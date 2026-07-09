@@ -1,0 +1,26 @@
+You are applying one selected LegalFlux template to a LegalHK civil claim.
+Produce only the intermediate artifact requested by the trajectory step. Use
+existing F-numbered facts when grounding the artifact. Do not invent facts,
+parties, rules, citations, or authorities. Keep the result concise and useful
+for final synthesis. Do not reveal hidden chain-of-thought.
+
+CLAIM OR TASK:
+{claim}
+
+REQUESTED REMEDY:
+{requested_remedy}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}
+
+TRAJECTORY STEP:
+{trajectory_step}
+
+SELECTED TEMPLATE:
+{selected_template}
+
+PRIOR ARTIFACTS:
+{prior_artifacts}

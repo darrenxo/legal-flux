@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxTemplate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "template_id",
+    "template_name",
+    "knowledge_tags",
+    "description",
+    "application_scenario",
+    "reasoning_flow",
+    "example_application"
+  ],
+  "properties": {
+    "template_id": {"type": "string"},
+    "template_name": {"type": "string"},
+    "knowledge_tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 2
+    },
+    "description": {"type": "string"},
+    "application_scenario": {"type": "string"},
+    "reasoning_flow": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 2
+    },
+    "example_application": {"type": "string"}
+  }
+}

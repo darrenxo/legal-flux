@@ -1,0 +1,53 @@
+project:
+  seed: 20260619
+  run_name: diagnostic
+
+model:
+  provider: ollama
+  base_url: http://127.0.0.1:11434
+  name: qwen3.5:9b
+  context_length: 16384
+  temperature: 0.0
+  seed: 20260619
+  analysis_max_tokens: 1000
+  distill_max_tokens: 700
+  template_max_tokens: 800
+  timeout_seconds: 600
+  concurrency: 1
+
+bot:
+  smoke_cases: 5
+  adaptation_cases: 32
+  holdout_cases: 32
+  retrieval_threshold: 0.05
+  novelty_threshold: 0.08
+  merge_threshold: 0.35
+  conditions:
+    - direct
+    - bot_full
+    - bot_no_distiller
+    - bot_no_buffer
+    - bot_no_manager
+    - bot_generic_init
+
+audit:
+  provider: none
+  max_outputs: 96
+  local:
+    provider: ollama
+    base_url: http://127.0.0.1:11434
+    model: gpt-oss:20b
+    reasoning_effort: medium
+    context_length: 16384
+    max_tokens: 3200
+    temperature: 0.0
+    seed: 20260619
+    timeout_seconds: 1200
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed/legalhk_only
+  runs_dir: runs/legal_bot
+  reports_dir: reports/legal_bot
+  prompts_dir: prompts
+  schemas_dir: schemas

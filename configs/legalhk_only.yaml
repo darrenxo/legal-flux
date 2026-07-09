@@ -1,0 +1,99 @@
+project:
+  seed: 20260619
+  run_name: diagnostic
+
+model:
+  provider: ollama
+  base_url: http://127.0.0.1:11434
+  name: qwen3.5:9b
+  context_length: 16384
+  temperature: 0.0
+  seed: 20260619
+  state_max_tokens: 1200
+  analysis_max_tokens: 1000
+  timeout_seconds: 600
+  concurrency: 1
+
+audit:
+  provider: openai
+  model: gpt-5.4-mini
+  reasoning_effort: medium
+  max_outputs: 160
+  local:
+    provider: ollama
+    base_url: http://127.0.0.1:11434
+    model: gpt-oss:20b
+    reasoning_effort: medium
+    context_length: 16384
+    max_tokens: 3200
+    temperature: 0.0
+    seed: 20260619
+    timeout_seconds: 1200
+
+data:
+  datasets:
+    - legalhk
+  smoke_cases: 5
+  smoke_case_ids:
+    - legalhk-2185
+    - legalhk-5875
+    - legalhk-864
+    - legalhk-2753
+    - legalhk-15673
+  excluded_evaluation_case_ids:
+    - legalhk-5096
+    - legalhk-2540
+    - legalhk-877
+    - legalhk-10386
+    - legalhk-5736
+    - legalhk-17430
+    - legalhk-11040
+    - legalhk-9920
+    - legalhk-5240
+    - legalhk-12595
+    - legalhk-16311
+    - legalhk-1893
+    - legalhk-8570
+    - legalhk-1168
+    - legalhk-5898
+    - legalhk-9306
+    - legalhk-3389
+    - legalhk-9072
+    - legalhk-3179
+    - legalhk-14998
+    - legalhk-6379
+    - legalhk-6569
+    - legalhk-1010
+    - legalhk-4965
+    - legalhk-7285
+    - legalhk-9963
+    - legalhk-4473
+    - legalhk-13410
+    - legalhk-17575
+    - legalhk-6653
+    - legalhk-13073
+    - legalhk-9837
+    - legalhk-7247
+    - legalhk-16908
+    - legalhk-563
+    - legalhk-1439
+    - legalhk-11760
+    - legalhk-15429
+    - legalhk-7547
+    - legalhk-16463
+    - legalhk-1622
+  evaluation_cases: 64
+  oracle_cases: 24
+  sampling_control_cases: 12
+  sampling_control_repeats: 3
+  max_input_characters: 48000
+  decision_overlap_ngram: 6
+  decision_overlap_threshold: 0.12
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed/legalhk_only
+  runs_dir: runs/legalhk_only
+  reports_dir: reports/legalhk_only
+  prompts_dir: prompts
+  schemas_dir: schemas

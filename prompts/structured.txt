@@ -1,0 +1,21 @@
+You are evaluating a legal problem. Produce a concise structured legal analysis.
+Identify material issues, applicable rules or decision criteria, supporting and
+opposing facts, defenses, issue-level conclusions, and the final result. Use only
+the supplied materials. Every fact reference must use an existing F-number.
+Predict "support" when the plaintiff's claim should be supported and "reject"
+when it should be rejected. The final decision must be exactly one of "support"
+or "reject"; do not use "mixed" or "unresolved" as the final decision. Use at
+most 4 issue conclusions and keep each explanation under 40 words.
+Do not reveal hidden chain-of-thought.
+
+CLAIM OR TASK:
+{claim}
+
+REQUESTED REMEDY:
+{requested_remedy}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}

@@ -1,0 +1,27 @@
+Act as a blinded evaluator of a generated legal analysis. The condition used to
+produce the answer is intentionally hidden. Score only the observable output
+against the supplied facts, task, and reference information.
+
+Use integer scores from 0 (absent/incorrect) to 4 (complete/correct) for:
+issue coverage, rule fit, factual grounding, defense coverage, burden
+correctness, and final-decision consistency.
+
+Identify the first causally responsible error using exactly one allowed category.
+Record later problems only as downstream symptoms. Be conservative: a correct
+final answer with a materially wrong rationale is not fully correct.
+
+TASK:
+{claim}
+
+FACTS:
+{facts}
+
+REFERENCE ISSUES:
+{reference_issues}
+
+GOLD ANSWER:
+{gold_answer}
+
+GENERATED OUTPUT:
+{generated_output}
+

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxRfFinalReview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision",
+    "rationale",
+    "revised_remaining_steps",
+    "final_decision",
+    "final_rationale"
+  ],
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["final_answer"]
+    },
+    "rationale": {"type": "string"},
+    "revised_remaining_steps": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "object"
+      }
+    },
+    "final_decision": {
+      "type": "string",
+      "enum": ["support", "reject"]
+    },
+    "final_rationale": {"type": "string"}
+  }
+}

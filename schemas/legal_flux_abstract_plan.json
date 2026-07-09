@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxAbstractPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_profile", "planned_steps", "planning_rationale"],
+  "properties": {
+    "case_profile": {"type": "string"},
+    "planned_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step_id", "step_name", "template_tags", "purpose"],
+        "properties": {
+          "step_id": {"type": "string"},
+          "step_name": {"type": "string"},
+          "template_tags": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "purpose": {"type": "string"}
+        }
+      }
+    },
+    "planning_rationale": {"type": "string"}
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DistilledLegalProblem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_type",
+    "remedy_type",
+    "lawsuit_type",
+    "material_factual_pattern",
+    "issue_families",
+    "defenses_or_counterarguments",
+    "evidence_posture",
+    "retrieval_query"
+  ],
+  "properties": {
+    "claim_type": {"type": "string"},
+    "remedy_type": {"type": "string"},
+    "lawsuit_type": {"type": "string"},
+    "material_factual_pattern": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "issue_families": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "defenses_or_counterarguments": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "evidence_posture": {
+      "type": "string",
+      "enum": ["supporting", "opposing", "conflicting", "insufficient", "unclear"]
+    },
+    "retrieval_query": {"type": "string"}
+  }
+}

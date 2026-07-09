@@ -1,0 +1,59 @@
+project:
+  seed: 20260619
+  run_name: diagnostic
+
+model:
+  provider: ollama
+  base_url: http://127.0.0.1:11434
+  name: qwen3.5:9b
+  context_length: 16384
+  temperature: 0.0
+  seed: 20260619
+  analysis_max_tokens: 1000
+  flux_plan_max_tokens: 900
+  flux_step_max_tokens: 900
+  flux_review_max_tokens: 500
+  timeout_seconds: 600
+  concurrency: 1
+
+legal_flux:
+  smoke_cases: 5
+  template_source_cases: 1400
+  trajectory_dev_cases: 256
+  final_test_cases: 512
+  template_pool_target: 80-120
+  max_steps: 4
+  planner_catalog_size: 24
+  rf_retrieval_backend: ollama_embedding
+  rf_embedding_model: bge-m3:latest
+  rf_embedding_cache_file: data/processed/legal_flux/rf_template_embeddings_bge_m3.json
+  rf_embedding_timeout_seconds: 600
+  force_binary_final_decision: true
+  max_input_characters: 5000
+  decision_overlap_ngram: 6
+  decision_overlap_threshold: 0.12
+  exclude_existing_legalhk_only_cases: true
+  prior_legalhk_cases_file: data/processed/legalhk_only/cases.jsonl
+  template_pool_file: data/processed/legal_flux/legal_flux_templates_v0.jsonl
+  template_export_dir: reports/legal_flux/template_distillation
+  chatgpt_batch_dir: reports/legal_flux/template_distillation/chatgpt_batches
+  chatgpt_homogeneous_batches: 24
+  chatgpt_mixed_batches: 6
+  chatgpt_cases_per_batch: 30
+  freeze_manifest_file: data/processed/legal_flux/legal_flux_frozen_manifest.json
+  profile_uses_reference_metadata: false
+  conditions:
+    - direct
+    - structured
+    - flux_rf_style
+
+audit:
+  provider: none
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed/legal_flux
+  runs_dir: runs/legal_flux
+  reports_dir: reports/legal_flux
+  prompts_dir: prompts
+  schemas_dir: schemas

@@ -1,0 +1,17 @@
+Resolve the legal problem from the supplied case state. Treat the raw facts as
+read-only grounding material: they may verify a state proposition but may not
+silently add a new issue or invented fact. Cite existing F-number references.
+Return concise issue conclusions and a final result. Predict "support" when the
+plaintiff's claim should be supported and "reject"
+when it should be rejected. The final decision must be exactly one of "support"
+or "reject"; do not use "mixed" or "unresolved" as the final decision. Keep each
+issue explanation under 40 words. Do not reveal hidden chain-of-thought.
+
+CLAIM OR TASK:
+{claim}
+
+CASE STATE:
+{case_state}
+
+RAW FACTS FOR GROUNDING:
+{facts}

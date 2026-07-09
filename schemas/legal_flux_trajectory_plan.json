@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxTrajectoryPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_profile", "planned_steps", "planning_rationale"],
+  "properties": {
+    "case_profile": {"type": "string"},
+    "planned_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step_id", "template_id", "purpose", "expected_artifact"],
+        "properties": {
+          "step_id": {"type": "string"},
+          "template_id": {"type": "string"},
+          "purpose": {"type": "string"},
+          "expected_artifact": {"type": "string"}
+        }
+      }
+    },
+    "planning_rationale": {"type": "string"}
+  }
+}

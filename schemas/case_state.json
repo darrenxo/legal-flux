@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CaseState",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["claims", "requested_remedies", "issues"],
+  "properties": {
+    "claims": {"type": "array", "items": {"type": "string"}},
+    "requested_remedies": {"type": "array", "items": {"type": "string"}},
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "issue",
+          "rule_or_test",
+          "burden_on",
+          "elements",
+          "defenses"
+        ],
+        "properties": {
+          "issue_id": {"type": "string"},
+          "issue": {"type": "string"},
+          "rule_or_test": {"type": "string"},
+          "burden_on": {
+            "type": "string",
+            "enum": ["plaintiff", "defendant", "unclear"]
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "element_id",
+                "element",
+                "supporting_fact_ids",
+                "opposing_fact_ids",
+                "missing_information",
+                "status"
+              ],
+              "properties": {
+                "element_id": {"type": "string"},
+                "element": {"type": "string"},
+                "supporting_fact_ids": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                },
+                "opposing_fact_ids": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                },
+                "missing_information": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "unresolved",
+                    "satisfied",
+                    "not_satisfied",
+                    "defeated"
+                  ]
+                }
+              }
+            }
+          },
+          "defenses": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
+

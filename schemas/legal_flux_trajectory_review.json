@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxTrajectoryReview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision", "rationale", "revised_remaining_steps"],
+  "properties": {
+    "decision": {"type": "string", "enum": ["continue", "revise", "stop"]},
+    "rationale": {"type": "string"},
+    "revised_remaining_steps": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step_id", "template_id", "purpose", "expected_artifact"],
+        "properties": {
+          "step_id": {"type": "string"},
+          "template_id": {"type": "string"},
+          "purpose": {"type": "string"},
+          "expected_artifact": {"type": "string"}
+        }
+      }
+    }
+  }
+}

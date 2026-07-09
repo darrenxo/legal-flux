@@ -1,0 +1,50 @@
+project:
+  seed: 20260619
+  run_name: pilot
+
+model:
+  provider: ollama
+  base_url: http://127.0.0.1:11434
+  name: qwen3.5:9b
+  context_length: 16384
+  temperature: 0.0
+  seed: 20260619
+  state_max_tokens: 1200
+  analysis_max_tokens: 1000
+  timeout_seconds: 600
+  concurrency: 1
+
+audit:
+  provider: openai
+  model: gpt-5.4-mini
+  reasoning_effort: medium
+  max_outputs: 160
+  local:
+    provider: ollama
+    base_url: http://127.0.0.1:11434
+    model: gpt-oss:20b
+    reasoning_effort: medium
+    context_length: 16384
+    max_tokens: 3200
+    temperature: 0.0
+    seed: 20260619
+    timeout_seconds: 1200
+
+data:
+  openexempt_base_cases: 48
+  legalhk_cases: 24
+  max_input_characters: 48000
+  smoke_openexempt_cases: 3
+  smoke_legalhk_cases: 2
+  oracle_openexempt_cases: 24
+  oracle_legalhk_cases: 12
+  sampling_control_cases: 12
+  sampling_control_repeats: 3
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  runs_dir: runs
+  reports_dir: reports/generated
+  prompts_dir: prompts
+  schemas_dir: schemas

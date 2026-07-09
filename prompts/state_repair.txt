@@ -1,0 +1,20 @@
+Repair the proposed pre-analysis case state using the validation errors below.
+Make the smallest correction necessary. Keep all element statuses "unresolved".
+Use only existing F-number references and known parties. Return only the required
+JSON.
+
+PROPOSED STATE:
+{case_state}
+
+VALIDATION ERRORS:
+{validation_errors}
+
+CLAIM OR TASK:
+{claim}
+
+KNOWN PARTIES:
+{parties}
+
+FACTS:
+{facts}
+

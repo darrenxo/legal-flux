@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DirectAnalysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["final_decision", "final_rationale"],
+  "properties": {
+    "final_decision": {
+      "type": "string",
+      "enum": ["support", "reject", "mixed", "unresolved"]
+    },
+    "final_rationale": {"type": "string"}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalFluxStepArtifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "step_id",
+    "template_id",
+    "instantiated_result",
+    "material_fact_ids",
+    "issue_ids",
+    "confidence",
+    "needs_revision",
+    "revision_reason"
+  ],
+  "properties": {
+    "step_id": {"type": "string"},
+    "template_id": {"type": "string"},
+    "instantiated_result": {"type": "string"},
+    "material_fact_ids": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "issue_ids": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+    "needs_revision": {"type": "boolean"},
+    "revision_reason": {"type": "string"}
+  }
+}

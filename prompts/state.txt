@@ -1,0 +1,26 @@
+Construct a pre-analysis legal case state. Do not decide any element yet: every
+element status must remain "unresolved". Represent the claims, remedies, issues,
+rules or decision criteria, burdens, elements, defenses, and links to supporting
+or opposing facts. Use only existing F-number references. Do not invent parties,
+facts, rules, or authorities. Return only the required JSON.
+
+Be aggressively concise so the complete JSON fits the output budget:
+- use one short claim and one short remedy;
+- include at most 3 dispositive issues;
+- include at most 2 elements per issue;
+- keep each issue, rule, element, and defense under 20 words;
+- list at most 2 missing-information items per element;
+- defenses must be an array of plain strings, never objects;
+- do not narrate or restate the facts.
+
+CLAIM OR TASK:
+{claim}
+
+REQUESTED REMEDY:
+{requested_remedy}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}
