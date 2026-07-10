@@ -1,0 +1,594 @@
+{
+  "created_at": "2026-07-05T21:50:11.160681+00:00",
+  "base": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\legal_flux_templates_final.jsonl",
+  "gap_fill": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\legal_flux_gap_fill_proposed.jsonl",
+  "output": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\legal_flux_templates_audited.jsonl",
+  "base_template_count": 116,
+  "dropped_duplicate_count": 8,
+  "gap_fill_count": 6,
+  "audited_template_count": 114,
+  "dropped_duplicate_ids": {
+    "LF001": "Duplicate of LF022; LF022 keeps dependency consistency and double-counting checks.",
+    "LF003": "Duplicate of LF002; LF002 is the more general long-fact filtering template.",
+    "LF005": "Duplicate of LF008; LF008 has broader rule-to-element extraction coverage.",
+    "LF052": "Duplicate of LF049; LF049 preserves preconditions and implied cooperation/prevention analysis.",
+    "LF060": "Duplicate of LF059; LF059 preserves set-off and counterclaim treatment.",
+    "LF071": "Duplicate of LF043; LF043 is the more general composite-remedy template.",
+    "LF108": "Duplicate of LF106; LF106 already covers winding-up standing as a gateway.",
+    "LF116": "Duplicate of LF113; LF113 more fully covers sanction procedure and stakeholder fairness."
+  },
+  "id_map": [
+    {
+      "old_template_id": "LF002",
+      "new_template_id": "LF001",
+      "template_name": "Issue-Directed Long-Fact Filtering"
+    },
+    {
+      "old_template_id": "LF004",
+      "new_template_id": "LF002",
+      "template_name": "Competing Narrative and Evidence Reliability Resolution"
+    },
+    {
+      "old_template_id": "LF006",
+      "new_template_id": "LF003",
+      "template_name": "Identify and Complete the Governing Doctrine"
+    },
+    {
+      "old_template_id": "LF007",
+      "new_template_id": "LF004",
+      "template_name": "Multi-Source Rule Synthesis"
+    },
+    {
+      "old_template_id": "LF008",
+      "new_template_id": "LF005",
+      "template_name": "Rule-to-Element Extraction and Mapping"
+    },
+    {
+      "old_template_id": "LF009",
+      "new_template_id": "LF006",
+      "template_name": "Temporal Operation of Legal Rules"
+    },
+    {
+      "old_template_id": "LF010",
+      "new_template_id": "LF007",
+      "template_name": "Reconcile Overlapping Statutory and Procedural Regimes"
+    },
+    {
+      "old_template_id": "LF011",
+      "new_template_id": "LF008",
+      "template_name": "Resolve Competing Legal Characterizations"
+    },
+    {
+      "old_template_id": "LF012",
+      "new_template_id": "LF009",
+      "template_name": "Extract and Apply a Precedential Principle"
+    },
+    {
+      "old_template_id": "LF013",
+      "new_template_id": "LF010",
+      "template_name": "Select the Closest Material Analogy"
+    },
+    {
+      "old_template_id": "LF014",
+      "new_template_id": "LF011",
+      "template_name": "Distinguish an Apparently Relevant Precedent"
+    },
+    {
+      "old_template_id": "LF015",
+      "new_template_id": "LF012",
+      "template_name": "Element-Wise Burden and Evidence Matrix"
+    },
+    {
+      "old_template_id": "LF016",
+      "new_template_id": "LF013",
+      "template_name": "Evidence Provenance and Authenticity Assessment"
+    },
+    {
+      "old_template_id": "LF017",
+      "new_template_id": "LF014",
+      "template_name": "Assess Credibility and Discharge of the Civil Burden"
+    },
+    {
+      "old_template_id": "LF018",
+      "new_template_id": "LF015",
+      "template_name": "Missing Evidence and Evidential Gap Analysis"
+    },
+    {
+      "old_template_id": "LF019",
+      "new_template_id": "LF016",
+      "template_name": "Separate Primary Claim, Defense, and Counterclaim"
+    },
+    {
+      "old_template_id": "LF020",
+      "new_template_id": "LF017",
+      "template_name": "Legal Status, Authority, and Capacity Qualification"
+    },
+    {
+      "old_template_id": "LF021",
+      "new_template_id": "LF018",
+      "template_name": "Entitlement First, Quantum Second"
+    },
+    {
+      "old_template_id": "LF022",
+      "new_template_id": "LF019",
+      "template_name": "Compose a Multi-Issue Decision Through Dependency-Aware Sequencing"
+    },
+    {
+      "old_template_id": "LF023",
+      "new_template_id": "LF020",
+      "template_name": "Procedural Gateway Before Merits"
+    },
+    {
+      "old_template_id": "LF024",
+      "new_template_id": "LF021",
+      "template_name": "Jurisdiction, Forum, and Alternative Remedy Check"
+    },
+    {
+      "old_template_id": "LF025",
+      "new_template_id": "LF022",
+      "template_name": "Statutory Status and Standing Verification"
+    },
+    {
+      "old_template_id": "LF026",
+      "new_template_id": "LF023",
+      "template_name": "Service, Notice, and Fair Opportunity to Respond"
+    },
+    {
+      "old_template_id": "LF027",
+      "new_template_id": "LF024",
+      "template_name": "Relief from Procedural Default"
+    },
+    {
+      "old_template_id": "LF028",
+      "new_template_id": "LF025",
+      "template_name": "Test for Summary Disposition or a Genuine Triable Issue"
+    },
+    {
+      "old_template_id": "LF029",
+      "new_template_id": "LF026",
+      "template_name": "Strike-Out and Abuse-of-Process Screening"
+    },
+    {
+      "old_template_id": "LF030",
+      "new_template_id": "LF027",
+      "template_name": "Late Evidence or Pleading Change Prejudice Assessment"
+    },
+    {
+      "old_template_id": "LF031",
+      "new_template_id": "LF028",
+      "template_name": "Ex Parte Candour and Material Non-Disclosure Review"
+    },
+    {
+      "old_template_id": "LF032",
+      "new_template_id": "LF029",
+      "template_name": "Define Proportionate Discovery by Relevance and Search Burden"
+    },
+    {
+      "old_template_id": "LF033",
+      "new_template_id": "LF030",
+      "template_name": "Appellate Error, Evidential Safety, and Totality Review"
+    },
+    {
+      "old_template_id": "LF034",
+      "new_template_id": "LF031",
+      "template_name": "Judicial Review Leave and Arguability Screen"
+    },
+    {
+      "old_template_id": "LF035",
+      "new_template_id": "LF032",
+      "template_name": "Administrative Power, Relevant Considerations, and Rationality"
+    },
+    {
+      "old_template_id": "LF036",
+      "new_template_id": "LF033",
+      "template_name": "Practical Utility and Supervening-Event Check"
+    },
+    {
+      "old_template_id": "LF037",
+      "new_template_id": "LF034",
+      "template_name": "Apply the General Interim-Relief Framework"
+    },
+    {
+      "old_template_id": "LF038",
+      "new_template_id": "LF035",
+      "template_name": "Require Necessity and Narrow Tailoring for Exceptional Procedural Orders"
+    },
+    {
+      "old_template_id": "LF039",
+      "new_template_id": "LF036",
+      "template_name": "Discretionary Remedy Calibration"
+    },
+    {
+      "old_template_id": "LF040",
+      "new_template_id": "LF037",
+      "template_name": "Security for Costs Balancing"
+    },
+    {
+      "old_template_id": "LF041",
+      "new_template_id": "LF038",
+      "template_name": "Procedural Stay for Parallel Proceedings"
+    },
+    {
+      "old_template_id": "LF042",
+      "new_template_id": "LF039",
+      "template_name": "Declaratory Relief Utility and Precision"
+    },
+    {
+      "old_template_id": "LF043",
+      "new_template_id": "LF040",
+      "template_name": "Composite Remedy Sequencing"
+    },
+    {
+      "old_template_id": "LF044",
+      "new_template_id": "LF041",
+      "template_name": "Identify the Contracting Parties and Legal Capacity"
+    },
+    {
+      "old_template_id": "LF045",
+      "new_template_id": "LF042",
+      "template_name": "Contract Formation from Communications and Conduct"
+    },
+    {
+      "old_template_id": "LF046",
+      "new_template_id": "LF043",
+      "template_name": "Test Incorporation by Reference and Assent"
+    },
+    {
+      "old_template_id": "LF047",
+      "new_template_id": "LF044",
+      "template_name": "Integrated Term Reconstruction Across Instruments"
+    },
+    {
+      "old_template_id": "LF048",
+      "new_template_id": "LF045",
+      "template_name": "Interpret a Contested Term Through Text, Context, and Purpose"
+    },
+    {
+      "old_template_id": "LF049",
+      "new_template_id": "LF046",
+      "template_name": "Map Performance Duties and Preconditions"
+    },
+    {
+      "old_template_id": "LF050",
+      "new_template_id": "LF047",
+      "template_name": "Reciprocal Performance, Prevention, and Default Sequence"
+    },
+    {
+      "old_template_id": "LF051",
+      "new_template_id": "LF048",
+      "template_name": "Conformity, Defect, and Substantial Performance Assessment"
+    },
+    {
+      "old_template_id": "LF053",
+      "new_template_id": "LF049",
+      "template_name": "Analyze Repudiation, Acceptance, and Termination Sequence"
+    },
+    {
+      "old_template_id": "LF054",
+      "new_template_id": "LF050",
+      "template_name": "Variation, Waiver, Settlement, and Termination Effect"
+    },
+    {
+      "old_template_id": "LF055",
+      "new_template_id": "LF051",
+      "template_name": "Test Enforceability Against Vitiating Conduct and Equitable Bars"
+    },
+    {
+      "old_template_id": "LF056",
+      "new_template_id": "LF052",
+      "template_name": "Evaluate Excuse, Suspension, and Avoidance Defenses"
+    },
+    {
+      "old_template_id": "LF057",
+      "new_template_id": "LF053",
+      "template_name": "Assess Notice, Knowledge, and Opportunity to Comply"
+    },
+    {
+      "old_template_id": "LF058",
+      "new_template_id": "LF054",
+      "template_name": "Delivery, Acceptance, and Payment Maturity"
+    },
+    {
+      "old_template_id": "LF059",
+      "new_template_id": "LF055",
+      "template_name": "Payment Account, Set-Off, and Net Balance Reconciliation"
+    },
+    {
+      "old_template_id": "LF061",
+      "new_template_id": "LF056",
+      "template_name": "Debt Entitlement and Chain of Title"
+    },
+    {
+      "old_template_id": "LF062",
+      "new_template_id": "LF057",
+      "template_name": "Characterization of a Disputed Transfer"
+    },
+    {
+      "old_template_id": "LF063",
+      "new_template_id": "LF058",
+      "template_name": "Third-Party Payment, Settlement, and Discharge Effect"
+    },
+    {
+      "old_template_id": "LF064",
+      "new_template_id": "LF059",
+      "template_name": "Causation, Foreseeability, and Loss Attribution"
+    },
+    {
+      "old_template_id": "LF065",
+      "new_template_id": "LF060",
+      "template_name": "Mitigation and Reasonable Post-Breach Response"
+    },
+    {
+      "old_template_id": "LF066",
+      "new_template_id": "LF061",
+      "template_name": "Calculate Expectation Loss Using Market and Resale Evidence"
+    },
+    {
+      "old_template_id": "LF067",
+      "new_template_id": "LF062",
+      "template_name": "Classify Deposits, Refunds, Forfeiture, and Restitution"
+    },
+    {
+      "old_template_id": "LF068",
+      "new_template_id": "LF063",
+      "template_name": "Specific Performance Suitability Check"
+    },
+    {
+      "old_template_id": "LF069",
+      "new_template_id": "LF064",
+      "template_name": "Arbitration Agreement Scope and Stay Analysis"
+    },
+    {
+      "old_template_id": "LF070",
+      "new_template_id": "LF065",
+      "template_name": "Good Title, Requisitions, and Conveyancing Completion"
+    },
+    {
+      "old_template_id": "LF072",
+      "new_template_id": "LF066",
+      "template_name": "Competing Title, Beneficial Interest, and Possession"
+    },
+    {
+      "old_template_id": "LF073",
+      "new_template_id": "LF067",
+      "template_name": "Factual Possession of Land"
+    },
+    {
+      "old_template_id": "LF074",
+      "new_template_id": "LF068",
+      "template_name": "Intention to Possess and Permission Defeat Check"
+    },
+    {
+      "old_template_id": "LF075",
+      "new_template_id": "LF069",
+      "template_name": "Continuity and Tacking Across Occupiers"
+    },
+    {
+      "old_template_id": "LF076",
+      "new_template_id": "LF070",
+      "template_name": "Possessable Subject Matter and Boundary Identification"
+    },
+    {
+      "old_template_id": "LF077",
+      "new_template_id": "LF071",
+      "template_name": "Statutory Classification of Property or Use"
+    },
+    {
+      "old_template_id": "LF078",
+      "new_template_id": "LF072",
+      "template_name": "Compulsory Sale Eligibility and Ownership Threshold"
+    },
+    {
+      "old_template_id": "LF079",
+      "new_template_id": "LF073",
+      "template_name": "Redevelopment Justification from Age and Repair Evidence"
+    },
+    {
+      "old_template_id": "LF080",
+      "new_template_id": "LF074",
+      "template_name": "Reasonable Acquisition Efforts and Fair Offer Assessment"
+    },
+    {
+      "old_template_id": "LF081",
+      "new_template_id": "LF075",
+      "template_name": "Value Property Through Comparable Evidence and Legal Adjustments"
+    },
+    {
+      "old_template_id": "LF082",
+      "new_template_id": "LF076",
+      "template_name": "Beneficial Ownership and Trust Formation"
+    },
+    {
+      "old_template_id": "LF083",
+      "new_template_id": "LF077",
+      "template_name": "Fiduciary or Entity Administration Review"
+    },
+    {
+      "old_template_id": "LF084",
+      "new_template_id": "LF078",
+      "template_name": "Legal Recognition of Personal or Family Status"
+    },
+    {
+      "old_template_id": "LF085",
+      "new_template_id": "LF079",
+      "template_name": "Needs-and-Means Assessment for Monetary Relief"
+    },
+    {
+      "old_template_id": "LF086",
+      "new_template_id": "LF080",
+      "template_name": "Relationship-and-Control Duty Identification"
+    },
+    {
+      "old_template_id": "LF087",
+      "new_template_id": "LF081",
+      "template_name": "Evaluate Negligence Through Foreseeable Risk and Reasonable Precautions"
+    },
+    {
+      "old_template_id": "LF088",
+      "new_template_id": "LF082",
+      "template_name": "Statutory Duty as Standard of Care"
+    },
+    {
+      "old_template_id": "LF089",
+      "new_template_id": "LF083",
+      "template_name": "Unsafe Equipment, Premises, or Work-System Breach"
+    },
+    {
+      "old_template_id": "LF090",
+      "new_template_id": "LF084",
+      "template_name": "Instruction, Supervision, and Warning Adequacy"
+    },
+    {
+      "old_template_id": "LF091",
+      "new_template_id": "LF085",
+      "template_name": "Reconstruct a Disputed Accident from Competing Evidence"
+    },
+    {
+      "old_template_id": "LF092",
+      "new_template_id": "LF086",
+      "template_name": "Infer Negligence from an Unexplained Operational Failure"
+    },
+    {
+      "old_template_id": "LF093",
+      "new_template_id": "LF087",
+      "template_name": "Allocate Liability Across a Multi-Actor Control Chain"
+    },
+    {
+      "old_template_id": "LF094",
+      "new_template_id": "LF088",
+      "template_name": "Breach-to-Injury Causal Mechanism"
+    },
+    {
+      "old_template_id": "LF095",
+      "new_template_id": "LF089",
+      "template_name": "Medical Causation with Pre-Existing Vulnerability"
+    },
+    {
+      "old_template_id": "LF096",
+      "new_template_id": "LF090",
+      "template_name": "Contributory Negligence and Fault Apportionment"
+    },
+    {
+      "old_template_id": "LF097",
+      "new_template_id": "LF091",
+      "template_name": "Derivative and Institutional Liability"
+    },
+    {
+      "old_template_id": "LF098",
+      "new_template_id": "LF092",
+      "template_name": "Head-by-Head Damages Assessment"
+    },
+    {
+      "old_template_id": "LF099",
+      "new_template_id": "LF093",
+      "template_name": "Earnings and Earning-Capacity Projection"
+    },
+    {
+      "old_template_id": "LF100",
+      "new_template_id": "LF094",
+      "template_name": "Future Loss and Continuing-Need Projection"
+    },
+    {
+      "old_template_id": "LF101",
+      "new_template_id": "LF095",
+      "template_name": "Verify Special Damages and Future Expense Claims"
+    },
+    {
+      "old_template_id": "LF102",
+      "new_template_id": "LF096",
+      "template_name": "Calculate Fatal-Accident Dependency and Estate Loss"
+    },
+    {
+      "old_template_id": "LF103",
+      "new_template_id": "LF097",
+      "template_name": "Damages Adjustments and Anti-Duplication"
+    },
+    {
+      "old_template_id": "LF104",
+      "new_template_id": "LF098",
+      "template_name": "Determine Employment Status and Work-Related Accident Nexus"
+    },
+    {
+      "old_template_id": "LF105",
+      "new_template_id": "LF099",
+      "template_name": "Publication Meaning and Layered Defamation Defenses"
+    },
+    {
+      "old_template_id": "LF106",
+      "new_template_id": "LF100",
+      "template_name": "Winding-Up Petition Gatekeeping"
+    },
+    {
+      "old_template_id": "LF107",
+      "new_template_id": "LF101",
+      "template_name": "Insolvency Debt, Dispute, and Payment-Capacity Assessment"
+    },
+    {
+      "old_template_id": "LF109",
+      "new_template_id": "LF102",
+      "template_name": "Restructuring or Moratorium Versus Immediate Liquidation"
+    },
+    {
+      "old_template_id": "LF110",
+      "new_template_id": "LF103",
+      "template_name": "Corporate Irregularity Cure and Stakeholder Protection"
+    },
+    {
+      "old_template_id": "LF111",
+      "new_template_id": "LF104",
+      "template_name": "Unfair Prejudice and Loss of Confidence Analysis"
+    },
+    {
+      "old_template_id": "LF112",
+      "new_template_id": "LF105",
+      "template_name": "Director Unfitness and Sanction Calibration"
+    },
+    {
+      "old_template_id": "LF113",
+      "new_template_id": "LF106",
+      "template_name": "Corporate Transaction or Arrangement Sanction"
+    },
+    {
+      "old_template_id": "LF114",
+      "new_template_id": "LF107",
+      "template_name": "Corporate Records, Disclosure, and Evidentiary Reliability"
+    },
+    {
+      "old_template_id": "LF115",
+      "new_template_id": "LF108",
+      "template_name": "Protective Interim Relief Based on Asset Risk"
+    },
+    {
+      "old_template_id": "LF117",
+      "new_template_id": "LF109",
+      "template_name": "Focused Single-Issue Resolution with Scope Control"
+    },
+    {
+      "old_template_id": "LF118",
+      "new_template_id": "LF110",
+      "template_name": "Dual-Issue Dependency and Alternative-Ground Resolution"
+    },
+    {
+      "old_template_id": "LF119",
+      "new_template_id": "LF111",
+      "template_name": "Cross-Domain Claim Interface and Rule-Priority Analysis"
+    },
+    {
+      "old_template_id": "LF120",
+      "new_template_id": "LF112",
+      "template_name": "Affirmative Defense Validity, Burden, and Waiver Check"
+    },
+    {
+      "old_template_id": "LF121",
+      "new_template_id": "LF113",
+      "template_name": "Testamentary Instrument Validity and Construction"
+    },
+    {
+      "old_template_id": "LF122",
+      "new_template_id": "LF114",
+      "template_name": "Estate Administration, Priority, and Distribution Sequence"
+    }
+  ],
+  "output_sha256": "93e7f964d0c8e14353ac61bfe6766283c472e3677dc017b14cf9fd8b64346f70",
+  "note": "Template text was preserved from source files. The script removes audit-flagged duplicate records, appends validated gap-fill records, and renumbers template_id values sequentially."
+}

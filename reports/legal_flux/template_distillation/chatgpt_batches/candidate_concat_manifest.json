@@ -1,0 +1,224 @@
+{
+  "created_at": "2026-07-05T18:19:52.519193+00:00",
+  "mode": "byte_concatenation_no_json_rewrite",
+  "input_dir": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates",
+  "glob": "*_candidates.jsonl",
+  "output": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\all_candidate_templates.jsonl",
+  "source_file_count": 30,
+  "source_nonempty_line_count": 337,
+  "output_bytes": 485937,
+  "output_sha256": "ab468bb43690328bab186d3d843c5039870efa4c5c2f94e4a3571982874cbc19",
+  "sources": [
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_001_candidates.jsonl",
+      "bytes": 15999,
+      "sha256": "f281b8b79a7a33f981cada64f96ab8a2963b69b0737258096835fbbdfd17d7d0",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_002_candidates.jsonl",
+      "bytes": 15376,
+      "sha256": "ae6e4b63540eb9b8f7a38d5a26c7e34d2b57ef4cd26ce8e2c5f7e1992a428f87",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_003_candidates.jsonl",
+      "bytes": 18175,
+      "sha256": "e3a703b6d6ea95e846f9b154947b9c4b38be350ff4c27c02739ba8a6fafbb602",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_004_candidates.jsonl",
+      "bytes": 15896,
+      "sha256": "2c0b5b04e0215ab3bd6f420c4c595115d2a2b96c5f27024aa19808b5b6860ca1",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_005_candidates.jsonl",
+      "bytes": 15860,
+      "sha256": "4b09d4354279042b67ee9b977bf416d2462cf056c56b7da2d6513bd3fa0633fa",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_006_candidates.jsonl",
+      "bytes": 15789,
+      "sha256": "1900ec859be0f21c2e69595834ec1b2af4eb5c8bab1116e4cf05b2b144f983f9",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_007_candidates.jsonl",
+      "bytes": 14524,
+      "sha256": "964b39db08d5e4298ebbc854400cdb1f1b943f7a546ab58a141094dfe2965560",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_008_candidates.jsonl",
+      "bytes": 19188,
+      "sha256": "507dd1221f27c43e819656fd7fce6a474ebb225db17da3c875386dab8fb9d6a0",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_009_candidates.jsonl",
+      "bytes": 16116,
+      "sha256": "3f6b77f30bf298c4270267fd3eb7335e27811104364ebebe9c00a4bf03271a76",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_010_candidates.jsonl",
+      "bytes": 16206,
+      "sha256": "f1a4de6c1cb28b6ab849fab2ab55152413f96ea146e25a707ceddb24cd0bafba",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_011_candidates.jsonl",
+      "bytes": 18624,
+      "sha256": "26b764179c61d3da61e095104b657b788020b1232c9cf4d9f142b8cf8f792097",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_012_candidates.jsonl",
+      "bytes": 19585,
+      "sha256": "c60b1c52c74947033c4b0c2afe62c46a8da42d6794d5678a9fac24ab32801ffc",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_013_candidates.jsonl",
+      "bytes": 15861,
+      "sha256": "4ec0cc3db3e36f6290a4015ce4e80fe25c46a96faf885196b8b1d5f59d0c01eb",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_014_candidates.jsonl",
+      "bytes": 18962,
+      "sha256": "043c4834294e6fb0af9362c442eba87db475a982fb9aa212ef92e656efb0d163",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_015_candidates.jsonl",
+      "bytes": 18382,
+      "sha256": "5c8cd4761b6481d70e511f4c3fcb0be0613bdbbd80133049f5a982099dcea441",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_016_candidates.jsonl",
+      "bytes": 16046,
+      "sha256": "fcc1175ec921e55ca5770ef62c9fd8c6459d4a0db5431d88b095a0f1fbb28cf4",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_017_candidates.jsonl",
+      "bytes": 16816,
+      "sha256": "1ce34ea3b79972eea77e321bcd3a2a67e5e10a5c9c5d73fb01533b565cc9b541",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_018_candidates.jsonl",
+      "bytes": 15352,
+      "sha256": "34def3d29be4cf6c2e5eba5a3c503151a0c8ee418e5abcb5ae113848d24ccb01",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_019_candidates.jsonl",
+      "bytes": 14669,
+      "sha256": "0557886e91ec0d0297848f9e445de3a8cefef28ac1b0dfb028efb1f009ccdca7",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_020_candidates.jsonl",
+      "bytes": 14524,
+      "sha256": "d149ba5b080f08c9fc07678cbf4b1b58f8ce7563786ae5a53045ac426b105e9d",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_021_candidates.jsonl",
+      "bytes": 16490,
+      "sha256": "89ae7d810733d02d93acac4ffdcb29475b23ef9f391d21266681ae8a586b50a9",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_022_candidates.jsonl",
+      "bytes": 13775,
+      "sha256": "e320941944eceae236458a2f26702ed656b11d899b29585b6343c062a5a914f2",
+      "nonempty_line_count": 10,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_023_candidates.jsonl",
+      "bytes": 16089,
+      "sha256": "135889261ec5fa1dd1245706c307a624b380bf4577c1d1518fd3df397151aaf3",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\homogeneous_024_candidates.jsonl",
+      "bytes": 14307,
+      "sha256": "26b8508db0355203c73b9f8e84f82f68a452cc39de1d2561c454571857e44066",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_001_candidates.jsonl",
+      "bytes": 16119,
+      "sha256": "ba6e5e6fab36b406fa65fca8eb9a6037f2157d0862136a0abf936a060a99a844",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_002_candidates.jsonl",
+      "bytes": 15609,
+      "sha256": "565d8092dc34e609487adb9548dfbd45fbc351b8eba30d875ff2cbbf5979c8bb",
+      "nonempty_line_count": 11,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_003_candidates.jsonl",
+      "bytes": 14901,
+      "sha256": "39739ab35b405d479d835d7ec866b4962989a9abc2dc628db1d7aa8a0f32ed3d",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_004_candidates.jsonl",
+      "bytes": 14884,
+      "sha256": "e24b544ede9339cbdbd8529c8ef641e42caa2129ecf9f46b52e8027f80e3f3c1",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_005_candidates.jsonl",
+      "bytes": 16454,
+      "sha256": "bcc1f14074fb01c57f742309a57b1176b4ab34c9a84c763c9ddc63203d9ccd8a",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    },
+    {
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\chatgpt_batches\\03_candidate_templates\\mixed_006_candidates.jsonl",
+      "bytes": 15300,
+      "sha256": "493bccac1bcbe24b3c02a143cbb33f4e6fda61c37a6e5672db69e3fe1f4c6c91",
+      "nonempty_line_count": 12,
+      "ended_with_newline": false
+    }
+  ],
+  "note": "Source file bytes are copied as-is. The script only inserts newline separators between files and after files that lack a trailing newline."
+}

@@ -1,0 +1,8 @@
+{
+  "cases": 1400,
+  "packet": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\template_source_cases.jsonl",
+  "schema": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\legal_flux_template.schema.json",
+  "instructions": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_case_state_pilot\\reports\\legal_flux\\template_distillation\\INSTRUCTIONS.md",
+  "packet_sha256": "b41e66c3e1ca03e5fe6af072518e96540134dc7909f9971bf3cfae5b5fde68d0",
+  "created_at": "2026-07-04T20:48:37.959633+00:00"
+}
