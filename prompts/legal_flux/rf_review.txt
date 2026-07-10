@@ -18,11 +18,12 @@ Do not reveal hidden chain-of-thought.
 CLAIM OR TASK:
 {claim}
 
-REQUESTED REMEDY:
-{requested_remedy}
+PARTIES:
+{parties}
 
 FACTS:
 {facts}
+{authority_context}
 
 ABSTRACT TRAJECTORY PLAN:
 {abstract_plan}

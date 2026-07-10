@@ -11,19 +11,15 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 RUN_DIR = ROOT / "runs" / "legal_flux" / "trajectory_dev"
 REPORT_DIR = ROOT / "reports" / "legal_flux"
-CONDITION_ORDER = [
-    "direct",
-    "structured",
-    "flux_fixed",
-    "flux_adaptive",
-    "flux_adaptive_no_review",
-]
+TEMPLATE_POOL = ROOT / "templates" / "legal_flux_templates_v0.jsonl"
+ADAPTIVE_CONDITION = "flux_rf_style"
+CONDITION_ORDER = ["direct", "structured", ADAPTIVE_CONDITION]
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [
         json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
+        for line in path.read_text(encoding="utf-8-sig").splitlines()
         if line.strip()
     ]
 
@@ -40,6 +36,29 @@ def latest_scored_rows() -> list[dict[str, Any]]:
         if row.get("run_hash") in allowed:
             latest[row["run_hash"]] = row
     return list(latest.values())
+
+
+def latest_generation_rows() -> dict[str, dict[str, Any]]:
+    plan = json.loads((RUN_DIR / "run_plan.json").read_text(encoding="utf-8"))
+    allowed = {
+        job["run_hash"]
+        for job in plan.get("jobs", [])
+        if isinstance(job, dict) and job.get("run_hash")
+    }
+    latest: dict[str, dict[str, Any]] = {}
+    path = RUN_DIR / "generations.jsonl"
+    if not path.exists():
+        return latest
+    for row in read_jsonl(path):
+        if row.get("run_hash") in allowed:
+            latest[row["run_hash"]] = row
+    return latest
+
+
+def template_lookup() -> dict[str, dict[str, Any]]:
+    if not TEMPLATE_POOL.exists():
+        return {}
+    return {row["template_id"]: row for row in read_jsonl(TEMPLATE_POOL)}
 
 
 def pct(value: float | None) -> str:
@@ -65,13 +84,8 @@ def md_table(headers: list[str], rows: list[list[Any]]) -> str:
 
 
 def short(text: Any, limit: int = 220) -> str:
-    value = " ".join(str(text or "").split())
+    value = " ".join(str(text or "").replace("|", "/").split())
     return value if len(value) <= limit else value[: limit - 3] + "..."
-
-
-def profile(row: dict[str, Any]) -> dict[str, Any]:
-    metadata = row.get("metadata") or {}
-    return metadata.get("legal_flux_profile") or {}
 
 
 def condition_summary(rows: list[dict[str, Any]]) -> str:
@@ -92,6 +106,8 @@ def condition_summary(rows: list[dict[str, Any]]) -> str:
                 pct(avg([float(x["issue_coverage_proxy"] or 0.0) for x in items])),
                 f"{avg([float(x.get('calls') or 0.0) for x in items]):.2f}",
                 f"{avg([float(x.get('elapsed_seconds') or 0.0) for x in items]):.2f}",
+                f"{avg([float(x.get('prompt_tokens') or 0.0) for x in items]):.0f}",
+                f"{avg([float(x.get('output_tokens') or 0.0) for x in items]):.0f}",
             ]
         )
     return md_table(
@@ -103,6 +119,8 @@ def condition_summary(rows: list[dict[str, Any]]) -> str:
             "issue coverage",
             "avg calls",
             "avg sec",
+            "avg prompt tok",
+            "avg output tok",
         ],
         table,
     )
@@ -115,19 +133,25 @@ def pivot_by_case(rows: list[dict[str, Any]]) -> dict[str, dict[str, dict[str, A
     return by_case
 
 
-def direct_adaptive_delta(by_case: dict[str, dict[str, dict[str, Any]]]) -> tuple[str, list[dict[str, Any]]]:
+def direct_adaptive_delta(
+    by_case: dict[str, dict[str, dict[str, Any]]],
+    templates: dict[str, dict[str, Any]],
+) -> tuple[str, list[dict[str, Any]]]:
     counts = Counter()
     deltas: list[dict[str, Any]] = []
     for case_id, conditions in sorted(by_case.items()):
         direct = conditions.get("direct")
-        adaptive = conditions.get("flux_adaptive")
-        fixed = conditions.get("flux_fixed")
+        adaptive = conditions.get(ADAPTIVE_CONDITION)
         structured = conditions.get("structured")
-        no_review = conditions.get("flux_adaptive_no_review")
         if not direct or not adaptive:
             continue
         direct_ok = bool(direct.get("answer_correct"))
         adaptive_ok = bool(adaptive.get("answer_correct"))
+        retrieved_ids = adaptive.get("retrieved_template_ids") or []
+        template_names = [
+            templates.get(template_id, {}).get("template_name", template_id)
+            for template_id in retrieved_ids
+        ]
         if direct_ok and adaptive_ok:
             bucket = "both_correct"
         elif direct_ok and not adaptive_ok:
@@ -144,24 +168,33 @@ def direct_adaptive_delta(by_case: dict[str, dict[str, dict[str, Any]]]) -> tupl
                 "gold": direct.get("gold_answer"),
                 "direct_prediction": direct.get("prediction"),
                 "adaptive_prediction": adaptive.get("prediction"),
-                "fixed_prediction": fixed.get("prediction") if fixed else "",
-                "no_review_prediction": no_review.get("prediction") if no_review else "",
                 "structured_prediction": structured.get("prediction") if structured else "",
                 "lawsuit_type": (direct.get("metadata") or {}).get("lawsuit_type") or "(blank)",
-                "template_families": profile(direct).get("template_families") or "",
-                "reasoning_demands": profile(direct).get("reasoning_demands") or "",
                 "adaptive_trajectory_length": adaptive.get("trajectory_length"),
                 "adaptive_review_count": adaptive.get("review_count"),
                 "adaptive_calls": adaptive.get("calls"),
-                "adaptive_repairs": ";".join(adaptive.get("repair_actions") or []),
-                "adaptive_final_rationale": short((adaptive.get("parsed_json") or {}).get("final_rationale"), 400),
-                "direct_final_rationale": short((direct.get("parsed_json") or {}).get("final_rationale"), 400),
+                "adaptive_retrieved_templates": ";".join(retrieved_ids),
+                "adaptive_retrieval_modes": "not_logged",
+                "adaptive_step_names": ";".join(
+                    str(step.get("step_name"))
+                    for step in (adaptive.get("trajectory_plan") or {}).get("planned_steps", [])
+                ),
+                "adaptive_template_names": ";".join(template_names),
+                "adaptive_final_rationale": short(
+                    (adaptive.get("parsed_json") or {}).get("final_rationale"),
+                    500,
+                ),
+                "direct_final_rationale": short(
+                    (direct.get("parsed_json") or {}).get("final_rationale"),
+                    500,
+                ),
             }
         )
+    total = sum(counts.values()) or 1
     table = md_table(
         ["bucket", "count", "share"],
         [
-            [bucket, counts[bucket], pct(counts[bucket] / sum(counts.values()))]
+            [bucket, counts[bucket], pct(counts[bucket] / total)]
             for bucket in ("both_correct", "direct_only", "adaptive_only", "both_wrong")
         ],
     )
@@ -175,21 +208,23 @@ def prediction_distribution(rows: list[dict[str, Any]]) -> str:
         condition = row["condition"]
         prediction = str(row.get("prediction"))
         by_condition[condition][prediction] += 1
-        by_gold_condition[(condition, str(row.get("gold_answer")))][prediction] += 1
+        by_gold_condition[(condition, str(row.get("gold_answer")))] [prediction] += 1
     dist_rows = []
     for condition in CONDITION_ORDER:
         total = sum(by_condition[condition].values())
         if not total:
             continue
+        support = by_condition[condition].get("support", 0)
+        reject = by_condition[condition].get("reject", 0)
         dist_rows.append(
             [
                 condition,
-                by_condition[condition].get("support", 0),
-                by_condition[condition].get("reject", 0),
+                support,
+                reject,
                 by_condition[condition].get("mixed", 0),
                 by_condition[condition].get("unresolved", 0),
                 by_condition[condition].get("None", 0),
-                pct((total - by_condition[condition].get("support", 0) - by_condition[condition].get("reject", 0)) / total),
+                pct((total - support - reject) / total),
             ]
         )
     by_gold_rows = []
@@ -199,8 +234,7 @@ def prediction_distribution(rows: list[dict[str, Any]]) -> str:
             total = sum(counter.values())
             if not total:
                 continue
-            if not total:
-                continue
+            correct = counter.get(gold, 0)
             by_gold_rows.append(
                 [
                     condition,
@@ -208,9 +242,7 @@ def prediction_distribution(rows: list[dict[str, Any]]) -> str:
                     total,
                     counter.get("support", 0),
                     counter.get("reject", 0),
-                    counter.get("mixed", 0),
-                    counter.get("unresolved", 0),
-                    pct((counter.get("mixed", 0) + counter.get("unresolved", 0)) / total),
+                    pct(correct / total),
                 ]
             )
     return (
@@ -220,14 +252,16 @@ def prediction_distribution(rows: list[dict[str, Any]]) -> str:
         )
         + "\n"
         + md_table(
-            ["condition", "gold", "n", "pred support", "pred reject", "pred mixed", "pred unresolved", "mixed/unresolved share"],
+            ["condition", "gold", "n", "pred support", "pred reject", "gold-specific acc"],
             by_gold_rows,
         )
     )
 
 
-def adaptive_failure_reasons(rows: list[dict[str, Any]], by_case: dict[str, dict[str, dict[str, Any]]]) -> str:
-    adaptive = [row for row in rows if row["condition"] == "flux_adaptive"]
+def adaptive_failure_reasons(
+    rows: list[dict[str, Any]], by_case: dict[str, dict[str, dict[str, Any]]]
+) -> str:
+    adaptive = [row for row in rows if row["condition"] == ADAPTIVE_CONDITION]
     wrong = [row for row in adaptive if not row.get("answer_correct")]
     reason_counts = Counter()
     for row in wrong:
@@ -237,10 +271,12 @@ def adaptive_failure_reasons(rows: list[dict[str, Any]], by_case: dict[str, dict
             reason_counts["non_binary_prediction"] += 1
         elif prediction != row.get("gold_answer"):
             reason_counts["opposite_binary_prediction"] += 1
+        if prediction == "support" and row.get("gold_answer") == "reject":
+            reason_counts["false_support"] += 1
+        if prediction == "reject" and row.get("gold_answer") == "support":
+            reason_counts["false_reject"] += 1
         if case_conditions.get("direct", {}).get("answer_correct"):
             reason_counts["direct_was_correct"] += 1
-        if case_conditions.get("flux_fixed", {}).get("answer_correct"):
-            reason_counts["fixed_was_correct"] += 1
         if case_conditions.get("structured", {}).get("answer_correct"):
             reason_counts["structured_was_correct"] += 1
     rows_out = [
@@ -248,6 +284,48 @@ def adaptive_failure_reasons(rows: list[dict[str, Any]], by_case: dict[str, dict
         for reason, count in reason_counts.most_common()
     ]
     return md_table(["adaptive wrong subtype", "count", "share of adaptive wrong"], rows_out)
+
+
+def pairwise_overlap(by_case: dict[str, dict[str, dict[str, Any]]]) -> str:
+    rows = []
+    for left, right in (
+        ("direct", ADAPTIVE_CONDITION),
+        ("direct", "structured"),
+        ("structured", ADAPTIVE_CONDITION),
+    ):
+        both = [conditions for conditions in by_case.values() if left in conditions and right in conditions]
+        buckets = Counter(
+            (bool(conditions[left].get("answer_correct")), bool(conditions[right].get("answer_correct")))
+            for conditions in both
+        )
+        disagree = sum(
+            1
+            for conditions in both
+            if conditions[left].get("prediction") != conditions[right].get("prediction")
+        )
+        rows.append(
+            [
+                f"{left} vs {right}",
+                len(both),
+                buckets[(True, True)],
+                buckets[(True, False)],
+                buckets[(False, True)],
+                buckets[(False, False)],
+                disagree,
+            ]
+        )
+    return md_table(
+        [
+            "pair",
+            "n",
+            "both correct",
+            "left only",
+            "right only",
+            "both wrong",
+            "prediction disagreements",
+        ],
+        rows,
+    )
 
 
 def lawsuit_type_delta(rows: list[dict[str, Any]]) -> str:
@@ -259,49 +337,45 @@ def lawsuit_type_delta(rows: list[dict[str, Any]]) -> str:
     table = []
     for lawsuit_type in lawsuit_types:
         direct = by_type_condition.get((lawsuit_type, "direct"), [])
-        adaptive = by_type_condition.get((lawsuit_type, "flux_adaptive"), [])
-        no_review = by_type_condition.get((lawsuit_type, "flux_adaptive_no_review"), [])
-        fixed = by_type_condition.get((lawsuit_type, "flux_fixed"), [])
-        if len(direct) < 5:
+        adaptive = by_type_condition.get((lawsuit_type, ADAPTIVE_CONDITION), [])
+        structured = by_type_condition.get((lawsuit_type, "structured"), [])
+        if len(direct) < 5 or not adaptive:
             continue
         direct_acc = avg([float(row["answer_correct"]) for row in direct]) or 0.0
         adaptive_acc = avg([float(row["answer_correct"]) for row in adaptive]) or 0.0
-        no_review_acc = avg([float(row["answer_correct"]) for row in no_review])
-        fixed_acc = avg([float(row["answer_correct"]) for row in fixed])
+        structured_acc = avg([float(row["answer_correct"]) for row in structured])
         table.append(
             [
                 lawsuit_type,
                 len(direct),
                 pct(direct_acc),
-                pct(fixed_acc) if fixed_acc is not None else "",
+                pct(structured_acc) if structured_acc is not None else "",
                 pct(adaptive_acc),
-                pct(no_review_acc) if no_review_acc is not None else "",
                 f"{100 * (adaptive_acc - direct_acc):+.1f} pp",
             ]
         )
     table.sort(key=lambda row: float(str(row[-1]).split()[0]), reverse=True)
     return md_table(
-        [
-            "lawsuit_type",
-            "n",
-            "direct acc",
-            "fixed acc",
-            "adaptive acc",
-            "no-review acc",
-            "adaptive-direct",
-        ],
-        table[:20],
+        ["lawsuit_type", "n", "direct acc", "structured acc", "rf acc", "rf-direct"],
+        table[:25],
     )
 
 
 def trajectory_correlates(rows: list[dict[str, Any]]) -> str:
-    adaptive = [row for row in rows if row["condition"] == "flux_adaptive"]
-    no_review = [row for row in rows if row["condition"] == "flux_adaptive_no_review"]
+    adaptive = [row for row in rows if row["condition"] == ADAPTIVE_CONDITION]
     buckets = {
-        "adaptive_correct": [row for row in adaptive if row.get("answer_correct")],
-        "adaptive_wrong": [row for row in adaptive if not row.get("answer_correct")],
-        "no_review_correct": [row for row in no_review if row.get("answer_correct")],
-        "no_review_wrong": [row for row in no_review if not row.get("answer_correct")],
+        "rf_correct": [row for row in adaptive if row.get("answer_correct")],
+        "rf_wrong": [row for row in adaptive if not row.get("answer_correct")],
+        "rf_false_support": [
+            row
+            for row in adaptive
+            if row.get("gold_answer") == "reject" and row.get("prediction") == "support"
+        ],
+        "rf_false_reject": [
+            row
+            for row in adaptive
+            if row.get("gold_answer") == "support" and row.get("prediction") == "reject"
+        ],
     }
     table = []
     for name, items in buckets.items():
@@ -325,33 +399,72 @@ def trajectory_correlates(rows: list[dict[str, Any]]) -> str:
     )
 
 
-def template_outcomes(rows: list[dict[str, Any]]) -> str:
-    stats: dict[str, list[int]] = defaultdict(list)
-    for row in rows:
-        if row["condition"] != "flux_adaptive":
-            continue
-        seen = {
-            step.get("template_id")
-            for step in (row.get("executed_steps") or [])
-            if step.get("template_id")
-        }
-        for template_id in seen:
-            stats[template_id].append(int(bool(row.get("answer_correct"))))
-    table = []
-    for template_id, outcomes in stats.items():
-        if len(outcomes) < 8:
-            continue
-        table.append([template_id, len(outcomes), pct(mean(outcomes))])
-    table.sort(key=lambda row: (float(row[2].rstrip("%")), row[1]))
-    return (
-        "**Lowest adaptive template-associated accuracies, min 8 uses**\n"
-        + md_table(["template", "uses", "case acc when used"], table[:12])
-        + "\n**Highest adaptive template-associated accuracies, min 8 uses**\n"
-        + md_table(["template", "uses", "case acc when used"], list(reversed(table[-12:])))
+def retrieval_diagnostics(rows: list[dict[str, Any]], templates: dict[str, dict[str, Any]]) -> str:
+    adaptive = [row for row in rows if row["condition"] == ADAPTIVE_CONDITION]
+    length_counts = Counter()
+    review_counts = Counter()
+    template_outcomes: dict[str, list[int]] = defaultdict(list)
+    tag_counts = Counter()
+    step_name_counts = Counter()
+    repeated_template_cases = 0
+    mode_counts = Counter()
+    similarities = []
+    for row in adaptive:
+        ok = int(bool(row.get("answer_correct")))
+        length_counts[int(row.get("trajectory_length") or 0)] += 1
+        review_counts[int(row.get("review_count") or 0)] += 1
+        retrieved_ids = row.get("retrieved_template_ids") or []
+        if len(set(retrieved_ids)) < len(retrieved_ids):
+            repeated_template_cases += 1
+        for template_id in set(retrieved_ids):
+            template_name = templates.get(template_id, {}).get("template_name", template_id)
+            template_outcomes[f"{template_id} - {template_name}"].append(ok)
+        for selected in row.get("selected_templates") or []:
+            mode_counts[str(selected.get("retrieval_mode"))] += 1
+            if selected.get("similarity") is not None:
+                similarities.append(float(selected["similarity"]))
+        for step in (row.get("trajectory_plan") or {}).get("planned_steps", []):
+            for tag in step.get("template_tags") or []:
+                tag_counts[str(tag)] += 1
+            if step.get("step_name"):
+                step_name_counts[str(step["step_name"])] += 1
+    template_rows = []
+    for key, outcomes in template_outcomes.items():
+        if len(outcomes) >= 8:
+            template_rows.append([key, len(outcomes), pct(mean(outcomes))])
+    template_rows.sort(key=lambda row: (float(row[2].rstrip("%")), -row[1]))
+    return "\n".join(
+        [
+            "**Retrieval modes**",
+            md_table(["mode", "count"], [[mode, count] for mode, count in mode_counts.most_common()]),
+            (
+                "**Similarity summary:** "
+                + (
+                    f"count={len(similarities)}, mean={mean(similarities):.3f}, "
+                    f"min={min(similarities):.3f}, max={max(similarities):.3f}"
+                    if similarities
+                    else "No similarity scores logged."
+                )
+            ),
+            f"**Cases with repeated template IDs in one trajectory:** {repeated_template_cases}/{len(adaptive)}",
+            "",
+            "**Trajectory length distribution**",
+            md_table(["length", "count"], [[length, count] for length, count in sorted(length_counts.items())]),
+            "**Review count distribution**",
+            md_table(["reviews", "count"], [[count_key, count] for count_key, count in sorted(review_counts.items())]),
+            "**Lowest RF template-associated accuracies, min 8 uses**",
+            md_table(["template", "uses", "case acc when used"], template_rows[:15]),
+            "**Highest RF template-associated accuracies, min 8 uses**",
+            md_table(["template", "uses", "case acc when used"], list(reversed(template_rows[-15:]))),
+            "**Most common planned step names**",
+            md_table(["step name", "count"], [[name, count] for name, count in step_name_counts.most_common(15)]),
+            "**Most common planned tags**",
+            md_table(["tag", "count"], [[tag, count] for tag, count in tag_counts.most_common(20)]),
+        ]
     )
 
 
-def examples_section(deltas: list[dict[str, Any]], bucket: str, limit: int = 8) -> str:
+def examples_section(deltas: list[dict[str, Any]], bucket: str, limit: int = 10) -> str:
     rows = [row for row in deltas if row["bucket"] == bucket][:limit]
     table = [
         [
@@ -359,12 +472,12 @@ def examples_section(deltas: list[dict[str, Any]], bucket: str, limit: int = 8) 
             row["gold"],
             row["direct_prediction"],
             row["adaptive_prediction"],
-            row.get("no_review_prediction", ""),
-            row["fixed_prediction"],
+            row["structured_prediction"],
             row["lawsuit_type"],
-            short(row["reasoning_demands"], 120),
             row["adaptive_trajectory_length"],
             row["adaptive_review_count"],
+            short(row["adaptive_step_names"], 120),
+            short(row["adaptive_template_names"], 160),
             short(row["adaptive_final_rationale"], 220),
         ]
         for row in rows
@@ -374,21 +487,21 @@ def examples_section(deltas: list[dict[str, Any]], bucket: str, limit: int = 8) 
             "case",
             "gold",
             "direct",
-            "adaptive",
-            "no review",
-            "fixed",
+            "rf",
+            "structured",
             "lawsuit_type",
-            "reasoning_demands",
             "traj len",
             "reviews",
-            "adaptive rationale",
+            "planned steps",
+            "templates",
+            "rf rationale",
         ],
         table,
     )
 
 
 def write_delta_csv(deltas: list[dict[str, Any]]) -> Path:
-    path = REPORT_DIR / "trajectory_dev_case_deltas.csv"
+    path = REPORT_DIR / "trajectory_dev_rf_case_deltas.csv"
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(deltas[0]))
@@ -399,29 +512,43 @@ def write_delta_csv(deltas: list[dict[str, Any]]) -> Path:
 
 def main() -> None:
     rows = latest_scored_rows()
-    by_case = pivot_by_case(rows)
-    delta_table, deltas = direct_adaptive_delta(by_case)
+    generation_rows = latest_generation_rows()
+    for row in rows:
+        generation = generation_rows.get(row.get("run_hash"))
+        if generation and generation.get("selected_templates") is not None:
+            row["selected_templates"] = generation.get("selected_templates")
+    error_rows = [row for row in rows if row.get("status") == "error"]
+    scored_rows = [row for row in rows if "answer_correct" in row]
+    templates = template_lookup()
+    by_case = pivot_by_case(scored_rows)
+    delta_table, deltas = direct_adaptive_delta(by_case, templates)
     delta_csv = write_delta_csv(deltas)
     report = [
-        "# LegalFlux Trajectory-Dev Error Analysis",
+        "# LegalFlux RF-Style Trajectory-Dev Error Analysis",
+        "",
+        "This report uses the latest run hashes in `runs/legal_flux/trajectory_dev/run_plan.json`.",
+        "Model-facing inputs in this run used plaintiff claim/task, parties, facts, and supplied authority context.",
+        f"Scored rows: {len(scored_rows)}. Error rows excluded from metric tables: {len(error_rows)}.",
         "",
         "## Condition Summary",
-        condition_summary(rows),
-        "## Direct vs Adaptive Outcome Buckets",
+        condition_summary(scored_rows),
+        "## Direct vs RF Outcome Buckets",
         delta_table,
+        "## Pairwise Overlap",
+        pairwise_overlap(by_case),
         "## Prediction Distribution",
-        prediction_distribution(rows),
-        "## Adaptive Failure Subtypes",
-        adaptive_failure_reasons(rows, by_case),
+        prediction_distribution(scored_rows),
+        "## RF Failure Subtypes",
+        adaptive_failure_reasons(scored_rows, by_case),
         "## Trajectory Correlates",
-        trajectory_correlates(rows),
+        trajectory_correlates(scored_rows),
         "## Lawsuit Type Deltas",
-        lawsuit_type_delta(rows),
-        "## Adaptive Template Associations",
-        template_outcomes(rows),
-        "## Examples: Direct Correct, Adaptive Wrong",
+        lawsuit_type_delta(scored_rows),
+        "## Retrieval And Template Diagnostics",
+        retrieval_diagnostics(scored_rows, templates),
+        "## Examples: Direct Correct, RF Wrong",
         examples_section(deltas, "direct_only"),
-        "## Examples: Adaptive Correct, Direct Wrong",
+        "## Examples: RF Correct, Direct Wrong",
         examples_section(deltas, "adaptive_only"),
         "## Artifacts",
         f"- Case-level delta CSV: `{delta_csv.relative_to(ROOT)}`",
@@ -429,7 +556,7 @@ def main() -> None:
         f"- Aggregate metrics: `{(RUN_DIR / 'aggregate.csv').relative_to(ROOT)}`",
         "",
     ]
-    report_path = REPORT_DIR / "trajectory_dev_error_analysis.md"
+    report_path = REPORT_DIR / "trajectory_dev_rf_error_analysis.md"
     report_path.write_text("\n".join(report), encoding="utf-8")
     print(json.dumps({"report": str(report_path), "delta_csv": str(delta_csv)}, indent=2))
 

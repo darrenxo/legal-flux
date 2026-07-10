@@ -15,10 +15,10 @@ def discover_project_root() -> Path:
         Path(__file__).resolve().parents[2],
     ]
     for candidate in candidates:
-        if candidate and (candidate / "configs" / "pilot.yaml").exists():
+        if candidate and (candidate / "configs" / "legal_flux.yaml").exists():
             return candidate.resolve()
     raise FileNotFoundError(
-        "Could not locate configs/pilot.yaml. Run the CLI from the "
+        "Could not locate configs/legal_flux.yaml. Run the CLI from the "
         "legal_case_state_pilot directory or set LEGAL_PILOT_ROOT."
     )
 
@@ -27,7 +27,7 @@ PROJECT_ROOT = discover_project_root()
 
 
 def load_config(path: str | Path | None = None) -> dict[str, Any]:
-    config_path = Path(path) if path else PROJECT_ROOT / "configs" / "pilot.yaml"
+    config_path = Path(path) if path else PROJECT_ROOT / "configs" / "legal_flux.yaml"
     data = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     data["_config_path"] = str(config_path.resolve())
     data["_project_root"] = str(PROJECT_ROOT)

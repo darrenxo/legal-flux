@@ -12,10 +12,11 @@ import pandas as pd
 from .adaptive_profiles import profile_frame, profile_row
 from .clients import OllamaClient
 from .config import resolve_path
-from .data_prep import (
+from .legalhk_data import (
     LEGALHK_PARQUET_URL,
-    _normalize_legalhk_case,
     download_file,
+    legalhk_index,
+    normalize_legalhk_case,
 )
 from .io_utils import read_jsonl, sha256_text, write_jsonl
 from .legal_flux import (
@@ -54,7 +55,7 @@ def prepare_legal_flux(config: dict[str, Any]) -> dict[str, Any]:
 
     prior_case_ids = _prior_legalhk_case_ids(config)
     if config["legal_flux"].get("exclude_existing_legalhk_only_cases", True):
-        prior_indices = {_legalhk_index(case_id) for case_id in prior_case_ids}
+        prior_indices = {legalhk_index(case_id) for case_id in prior_case_ids}
         eligible = eligible.drop(index=list(prior_indices & set(eligible.index)))
 
     profiled = _add_profile_columns(eligible)
@@ -466,7 +467,7 @@ def _stratified_indices(
 
 
 def _normalize_flux_case(index: Any, row: pd.Series, *, split: str) -> NormalizedCase:
-    case = _normalize_legalhk_case(index, row, split=split)
+    case = normalize_legalhk_case(index, row, split=split)
     profile = profile_row(row.to_dict())
     metadata = {
         **case.metadata,
@@ -575,13 +576,6 @@ def _prior_legalhk_case_ids(config: dict[str, Any]) -> set[str]:
         for row in read_jsonl(path)
         if str(row.get("case_id", "")).startswith("legalhk-")
     }
-
-
-def _legalhk_index(case_id: str) -> int:
-    prefix = "legalhk-"
-    if not str(case_id).startswith(prefix):
-        raise ValueError(f"Invalid LegalHK case ID: {case_id}")
-    return int(str(case_id)[len(prefix) :])
 
 
 def _flux_expected_run_hash(

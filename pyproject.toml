@@ -3,9 +3,9 @@ requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "legal-case-state-pilot"
+name = "legalflux"
 version = "0.1.0"
-description = "Controlled diagnostic pilot for typed legal case-state reasoning."
+description = "ReasonFlux-style adaptive template trajectories for LegalHK reasoning."
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [

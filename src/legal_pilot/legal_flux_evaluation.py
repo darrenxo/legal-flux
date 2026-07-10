@@ -4,10 +4,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from .config import resolve_path
-from .evaluation import _aggregate_frame
 from .io_utils import latest_by_run_hash, read_jsonl, write_jsonl
 from .models import FinalAnalysis
 from .runner import load_cases
@@ -90,3 +90,69 @@ def _filter_to_run_plan(
         if isinstance(job, dict) and job.get("run_hash")
     }
     return [row for row in rows if row.get("run_hash") in allowed]
+
+
+def _aggregate_frame(frame: pd.DataFrame) -> pd.DataFrame:
+    if frame.empty:
+        return pd.DataFrame()
+    numeric = [
+        column
+        for column in (
+            "answer_correct",
+            "binary_prediction_valid",
+            "conclusion_with_fact_rate",
+            "valid_fact_reference_rate",
+            "unknown_fact_reference_count",
+            "issue_coverage_proxy",
+            "elapsed_seconds",
+            "prompt_tokens",
+            "output_tokens",
+            "calls",
+        )
+        if column in frame.columns
+    ]
+    grouped = (
+        frame.groupby(["dataset", "condition"], dropna=False)[numeric]
+        .mean(numeric_only=True)
+        .reset_index()
+    )
+    counts = (
+        frame.groupby(["dataset", "condition"], dropna=False)
+        .size()
+        .reset_index(name="n")
+    )
+    grouped = counts.merge(grouped, on=["dataset", "condition"], how="left")
+    for metric in ("answer_correct", "valid_fact_reference_rate"):
+        if metric not in frame.columns:
+            continue
+        intervals = []
+        for keys, group in frame.groupby(["dataset", "condition"], dropna=False):
+            low, high = _bootstrap_ci(group[metric].dropna().to_numpy(), seed=20260619)
+            intervals.append(
+                {
+                    "dataset": keys[0],
+                    "condition": keys[1],
+                    f"{metric}_ci_low": low,
+                    f"{metric}_ci_high": high,
+                }
+            )
+        grouped = grouped.merge(
+            pd.DataFrame(intervals), on=["dataset", "condition"], how="left"
+        )
+    return grouped
+
+
+def _bootstrap_ci(
+    values: np.ndarray,
+    *,
+    seed: int,
+    samples: int = 2000,
+) -> tuple[float | None, float | None]:
+    values = np.asarray(values, dtype=float)
+    if len(values) == 0:
+        return None, None
+    rng = np.random.default_rng(seed)
+    means = np.array(
+        [rng.choice(values, size=len(values), replace=True).mean() for _ in range(samples)]
+    )
+    return float(np.quantile(means, 0.025)), float(np.quantile(means, 0.975))

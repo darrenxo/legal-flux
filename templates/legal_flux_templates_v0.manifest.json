@@ -1,0 +1,13 @@
+{
+  "imported_at": "2026-07-05T21:50:32.306934+00:00",
+  "source": "reports/legal_flux/template_distillation/chatgpt_batches/legal_flux_templates_audited.jsonl",
+  "output_path": "templates/legal_flux_templates_v0.jsonl",
+  "templates": 114,
+  "template_pool_hash": "8018d763b67a61e39a9f243f90f05dcbd05b7e29721970d6f2cbde24ecf71f30",
+  "schema": "schemas/legal_flux_template.json",
+  "sanitization": [
+    "Removed or generalized source case IDs, F-number references, numeric values, and explicit support/reject outcome words in template text.",
+    "Rejected duplicate template IDs and templates with fewer than two tags or fewer than two reasoning-flow steps."
+  ],
+  "note": "Paths are repository-relative. The source audit file is local/generated and is not tracked because it may sit near LegalHK case packets."
+}

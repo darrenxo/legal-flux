@@ -7,7 +7,7 @@ def test_ledger_appends_and_resumes(tmp_path):
     path = tmp_path / "records.jsonl"
     ledger = JsonlLedger(path)
     run_hash = make_run_hash(
-        dataset="openexempt",
+        dataset="legalhk",
         case_id="c1",
         variant_id="original",
         condition="direct",
