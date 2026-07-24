@@ -1,0 +1,120 @@
+# Task: Audit final LegalFlux template-pool coverage
+
+You will receive the final template-pool JSONL, the batch manifest, and the
+coverage summary below.
+
+Check whether the final pool covers the main observed reasoning families,
+domains, authorities, issue-composition patterns, and reasoning demands. Then
+return a concise audit report with:
+
+1. Covered categories.
+2. Under-covered categories.
+3. Duplicative templates that should be merged.
+4. Up to 20 additional templates if important gaps remain.
+
+If you propose additional templates, return them as JSONL records matching
+`legal_flux_template.schema.json` after the audit report.
+
+Coverage summary:
+
+```json
+{
+  "template_source_cases": 3674,
+  "primary_family_counts": {
+    "contract_performance": 1452,
+    "property_possession": 600,
+    "debt_payment": 500,
+    "tort_negligence_damage": 311,
+    "employment_compensation": 288,
+    "company_insolvency": 262,
+    "procedure_appeal": 157,
+    "criminal_procedure": 72,
+    "trust_probate_family": 17,
+    "general_legal_reasoning": 13,
+    "public_law_judicial_review": 2
+  },
+  "demand_focus_counts": {
+    "procedural_threshold_check": 2137,
+    "evidence_and_burden_assessment": 993,
+    "precedent_or_analogy_handling": 303,
+    "defense_or_counterargument_check": 106,
+    "remedy_discretion_check": 32,
+    "supplied_rule_extraction": 29,
+    "multi_issue_composition": 28,
+    "long_fact_filtering": 25,
+    "rule_recall_or_doctrine_identification": 21
+  },
+  "all_reasoning_demand_counts": {
+    "supplied_rule_extraction": 2935,
+    "precedent_or_analogy_handling": 2741,
+    "evidence_and_burden_assessment": 2507,
+    "procedural_threshold_check": 2137,
+    "remedy_discretion_check": 1928,
+    "dual_issue_resolution": 1574,
+    "multi_issue_composition": 1526,
+    "long_fact_filtering": 1302,
+    "defense_or_counterargument_check": 995,
+    "rule_recall_or_doctrine_identification": 739,
+    "focused_issue_resolution": 508,
+    "issue_spotting_gap": 66
+  },
+  "trajectory_prefix_counts_top50": {
+    "case_profile > issue_confirmation > material_fact_filtering > procedural_threshold > rule_extraction": 336,
+    "case_profile > issue_decomposition > material_fact_filtering > procedural_threshold > rule_extraction": 318,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:contract_performance": 181,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:contract_performance": 172,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:employment_compensation": 119,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:property_possession": 118,
+    "case_profile > issue_decomposition > material_fact_filtering > rule_extraction > domain_template:contract_performance": 85,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:company_insolvency": 82,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:debt_payment": 81,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_extraction > domain_template:contract_performance": 79,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:contract_performance > domain_template:debt_payment": 71,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:procedure_appeal": 70,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:contract_performance > domain_template:debt_payment": 63,
+    "case_profile > issue_confirmation > material_fact_filtering > procedural_threshold > rule_or_doctrine_identification": 63,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:property_possession": 59,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:debt_payment": 59,
+    "case_profile > issue_confirmation > procedural_threshold > rule_or_doctrine_identification > domain_template:contract_performance": 55,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:employment_compensation": 51,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:company_insolvency": 50,
+    "case_profile > issue_decomposition > material_fact_filtering > rule_or_doctrine_identification > domain_template:contract_performance": 46,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_or_doctrine_identification > domain_template:contract_performance": 46,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_extraction > domain_template:property_possession": 45,
+    "case_profile > issue_decomposition > procedural_threshold > rule_or_doctrine_identification > domain_template:contract_performance": 44,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:contract_performance > domain_template:property_possession": 44,
+    "case_profile > issue_confirmation > procedural_threshold > rule_extraction > domain_template:tort_negligence_damage": 44,
+    "case_profile > issue_decomposition > material_fact_filtering > procedural_threshold > rule_or_doctrine_identification": 43,
+    "case_profile > issue_confirmation > rule_or_doctrine_identification > domain_template:contract_performance > domain_template:debt_payment": 42,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:contract_performance > domain_template:property_possession": 41,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_extraction > domain_template:debt_payment": 41,
+    "case_profile > issue_decomposition > rule_or_doctrine_identification > domain_template:contract_performance > domain_template:debt_payment": 37,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:tort_negligence_damage": 37,
+    "case_profile > issue_decomposition > material_fact_filtering > rule_extraction > domain_template:property_possession": 35,
+    "case_profile > issue_decomposition > procedural_threshold > rule_extraction > domain_template:procedure_appeal": 34,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:debt_payment > domain_template:property_possession": 34,
+    "case_profile > issue_decomposition > material_fact_filtering > rule_extraction > domain_template:debt_payment": 24,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:property_possession > domain_template:criminal_procedure": 24,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:contract_performance > domain_template:tort_negligence_damage": 23,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:property_possession > domain_template:company_insolvency": 22,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_extraction > domain_template:tort_negligence_damage": 21,
+    "case_profile > issue_confirmation > procedural_threshold > rule_or_doctrine_identification > domain_template:procedure_appeal": 20,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:debt_payment > domain_template:company_insolvency": 20,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:contract_performance > domain_template:tort_negligence_damage": 18,
+    "case_profile > issue_confirmation > rule_or_doctrine_identification > domain_template:contract_performance > domain_template:property_possession": 17,
+    "case_profile > issue_confirmation > procedural_threshold > rule_or_doctrine_identification > domain_template:debt_payment": 17,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:debt_payment > domain_template:property_possession": 16,
+    "case_profile > issue_confirmation > procedural_threshold > rule_or_doctrine_identification > domain_template:property_possession": 16,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:tort_negligence_damage > domain_template:employment_compensation": 15,
+    "case_profile > issue_confirmation > rule_extraction > domain_template:tort_negligence_damage > domain_template:employment_compensation": 14,
+    "case_profile > issue_decomposition > rule_extraction > domain_template:debt_payment > domain_template:company_insolvency": 14,
+    "case_profile > issue_confirmation > material_fact_filtering > rule_or_doctrine_identification > domain_template:tort_negligence_damage": 13
+  },
+  "batch_count": 50,
+  "batched_case_ids": 3674,
+  "batch_kind_counts": {
+    "homogeneous": 40,
+    "mixed": 10
+  }
+}
+```

@@ -8,7 +8,7 @@ import yaml
 
 
 def discover_project_root() -> Path:
-    configured = os.environ.get("LEGAL_PILOT_ROOT")
+    configured = os.environ.get("LEGAL_FLUX_ROOT")
     candidates = [
         Path(configured).expanduser() if configured else None,
         Path.cwd(),
@@ -19,7 +19,7 @@ def discover_project_root() -> Path:
             return candidate.resolve()
     raise FileNotFoundError(
         "Could not locate configs/legal_flux.yaml. Run the CLI from the "
-        "legal_case_state_pilot directory or set LEGAL_PILOT_ROOT."
+        "legal_flux directory or set LEGAL_FLUX_ROOT."
     )
 
 

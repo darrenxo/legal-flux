@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -93,9 +94,26 @@ def prepare_legal_flux(config: dict[str, Any]) -> dict[str, Any]:
             split: int(selected["trajectory_signature"].nunique())
             for split, selected in splits.items()
         },
+        "split_domain_counts": {
+            split: dict(sorted(selected["broad_domain"].value_counts().items()))
+            for split, selected in splits.items()
+        },
+        "split_family_counts": {
+            split: dict(selected["family_bucket"].value_counts().head(25).items())
+            for split, selected in splits.items()
+        },
+        "split_demand_counts": {
+            split: dict(selected["demand_bucket"].value_counts().head(25).items())
+            for split, selected in splits.items()
+        },
+        "split_authority_counts": {
+            split: dict(sorted(selected["authority_bucket"].value_counts().items()))
+            for split, selected in splits.items()
+        },
         "notes": [
-            "All LegalFlux splits use civil LegalHK rows with binary labels, non-empty claims/facts, explicit outcome-leakage screening, and strict judicial/evaluative-language screening.",
-            "Template-source cases are separated from trajectory-dev and final-test cases; final-test cases are not used for template generation or trajectory tuning.",
+            "All LegalFlux splits use structured LegalHK rows with binary labels, non-empty claims/facts, and configurable input-length/outcome-leakage screening.",
+            "The default research split preserves natural label, domain, authority, length, issue-count, and heuristic family/demand distributions across template-source, planner-train, trajectory-dev, and final-test splits.",
+            "Template-source, planner-train, trajectory-dev, and final-test cases are disjoint; final-test cases are not used for template generation, training, tuning, reward construction, or error-driven revisions.",
             "selection_review.jsonl omits outcome labels and judgment decisions so it can be inspected without revealing answers.",
         ],
     }
@@ -316,21 +334,24 @@ def _eligible_frame(
             > max_characters
         ):
             reasons.append("input_too_long")
-        if not is_civil_legalhk_row(
-            plaintiff=str(row.get("plaintiff", "")),
-            lawsuit_type=str(row.get("lawsuit_type", "")),
-            claim=str(row.get("plaintiff_claim", "")),
-        ):
-            reasons.append("not_civil")
-        reasons.extend(
-            explicit_leakage_reasons(
-                str(row.get("more_facts", "")),
-                judgment_decision=str(row.get("judgment_decision", "")),
-                ngram_size=ngram_size,
-                overlap_threshold=overlap_threshold,
+        if not config["legal_flux"].get("include_all_domains", True):
+            if not is_civil_legalhk_row(
+                plaintiff=str(row.get("plaintiff", "")),
+                lawsuit_type=str(row.get("lawsuit_type", "")),
+                claim=str(row.get("plaintiff_claim", "")),
+            ):
+                reasons.append("not_civil")
+        if config["legal_flux"].get("screen_explicit_outcome_leakage", True):
+            reasons.extend(
+                explicit_leakage_reasons(
+                    str(row.get("more_facts", "")),
+                    judgment_decision=str(row.get("judgment_decision", "")),
+                    ngram_size=ngram_size,
+                    overlap_threshold=overlap_threshold,
+                )
             )
-        )
-        reasons.extend(strict_evaluation_reasons(str(row.get("more_facts", ""))))
+        if config["legal_flux"].get("strict_fact_language_filter", False):
+            reasons.extend(strict_evaluation_reasons(str(row.get("more_facts", ""))))
         if reasons:
             excluded.update(set(reasons))
         else:
@@ -340,7 +361,7 @@ def _eligible_frame(
         eligible["support&reject"].astype(str).str.strip().str.lower()
     )
     eligible["has_defense"] = eligible["issues"].astype(str).str.contains(
-        r"defen[cs]e|contributory|counterclaim|exception|whether.*liable",
+        r"defen[cs]\w*|contributory|counterclaim\w*|exception|whether.*liable",
         case=False,
         regex=True,
     )
@@ -361,9 +382,22 @@ def _add_profile_columns(frame: pd.DataFrame) -> pd.DataFrame:
         "issue_count",
         "fact_count_estimate",
         "fact_characters",
+        "related_law_count",
+        "relevant_case_count",
     ]
     result = frame.join(profiles[profile_columns])
+    result["broad_domain"] = result.apply(_broad_domain, axis=1)
+    result["authority_bucket"] = result.apply(
+        lambda row: _authority_bucket(
+            int(row.get("related_law_count", 0)),
+            int(row.get("relevant_case_count", 0)),
+        ),
+        axis=1,
+    )
     result["family_bucket"] = result["template_families"].map(
+        lambda value: str(value).split("|")[0] if str(value) else "unknown"
+    )
+    result["demand_bucket"] = result["reasoning_demands"].map(
         lambda value: str(value).split("|")[0] if str(value) else "unknown"
     )
     result["issue_bucket"] = result["issue_count"].map(
@@ -383,26 +417,71 @@ def _draw_flux_splits(
     frame: pd.DataFrame,
     config: dict[str, Any],
 ) -> dict[str, pd.DataFrame]:
-    counts = {
-        "smoke": int(config["legal_flux"].get("smoke_cases", 5)),
+    counts = _split_counts(len(frame), config)
+    smoke_indices = _proportional_stratified_indices(
+        frame,
+        count=counts["smoke"],
+        seed=config["project"]["seed"],
+        key_columns=["support&reject", "broad_domain"],
+    )
+    smoke = frame.loc[smoke_indices].copy()
+    remaining = frame.drop(index=smoke_indices)
+    main_counts = {
+        split: counts[split]
+        for split in ("template_source", "planner_train", "trajectory_dev", "final_test")
+    }
+    splits = _proportional_stratified_splits(
+        remaining,
+        targets=main_counts,
+        seed=config["project"]["seed"] + 1,
+        key_columns=[
+            "support&reject",
+            "broad_domain",
+            "family_bucket",
+            "demand_bucket",
+            "issue_bucket",
+            "length_bucket",
+            "authority_bucket",
+            "has_defense",
+        ],
+    )
+    return {"smoke": smoke, **splits}
+
+
+def _split_counts(total_rows: int, config: dict[str, Any]) -> dict[str, int]:
+    smoke = int(config["legal_flux"].get("smoke_cases", 5))
+    if smoke >= total_rows:
+        raise ValueError(f"Requested {smoke} smoke rows from a pool of {total_rows}.")
+    fractions = config["legal_flux"].get("split_fractions")
+    if fractions:
+        split_names = ("template_source", "planner_train", "trajectory_dev", "final_test")
+        fraction_values = {
+            name: float(fractions.get(name, 0.0)) for name in split_names
+        }
+        total_fraction = sum(fraction_values.values())
+        if total_fraction <= 0:
+            raise ValueError("legal_flux.split_fractions must sum to a positive value.")
+        available = total_rows - smoke
+        raw = {
+            name: available * fraction_values[name] / total_fraction
+            for name in split_names
+        }
+        counts = {name: int(raw[name]) for name in split_names}
+        remainder = available - sum(counts.values())
+        for name in sorted(
+            split_names,
+            key=lambda key: raw[key] - counts[key],
+            reverse=True,
+        )[:remainder]:
+            counts[name] += 1
+        return {"smoke": smoke, **counts}
+    return {
+        "smoke": smoke,
         "final_test": int(config["legal_flux"].get("final_test_cases", 512)),
         "trajectory_dev": int(config["legal_flux"].get("trajectory_dev_cases", 256)),
-        "template_source": int(
-            config["legal_flux"].get("template_source_cases", 1400)
-        ),
+        "planner_train": int(config["legal_flux"].get("planner_train_cases", 0)),
+        "template_source": int(config["legal_flux"].get("template_source_cases", 1400)),
     }
-    remaining = frame.copy()
-    splits: dict[str, pd.DataFrame] = {}
-    for offset, split in enumerate(("smoke", "final_test", "trajectory_dev", "template_source")):
-        indices = _balanced_stratified_indices(
-            remaining,
-            count=counts[split],
-            seed=config["project"]["seed"] + offset,
-        )
-        selected = remaining.loc[indices].copy()
-        splits[split] = selected
-        remaining = remaining.drop(index=indices)
-    return splits
 
 
 def _balanced_stratified_indices(
@@ -427,11 +506,11 @@ def _balanced_stratified_indices(
                 count=target,
                 rng=rng,
                 key_columns=[
-                    "family_bucket",
+                    "broad_domain",
                     "issue_bucket",
                     "length_bucket",
+                    "authority_bucket",
                     "has_defense",
-                    "trajectory_bucket",
                 ],
             )
         )
@@ -466,6 +545,109 @@ def _stratified_indices(
     return selected
 
 
+def _proportional_stratified_indices(
+    frame: pd.DataFrame,
+    *,
+    count: int,
+    seed: int,
+    key_columns: list[str],
+) -> list[Any]:
+    if count > len(frame):
+        raise ValueError(f"Requested {count} rows from a pool of {len(frame)}.")
+    splits = _proportional_stratified_splits(
+        frame,
+        targets={"selected": count, "rest": len(frame) - count},
+        seed=seed,
+        key_columns=key_columns,
+    )
+    return list(splits["selected"].index)
+
+
+def _proportional_stratified_splits(
+    frame: pd.DataFrame,
+    *,
+    targets: dict[str, int],
+    seed: int,
+    key_columns: list[str],
+) -> dict[str, pd.DataFrame]:
+    if sum(targets.values()) != len(frame):
+        raise ValueError("Stratified split targets must sum to the frame length.")
+    rng = random.Random(seed)
+    remaining = frame.copy()
+    selected: dict[str, pd.DataFrame] = {}
+    split_names = list(targets)
+    for split in split_names[:-1]:
+        indices = _stratified_sample_exact_indices(
+            remaining,
+            count=targets[split],
+            rng=rng,
+            key_columns=key_columns,
+        )
+        selected[split] = remaining.loc[indices].copy()
+        remaining = remaining.drop(index=indices)
+    final_split = split_names[-1]
+    if len(remaining) != targets[final_split]:
+        raise ValueError(
+            f"Final split {final_split} expected {targets[final_split]} rows "
+            f"but received {len(remaining)}."
+        )
+    selected[final_split] = remaining.copy()
+    return selected
+
+
+def _stratified_sample_exact_indices(
+    frame: pd.DataFrame,
+    *,
+    count: int,
+    rng: random.Random,
+    key_columns: list[str],
+) -> list[Any]:
+    if count < 0 or count > len(frame):
+        raise ValueError(f"Requested {count} rows from a pool of {len(frame)}.")
+    if count == 0:
+        return []
+    if count == len(frame):
+        return list(frame.index)
+    groups: dict[tuple[Any, ...], list[Any]] = defaultdict(list)
+    for index, row in frame.iterrows():
+        groups[tuple(row[column] for column in key_columns)].append(index)
+    for values in groups.values():
+        rng.shuffle(values)
+
+    raw_quotas = {
+        key: count * len(indices) / len(frame)
+        for key, indices in groups.items()
+    }
+    quotas = {
+        key: min(int(raw_quotas[key]), len(groups[key]))
+        for key in groups
+    }
+    leftover = count - sum(quotas.values())
+    ranked = sorted(
+        groups,
+        key=lambda key: (
+            raw_quotas[key] - quotas[key],
+            rng.random(),
+        ),
+        reverse=True,
+    )
+    for key in ranked:
+        if leftover <= 0:
+            break
+        if quotas[key] >= len(groups[key]):
+            continue
+        quotas[key] += 1
+        leftover -= 1
+    if leftover:
+        raise ValueError("Could not allocate enough rows for stratified sample.")
+
+    selected: list[Any] = []
+    for key, quota in quotas.items():
+        selected.extend(groups[key][:quota])
+    rng.shuffle(selected)
+    return selected
+
+
 def _normalize_flux_case(index: Any, row: pd.Series, *, split: str) -> NormalizedCase:
     case = normalize_legalhk_case(index, row, split=split)
     profile = profile_row(row.to_dict())
@@ -484,8 +666,12 @@ def _normalize_flux_case(index: Any, row: pd.Series, *, split: str) -> Normalize
                 "issue_count",
                 "fact_count_estimate",
                 "fact_characters",
+                "related_law_count",
+                "relevant_case_count",
             )
         },
+        "broad_domain": str(row.get("broad_domain", "")),
+        "authority_bucket": str(row.get("authority_bucket", "")),
         "relevant_cases": str(row.get("relevant_cases", "")),
     }
     authorities = str(row.get("related_laws", "")).strip() or None
@@ -505,10 +691,15 @@ def _review_row(case: NormalizedCase, row: pd.Series) -> dict[str, Any]:
         "fact_characters": case.metadata.get("fact_characters"),
         "has_defense": case.metadata.get("has_defense"),
         "legal_flux_profile": case.metadata.get("legal_flux_profile"),
+        "broad_domain": case.metadata.get("broad_domain"),
+        "authority_bucket": case.metadata.get("authority_bucket"),
         "related_law_count": len(
             [line for line in str(row.get("related_laws", "")).splitlines() if line.strip()]
         ),
-        "leakage_screen": "civil_low_explicit_leakage_strict_evaluation_screen",
+        "relevant_case_count": len(
+            [line for line in str(row.get("relevant_cases", "")).splitlines() if line.strip()]
+        ),
+        "leakage_screen": "all_domain_explicit_outcome_leakage_screen",
     }
 
 
@@ -523,7 +714,6 @@ def _template_source_packet(case: NormalizedCase) -> dict[str, Any]:
         "parties": case.parties,
         "facts": case.facts,
         "lawsuit_type": case.metadata.get("lawsuit_type"),
-        "legal_flux_profile": case.metadata.get("legal_flux_profile"),
         "reference_issues": case.reference_issues,
         "reference_state": reference_state,
         "authorities": case.authorities,
@@ -535,8 +725,9 @@ def _template_distillation_instructions(*, case_count: int, target_count: Any) -
 
 Use `template_source_cases.jsonl` to create a fixed pool of {target_count}
 high-level legal reasoning templates. The packet contains {case_count}
-template-source cases only. It does not contain final-test cases, trajectory-dev
-cases, judgment decisions, or support/reject labels.
+template-source cases only. It does not contain planner-train, trajectory-dev,
+or final-test cases, judgment decisions, support/reject labels, or heuristic
+family/demand labels.
 
 Return JSONL, one object per template, matching `legal_flux_template.schema.json`.
 Follow the ReasonFlux-style schema:
@@ -556,12 +747,86 @@ Requirements:
   F-number references, or final outcome words such as support/reject.
 - Cover different case-level trajectories: issue spotting, supplied-rule
   extraction, rule recall, procedural threshold, evidence/burden assessment,
-  precedent/analogy handling, defenses/counterarguments, remedy discretion, and
-  final issue composition.
+  precedent/analogy handling, defenses/counterarguments, remedy discretion,
+  criminal/immigration/public-law pathways, and final issue composition.
 - Prefer medium-grained templates that can be sequenced by a planner. Avoid a
   single all-purpose IRAC template and avoid tiny one-sentence micro-actions.
 - Return JSONL only, with no prose before or after the records.
 """
+
+
+def _broad_domain(row: pd.Series) -> str:
+    text = " ".join(
+        str(row.get(key, ""))
+        for key in ("plaintiff", "defendant", "plaintiff_claim", "lawsuit_type", "issues")
+    ).lower()
+    if "hksar" in text or re.search(
+        r"\b(criminal|conviction\w*|sentence|sentencing|prosecution|offen[cs]\w*|"
+        r"charg\w*|theft|trafficking|bail)\b",
+        text,
+    ):
+        return "criminal"
+    if re.search(
+        r"\b(immigration|non-refoulement|refugee\w*|torture|deport\w*|"
+        r"removal order)\b",
+        text,
+    ):
+        return "immigration_public"
+    if re.search(
+        r"\b(judicial review|public law|administrative|director of|commissioner)\b",
+        text,
+    ):
+        return "public_law"
+    if re.search(
+        r"\b(appeals?|leave|extension of time|set aside|strike out|case stated|"
+        r"interlocutory)\b",
+        text,
+    ):
+        return "procedure_appeal"
+    if re.search(
+        r"\b(labou?r|employment|employees?|wages?|severance|work injur\w*)\b",
+        text,
+    ):
+        return "employment_labor"
+    if re.search(
+        r"\b(family|matrimonial|divorce|maintenance|probate|estate|trust)\b",
+        text,
+    ):
+        return "family_trust_probate"
+    if re.search(
+        r"\b(compan(?:y|ies)|winding up|liquidat\w*|shareholders?|directors?|"
+        r"insolven\w*)\b",
+        text,
+    ):
+        return "company_insolvency"
+    if re.search(
+        r"\b(propert\w*|land|tenan\w*|leas\w*|possess\w*|premises|"
+        r"conveyanc\w*)\b",
+        text,
+    ):
+        return "property_land"
+    if re.search(
+        r"\b(contracts?|agreements?|debts?|loans?|payments?|invoices?|"
+        r"breach(?:es|ed|ing)?)\b",
+        text,
+    ):
+        return "contract_debt"
+    if re.search(
+        r"\b(torts?|negligence|injur\w*|damag\w*|defamation|accidents?)\b",
+        text,
+    ):
+        return "tort_damages"
+    return "other_legal"
+
+
+def _authority_bucket(related_law_count: int, relevant_case_count: int) -> str:
+    if related_law_count and relevant_case_count:
+        return "laws_and_cases"
+    if related_law_count:
+        return "laws_only"
+    if relevant_case_count:
+        return "cases_only"
+    return "no_authorities"
 
 
 def _prior_legalhk_case_ids(config: dict[str, Any]) -> set[str]:
@@ -596,4 +861,6 @@ def _flux_expected_run_hash(
         workflow_hash=workflow_hash,
         template_hash=template_hash,
         seed=seed,
+        sample_index=int(job.get("sample_index", 0)),
+        temperature=job.get("temperature"),
     )

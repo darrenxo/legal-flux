@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-07-20T23:55:34.248235+00:00",
+  "stage": "merge",
+  "status": "ok",
+  "candidate_files": 50,
+  "template_count": 215,
+  "output_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\legal_flux_templates_gemini_merged.jsonl",
+  "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\legal_flux_templates_gemini_merged_raw.txt",
+  "metadata": {
+    "model": "gemini-3.5-flash",
+    "elapsed_seconds": 333.41305529999954,
+    "prompt_tokens": 307330,
+    "completion_tokens": 58539,
+    "total_tokens": 367456
+  },
+  "prompt_sha256": "6c2e5d3832acd80b145b44f19f890b753554b2ab0c64f08f1d3f3cf0db2e7e68",
+  "output_sha256": "4bfece7db62c81417cd763966dc94608fb722be30e4b13887a7e381023da63ff"
+}

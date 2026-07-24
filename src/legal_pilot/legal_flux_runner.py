@@ -46,10 +46,18 @@ def run_legal_flux_generation(
     *,
     phase: str,
     dry_run: bool = False,
+    sample_count: int | None = None,
+    case_limit: int | None = None,
 ) -> dict[str, Any]:
     normalized_phase = phase.replace("-", "_")
     cases = load_cases(config)
-    jobs = build_legal_flux_jobs(cases, config, phase=normalized_phase)
+    jobs = build_legal_flux_jobs(
+        cases,
+        config,
+        phase=normalized_phase,
+        sample_count=sample_count,
+        case_limit=case_limit,
+    )
     run_dir = resolve_path(config, "runs_dir") / normalized_phase
     if dry_run:
         return {
@@ -57,6 +65,7 @@ def run_legal_flux_generation(
             "jobs": len(jobs),
             "conditions": sorted({job["condition"] for job in jobs}),
             "cases": len({job["case"].case_id for job in jobs}),
+            "samples_per_case": max((job["sample_index"] for job in jobs), default=0) + 1,
             "run_dir": str(run_dir),
             "dry_run": True,
         }
@@ -94,10 +103,13 @@ def run_legal_flux_generation(
                 workflow_hash=workflow_hash,
                 template_hash=template_hash,
                 seed=job["seed"],
+                sample_index=job["sample_index"],
+                temperature=job["temperature"],
             ),
             "case_id": job["case"].case_id,
             "condition": job["condition"],
             "phase": normalized_phase,
+            "sample_index": job["sample_index"],
         }
         for job in jobs
     ]
@@ -167,6 +179,8 @@ def flux_run_hash(
     workflow_hash: str,
     template_hash: str,
     seed: int,
+    sample_index: int = 0,
+    temperature: float | None = None,
 ) -> str:
     return make_run_hash(
         dataset=case.dataset,
@@ -174,6 +188,8 @@ def flux_run_hash(
         variant_id=case.variant_id,
         condition=condition,
         phase=phase,
+        sample_index=sample_index,
+        temperature=temperature,
         model_digest=model_digest,
         workflow_hash=workflow_hash,
         template_pool_hash=template_hash,
@@ -204,6 +220,8 @@ def _run_flux_job(
         workflow_hash=workflow_hash,
         template_hash=template_hash,
         seed=job["seed"],
+        sample_index=job["sample_index"],
+        temperature=job["temperature"],
     )
     if ledger.contains(run_hash):
         return None

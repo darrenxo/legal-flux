@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
 from legal_pilot.__main__ import build_parser
+from legal_pilot.adaptive_profiles import profile_row
 from legal_pilot.clients import ModelResponse
 from legal_pilot.config import load_config
 from legal_pilot.embeddings import FixedEmbeddingBackend
@@ -18,6 +20,8 @@ from legal_pilot.legal_flux import (
     validate_template_pool,
 )
 from legal_pilot.legal_flux_chatgpt import export_legal_flux_chatgpt_batches
+from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
+from legal_pilot.legal_flux_gemini import run_gemini_template_workflow
 from legal_pilot.legal_flux_runner import (
     _execute_rf_style_case,
     _normalize_rf_review_payload,
@@ -25,6 +29,10 @@ from legal_pilot.legal_flux_runner import (
     flux_run_hash,
 )
 from legal_pilot.legal_flux_setup import import_legal_flux_templates
+from legal_pilot.legal_flux_training import (
+    export_template_structure_sft,
+    export_trajectory_dpo,
+)
 from legal_pilot.models import (
     LegalFluxAbstractStep,
     LegalFluxPlanStep,
@@ -109,6 +117,38 @@ def _response(payload: dict) -> ModelResponse:
     )
 
 
+def test_adaptive_profile_regexes_match_legal_word_families():
+    profile = profile_row(
+        {
+            "plaintiff_claim": (
+                "The plaintiff alleges repudiation of the agreement, tenant "
+                "possession issues, injuries, liquidation, insolvency, and "
+                "credible defenses requiring discretionary declarations. The "
+                "case also mentions criminal charges, a non-refoulement claim, "
+                "and judicial review of a tribunal decision."
+            ),
+            "lawsuit_type": "Contract and insolvency",
+            "more_facts": "The defendant repudiated the lease and raised defences.",
+            "issues": "Whether the repudiatory breach caused injuries.",
+            "related_laws": "",
+            "relevant_cases": "",
+        }
+    )
+    families = set(profile["template_families"].split("|"))
+    demands = set(profile["reasoning_demands"].split("|"))
+
+    assert "contract_performance" in families
+    assert "property_possession" in families
+    assert "tort_negligence_damage" in families
+    assert "company_insolvency" in families
+    assert "criminal_procedure" in families
+    assert "immigration_non_refoulement" in families
+    assert "public_law_judicial_review" in families
+    assert "evidence_and_burden_assessment" in demands
+    assert "defense_or_counterargument_check" in demands
+    assert "remedy_discretion_check" in demands
+
+
 class SequenceClient:
     def __init__(self, responses: list[ModelResponse]):
         self.responses = list(responses)
@@ -119,6 +159,19 @@ class SequenceClient:
         self.prompts.append(kwargs["prompt"])
         self.calls.append(kwargs)
         return self.responses.pop(0)
+
+
+class FakeTemplateApiClient:
+    def __init__(self, responses: list[str]):
+        self.responses = list(responses)
+        self.messages: list[list[dict[str, str]]] = []
+
+    def complete(self, messages: list[dict[str, str]]) -> dict:
+        self.messages.append(messages)
+        return {
+            "content": self.responses.pop(0),
+            "metadata": {"response_id": f"fake-{len(self.messages)}"},
+        }
 
 
 def test_template_pool_validation_sanitization_and_import(tmp_path: Path):
@@ -151,11 +204,22 @@ def test_template_pool_validation_sanitization_and_import(tmp_path: Path):
     result = import_legal_flux_templates(config, input_path=source)
     templates = load_template_pool(output)
     cleaned = sanitize_flux_template(templates[0])
+    legal_number = sanitize_flux_template(
+        _template(
+            "LF003",
+            "Summary Judgment under Order 14",
+            "order_14",
+            "100%",
+        )
+    )
 
     assert result["templates"] == 2
     assert output.exists()
     assert "support" not in cleaned.template_name.lower()
     assert "F1" not in cleaned.template_name
+    assert legal_number.template_name == "Summary Judgment under Order 14"
+    assert legal_number.knowledge_tags[0] == "order_14"
+    assert legal_number.knowledge_tags[1] == "case-specific value"
 
 
 def test_rf_retrieval_uses_exact_terms_then_embedding_and_excludes_repeats():
@@ -488,8 +552,313 @@ def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):
     assert result["mixed_batches"] == 1
     assert manifest.exists()
     assert "gold_answer" not in rows[0]
+    assert "legal_flux_profile" not in rows[0]
     assert rows[0]["case_id"] != "legalhk-999"
     assert (manifest.parent / "prompts" / "02_merge_deduplicate_templates.md").exists()
+
+
+def test_deepseek_template_workflow_generates_candidates_merge_and_audit(tmp_path: Path):
+    batch_root = tmp_path / "batches"
+    batch_dir = batch_root / "01_homogeneous_batches"
+    prompts_dir = batch_root / "prompts"
+    batch_dir.mkdir(parents=True)
+    prompts_dir.mkdir(parents=True)
+    batch_path = batch_dir / "homogeneous_001_contract.jsonl"
+    write_jsonl(
+        batch_path,
+        [
+            {
+                "case_id": "legalhk-1",
+                "claim": "Repayment under a disputed agreement.",
+                "facts": {"F1": "The defendant received money."},
+            }
+        ],
+    )
+    schema_path = batch_root / "legal_flux_template.schema.json"
+    schema_path.write_text(
+        json.dumps(LegalFluxTemplate.model_json_schema(), ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (batch_root / "coverage_summary.json").write_text("{}", encoding="utf-8")
+    (batch_root / "batch_manifest.json").write_text(
+        json.dumps(
+            {
+                "batches": [
+                    {
+                        "batch_id": "homogeneous_001",
+                        "kind": "homogeneous",
+                        "label": "contract",
+                        "path": str(batch_path),
+                        "case_count": 1,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (prompts_dir / "01_generate_candidate_templates.md").write_text(
+        "Generate candidate templates.", encoding="utf-8"
+    )
+    (prompts_dir / "02_merge_deduplicate_templates.md").write_text(
+        "Merge candidate templates.", encoding="utf-8"
+    )
+    (prompts_dir / "03_coverage_audit_and_gap_fill.md").write_text(
+        "Audit coverage.", encoding="utf-8"
+    )
+    candidate = _template(
+        "CAND_homogeneous_001_01",
+        "Agreement Entitlement Check",
+        "contract",
+        "entitlement",
+    ).model_dump(mode="json")
+    merged = [
+        _template("LF001", "Agreement Entitlement Check", "contract", "entitlement").model_dump(mode="json"),
+        _template("LF002", "Evidence Burden Check", "evidence", "burden").model_dump(mode="json"),
+    ]
+    client = FakeTemplateApiClient(
+        [
+            json.dumps(candidate, ensure_ascii=False),
+            "\n".join(json.dumps(row, ensure_ascii=False) for row in merged),
+            "No important gaps remain.",
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "chatgpt_batch_dir": str(batch_root),
+        "deepseek_template_dir": str(tmp_path / "deepseek_api"),
+    }
+
+    result = run_deepseek_template_workflow(
+        config,
+        stage="all",
+        force=True,
+        client=client,
+    )
+    output_root = tmp_path / "deepseek_api"
+
+    assert result["candidates"]["records"][0]["template_count"] == 1
+    assert result["merge"]["template_count"] == 2
+    assert result["audit"]["gap_fill_count"] == 0
+    assert (output_root / "03_candidate_templates" / "homogeneous_001_candidates.jsonl").exists()
+    assert (output_root / "legal_flux_templates_deepseek_merged.jsonl").exists()
+    assert "BATCH_ID" in client.messages[0][-1]["content"]
+
+
+def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path: Path):
+    batch_root = tmp_path / "batches"
+    batch_dir = batch_root / "01_homogeneous_batches"
+    prompts_dir = batch_root / "prompts"
+    batch_dir.mkdir(parents=True)
+    prompts_dir.mkdir(parents=True)
+    batch_path = batch_dir / "homogeneous_001_contract.jsonl"
+    write_jsonl(
+        batch_path,
+        [
+            {
+                "case_id": "legalhk-1",
+                "claim": "Repayment under a disputed agreement.",
+                "facts": {"F1": "The defendant received money."},
+            }
+        ],
+    )
+    schema_path = batch_root / "legal_flux_template.schema.json"
+    schema_path.write_text(
+        json.dumps(LegalFluxTemplate.model_json_schema(), ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (batch_root / "coverage_summary.json").write_text("{}", encoding="utf-8")
+    (batch_root / "batch_manifest.json").write_text(
+        json.dumps(
+            {
+                "batches": [
+                    {
+                        "batch_id": "homogeneous_001",
+                        "kind": "homogeneous",
+                        "label": "contract",
+                        "path": str(batch_path),
+                        "case_count": 1,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (prompts_dir / "01_generate_candidate_templates.md").write_text(
+        "Generate candidate templates.", encoding="utf-8"
+    )
+    (prompts_dir / "02_merge_deduplicate_templates.md").write_text(
+        "Merge candidate templates.", encoding="utf-8"
+    )
+    (prompts_dir / "03_coverage_audit_and_gap_fill.md").write_text(
+        "Audit coverage.", encoding="utf-8"
+    )
+    candidate = _template(
+        "CAND_homogeneous_001_01",
+        "Agreement Entitlement Check",
+        "contract",
+        "entitlement",
+    ).model_dump(mode="json")
+    merged = [
+        _template("LF001", "Agreement Entitlement Check", "contract", "entitlement").model_dump(mode="json"),
+        _template("LF002", "Evidence Burden Check", "evidence", "burden").model_dump(mode="json"),
+    ]
+    client = FakeTemplateApiClient(
+        [
+            json.dumps(candidate, ensure_ascii=False),
+            "\n".join(json.dumps(row, ensure_ascii=False) for row in merged),
+            "No important gaps remain.",
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "chatgpt_batch_dir": str(batch_root),
+        "gemini_template_dir": str(tmp_path / "gemini_api"),
+    }
+
+    result = run_gemini_template_workflow(
+        config,
+        stage="all",
+        force=True,
+        client=client,
+    )
+    output_root = tmp_path / "gemini_api"
+
+    assert result["candidates"]["records"][0]["template_count"] == 1
+    assert result["merge"]["template_count"] == 2
+    assert result["audit"]["gap_fill_count"] == 0
+    assert (
+        output_root / "03_candidate_templates" / "homogeneous_001_candidates.jsonl"
+    ).exists()
+    assert (output_root / "legal_flux_templates_gemini_merged.jsonl").exists()
+    assert "BATCH_ID" in client.messages[0][-1]["content"]
+
+
+def test_template_structure_sft_export_uses_template_name_and_tags(tmp_path: Path):
+    pool = tmp_path / "templates.jsonl"
+    write_jsonl(
+        pool,
+        [
+            _template("LF001", "Debt entitlement", "debt", "rule_application").model_dump(mode="json"),
+            _template("LF002", "Procedural gate", "procedure", "threshold").model_dump(mode="json"),
+        ],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(tmp_path / "processed"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+
+    result = export_template_structure_sft(config)
+    rows = read_jsonl(Path(result["output_path"]))
+
+    assert result["templates"] == 2
+    assert rows[0]["task"] == "template_structure_sft"
+    assert "Template name: Debt entitlement" in rows[0]["messages"][1]["content"]
+    assert "application_scenario" in rows[0]["messages"][2]["content"]
+
+
+def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
+    pool = tmp_path / "templates.jsonl"
+    processed = tmp_path / "processed"
+    runs = tmp_path / "runs"
+    write_jsonl(
+        pool,
+        [
+            _template("LF001", "Debt entitlement", "debt", "rule_application").model_dump(mode="json"),
+            _template("LF002", "Procedural gate", "procedure", "threshold").model_dump(mode="json"),
+        ],
+    )
+    case = _case(split="planner_train")
+    write_jsonl(processed / "cases.jsonl", [case.model_dump(mode="json")])
+    plan_good = {
+        "case_profile": "good debt profile",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Debt entitlement",
+                "template_tags": ["debt", "rule_application"],
+                "purpose": "Resolve whether repayment is due.",
+            }
+        ],
+        "planning_rationale": "The entitlement step is dispositive.",
+    }
+    plan_bad = {
+        "case_profile": "bad unrelated profile",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Procedural gate",
+                "template_tags": ["procedure", "threshold"],
+                "purpose": "Screen for a procedural issue not shown by the facts.",
+            }
+        ],
+        "planning_rationale": "This over-focuses on procedure.",
+    }
+    write_jsonl(
+        runs / "planner_train" / "scored.jsonl",
+        [
+            {
+                "run_hash": "chosen",
+                "status": "ok",
+                "condition": "flux_rf_style",
+                "dataset": case.dataset,
+                "case_id": case.case_id,
+                "variant_id": case.variant_id,
+                "sample_index": 0,
+                "trajectory_plan": plan_good,
+                "executed_steps": [{"step_id": "S1"}],
+                "retrieved_template_ids": ["LF001"],
+                "trajectory_length": 1,
+                "schema_errors": [],
+                "answer_correct": True,
+                "binary_prediction_valid": True,
+            },
+            {
+                "run_hash": "rejected",
+                "status": "ok",
+                "condition": "flux_rf_style",
+                "dataset": case.dataset,
+                "case_id": case.case_id,
+                "variant_id": case.variant_id,
+                "sample_index": 1,
+                "trajectory_plan": plan_bad,
+                "executed_steps": [{"step_id": "S1"}, {"step_id": "S2"}],
+                "retrieved_template_ids": [],
+                "trajectory_length": 2,
+                "schema_errors": ["schema repair needed"],
+                "answer_correct": False,
+                "binary_prediction_valid": True,
+            },
+        ],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+        "runs_dir": str(runs),
+        "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+        "max_steps": 4,
+    }
+
+    result = export_trajectory_dpo(config)
+    rows = read_jsonl(Path(result["output_path"]))
+
+    assert result["pairs"] == 1
+    assert "good debt profile" in rows[0]["chosen"]
+    assert "bad unrelated profile" in rows[0]["rejected"]
+    assert rows[0]["chosen_reward"] > rows[0]["rejected_reward"]
 
 
 def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
@@ -510,6 +879,60 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     )
     assert args.phase == "final-test"
     assert args.dry_run
+    train_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-generate",
+            "--phase",
+            "planner-train",
+            "--samples",
+            "3",
+        ]
+    )
+    assert train_args.phase == "planner-train"
+    assert train_args.samples == 3
+    assert parser.parse_args(
+        ["--config", "configs/legal_flux.yaml", "flux-export-template-sft"]
+    ).command == "flux-export-template-sft"
+    assert parser.parse_args(
+        ["--config", "configs/legal_flux.yaml", "flux-export-template-batches"]
+    ).command == "flux-export-template-batches"
+    assert parser.parse_args(
+        ["--config", "configs/legal_flux.yaml", "flux-export-trajectory-dpo"]
+    ).command == "flux-export-trajectory-dpo"
+    gemini_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-gemini-templates",
+            "--stage",
+            "all",
+            "--limit",
+            "2",
+            "--dry-run",
+        ]
+    )
+    assert gemini_args.command == "flux-gemini-templates"
+    assert gemini_args.stage == "all"
+    assert gemini_args.limit == 2
+    assert gemini_args.dry_run
+    deepseek_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-deepseek-templates",
+            "--stage",
+            "all",
+            "--limit",
+            "2",
+            "--dry-run",
+        ]
+    )
+    assert deepseek_args.command == "flux-deepseek-templates"
+    assert deepseek_args.stage == "all"
+    assert deepseek_args.limit == 2
+    assert deepseek_args.dry_run
     with pytest.raises(SystemExit):
         parser.parse_args(["--config", "configs/legal_flux.yaml", "unknown-command"])
 

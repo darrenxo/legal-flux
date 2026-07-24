@@ -18,11 +18,17 @@ model:
 
 legal_flux:
   smoke_cases: 5
-  template_source_cases: 1400
-  trajectory_dev_cases: 256
-  final_test_cases: 512
-  template_pool_target: 80-120
+  split_fractions:
+    template_source: 0.20
+    planner_train: 0.50
+    trajectory_dev: 0.15
+    final_test: 0.15
+  template_pool_target: 200-300
   max_steps: 4
+  planner_train_samples: 4
+  planner_train_temperature: 0.7
+  planner_train_conditions:
+    - flux_rf_style
   rf_retrieval_backend: ollama_embedding
   rf_embedding_model: bge-m3:latest
   rf_embedding_cache_file: data/processed/legal_flux/rf_template_embeddings_bge_m3.json
@@ -30,17 +36,23 @@ legal_flux:
   rf_tag_example_limit: 36
   include_authority_input: true
   force_binary_final_decision: true
-  max_input_characters: 5000
+  max_input_characters: 12000
   decision_overlap_ngram: 6
   decision_overlap_threshold: 0.12
-  exclude_existing_legalhk_only_cases: true
+  screen_explicit_outcome_leakage: false
+  include_all_domains: true
+  strict_fact_language_filter: false
+  exclude_existing_legalhk_only_cases: false
   prior_legalhk_cases_file: data/processed/legalhk_only/cases.jsonl
   template_pool_file: templates/legal_flux_templates_v0.jsonl
   template_export_dir: reports/legal_flux/template_distillation
-  chatgpt_batch_dir: reports/legal_flux/template_distillation/chatgpt_batches
-  chatgpt_homogeneous_batches: 24
-  chatgpt_mixed_batches: 6
-  chatgpt_cases_per_batch: 30
+  chatgpt_batch_dir: reports/legal_flux/template_distillation/azure_gpt56_batches
+  deepseek_template_dir: reports/legal_flux/template_distillation/deepseek_api
+  gemini_template_dir: reports/legal_flux/template_distillation/gemini_api
+  chatgpt_homogeneous_batches: 40
+  chatgpt_mixed_batches: 10
+  chatgpt_cases_per_batch: 80
+  template_batch_full_coverage: true
   freeze_manifest_file: data/processed/legal_flux/legal_flux_frozen_manifest.json
   conditions:
     - direct
@@ -49,6 +61,28 @@ legal_flux:
 
 audit:
   provider: none
+
+deepseek:
+  api_key_env: DEEPSEEK_API_KEY
+  base_url: https://api.deepseek.com
+  model: deepseek-v4-pro
+  temperature: 0.2
+  max_tokens: 24000
+  timeout_seconds: 600
+  thinking: disabled
+  reasoning_effort: high
+
+gemini:
+  model: gemini-3.5-flash
+  project:
+  location: global
+  api_version: v1
+  temperature:
+  thinking_level: high
+  include_thoughts: false
+  max_output_tokens: 65536
+  timeout_seconds: 600
+  application_credentials_file:
 
 paths:
   raw_dir: data/raw

@@ -1,0 +1,799 @@
+{
+  "created_at": "2026-07-20T23:46:09.889870+00:00",
+  "stage": "candidates",
+  "output_dir": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates",
+  "batch_count": 50,
+  "records": [
+    {
+      "batch_id": "homogeneous_001",
+      "status": "skipped_existing",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_001_candidates.jsonl",
+      "template_count": 15
+    },
+    {
+      "batch_id": "homogeneous_002",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_002_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_002_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 86.70874610000465,
+        "prompt_tokens": 50449,
+        "completion_tokens": 4624,
+        "total_tokens": 66505
+      },
+      "prompt_sha256": "33ae78d1e4130fc8f1636bfe76193e6aae50a1685ff93cd5096f9adb61f61d90",
+      "output_sha256": "7beb91819e44bab3787ccc974ddae52a2cad0be6acd8c385debe1ebdea37dc20"
+    },
+    {
+      "batch_id": "homogeneous_003",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_003_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_003_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 63.37534930000402,
+        "prompt_tokens": 52916,
+        "completion_tokens": 4783,
+        "total_tokens": 67701
+      },
+      "prompt_sha256": "334c1dd1c25e4fb7ed1cbe4e02b6b4cd18bfd5a01bdbedfb6f99ade161d3d241",
+      "output_sha256": "f597f2a2b756e64611fabc90b31d98d88c0fdb62d3431435202faae6515b3671"
+    },
+    {
+      "batch_id": "homogeneous_004",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_004_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_004_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 62.246609500005434,
+        "prompt_tokens": 53336,
+        "completion_tokens": 4826,
+        "total_tokens": 69893
+      },
+      "prompt_sha256": "adea0da5d8b68b0e050d548be0fd01abca1f62fe8429af88883b72e32e6901eb",
+      "output_sha256": "70aba1aaeab1cff014f1995c8a791b9b1bf40172248c3d0b2723adbdbaf10868"
+    },
+    {
+      "batch_id": "homogeneous_005",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_005_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_005_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 77.52119949999906,
+        "prompt_tokens": 48247,
+        "completion_tokens": 4135,
+        "total_tokens": 62730
+      },
+      "prompt_sha256": "f95cd7d0c954e58ec14ed2f32bdabde2c3524e64ce1d9c4eff22f6cea89c81a0",
+      "output_sha256": "0581cc2139a239fb240924b24ee7bbf187427ee2ac43d7aca9fb1ef5804aa89d"
+    },
+    {
+      "batch_id": "homogeneous_006",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_006_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_006_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 80.7307381999999,
+        "prompt_tokens": 50724,
+        "completion_tokens": 5111,
+        "total_tokens": 64179
+      },
+      "prompt_sha256": "8155a7586b2b49760b5f38cd6b10b61e06dec65485bb5875c19d0ca29d811e8b",
+      "output_sha256": "b1bd70c68596a66ccab0d52020bda3688e99dbd4f06bc3e4441ae8516003cdf4"
+    },
+    {
+      "batch_id": "homogeneous_007",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_007_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_007_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 80.17259950000152,
+        "prompt_tokens": 45486,
+        "completion_tokens": 4682,
+        "total_tokens": 61397
+      },
+      "prompt_sha256": "0733262474face1d8bed135be2228f4cd3a3d6ec355f00e42eafbd88fc6e1701",
+      "output_sha256": "b12a89c60660290568970ef6f7cda61e94b70a8d3f111f5b3793efa8268f80f6"
+    },
+    {
+      "batch_id": "homogeneous_008",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_008_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_008_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 52.576874299993506,
+        "prompt_tokens": 53228,
+        "completion_tokens": 3724,
+        "total_tokens": 67068
+      },
+      "prompt_sha256": "3efaee6ad73026444f172c859351864776ac384cf7cd15bb57c2ab9e486c2457",
+      "output_sha256": "76a77fc7fb105de3a6ec28eae141bfcc84dfc0a33febafd921bbb8ad89307020"
+    },
+    {
+      "batch_id": "homogeneous_009",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_009_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_009_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 66.06827280000289,
+        "prompt_tokens": 56639,
+        "completion_tokens": 4365,
+        "total_tokens": 70300
+      },
+      "prompt_sha256": "7dc1b537426b9eb31e945be12379323ee3ac3c01d5790a244da65cf7db0fc61e",
+      "output_sha256": "1d6e836041150976f19c8c84ca143e7e0b55eb08b23d949f167faea019207889"
+    },
+    {
+      "batch_id": "homogeneous_010",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_010_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_010_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 49.595966599998064,
+        "prompt_tokens": 54712,
+        "completion_tokens": 4160,
+        "total_tokens": 68058
+      },
+      "prompt_sha256": "559f7df041bf859c8a9250439533981456116f91a5775fbdd27cab6f985d5df0",
+      "output_sha256": "6661a1a629b5260b508d1052fce4851d26b776454ab6c6e89018332474c1dc90"
+    },
+    {
+      "batch_id": "homogeneous_011",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_011_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_011_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 52.951854499995534,
+        "prompt_tokens": 57583,
+        "completion_tokens": 3525,
+        "total_tokens": 67586
+      },
+      "prompt_sha256": "620569351d3b931301f8a85d9e5417fdb94d7e6d169b84b735cedcdeae85948f",
+      "output_sha256": "6ef3080ca9e482ea5491fb813516ba6c0b37c074c2a88c499befb35c9042eb90"
+    },
+    {
+      "batch_id": "homogeneous_012",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_012_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_012_raw.txt",
+      "template_count": 13,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 68.96893920000002,
+        "prompt_tokens": 63108,
+        "completion_tokens": 4774,
+        "total_tokens": 76907
+      },
+      "prompt_sha256": "f2c88b30ea5a67f5c4045260d13fe3121ddf7a38f995af3221338d83bc98704b",
+      "output_sha256": "63d5159244e92e72dd7de45230b86a0e1160b3b99462413aee5c368d61c02f1d"
+    },
+    {
+      "batch_id": "homogeneous_013",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_013_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_013_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 76.3582322000002,
+        "prompt_tokens": 66486,
+        "completion_tokens": 4842,
+        "total_tokens": 81557
+      },
+      "prompt_sha256": "759490acf005c4b695dce5fbacddb4ec1c6d240a0822ba324abfe5b2b0811ba5",
+      "output_sha256": "72193b7b7696adb37a70bc69ec9974a901464908312f71102ec6d8adf55f4852"
+    },
+    {
+      "batch_id": "homogeneous_014",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_014_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_014_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 44.96559430000343,
+        "prompt_tokens": 74217,
+        "completion_tokens": 3842,
+        "total_tokens": 83316
+      },
+      "prompt_sha256": "14b750c3561dc9495f1171bdb285e3d8c07af03e84057b111a8e02e1ecc7bee7",
+      "output_sha256": "77b8d1a7677f19a76e497ad41e7e97f242b074cb9d00daee4a15f5c07eb6e8a8"
+    },
+    {
+      "batch_id": "homogeneous_015",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_015_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_015_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 62.360235599997395,
+        "prompt_tokens": 61012,
+        "completion_tokens": 4152,
+        "total_tokens": 73542
+      },
+      "prompt_sha256": "38d4ea98fac026c616e5c445ccef61bb1656efc015c00c86e4de645660940cc1",
+      "output_sha256": "b4d2be188b16d3f3cdba5d43785fa452d5b4a6739e5ac3ac4631b997177e025e"
+    },
+    {
+      "batch_id": "homogeneous_016",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_016_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_016_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 69.86993300000177,
+        "prompt_tokens": 51146,
+        "completion_tokens": 4787,
+        "total_tokens": 65472
+      },
+      "prompt_sha256": "a939a85b1ef6dcd9bfaae8b420220d95ef0968572eda4ad4a891af220f6480cb",
+      "output_sha256": "63bb3f7c1a60c59be52c081943b2c4f4599b6c62c1f9092e6fe51eaac6d487e2"
+    },
+    {
+      "batch_id": "homogeneous_017",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_017_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_017_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 80.07212309999886,
+        "prompt_tokens": 46424,
+        "completion_tokens": 4498,
+        "total_tokens": 63427
+      },
+      "prompt_sha256": "9a777115a08f929b37749056b18b94904c3175b194310cb59e3a51998e9c9f83",
+      "output_sha256": "41de81486bbbc1f673c26636a696182eb11eac8d49d1388a000aacbddcc2bbb2"
+    },
+    {
+      "batch_id": "homogeneous_018",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_018_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_018_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 73.68036869999924,
+        "prompt_tokens": 61324,
+        "completion_tokens": 4367,
+        "total_tokens": 75920
+      },
+      "prompt_sha256": "62bce264671a16b942d73e50bafb0cc0466581d288c0127f4f54325bc0663c30",
+      "output_sha256": "4e5a072c8e371e6de9170ac56701321c1b9ae862640d90c361cf92a10f4cb481"
+    },
+    {
+      "batch_id": "homogeneous_019",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_019_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_019_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 77.99157659999764,
+        "prompt_tokens": 58391,
+        "completion_tokens": 4963,
+        "total_tokens": 74876
+      },
+      "prompt_sha256": "ec0975cfef508544d61a3e7026b9ee87c34f8779c90a5332a8fe6d5aa9616a3e",
+      "output_sha256": "6dc7c7351a9a76d2210ad71893426b4961295e00dba18643704d236bed2b66cf"
+    },
+    {
+      "batch_id": "homogeneous_020",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_020_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_020_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 73.80664080000133,
+        "prompt_tokens": 52104,
+        "completion_tokens": 4599,
+        "total_tokens": 64867
+      },
+      "prompt_sha256": "06e1f4dfb99dbca226754382007f51560abd2324c6bcaa7e552b645ad5954fc2",
+      "output_sha256": "a721f5faf0fee86788d25f251918ff84543c7d946dc92dc7c784f978af7e4cf0"
+    },
+    {
+      "batch_id": "homogeneous_021",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_021_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_021_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 74.41685690000304,
+        "prompt_tokens": 55985,
+        "completion_tokens": 5241,
+        "total_tokens": 70786
+      },
+      "prompt_sha256": "69de721e50e51235682d5fd9be74dfa6ebca966a6d6da2935cb51bdf1995ced4",
+      "output_sha256": "c89caa59902124f66b826c71d906e694aa97236b3379ca06f30f8c030a248b0c"
+    },
+    {
+      "batch_id": "homogeneous_022",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_022_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_022_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 74.02205649999814,
+        "prompt_tokens": 53390,
+        "completion_tokens": 4634,
+        "total_tokens": 67964
+      },
+      "prompt_sha256": "da51408ab8d8ea353c891f3f1dffedf2ea1080dd427781a13aed3ab4778415d3",
+      "output_sha256": "61e0a87118b0af3c22cbabf72f447a19d7406cb29cb6069474de7b186bf14d6d"
+    },
+    {
+      "batch_id": "homogeneous_023",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_023_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_023_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 62.17449889999989,
+        "prompt_tokens": 54343,
+        "completion_tokens": 3930,
+        "total_tokens": 66803
+      },
+      "prompt_sha256": "ebdd2ea93a3bbb6715f5803b23a5262155b5aa25ad2087f9201b7c7b3c95f0a2",
+      "output_sha256": "eb438890373d2c5ff7d62886d7de604f29187461b1d9948b5074088d15357bac"
+    },
+    {
+      "batch_id": "homogeneous_024",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_024_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_024_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 103.1708088000014,
+        "prompt_tokens": 58726,
+        "completion_tokens": 5086,
+        "total_tokens": 77387
+      },
+      "prompt_sha256": "fa2a75586b578d10d5d9abe4c4753627ff503b442fa1c83cef2adc9362e82a9e",
+      "output_sha256": "9da6bdd29695f598d5fab150df7a71154505b676f283e34c4a2f759d1519e823"
+    },
+    {
+      "batch_id": "homogeneous_025",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_025_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_025_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 69.84582620000583,
+        "prompt_tokens": 53516,
+        "completion_tokens": 3722,
+        "total_tokens": 67396
+      },
+      "prompt_sha256": "d93a4b2f52ddef0cb947bf5f17db3aa23a3df9932c278b72b283a1ed6432b74c",
+      "output_sha256": "dbd75ed13858cce546b986c9f6f6b8d385fa9eeb5399440dcb4b0f23f9d02062"
+    },
+    {
+      "batch_id": "homogeneous_026",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_026_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_026_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 71.26352030000271,
+        "prompt_tokens": 61154,
+        "completion_tokens": 4911,
+        "total_tokens": 76255
+      },
+      "prompt_sha256": "6b016684eb470febcb0f82dd91d35651f1af90232b72602a46883cdef06fd696",
+      "output_sha256": "a3a0911a1bcc0e8cb774a40de949a2221e4a0e4c642bfeedeb53fadbe03df170"
+    },
+    {
+      "batch_id": "homogeneous_027",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_027_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_027_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 50.97592160000204,
+        "prompt_tokens": 57606,
+        "completion_tokens": 3656,
+        "total_tokens": 69339
+      },
+      "prompt_sha256": "59d58122dcd3dc132587c17c66e05114bf27233a04660a358ca2a67c3874a891",
+      "output_sha256": "0fbe82eea3db735b775df3875996d0848bf62bd2677f8f18f4e6e9a81d865d53"
+    },
+    {
+      "batch_id": "homogeneous_028",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_028_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_028_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 76.7240352000008,
+        "prompt_tokens": 53058,
+        "completion_tokens": 5077,
+        "total_tokens": 70783
+      },
+      "prompt_sha256": "f139246300bcad2a40864f673c63061c036aa9f57ecda588989bd52f2996b21d",
+      "output_sha256": "268e5d1e1e3084754da0b91348858dbedeb8697291c5197109d98f82ae96c82c"
+    },
+    {
+      "batch_id": "homogeneous_029",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_029_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_029_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 68.04804680000234,
+        "prompt_tokens": 54670,
+        "completion_tokens": 4367,
+        "total_tokens": 68275
+      },
+      "prompt_sha256": "338e8ba0e12eeae594c31262dd8ba90c02b006d51053be7d3a007d7734fa9609",
+      "output_sha256": "dcda079287ca20242e502678a070fb53dfcc6ca578fc2971435408988b721705"
+    },
+    {
+      "batch_id": "homogeneous_030",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_030_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_030_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 56.5098696999994,
+        "prompt_tokens": 53264,
+        "completion_tokens": 3546,
+        "total_tokens": 64648
+      },
+      "prompt_sha256": "b37ba2822ed946e2dc18b4bbca5e08a34d9fdf7ba1123fcc5ab6aad2da84b4c2",
+      "output_sha256": "2db897cd3dfcaab4a4648e7be64afaa0fbf9356e88b0323e0526a776aa0e3660"
+    },
+    {
+      "batch_id": "homogeneous_031",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_031_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_031_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 76.20553849999851,
+        "prompt_tokens": 56457,
+        "completion_tokens": 3903,
+        "total_tokens": 69703
+      },
+      "prompt_sha256": "c5c74f4901f112f5063f9c09d78fcb78c321fb4b603184b39bfecade30c5b5ac",
+      "output_sha256": "efb53ad094e65ecdb2a8f1b1602a6259dfb714a91c2999f9917b96f2ab582bb3"
+    },
+    {
+      "batch_id": "homogeneous_032",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_032_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_032_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 76.88670279999496,
+        "prompt_tokens": 56550,
+        "completion_tokens": 5121,
+        "total_tokens": 72146
+      },
+      "prompt_sha256": "f49f21b48dee1f389d9c94c274a7e06ea4be37371a3347599f538307daac3750",
+      "output_sha256": "5cddda9a7130b617e6184097278c60eb8bde7525d3f3a5a5903cc05341a882c7"
+    },
+    {
+      "batch_id": "homogeneous_033",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_033_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_033_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 82.75899129999743,
+        "prompt_tokens": 54252,
+        "completion_tokens": 4978,
+        "total_tokens": 65958
+      },
+      "prompt_sha256": "b71a8174a528fe4d751fe29fe6756ccbde95e1f102c8b756a2a291e57e5a768c",
+      "output_sha256": "a400f2a53e1dbbac0dfb0b72425f618ff8ecea85aace2cc84d4a2a29ec606b48"
+    },
+    {
+      "batch_id": "homogeneous_034",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_034_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_034_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 64.05150239999784,
+        "prompt_tokens": 59233,
+        "completion_tokens": 5140,
+        "total_tokens": 70799
+      },
+      "prompt_sha256": "28612b8cd6596eddf8382acadc56d0b82f6dec95c62a82645758e3c7bc546dd9",
+      "output_sha256": "256bae48b498f1ce3f628ca5d47ac890dde452b86cc06123b19a5c87f915c0d0"
+    },
+    {
+      "batch_id": "homogeneous_035",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_035_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_035_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 76.84896860000299,
+        "prompt_tokens": 58100,
+        "completion_tokens": 5436,
+        "total_tokens": 72830
+      },
+      "prompt_sha256": "fcd4baaea931afb0de2e051354622b2fcc5dec75de735d285a5015580846df53",
+      "output_sha256": "72ab2ea48ae70b96596678333bf2cffa45bc0407202964df2379fb7e1a08b5f2"
+    },
+    {
+      "batch_id": "homogeneous_036",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_036_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_036_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 49.848522399996,
+        "prompt_tokens": 55254,
+        "completion_tokens": 4167,
+        "total_tokens": 66082
+      },
+      "prompt_sha256": "a9aafe6bb4505179385c5eba565fb41c741bbb54615b8afb99675ee6ff1c1f38",
+      "output_sha256": "4e79a26386359f6f0f5d6f507e3d1add531cf24913faa31f1ce71f94d01ee476"
+    },
+    {
+      "batch_id": "homogeneous_037",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_037_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_037_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 55.199670199996035,
+        "prompt_tokens": 50705,
+        "completion_tokens": 4045,
+        "total_tokens": 62397
+      },
+      "prompt_sha256": "614559e3972eec9b4d1330693d20039e91469bd19dea1ea6fa3a56e8eae392c6",
+      "output_sha256": "2217dec805f4e8ce7c0aa2675b1f0bc272091521ad618d90a9c3a60f7b9b9acf"
+    },
+    {
+      "batch_id": "homogeneous_038",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_038_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_038_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 73.4900695000033,
+        "prompt_tokens": 54469,
+        "completion_tokens": 5072,
+        "total_tokens": 67909
+      },
+      "prompt_sha256": "0a66750571730d75b7d9bc7677a6adc8f0ac906210a98b47b0fdb5f87c66e590",
+      "output_sha256": "875eb46137b14b316d0f87db98330c7813a0b16a4261cb159b7f7962e2ba3ff4"
+    },
+    {
+      "batch_id": "homogeneous_039",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_039_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_039_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 67.36582479999925,
+        "prompt_tokens": 47810,
+        "completion_tokens": 4445,
+        "total_tokens": 62142
+      },
+      "prompt_sha256": "a3e028310d69d8f90e6c5abf8e3df60c82af655ba3ae6b1119e6260c32d3d4c2",
+      "output_sha256": "59434080c17d199426a4fac834b8bd669fe1e6e4429de8ad4229bdf906a104ad"
+    },
+    {
+      "batch_id": "homogeneous_040",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\homogeneous_040_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\homogeneous_040_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 89.24814999999944,
+        "prompt_tokens": 57430,
+        "completion_tokens": 5004,
+        "total_tokens": 74088
+      },
+      "prompt_sha256": "01f582b4e02bd37592bfcdf8fa54b38ad984bfd0fd545d84ca6064bf8d3d68a7",
+      "output_sha256": "ebf22c96609f3cf219691ceb0af248936bc9a816560b7cc62eb2bcdfe8b2fa37"
+    },
+    {
+      "batch_id": "mixed_001",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_001_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_001_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 80.16671720000159,
+        "prompt_tokens": 54631,
+        "completion_tokens": 4548,
+        "total_tokens": 70117
+      },
+      "prompt_sha256": "252429c488220865f0aee074dd5bbdb7180a75c946634770c92ca5bd82e1a08f",
+      "output_sha256": "28a3a938e3377a126f12b4d93bb3f9e4c4ebe80383f3e4092e71abce215d0d02"
+    },
+    {
+      "batch_id": "mixed_002",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_002_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_002_raw.txt",
+      "template_count": 18,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 92.55537199999526,
+        "prompt_tokens": 53739,
+        "completion_tokens": 6104,
+        "total_tokens": 72997
+      },
+      "prompt_sha256": "95511f239c70be234888c2eceab14359da1287381bcd90f81aed7261de62f92a",
+      "output_sha256": "402fa9c3fd68495964ddbdc5a4d5e37bdf07313e8022ff89eec55c95cdb42e12"
+    },
+    {
+      "batch_id": "mixed_003",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_003_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_003_raw.txt",
+      "template_count": 16,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 103.22591999999713,
+        "prompt_tokens": 52330,
+        "completion_tokens": 5102,
+        "total_tokens": 70042
+      },
+      "prompt_sha256": "afae17948a0609ca7cb4c11db8d3b13a229508763d0fe3f6537d9c8e838e6a6f",
+      "output_sha256": "02daeb307b0c15f531dfd6e7c2ad0b810981705dba9b763ac32bfce38a57c1bc"
+    },
+    {
+      "batch_id": "mixed_004",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_004_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_004_raw.txt",
+      "template_count": 14,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 89.39623729999585,
+        "prompt_tokens": 52689,
+        "completion_tokens": 4860,
+        "total_tokens": 68185
+      },
+      "prompt_sha256": "dbd812c32d39eebf75dfa9b03bb813254ef7dae1a75abddee67233a1a5fdba49",
+      "output_sha256": "37952bf511d76089036c37a5acf9bfaa716e53505e90f0ccdce6908e94e7be6f"
+    },
+    {
+      "batch_id": "mixed_005",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_005_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_005_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 62.12836239999888,
+        "prompt_tokens": 53981,
+        "completion_tokens": 3585,
+        "total_tokens": 67135
+      },
+      "prompt_sha256": "0aa6ddf540a1be97fd315d75f645524c2035bc8a23ed27e63bd91959b3c295a1",
+      "output_sha256": "086481093280db4334eb783333688c153ac2e80893b3394b308d09d1a59c5706"
+    },
+    {
+      "batch_id": "mixed_006",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_006_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_006_raw.txt",
+      "template_count": 12,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 59.30697119999968,
+        "prompt_tokens": 53258,
+        "completion_tokens": 3759,
+        "total_tokens": 64699
+      },
+      "prompt_sha256": "a06766d8e4e27f776f5813a72f881130a693b650d3663124b54d77c0a5dd2def",
+      "output_sha256": "bb153955ecf68633acf30e4e18542ec1b23e5d86a83dd20965d31315ab8754fc"
+    },
+    {
+      "batch_id": "mixed_007",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_007_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_007_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 70.27825229999871,
+        "prompt_tokens": 57825,
+        "completion_tokens": 4676,
+        "total_tokens": 71862
+      },
+      "prompt_sha256": "c1491ca66a651997e5b3a0db4ef0204c1a5a4c8d482b7859b3b6e865de4f8b7d",
+      "output_sha256": "723ef8a19db1b152824ff15ab1d3c22b405e2545fbc2c556ed9cc6bcdc77097a"
+    },
+    {
+      "batch_id": "mixed_008",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_008_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_008_raw.txt",
+      "template_count": 13,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 77.9949443000005,
+        "prompt_tokens": 51343,
+        "completion_tokens": 4297,
+        "total_tokens": 65582
+      },
+      "prompt_sha256": "b70241af70ebc10adb9526df6308e737df45252312f64b1ebe79c18a63c1509d",
+      "output_sha256": "05137d93482c644cba117d7ef77f4b683f83ab2a32ad33233f7d3864bcec87bd"
+    },
+    {
+      "batch_id": "mixed_009",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_009_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_009_raw.txt",
+      "template_count": 13,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 62.93359369999962,
+        "prompt_tokens": 51137,
+        "completion_tokens": 4325,
+        "total_tokens": 62730
+      },
+      "prompt_sha256": "bf013ec98108ea6650500db6c9df0e5260ad985d901af4eaf87dce39d38b4bd2",
+      "output_sha256": "4b67ae108cf060f16c764206c1571b356faad593873b362c67ba35f4ad8bfd6a"
+    },
+    {
+      "batch_id": "mixed_010",
+      "status": "ok",
+      "output_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\mixed_010_candidates.jsonl",
+      "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\03_candidate_templates\\raw\\mixed_010_raw.txt",
+      "template_count": 15,
+      "metadata": {
+        "model": "gemini-3.5-flash",
+        "elapsed_seconds": 94.1970760999975,
+        "prompt_tokens": 56889,
+        "completion_tokens": 5243,
+        "total_tokens": 74285
+      },
+      "prompt_sha256": "90cdadf9492a74133b99426d8990950c535b66b5ffb13a880b8b5ee0d224ff06",
+      "output_sha256": "6a700db42c8105c9b1213f2874608c61dea0e830e27a044b4dc8a32f2c8d3a1c"
+    }
+  ],
+  "manifest_path": "C:\\Users\\Darrenxo\\OneDrive\\\u684c\u9762\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\candidates_manifest.json"
+}

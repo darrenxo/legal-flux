@@ -4,7 +4,7 @@ You will receive candidate-template JSONL files from homogeneous and mixed
 contrast batches, plus the batch manifest and coverage summary.
 
 Merge, deduplicate, and normalize the candidates into a final fixed LegalFlux
-template pool of 80-120 templates.
+template pool of 150-250 templates.
 
 Return JSONL only, one object per final template, matching
 `legal_flux_template.schema.json`.
@@ -18,7 +18,8 @@ Rules:
 - Ensure coverage for procedural thresholds, supplied-rule extraction, rule
   recall, issue decomposition/composition, evidence and burden assessment,
   defenses/counterarguments, precedent/analogy, remedy discretion, long-fact
-  filtering, and domain-specific civil families.
+  filtering, and domain-specific civil, criminal, immigration, public-law,
+  tribunal, and procedural families.
 - Use stable IDs `LF001`, `LF002`, ...
 - Do not include case IDs, party names, dates, amounts, citations, F-number
   references, or support/reject outcome words.

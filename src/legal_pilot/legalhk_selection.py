@@ -226,7 +226,7 @@ def _add_strata(frame: pd.DataFrame) -> pd.DataFrame:
     ).astype(str)
     if "has_defense" not in result:
         result["has_defense"] = result["issues"].astype(str).str.contains(
-            r"defen[cs]e|contributory|counterclaim|exception|whether.*liable",
+            r"defen[cs]\w*|contributory|counterclaim\w*|exception|whether.*liable",
             case=False,
             regex=True,
         )

@@ -12,7 +12,13 @@ from .models import LegalFluxAbstractStep, LegalFluxTemplate, NormalizedCase
 
 
 FLUX_CONDITIONS = ["direct", "structured", "flux_rf_style"]
-FLUX_PHASES = {"smoke", "template_source", "trajectory_dev", "final_test"}
+FLUX_PHASES = {
+    "smoke",
+    "template_source",
+    "planner_train",
+    "trajectory_dev",
+    "final_test",
+}
 
 
 def resolve_project_file(value: str | Path) -> Path:
@@ -189,8 +195,18 @@ def sanitize_flux_template(
         result = re.sub(r"\bF\d+\b", "supplied fact", result)
         result = re.sub(r"\blegalhk-\d+\b", "source case", result, flags=re.I)
         result = re.sub(
-            r"(?<!\w)(?:HK\$|US\$|\$|\u00a3|\u20ac|\u00a5)?\s*"
+            r"(?<!\w)(?:HK\$|US\$|\$|\u00a3|\u20ac|\u00a5)\s*"
             r"\d[\d,]*(?:\.\d+)?%?(?!\w)",
+            "case-specific value",
+            result,
+        )
+        result = re.sub(
+            r"(?<!\w)\d+(?:\.\d+)?%(?!\w)",
+            "case-specific value",
+            result,
+        )
+        result = re.sub(
+            r"(?<!\w)\d[\d,]{2,}(?:\.\d+)?(?!\w)",
             "case-specific value",
             result,
         )
@@ -229,6 +245,7 @@ def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:
         "legal_flux_evaluation.py",
         "legal_flux_runner.py",
         "legal_flux_setup.py",
+        "legal_flux_training.py",
         "legalhk_data.py",
         "legalhk_selection.py",
         "models.py",
@@ -300,6 +317,7 @@ def legal_flux_plan_hash(
             "gold_answer": job["case"].gold_answer,
             "condition": job["condition"],
             "phase": job["phase"],
+            "sample_index": job["sample_index"],
         }
         for job in build_legal_flux_jobs(cases, config, phase=phase)
     ]
@@ -311,6 +329,8 @@ def build_legal_flux_jobs(
     config: dict[str, Any],
     *,
     phase: str,
+    sample_count: int | None = None,
+    case_limit: int | None = None,
 ) -> list[dict[str, Any]]:
     normalized_phase = phase.replace("-", "_")
     if normalized_phase not in FLUX_PHASES - {"template_source"}:
@@ -318,23 +338,47 @@ def build_legal_flux_jobs(
     selected = [
         case for case in cases if case.metadata.get("selection_split") == normalized_phase
     ]
+    if case_limit is not None:
+        if case_limit < 1:
+            raise ValueError("case_limit must be at least 1.")
+        selected = selected[:case_limit]
     if not selected:
         raise ValueError(f"No cases found for LegalFlux phase {normalized_phase}.")
-    conditions = config["legal_flux"].get("conditions", FLUX_CONDITIONS)
+    if normalized_phase == "planner_train":
+        conditions = config["legal_flux"].get(
+            "planner_train_conditions", ["flux_rf_style"]
+        )
+        sample_count = (
+            int(sample_count)
+            if sample_count is not None
+            else int(config["legal_flux"].get("planner_train_samples", 1))
+        )
+        temperature = float(
+            config["legal_flux"].get(
+                "planner_train_temperature", config["model"]["temperature"]
+            )
+        )
+    else:
+        conditions = config["legal_flux"].get("conditions", FLUX_CONDITIONS)
+        sample_count = 1 if sample_count is None else int(sample_count)
+        temperature = config["model"]["temperature"]
     unsupported = sorted(set(conditions) - set(FLUX_CONDITIONS))
     if unsupported:
         raise ValueError(f"Unsupported LegalFlux conditions in cleaned repo: {unsupported}")
+    if sample_count < 1:
+        raise ValueError("sample_count must be at least 1.")
     return [
         {
             "case": case,
             "condition": condition,
             "phase": normalized_phase,
-            "sample_index": 0,
-            "temperature": config["model"]["temperature"],
-            "seed": config["model"]["seed"],
+            "sample_index": sample_index,
+            "temperature": temperature,
+            "seed": int(config["model"]["seed"]) + sample_index,
         }
         for case in selected
         for condition in conditions
+        for sample_index in range(sample_count)
     ]
 
 

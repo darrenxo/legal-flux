@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-07-20T23:57:35.618035+00:00",
+  "stage": "audit",
+  "status": "ok",
+  "audit_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\legal_flux_coverage_audit_gemini.md",
+  "gap_fill_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\gemini_api\\legal_flux_gap_fill_gemini.jsonl",
+  "gap_fill_count": 12,
+  "metadata": {
+    "model": "gemini-3.5-flash",
+    "elapsed_seconds": 66.03207159999874,
+    "prompt_tokens": 136811,
+    "completion_tokens": 4491,
+    "total_tokens": 149299
+  },
+  "prompt_sha256": "76088d662f585b88669ce53e3ba41c342569a53f7615e1b4d15ebbc0feac7517",
+  "audit_sha256": "deabfc4cabe568d409b0476011f18cb3fdfff3167c8adabd4980786ad654a08f"
+}
