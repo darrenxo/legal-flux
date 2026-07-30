@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from typing import Protocol
 
@@ -51,6 +52,60 @@ class FixedEmbeddingBackend:
             float(np.dot(query_vector, self.vectors[document]))
             for document in documents
         ]
+
+
+class SentenceTransformerEmbeddingBackend:
+    name = "sentence_transformer"
+
+    def __init__(
+        self,
+        *,
+        model: str,
+        device: str | None = None,
+        max_length: int = 8192,
+        batch_size: int = 8,
+    ):
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:
+            raise RuntimeError(
+                "Sentence-transformer retrieval requires the optional retrieval "
+                "dependencies. Install with `pip install -e .[retrieval]`."
+            ) from exc
+        self.model_name = model
+        self.batch_size = batch_size
+        self.model = SentenceTransformer(model, device=device)
+        self.model.max_seq_length = max_length
+        self._vectors: dict[str, np.ndarray] = {}
+        self._lock = threading.Lock()
+
+    def similarities(self, query: str, documents: list[str]) -> list[float]:
+        if not documents:
+            return []
+        vectors = self.embed([query, *documents])
+        return [
+            float(np.dot(vectors[0], document_vector))
+            for document_vector in vectors[1:]
+        ]
+
+    def embed(self, texts: list[str]) -> list[np.ndarray]:
+        with self._lock:
+            unique_missing = [
+                text for text in dict.fromkeys(texts) if text not in self._vectors
+            ]
+            if unique_missing:
+                encoded = self.model.encode(
+                    unique_missing,
+                    batch_size=self.batch_size,
+                    convert_to_numpy=True,
+                    normalize_embeddings=True,
+                    show_progress_bar=False,
+                )
+                for text, vector in zip(unique_missing, encoded, strict=True):
+                    self._vectors[text] = _normalized(
+                        np.asarray(vector, dtype=np.float32)
+                    )
+            return [self._vectors[text] for text in texts]
 
 
 class OllamaEmbeddingBackend:

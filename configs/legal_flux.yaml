@@ -31,6 +31,7 @@ legal_flux:
     - flux_rf_style
   rf_retrieval_backend: ollama_embedding
   rf_embedding_model: bge-m3:latest
+  rf_sentence_transformer_model: BAAI/bge-m3
   rf_embedding_cache_file: data/processed/legal_flux/rf_template_embeddings_bge_m3.json
   rf_embedding_timeout_seconds: 600
   rf_tag_example_limit: 36
@@ -45,6 +46,9 @@ legal_flux:
   exclude_existing_legalhk_only_cases: false
   prior_legalhk_cases_file: data/processed/legalhk_only/cases.jsonl
   template_pool_file: templates/legal_flux_templates_v0.jsonl
+  planner_model:
+  executor_model:
+  reviewer_model:
   template_export_dir: reports/legal_flux/template_distillation
   chatgpt_batch_dir: reports/legal_flux/template_distillation/azure_gpt56_batches
   deepseek_template_dir: reports/legal_flux/template_distillation/deepseek_api
@@ -58,6 +62,65 @@ legal_flux:
     - direct
     - structured
     - flux_rf_style
+
+xsim:
+  dense_model: BAAI/bge-m3
+  reranker_model: BAAI/bge-reranker-v2-m3
+  device:
+  max_length: 8192
+  dense_batch_size: 8
+  reranker_batch_size: 8
+  dense_top_k: 50
+  final_top_k: 2
+  embeddings_file: planner_train_bge_m3_embeddings.npy
+  case_index_file: planner_train_embedding_cases.json
+  dense_candidates_file: xsim_dense_top50.jsonl
+  neighbors_file: xsim_neighbors.jsonl
+  manifest_file: xsim_manifest.json
+
+dpo:
+  samples_per_anchor: 4
+  planner_model:
+  executor_model:
+  planner_temperature: 0.7
+  seed: 20260619
+  candidates_file: trajectory_candidates.jsonl
+  evaluations_file: trajectory_evaluations.jsonl
+  manifest_file: trajectory_collection_manifest.json
+
+training:
+  template_sft:
+    model_name_or_path: Qwen/Qwen3.5-9B
+    output_dir: runs/legal_flux/training/template_structure_sft
+    finetuning_type: lora
+    eval_fraction: 0.0
+    num_train_epochs: 6
+    learning_rate: 0.0001
+    per_device_train_batch_size: 1
+    per_device_eval_batch_size: 1
+    gradient_accumulation_steps: 16
+    warmup_ratio: 0.05
+    weight_decay: 0.01
+    max_grad_norm: 1.0
+    max_length: 1024
+    gradient_checkpointing: true
+    bf16: true
+    tf32: true
+    save_total_limit: 6
+    logging_steps: 5
+    dataset_num_proc: 4
+    report_to: none
+    trust_remote_code: false
+    attn_implementation: sdpa
+    lora_r: 32
+    lora_alpha: 64
+    lora_dropout: 0.05
+    lora_target_modules: all-linear
+    lora_exclude_modules:
+      - visual
+      - vision_model
+      - vision_tower
+      - merger
 
 audit:
   provider: none

@@ -1,0 +1,16 @@
+extends: legal_flux.yaml
+
+model:
+  provider: openai_compatible
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: OPENAI_API_KEY
+  name: Qwen/Qwen3.5-9B
+  concurrency: 8
+  timeout_seconds: 900
+
+legal_flux:
+  rf_retrieval_backend: sentence_transformer
+  rf_sentence_transformer_model: BAAI/bge-m3
+
+xsim:
+  device: cpu

@@ -3,13 +3,23 @@ from __future__ import annotations
 import json
 import re
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .clients import OllamaClient, OllamaResponseError
-from .config import resolve_path
-from .embeddings import OllamaEmbeddingBackend, SimilarityBackend, TfidfSimilarityBackend
+from .clients import (
+    GenerationClient,
+    GenerationResponseError,
+    build_generation_client,
+)
+from .config import resolve_path, resolve_project_path
+from .embeddings import (
+    OllamaEmbeddingBackend,
+    SentenceTransformerEmbeddingBackend,
+    SimilarityBackend,
+    TfidfSimilarityBackend,
+)
 from .io_utils import canonical_json, sha256_text
 from .ledger import JsonlLedger, make_run_hash
 from .legal_flux import (
@@ -48,9 +58,32 @@ def run_legal_flux_generation(
     dry_run: bool = False,
     sample_count: int | None = None,
     case_limit: int | None = None,
+    conditions: list[str] | None = None,
+    num_shards: int = 1,
+    shard_index: int = 0,
+    run_tag: str | None = None,
+    case_ids_file: str | None = None,
 ) -> dict[str, Any]:
     normalized_phase = phase.replace("-", "_")
+    normalized_run_tag = _validated_run_tag(run_tag)
+    if num_shards < 1:
+        raise ValueError("num_shards must be at least 1.")
+    if not 0 <= shard_index < num_shards:
+        raise ValueError("shard_index must be in [0, num_shards).")
     cases = load_cases(config)
+    requested_case_ids: set[str] | None = None
+    if case_ids_file:
+        requested_case_ids = _load_case_ids(
+            resolve_project_path(config, case_ids_file)
+        )
+        available = {case.case_id for case in cases}
+        missing = sorted(requested_case_ids - available)
+        if missing:
+            raise ValueError(
+                f"Case-ID file contains {len(missing)} unknown IDs; first: "
+                f"{missing[:5]}"
+            )
+        cases = [case for case in cases if case.case_id in requested_case_ids]
     jobs = build_legal_flux_jobs(
         cases,
         config,
@@ -58,7 +91,36 @@ def run_legal_flux_generation(
         sample_count=sample_count,
         case_limit=case_limit,
     )
-    run_dir = resolve_path(config, "runs_dir") / normalized_phase
+    if requested_case_ids is not None:
+        selected_ids = {job["case"].case_id for job in jobs}
+        wrong_phase = sorted(requested_case_ids - selected_ids)
+        if wrong_phase:
+            raise ValueError(
+                f"Case-ID file contains {len(wrong_phase)} cases outside "
+                f"{normalized_phase}; first: {wrong_phase[:5]}"
+            )
+    if conditions is not None:
+        requested = {condition.strip() for condition in conditions if condition.strip()}
+        known = {job["condition"] for job in jobs}
+        unsupported = sorted(requested - known)
+        if unsupported:
+            raise ValueError(
+                f"Requested conditions are not configured for {normalized_phase}: "
+                f"{unsupported}"
+            )
+        jobs = [job for job in jobs if job["condition"] in requested]
+    jobs = _select_generation_shard(
+        jobs,
+        num_shards=num_shards,
+        shard_index=shard_index,
+    )
+    run_dir = _generation_run_dir(
+        config,
+        normalized_phase,
+        num_shards=num_shards,
+        shard_index=shard_index,
+        run_tag=normalized_run_tag,
+    )
     if dry_run:
         return {
             "phase": normalized_phase,
@@ -67,6 +129,9 @@ def run_legal_flux_generation(
             "cases": len({job["case"].case_id for job in jobs}),
             "samples_per_case": max((job["sample_index"] for job in jobs), default=0) + 1,
             "run_dir": str(run_dir),
+            "num_shards": num_shards,
+            "shard_index": shard_index,
+            "run_tag": normalized_run_tag,
             "dry_run": True,
         }
 
@@ -78,12 +143,37 @@ def run_legal_flux_generation(
         if any(job["condition"] == "flux_rf_style" for job in jobs)
         else None
     )
-    client = OllamaClient(config["model"]["base_url"], config["model"]["timeout_seconds"])
-    model_info = client.model_info(config["model"]["name"])
-    if not model_info:
+    client = build_generation_client(config)
+    required_models = {config["model"]["name"]}
+    if any(job["condition"] == "flux_rf_style" for job in jobs):
+        required_models.update(
+            _role_model(config, role)
+            for role in ("planner", "executor", "reviewer")
+        )
+    model_infos = {
+        model_name: client.model_info(model_name)
+        for model_name in sorted(required_models)
+    }
+    missing_models = [
+        model_name for model_name, model_info in model_infos.items() if not model_info
+    ]
+    if missing_models:
         client.close()
-        raise RuntimeError(f"Model {config['model']['name']!r} is not installed in Ollama.")
-    digest = model_info.get("digest", "unknown")
+        raise RuntimeError(
+            f"Models {missing_models!r} are not exposed by "
+            f"{config['model'].get('provider', 'ollama')} at "
+            f"{config['model']['base_url']}."
+        )
+    model_digests = {
+        model_name: str(model_info.get("digest", "unknown"))
+        for model_name, model_info in model_infos.items()
+        if model_info is not None
+    }
+    digest = (
+        next(iter(model_digests.values()))
+        if len(model_digests) == 1
+        else sha256_text(canonical_json(model_digests))
+    )
     if normalized_phase == "final_test":
         assert_legal_flux_frozen(
             config,
@@ -119,8 +209,12 @@ def run_legal_flux_generation(
             {
                 "phase": normalized_phase,
                 "model_digest": digest,
+                "model_digests": model_digests,
                 "workflow_hash": workflow_hash,
                 "template_pool_hash": template_hash,
+                "num_shards": num_shards,
+                "shard_index": shard_index,
+                "run_tag": normalized_run_tag,
                 "job_count": len(planned),
                 "jobs": planned,
             },
@@ -134,25 +228,54 @@ def run_legal_flux_generation(
     completed = 0
     skipped = 0
     errors = 0
+    concurrency = max(1, int(config["model"].get("concurrency", 1)))
     try:
-        for job in jobs:
-            record = _run_flux_job(
-                client,
-                config,
-                job,
-                templates=templates,
-                model_digest=digest,
-                workflow_hash=workflow_hash,
-                template_hash=template_hash,
-                ledger=ledger,
-                similarity_backend=similarity_backend,
+        if concurrency == 1:
+            records = (
+                _run_flux_job(
+                    client,
+                    config,
+                    job,
+                    templates=templates,
+                    model_digest=digest,
+                    workflow_hash=workflow_hash,
+                    template_hash=template_hash,
+                    ledger=ledger,
+                    similarity_backend=similarity_backend,
+                )
+                for job in jobs
             )
-            if record is None:
-                skipped += 1
-                continue
-            completed += 1
-            if record.get("status") != "ok":
-                errors += 1
+            for record in records:
+                completed, skipped, errors = _update_run_counts(
+                    record,
+                    completed=completed,
+                    skipped=skipped,
+                    errors=errors,
+                )
+        else:
+            with ThreadPoolExecutor(max_workers=concurrency) as executor:
+                futures = [
+                    executor.submit(
+                        _run_flux_job,
+                        client,
+                        config,
+                        job,
+                        templates=templates,
+                        model_digest=digest,
+                        workflow_hash=workflow_hash,
+                        template_hash=template_hash,
+                        ledger=ledger,
+                        similarity_backend=similarity_backend,
+                    )
+                    for job in jobs
+                ]
+                for future in as_completed(futures):
+                    completed, skipped, errors = _update_run_counts(
+                        future.result(),
+                        completed=completed,
+                        skipped=skipped,
+                        errors=errors,
+                    )
     finally:
         client.close()
         if hasattr(similarity_backend, "close"):
@@ -165,8 +288,13 @@ def run_legal_flux_generation(
         "errors": errors,
         "run_dir": str(run_dir),
         "model_digest": digest,
+        "model_digests": model_digests,
         "workflow_hash": workflow_hash,
         "template_pool_hash": template_hash,
+        "num_shards": num_shards,
+        "shard_index": shard_index,
+        "run_tag": normalized_run_tag,
+        "concurrency": concurrency,
     }
 
 
@@ -198,7 +326,7 @@ def flux_run_hash(
 
 
 def _run_flux_job(
-    client: OllamaClient,
+    client: GenerationClient,
     config: dict[str, Any],
     job: dict[str, Any],
     *,
@@ -235,6 +363,10 @@ def _run_flux_job(
         "phase": phase,
         "prompt_hash": _condition_prompt_hash(config, case, condition, templates),
         "model_name": config["model"]["name"],
+        "role_models": {
+            role: _role_model(config, role)
+            for role in ("planner", "executor", "reviewer")
+        },
         "model_digest": model_digest,
         "workflow_hash": workflow_hash,
         "template_pool_hash": template_hash,
@@ -289,7 +421,9 @@ def _run_flux_job(
         record = {
             **base,
             "status": "error",
-            "raw_response": exc.raw_text if isinstance(exc, OllamaResponseError) else None,
+            "raw_response": (
+                exc.raw_text if isinstance(exc, GenerationResponseError) else None
+            ),
             "parsed_json": None,
             "trajectory_plan": None,
             "executed_steps": None,
@@ -310,6 +444,98 @@ def _run_flux_job(
     return record
 
 
+def _generation_run_dir(
+    config: dict[str, Any],
+    phase: str,
+    *,
+    num_shards: int,
+    shard_index: int,
+    run_tag: str | None,
+) -> Path:
+    base = resolve_path(config, "runs_dir") / phase
+    if run_tag:
+        base = base / "experiments" / run_tag
+    if num_shards == 1:
+        return base
+    return base / "shards" / f"shard-{shard_index:05d}-of-{num_shards:05d}"
+
+
+def _validated_run_tag(run_tag: str | None) -> str | None:
+    if run_tag is None:
+        return None
+    value = run_tag.strip()
+    if not value or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", value):
+        raise ValueError(
+            "run_tag must be 1-80 characters using letters, digits, dot, "
+            "underscore, or hyphen."
+        )
+    return value
+
+
+def _load_case_ids(path: Path) -> set[str]:
+    if not path.exists():
+        raise FileNotFoundError(f"Case-ID file not found: {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    values = payload.get("case_ids") if isinstance(payload, dict) else payload
+    if not isinstance(values, list):
+        raise ValueError("Case-ID file must be a JSON list or contain `case_ids`.")
+    case_ids = {str(value).strip() for value in values if str(value).strip()}
+    if not case_ids:
+        raise ValueError("Case-ID file contains no case IDs.")
+    return case_ids
+
+
+def _select_generation_shard(
+    jobs: list[dict[str, Any]],
+    *,
+    num_shards: int,
+    shard_index: int,
+) -> list[dict[str, Any]]:
+    if num_shards == 1:
+        return jobs
+    case_keys = list(
+        dict.fromkeys(
+            (
+                job["case"].dataset,
+                job["case"].case_id,
+                job["case"].variant_id,
+            )
+            for job in jobs
+        )
+    )
+    selected_keys = {
+        key
+        for index, key in enumerate(case_keys)
+        if index % num_shards == shard_index
+    }
+    return [
+        job
+        for job in jobs
+        if (
+            job["case"].dataset,
+            job["case"].case_id,
+            job["case"].variant_id,
+        )
+        in selected_keys
+    ]
+
+
+def _update_run_counts(
+    record: dict[str, Any] | None,
+    *,
+    completed: int,
+    skipped: int,
+    errors: int,
+) -> tuple[int, int, int]:
+    if record is None:
+        return completed, skipped + 1, errors
+    return (
+        completed + 1,
+        skipped,
+        errors + (1 if record.get("status") != "ok" else 0),
+    )
+
+
 def _execute_rf_style_case(
     client: Any,
     config: dict[str, Any],
@@ -318,7 +544,9 @@ def _execute_rf_style_case(
     templates: list[LegalFluxTemplate],
     similarity_backend: SimilarityBackend | None = None,
 ) -> tuple[FinalAnalysis, dict[str, Any]]:
-    common = _common_generation_settings(config)
+    planner_common = _common_generation_settings(config, role="planner")
+    executor_common = _common_generation_settings(config, role="executor")
+    reviewer_common = _common_generation_settings(config, role="reviewer")
     schema_dir = resolve_path(config, "schemas_dir")
     max_steps = int(config["legal_flux"].get("max_steps", 4))
 
@@ -345,7 +573,7 @@ def _execute_rf_style_case(
         prompt=plan_prompt,
         schema=_load_schema(schema_dir / "legal_flux_abstract_plan.json"),
         max_tokens=config["model"]["flux_plan_max_tokens"],
-        **common,
+        **planner_common,
     )
     normalized_plan, plan_repairs = _normalize_abstract_plan_payload(
         response.parsed, max_steps=max_steps
@@ -391,7 +619,7 @@ def _execute_rf_style_case(
             step=step,
             template=template,
             prior_artifacts=artifacts,
-            common=common,
+            common=executor_common,
         )
         artifacts.append(artifact)
         raw_parts.append(step_trace["raw_response"])
@@ -411,7 +639,7 @@ def _execute_rf_style_case(
             artifacts=artifacts,
             remaining=remaining,
             selected_templates=selected_templates,
-            common=common,
+            common=reviewer_common,
             max_steps=max_steps - len(artifacts),
             force_final_answer=not remaining or len(artifacts) >= max_steps,
         )
@@ -443,7 +671,7 @@ def _execute_rf_style_case(
             artifacts=artifacts,
             remaining=[],
             selected_templates=selected_templates,
-            common=common,
+            common=reviewer_common,
             max_steps=0,
             force_final_answer=True,
         )
@@ -958,19 +1186,37 @@ def _renumber_abstract_remaining_steps(
     ]
 
 
-def _common_generation_settings(config: dict[str, Any]) -> dict[str, Any]:
+def _common_generation_settings(
+    config: dict[str, Any],
+    *,
+    role: str | None = None,
+) -> dict[str, Any]:
     return {
-        "model": config["model"]["name"],
+        "model": _role_model(config, role) if role else config["model"]["name"],
         "temperature": config["model"]["temperature"],
         "seed": config["model"]["seed"],
         "context_length": config["model"]["context_length"],
     }
 
 
+def _role_model(config: dict[str, Any], role: str) -> str:
+    configured = config["legal_flux"].get(f"{role}_model")
+    return str(configured or config["model"]["name"])
+
+
 def _build_rf_similarity_backend(config: dict[str, Any]) -> SimilarityBackend:
     backend = config["legal_flux"].get("rf_retrieval_backend", "ollama_embedding")
     if backend == "tfidf":
         return TfidfSimilarityBackend()
+    if backend == "sentence_transformer":
+        return SentenceTransformerEmbeddingBackend(
+            model=config["legal_flux"].get(
+                "rf_sentence_transformer_model", "BAAI/bge-m3"
+            ),
+            device=config.get("xsim", {}).get("device") or None,
+            max_length=int(config.get("xsim", {}).get("max_length", 8192)),
+            batch_size=int(config.get("xsim", {}).get("dense_batch_size", 8)),
+        )
     if backend != "ollama_embedding":
         raise ValueError(f"Unknown LegalFlux RF retrieval backend: {backend}")
     cache_file = config["legal_flux"].get(

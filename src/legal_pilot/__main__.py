@@ -48,6 +48,25 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Limit the number of cases drawn from the selected phase.",
     )
+    flux_generate.add_argument(
+        "--conditions",
+        nargs="+",
+        choices=["direct", "structured", "flux_rf_style"],
+        default=None,
+        help="Optional subset of configured comparison conditions.",
+    )
+    flux_generate.add_argument("--num-shards", type=int, default=1)
+    flux_generate.add_argument("--shard-index", type=int, default=0)
+    flux_generate.add_argument(
+        "--run-tag",
+        default=None,
+        help="Store this run under trajectory phase experiments/<run-tag>.",
+    )
+    flux_generate.add_argument(
+        "--case-ids-file",
+        default=None,
+        help="Optional JSON file containing the exact case IDs to run.",
+    )
 
     flux_score = subparsers.add_parser("flux-score")
     flux_score.add_argument(
@@ -63,7 +82,35 @@ def build_parser() -> argparse.ArgumentParser:
         ],
         default="trajectory-dev",
     )
+    flux_score.add_argument("--run-tag", default=None)
     subparsers.add_parser("flux-export-template-sft")
+    template_sft = subparsers.add_parser("flux-train-template-sft")
+    template_sft.add_argument("--dry-run", action="store_true")
+    template_sft.add_argument("--resume-from-checkpoint", default=None)
+    template_sft.add_argument("--learning-rate", type=float, default=None)
+    template_sft.add_argument("--num-train-epochs", type=int, default=None)
+    template_sft.add_argument("--output-dir", default=None)
+    dev_tune = subparsers.add_parser("flux-export-dev-tune")
+    dev_tune.add_argument("--count", type=int, default=256)
+    sft_grid = subparsers.add_parser("flux-summarize-sft-grid")
+    sft_grid.add_argument("--phase", default="trajectory-dev")
+    sft_grid.add_argument("--prefix", default="sft-")
+    xsim = subparsers.add_parser("flux-build-xsim")
+    xsim.add_argument(
+        "--stage",
+        choices=["dense", "rerank", "all"],
+        default="all",
+    )
+    xsim.add_argument("--case-limit", type=int, default=None)
+    xsim.add_argument("--force", action="store_true")
+    dpo_data = subparsers.add_parser("flux-build-dpo-data")
+    dpo_data.add_argument(
+        "--stage",
+        choices=["sample", "evaluate", "all"],
+        default="all",
+    )
+    dpo_data.add_argument("--case-limit", type=int, default=None)
+    dpo_data.add_argument("--force", action="store_true")
     trajectory_dpo = subparsers.add_parser("flux-export-trajectory-dpo")
     trajectory_dpo.add_argument("--phase", default="planner-train")
     deepseek_templates = subparsers.add_parser("flux-deepseek-templates")
@@ -124,15 +171,65 @@ def main(argv: list[str] | None = None) -> int:
             dry_run=args.dry_run,
             sample_count=args.samples,
             case_limit=args.case_limit,
+            conditions=args.conditions,
+            num_shards=args.num_shards,
+            shard_index=args.shard_index,
+            run_tag=args.run_tag,
+            case_ids_file=args.case_ids_file,
         )
     elif args.command == "flux-score":
         from .legal_flux_evaluation import score_legal_flux_run
 
-        result = score_legal_flux_run(config, phase=args.phase)
+        result = score_legal_flux_run(
+            config,
+            phase=args.phase,
+            run_tag=args.run_tag,
+        )
     elif args.command == "flux-export-template-sft":
         from .legal_flux_training import export_template_structure_sft
 
         result = export_template_structure_sft(config)
+    elif args.command == "flux-train-template-sft":
+        from .legal_flux_sft import train_template_structure_sft
+
+        result = train_template_structure_sft(
+            config,
+            dry_run=args.dry_run,
+            resume_from_checkpoint=args.resume_from_checkpoint,
+            learning_rate=args.learning_rate,
+            num_train_epochs=args.num_train_epochs,
+            output_dir=args.output_dir,
+        )
+    elif args.command == "flux-export-dev-tune":
+        from .legal_flux_sft import export_trajectory_dev_tune_subset
+
+        result = export_trajectory_dev_tune_subset(config, count=args.count)
+    elif args.command == "flux-summarize-sft-grid":
+        from .legal_flux_sft import summarize_sft_checkpoint_grid
+
+        result = summarize_sft_checkpoint_grid(
+            config,
+            phase=args.phase,
+            prefix=args.prefix,
+        )
+    elif args.command == "flux-build-xsim":
+        from .legal_flux_xsim import build_xsim
+
+        result = build_xsim(
+            config,
+            stage=args.stage,
+            case_limit=args.case_limit,
+            force=args.force,
+        )
+    elif args.command == "flux-build-dpo-data":
+        from .legal_flux_dpo import build_dpo_data
+
+        result = build_dpo_data(
+            config,
+            stage=args.stage,
+            case_limit=args.case_limit,
+            force=args.force,
+        )
     elif args.command == "flux-export-trajectory-dpo":
         from .legal_flux_training import export_trajectory_dpo
 

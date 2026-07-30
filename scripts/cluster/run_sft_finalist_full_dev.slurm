@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=legalflux-sft-final
+#SBATCH --account=bfua-delta-gpu
+#SBATCH --partition=gpuA40x4
+#SBATCH --array=0-7%4
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus-per-task=1
+#SBATCH --gpu-bind=closest
+#SBATCH --time=48:00:00
+#SBATCH --output=/projects/bfua/ychen129/legal_nlp/logs/legalflux-sft-final-%A_%a.out
+#SBATCH --error=/projects/bfua/ychen129/legal_nlp/logs/legalflux-sft-final-%A_%a.err
+#SBATCH --export=ALL
+
+set -euo pipefail
+
+: "${SFT_LR:?Submit with --export=ALL,SFT_LR=<learning-rate>,SFT_EPOCH=<epoch>}"
+: "${SFT_EPOCH:?Submit with --export=ALL,SFT_LR=<learning-rate>,SFT_EPOCH=<epoch>}"
+
+export LEGAL_FLUX_PROJECT_ROOT="${LEGAL_FLUX_PROJECT_ROOT:-/projects/bfua/${USER}/legal_nlp}"
+export LEGAL_FLUX_WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
+export LEGAL_FLUX_ROOT="${LEGAL_FLUX_ROOT:-${LEGAL_FLUX_PROJECT_ROOT}/repo}"
+export HF_HOME="${HF_HOME:-${LEGAL_FLUX_WORK_ROOT}/cache/huggingface}"
+export TOKENIZERS_PARALLELISM=false
+cd "$LEGAL_FLUX_ROOT"
+module reset
+module load pytorch-conda/2.8
+source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval/bin/activate"
+mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
+
+TRAIN_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/training/template_structure_sft/lr-${SFT_LR}"
+mapfile -t CHECKPOINTS < <(
+  find "$TRAIN_DIR" -maxdepth 1 -type d -name 'checkpoint-*' -print | sort -V
+)
+CHECKPOINT="${CHECKPOINTS[$((SFT_EPOCH - 1))]:-}"
+if [[ -z "$CHECKPOINT" ]]; then
+  echo "Epoch ${SFT_EPOCH} checkpoint not found under ${TRAIN_DIR}." >&2
+  exit 1
+fi
+
+RUN_TAG="sft-full-lr-${SFT_LR}-e${SFT_EPOCH}"
+ADAPTER_NAME="legalflux-${RUN_TAG}"
+export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
+export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
+export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-8}"
+export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
+export LEGAL_FLUX_PLANNER_MODEL="$ADAPTER_NAME"
+export LEGAL_FLUX_REVIEWER_MODEL="$ADAPTER_NAME"
+export LEGAL_FLUX_EXECUTOR_MODEL="$LEGAL_FLUX_MODEL_NAME"
+
+PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 16 + SLURM_ARRAY_TASK_ID) % 30000))
+export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
+
+vllm serve "$LEGAL_FLUX_MODEL_NAME" \
+  --host 127.0.0.1 \
+  --port "$PORT" \
+  --max-model-len 16384 \
+  --gpu-memory-utilization 0.90 \
+  --reasoning-parser qwen3 \
+  --language-model-only \
+  --enable-lora \
+  --max-lora-rank 32 \
+  --lora-modules "${ADAPTER_NAME}=${CHECKPOINT}" \
+  > "${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log" 2>&1 &
+SERVER_PID=$!
+trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+until curl --silent --fail "${LEGAL_FLUX_MODEL_BASE_URL}/models" >/dev/null; do
+  sleep 10
+done
+
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-generate \
+  --phase trajectory-dev \
+  --conditions flux_rf_style \
+  --num-shards "$SLURM_ARRAY_TASK_COUNT" \
+  --shard-index "$SLURM_ARRAY_TASK_ID" \
+  --run-tag "$RUN_TAG"

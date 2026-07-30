@@ -5,7 +5,7 @@ from difflib import get_close_matches
 from pathlib import Path
 from typing import Any
 
-from .clients import OllamaClient
+from .clients import GenerationClient
 from .config import resolve_path
 from .io_utils import read_jsonl
 from .models import DirectAnalysis, FinalAnalysis, NormalizedCase
@@ -30,7 +30,7 @@ def _preview_prompt(
 
 
 def _execute_condition(
-    client: OllamaClient,
+    client: GenerationClient,
     config: dict[str, Any],
     case: NormalizedCase,
     condition: str,

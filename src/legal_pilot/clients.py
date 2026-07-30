@@ -5,7 +5,7 @@ import os
 import time
 import hashlib
 from dataclasses import dataclass
-from typing import Any, TypeVar
+from typing import Any, Protocol, TypeVar
 
 import httpx
 from json_repair import repair_json
@@ -26,11 +26,37 @@ class ModelResponse:
     metadata: dict[str, Any]
 
 
-class OllamaResponseError(ValueError):
+class GenerationResponseError(ValueError):
     def __init__(self, message: str, *, raw_text: str, payload: dict[str, Any]):
         super().__init__(message)
         self.raw_text = raw_text
         self.payload = payload
+
+
+class GenerationClient(Protocol):
+    def close(self) -> None:
+        ...
+
+    def model_info(self, model_name: str) -> dict[str, Any] | None:
+        ...
+
+    def generate(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        schema: dict[str, Any],
+        temperature: float,
+        seed: int,
+        context_length: int,
+        max_tokens: int,
+        think: bool | str = False,
+    ) -> ModelResponse:
+        ...
+
+
+class OllamaResponseError(GenerationResponseError):
+    pass
 
 
 class OllamaClient:
@@ -144,6 +170,171 @@ class OllamaClient:
                 ),
             },
         )
+
+
+class OpenAICompatibleClient:
+    """Client for local vLLM/SGLang/Transformers OpenAI-compatible servers."""
+
+    def __init__(
+        self,
+        base_url: str,
+        timeout_seconds: int = 600,
+        *,
+        api_key: str = "EMPTY",
+        extra_body: dict[str, Any] | None = None,
+    ):
+        self.base_url = base_url.rstrip("/")
+        self.extra_body = dict(extra_body or {})
+        self.client = httpx.Client(
+            base_url=self.base_url,
+            timeout=timeout_seconds,
+            headers={"Authorization": f"Bearer {api_key}"},
+        )
+
+    def close(self) -> None:
+        self.client.close()
+
+    def model_info(self, model_name: str) -> dict[str, Any] | None:
+        response = self.client.get("/models")
+        response.raise_for_status()
+        for model in response.json().get("data", []):
+            if model.get("id") == model_name:
+                return {
+                    **model,
+                    "name": model_name,
+                    "digest": str(model.get("revision") or model_name),
+                }
+        return None
+
+    @retry(
+        retry=retry_if_exception_type((httpx.HTTPError, ValueError)),
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=8),
+        reraise=True,
+    )
+    def generate(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        schema: dict[str, Any],
+        temperature: float,
+        seed: int,
+        context_length: int,
+        max_tokens: int,
+        think: bool | str = False,
+    ) -> ModelResponse:
+        del context_length, think
+        start = time.perf_counter()
+        payload: dict[str, Any] = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": temperature,
+            "seed": seed,
+            "max_tokens": max_tokens,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "legalflux_response",
+                    "schema": schema,
+                    "strict": True,
+                },
+            },
+        }
+        payload.update(self.extra_body)
+        response = self.client.post("/chat/completions", json=payload)
+        response.raise_for_status()
+        response_payload = response.json()
+        choices = response_payload.get("choices") or []
+        if not choices:
+            raise GenerationResponseError(
+                "OpenAI-compatible response contained no choices.",
+                raw_text="",
+                payload=response_payload,
+            )
+        message = choices[0].get("message") or {}
+        raw_text = message.get("content") or ""
+        parsed, repaired, merged = _parse_json_object(
+            raw_text,
+            payload=response_payload,
+            source="OpenAI-compatible",
+        )
+        usage = response_payload.get("usage") or {}
+        reasoning = message.get("reasoning_content") or ""
+        return ModelResponse(
+            raw_text=raw_text,
+            parsed=parsed,
+            elapsed_seconds=time.perf_counter() - start,
+            prompt_tokens=usage.get("prompt_tokens"),
+            output_tokens=usage.get("completion_tokens"),
+            metadata={
+                "finish_reason": choices[0].get("finish_reason"),
+                "json_repair_applied": repaired,
+                "json_repair_merged_object_list": merged,
+                "thinking_characters": len(reasoning),
+                "thinking_sha256": (
+                    hashlib.sha256(reasoning.encode("utf-8")).hexdigest()
+                    if reasoning
+                    else None
+                ),
+            },
+        )
+
+
+def build_generation_client(config: dict[str, Any]) -> GenerationClient:
+    model_config = config["model"]
+    provider = str(model_config.get("provider", "ollama"))
+    if provider == "ollama":
+        return OllamaClient(
+            model_config["base_url"],
+            model_config.get("timeout_seconds", 600),
+        )
+    if provider == "openai_compatible":
+        api_key_env = str(model_config.get("api_key_env", "OPENAI_API_KEY"))
+        api_key = os.environ.get(api_key_env, "EMPTY")
+        return OpenAICompatibleClient(
+            model_config["base_url"],
+            model_config.get("timeout_seconds", 600),
+            api_key=api_key,
+            extra_body=model_config.get("extra_body"),
+        )
+    raise ValueError(f"Unsupported generation provider: {provider}")
+
+
+def _parse_json_object(
+    raw_text: str,
+    *,
+    payload: dict[str, Any],
+    source: str,
+) -> tuple[dict[str, Any], bool, bool]:
+    repaired = False
+    merged = False
+    try:
+        parsed = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        try:
+            parsed = repair_json(raw_text, return_objects=True)
+            repaired = True
+        except Exception as repair_exc:
+            raise GenerationResponseError(
+                f"Invalid {source} JSON content: {exc}",
+                raw_text=raw_text,
+                payload=payload,
+            ) from repair_exc
+    if isinstance(parsed, list) and all(isinstance(item, dict) for item in parsed):
+        combined: dict[str, Any] = {}
+        for item in parsed:
+            combined.update(item)
+        parsed = combined
+        repaired = True
+        merged = True
+    if not isinstance(parsed, dict):
+        raise GenerationResponseError(
+            f"{source} JSON did not produce an object.",
+            raw_text=raw_text,
+            payload=payload,
+        )
+    return parsed, repaired, merged
 
 
 class OpenAIAuditClient:

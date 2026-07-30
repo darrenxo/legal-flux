@@ -12,6 +12,11 @@ The current experiment compares three conditions:
   template per step, execute each step, and let a reviewer continue, revise, or
   emit the final binary answer.
 
+The active configuration caps LegalFlux at four executed template steps. The
+planner prompt receives this limit, overlong plans are truncated, reviewer
+revisions are limited to the remaining slots, and the reviewer must finalize
+when the cap is reached.
+
 Older BoT, semantic/frontier, case-state, `flux_fixed`, `flux_adaptive`, and
 `no_review` trials were moved outside this repo to:
 
@@ -157,21 +162,88 @@ Trajectory-dev run:
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-score --phase trajectory-dev
 ```
 
-Planner-training trajectory sampling and export:
+This is 2,755 cases and 8,265 condition-level jobs. A local Ollama run is
+supported, but the RF-style condition requires several calls per case. Use the
+five-case smoke run locally and use the sharded vLLM workflow in
+[`scripts/cluster/README.md`](scripts/cluster/README.md) for the full
+development comparison. Do not substitute `final-test` at this stage.
+
+Planner-training data preparation:
 
 ```powershell
-.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-generate --phase planner-train --samples 4
-.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-score --phase planner-train
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-export-template-sft
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-train-template-sft --dry-run
+.\.venv-codex\Scripts\python.exe -m pip install -e ".[train]"
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-train-template-sft
+.\.venv-codex\Scripts\python.exe -m pip install -e ".[retrieval]"
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-xsim --stage all
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-dpo-data --stage sample
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-dpo-data --stage evaluate
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-export-trajectory-dpo
 ```
 
 `flux-export-template-sft` produces the ReasonFlux-style template-structure
-learning data: template name/tags as input, and description/scenario/flow as
-output. `flux-export-trajectory-dpo` builds chosen/rejected trajectory pairs
-from repeated `planner_train` samples. v1 intentionally does not add trajectory
-SFT; that would be a pragmatic warm start rather than the core ReasonFlux-Zero
-recipe.
+learning data: template name and tags as input, and description plus scope as
+output. `application_scenario` is mapped to ReasonFlux's scope field. The
+reasoning flow remains in the executable template library and is not an SFT
+target. All 227 templates are used for SFT because the deployed planner is
+expected to know the complete fixed library. The trainer does not create
+duplicate rows: six epochs revisit the same shuffled examples, and gradient
+accumulation determines the effective batch. This is a first checkpoint;
+ReasonFlux reports 15K structure examples extended from approximately 500
+templates.
+
+`flux-train-template-sft` trains a LoRA adapter and writes the final checkpoint
+and manifest under `runs/legal_flux/training/template_structure_sft/`. The
+default six epochs, AdamW optimizer, and cosine schedule follow the settings
+disclosed for ReasonFlux's initialization training. The LoRA learning rate and
+batch settings are LegalFlux starting choices because the paper does not report
+those values. Every epoch checkpoint is retained. Select the epoch and
+hyperparameters by LegalFlux generation accuracy on `trajectory_dev`, first on
+a fixed development subset and then on the full split; never use `final_test`
+for this selection.
+
+The cluster workflow trains learning rates `5e-5`, `1e-4`, and `2e-4`, then
+screens epochs 2, 4, and 6 on the same stratified 256-case subset of
+`trajectory_dev`. Checkpoints are ranked by accuracy, weighted F1, and mean
+call count before the best one or two are confirmed on the complete development
+split. See [`scripts/cluster/README.md`](scripts/cluster/README.md).
+
+For trained evaluation, serve the adapter under a distinct model name and set
+`legal_flux.planner_model` and `legal_flux.reviewer_model` to that name. Leave
+`legal_flux.executor_model` unset (or set it to the base model) so executor
+behavior remains fixed. Direct and structured baselines always use
+`model.name`.
+
+`flux-build-xsim` embeds all 9,185 planner-training cases with `BAAI/bge-m3`,
+retrieves the top 50 cases for every anchor, and reranks those candidates with
+the `BAAI/bge-reranker-v2-m3` cross-encoder. Each saved `X_sim` set contains the
+anchor and the top two reranked neighbors. The embedding text contains claim,
+facts, related laws, and relevant cases only.
+
+For a local canary, build the reusable full-corpus embedding cache and dense
+candidates, rerank 100 anchors, inspect the output, and then resume the full
+rerank:
+
+```powershell
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-xsim --stage dense
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-xsim --stage rerank --case-limit 100
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-xsim --stage rerank
+```
+
+Both JSONL stages resume by skipping completed anchors. Use `--force` only when
+the corpus or retrieval settings change and the artifacts must be rebuilt.
+
+`flux-build-dpo-data` samples exactly four trajectories per anchor from the SFT
+planner. It retrieves each template sequence once and executes that fixed
+trajectory on all three `X_sim` cases using `dpo.executor_model`. The final
+export chooses the trajectory with the highest mean binary accuracy and rejects
+the lowest. Ties inside the best or worst tier are resolved by mean retrieval
+similarity, then fewer steps, then sample index as a deterministic fallback. A
+completed evaluation with an invalid final label counts as incorrect; transport
+or execution failures leave the candidate incomplete. A group is omitted when
+all complete candidates have the same accuracy. v1 intentionally does not add
+trajectory SFT.
 
 Final-test runs are guarded by `flux-freeze`:
 

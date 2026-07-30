@@ -6,9 +6,11 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from sklearn.metrics import f1_score
 
 from .config import resolve_path
 from .io_utils import latest_by_run_hash, read_jsonl, write_jsonl
+from .legal_flux_runner import _validated_run_tag
 from .models import FinalAnalysis
 from .runner import load_cases
 from .scoring import score_record
@@ -18,11 +20,25 @@ def score_legal_flux_run(
     config: dict[str, Any],
     *,
     phase: str,
+    run_tag: str | None = None,
 ) -> dict[str, Any]:
     normalized_phase = phase.replace("-", "_")
     run_dir = resolve_path(config, "runs_dir") / normalized_phase
-    rows = latest_by_run_hash(read_jsonl(run_dir / "generations.jsonl"))
-    rows = _filter_to_run_plan(rows, run_dir)
+    normalized_run_tag = _validated_run_tag(run_tag)
+    if normalized_run_tag:
+        run_dir = run_dir / "experiments" / normalized_run_tag
+    generation_paths = _generation_paths(run_dir)
+    rows = latest_by_run_hash(
+        [
+            row
+            for generation_path in generation_paths
+            for row in read_jsonl(generation_path)
+        ]
+    )
+    rows = _filter_to_run_plans(
+        rows,
+        [path.parent / "run_plan.json" for path in generation_paths],
+    )
     cases = {
         (case.dataset, case.case_id, case.variant_id): case
         for case in load_cases(config)
@@ -63,9 +79,11 @@ def score_legal_flux_run(
     aggregate.to_csv(run_dir / "aggregate.csv", index=False)
     summary = {
         "phase": normalized_phase,
+        "run_tag": normalized_run_tag,
         "records": len(scored),
         "ok_records": len(ok),
         "error_records": len(scored) - len(ok),
+        "generation_files": [str(path) for path in generation_paths],
         "aggregate_path": str(run_dir / "aggregate.csv"),
         "scored_path": str(run_dir / "scored.jsonl"),
     }
@@ -76,19 +94,31 @@ def score_legal_flux_run(
     return summary
 
 
-def _filter_to_run_plan(
+def _generation_paths(run_dir: Path) -> list[Path]:
+    shard_paths = sorted((run_dir / "shards").glob("*/generations.jsonl"))
+    if shard_paths:
+        return shard_paths
+    path = run_dir / "generations.jsonl"
+    if not path.exists():
+        raise FileNotFoundError(f"No generation ledger found under {run_dir}.")
+    return [path]
+
+
+def _filter_to_run_plans(
     rows: list[dict[str, Any]],
-    run_dir: Path,
+    plan_paths: list[Path],
 ) -> list[dict[str, Any]]:
-    plan_path = run_dir / "run_plan.json"
-    if not plan_path.exists():
+    existing = [path for path in plan_paths if path.exists()]
+    if not existing:
         return rows
-    plan = json.loads(plan_path.read_text(encoding="utf-8"))
-    allowed = {
-        job["run_hash"]
-        for job in plan.get("jobs", [])
-        if isinstance(job, dict) and job.get("run_hash")
-    }
+    allowed: set[str] = set()
+    for plan_path in existing:
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        allowed.update(
+            job["run_hash"]
+            for job in plan.get("jobs", [])
+            if isinstance(job, dict) and job.get("run_hash")
+        )
     return [row for row in rows if row.get("run_hash") in allowed]
 
 
@@ -122,6 +152,36 @@ def _aggregate_frame(frame: pd.DataFrame) -> pd.DataFrame:
         .reset_index(name="n")
     )
     grouped = counts.merge(grouped, on=["dataset", "condition"], how="left")
+    if {"gold_answer", "prediction"}.issubset(frame.columns):
+        classification_rows = []
+        for keys, group in frame.groupby(["dataset", "condition"], dropna=False):
+            gold = group["gold_answer"].fillna("__invalid__").astype(str)
+            predictions = group["prediction"].fillna("__invalid__").astype(str)
+            classification_rows.append(
+                {
+                    "dataset": keys[0],
+                    "condition": keys[1],
+                    "weighted_f1": f1_score(
+                        gold,
+                        predictions,
+                        labels=["support", "reject"],
+                        average="weighted",
+                        zero_division=0,
+                    ),
+                    "macro_f1": f1_score(
+                        gold,
+                        predictions,
+                        labels=["support", "reject"],
+                        average="macro",
+                        zero_division=0,
+                    ),
+                }
+            )
+        grouped = grouped.merge(
+            pd.DataFrame(classification_rows),
+            on=["dataset", "condition"],
+            how="left",
+        )
     for metric in ("answer_correct", "valid_fact_reference_rate"):
         if metric not in frame.columns:
             continue

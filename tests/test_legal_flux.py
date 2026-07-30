@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pandas as pd
 import pytest
 
 from legal_pilot.__main__ import build_parser
@@ -21,18 +22,28 @@ from legal_pilot.legal_flux import (
 )
 from legal_pilot.legal_flux_chatgpt import export_legal_flux_chatgpt_batches
 from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
+from legal_pilot.legal_flux_dpo import build_dpo_data
 from legal_pilot.legal_flux_gemini import run_gemini_template_workflow
+from legal_pilot.legal_flux_evaluation import _aggregate_frame
 from legal_pilot.legal_flux_runner import (
     _execute_rf_style_case,
     _normalize_rf_review_payload,
     _normalize_step_artifact_payload,
+    _select_generation_shard,
     flux_run_hash,
 )
 from legal_pilot.legal_flux_setup import import_legal_flux_templates
+from legal_pilot.legal_flux_sft import (
+    export_trajectory_dev_tune_subset,
+    summarize_sft_checkpoint_grid,
+    train_template_structure_sft,
+)
 from legal_pilot.legal_flux_training import (
+    _dpo_pair_from_xsim_group,
     export_template_structure_sft,
     export_trajectory_dpo,
 )
+from legal_pilot.legal_flux_xsim import build_xsim, load_xsim_neighbors
 from legal_pilot.models import (
     LegalFluxAbstractStep,
     LegalFluxPlanStep,
@@ -172,6 +183,109 @@ class FakeTemplateApiClient:
             "content": self.responses.pop(0),
             "metadata": {"response_id": f"fake-{len(self.messages)}"},
         }
+
+
+class FakeDenseEncoder:
+    model_name = "fake-bge-m3"
+
+    def encode(self, texts: list[str], *, batch_size: int):
+        vectors = {
+            "Case 0": [1.0, 0.0, 0.0],
+            "Case 1": [0.9, 0.1, 0.0],
+            "Case 2": [0.8, 0.2, 0.0],
+            "Case 3": [0.7, 0.3, 0.0],
+        }
+        return [
+            next(vector for marker, vector in vectors.items() if marker in text)
+            for text in texts
+        ]
+
+
+class FakeReranker:
+    model_name = "fake-reranker"
+
+    def score(self, pairs: list[tuple[str, str]], *, batch_size: int):
+        candidate_scores = {
+            "Case 1": 0.7,
+            "Case 2": 0.2,
+            "Case 3": 0.9,
+        }
+        return [
+            next(
+                score
+                for marker, score in candidate_scores.items()
+                if marker in candidate
+            )
+            for _, candidate in pairs
+        ]
+
+
+class FakeDpoPipelineClient:
+    def __init__(self, *, invalid_profiles: set[str] | None = None):
+        self.plan_index = 0
+        self.calls: list[dict] = []
+        self.invalid_profiles = invalid_profiles or set()
+
+    def generate(self, **kwargs):
+        self.calls.append(kwargs)
+        title = kwargs["schema"]["title"]
+        if title == "LegalFluxAbstractPlan":
+            index = self.plan_index
+            self.plan_index += 1
+            return _response(
+                {
+                    "case_profile": f"profile {index}",
+                    "planned_steps": [
+                        {
+                            "step_id": "S1",
+                            "step_name": "Debt entitlement",
+                            "template_tags": ["debt", "rule_application"],
+                            "purpose": f"Resolve debt variant {index}.",
+                        }
+                    ],
+                    "planning_rationale": f"rationale {index}",
+                }
+            )
+        if title == "LegalFluxStepArtifact":
+            return _response(
+                {
+                    "step_id": "S1",
+                    "template_id": "LF001",
+                    "instantiated_result": "The supplied facts resolve the claim.",
+                    "material_fact_ids": ["F1"],
+                    "issue_ids": [],
+                    "confidence": "high",
+                    "needs_revision": False,
+                    "revision_reason": "",
+                }
+            )
+        if title == "LegalFluxRfFinalReview":
+            prompt = kwargs["prompt"]
+            target_is_reject = "Claim for case 101" in prompt
+            invalid_profile = next(
+                (profile for profile in self.invalid_profiles if profile in prompt),
+                None,
+            )
+            if invalid_profile is not None:
+                decision = "undetermined"
+            elif "profile 0" in prompt:
+                decision = "reject" if target_is_reject else "support"
+            elif "profile 1" in prompt:
+                decision = "support" if target_is_reject else "reject"
+            elif "profile 2" in prompt:
+                decision = "support"
+            else:
+                decision = "reject"
+            return _response(
+                {
+                    "decision": "final_answer",
+                    "rationale": "The fixed trajectory has been completed.",
+                    "revised_remaining_steps": [],
+                    "final_decision": decision,
+                    "final_rationale": "The artifacts support this binary result.",
+                }
+            )
+        raise AssertionError(title)
 
 
 def test_template_pool_validation_sanitization_and_import(tmp_path: Path):
@@ -761,13 +875,333 @@ def test_template_structure_sft_export_uses_template_name_and_tags(tmp_path: Pat
     assert result["templates"] == 2
     assert rows[0]["task"] == "template_structure_sft"
     assert "Template name: Debt entitlement" in rows[0]["messages"][1]["content"]
-    assert "application_scenario" in rows[0]["messages"][2]["content"]
+    assert "Template ID:" not in rows[0]["messages"][1]["content"]
+    assert '"scope"' in rows[0]["messages"][2]["content"]
+    assert "reasoning_flow" not in rows[0]["messages"][2]["content"]
+    assert rows[0]["prompt"] == rows[0]["messages"][:2]
+    assert rows[0]["completion"] == rows[0]["messages"][2:]
 
 
-def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
+def test_template_structure_sft_dry_run_uses_full_template_library(tmp_path: Path):
+    pool = tmp_path / "templates.jsonl"
+    write_jsonl(
+        pool,
+        [
+            _template(
+                f"LF{index:03d}", f"Template {index}", "tag", "legal_reasoning"
+            ).model_dump(mode="json")
+            for index in range(10)
+        ],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(tmp_path / "processed"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+
+    result = train_template_structure_sft(
+        config,
+        dry_run=True,
+        learning_rate=5e-5,
+        output_dir="runs/sft/lr-5e-5",
+    )
+
+    assert result["train_examples"] == 10
+    assert result["eval_examples"] == 0
+    assert result["estimated_optimizer_steps"] == 6
+    assert result["settings"]["num_train_epochs"] == 6
+    assert result["settings"]["learning_rate"] == 0.00005
+    assert result["settings"]["save_total_limit"] == 6
+    assert Path(result["output_dir"]).parts[-3:] == ("runs", "sft", "lr-5e-5")
+
+
+def test_work_root_environment_redirects_generated_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    work_root = tmp_path / "cluster-work"
+    monkeypatch.setenv("LEGAL_FLUX_WORK_ROOT", str(work_root))
+
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+
+    assert Path(config["paths"]["processed_dir"]) == (
+        work_root / "data" / "processed" / "legal_flux"
+    )
+    assert Path(config["paths"]["runs_dir"]) == work_root / "runs" / "legal_flux"
+    assert Path(config["paths"]["reports_dir"]) == (
+        work_root / "reports" / "legal_flux"
+    )
+    assert Path(config["training"]["template_sft"]["output_dir"]) == (
+        work_root
+        / "runs"
+        / "legal_flux"
+        / "training"
+        / "template_structure_sft"
+    )
+
+
+def test_dev_tune_subset_is_fixed_and_stratified(tmp_path: Path):
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(tmp_path / "processed"),
+    }
+    cases = []
+    for index in range(20):
+        case = _case("trajectory_dev").model_copy(
+            update={
+                "case_id": f"case-{index}",
+                "gold_answer": "support" if index % 2 else "reject",
+                "metadata": {
+                    "selection_split": "trajectory_dev",
+                    "broad_domain": "procedure" if index % 3 else "contract",
+                    "authority_bucket": "laws_only" if index % 4 else "none",
+                },
+            }
+        )
+        cases.append(case.model_dump(mode="json"))
+    processed_dir = Path(config["paths"]["processed_dir"])
+    write_jsonl(processed_dir / "cases.jsonl", cases)
+
+    first = export_trajectory_dev_tune_subset(config, count=8)
+    second = export_trajectory_dev_tune_subset(config, count=8)
+
+    assert first["case_ids"] == second["case_ids"]
+    assert len(first["case_ids"]) == 8
+    assert sum(first["label_counts"].values()) == 8
+
+
+def test_aggregate_frame_reports_binary_f1_metrics():
+    frame = pd.DataFrame(
+        [
+            {
+                "dataset": "legalhk",
+                "condition": "flux_rf_style",
+                "gold_answer": "support",
+                "prediction": "support",
+                "answer_correct": 1.0,
+                "calls": 4,
+            },
+            {
+                "dataset": "legalhk",
+                "condition": "flux_rf_style",
+                "gold_answer": "support",
+                "prediction": "reject",
+                "answer_correct": 0.0,
+                "calls": 4,
+            },
+            {
+                "dataset": "legalhk",
+                "condition": "flux_rf_style",
+                "gold_answer": "reject",
+                "prediction": "reject",
+                "answer_correct": 1.0,
+                "calls": 4,
+            },
+        ]
+    )
+
+    row = _aggregate_frame(frame).iloc[0]
+
+    assert row["answer_correct"] == pytest.approx(2 / 3)
+    assert row["weighted_f1"] == pytest.approx(2 / 3)
+    assert row["macro_f1"] == pytest.approx(2 / 3)
+
+
+def test_sft_grid_summary_uses_weighted_f1_as_accuracy_tie_break(tmp_path: Path):
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "runs_dir": str(tmp_path / "runs"),
+        "reports_dir": str(tmp_path / "reports"),
+    }
+    for tag, weighted_f1 in (
+        ("sft-screen-a", 0.70),
+        ("sft-screen-b", 0.75),
+    ):
+        run_dir = tmp_path / "runs" / "trajectory_dev" / "experiments" / tag
+        run_dir.mkdir(parents=True)
+        pd.DataFrame(
+            [
+                {
+                    "dataset": "legalhk",
+                    "condition": "flux_rf_style",
+                    "answer_correct": 0.8,
+                    "weighted_f1": weighted_f1,
+                    "calls": 4,
+                }
+            ]
+        ).to_csv(run_dir / "aggregate.csv", index=False)
+
+    result = summarize_sft_checkpoint_grid(
+        config,
+        phase="trajectory-dev",
+        prefix="sft-screen-",
+    )
+
+    assert result["best_run_tag"] == "sft-screen-b"
+
+
+def test_generation_sharding_keeps_conditions_for_each_case_together():
+    cases = [_case().model_copy(update={"case_id": f"case-{index}"}) for index in range(5)]
+    jobs = [
+        {"case": case, "condition": condition}
+        for case in cases
+        for condition in ("direct", "structured", "flux_rf_style")
+    ]
+
+    shards = [
+        _select_generation_shard(jobs, num_shards=2, shard_index=index)
+        for index in range(2)
+    ]
+
+    assert sum(len(shard) for shard in shards) == len(jobs)
+    for shard in shards:
+        by_case: dict[str, set[str]] = {}
+        for job in shard:
+            by_case.setdefault(job["case"].case_id, set()).add(job["condition"])
+        assert all(
+            conditions == {"direct", "structured", "flux_rf_style"}
+            for conditions in by_case.values()
+        )
+
+
+def test_xsim_dense_retrieval_and_cross_encoder_reranking(tmp_path: Path):
+    processed = tmp_path / "processed"
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={
+                "case_id": f"legalhk-{index}",
+                "claim": f"Case {index} claim",
+                "facts": {"F1": f"Case {index} facts"},
+            }
+        )
+        for index in range(4)
+    ]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [case.model_dump(mode="json") for case in cases],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+    }
+    config["xsim"] = {
+        **config["xsim"],
+        "dense_model": "fake-bge-m3",
+        "reranker_model": "fake-reranker",
+        "dense_top_k": 3,
+        "final_top_k": 2,
+    }
+
+    result = build_xsim(
+        config,
+        case_limit=1,
+        dense_encoder=FakeDenseEncoder(),
+        reranker=FakeReranker(),
+    )
+    neighbors = load_xsim_neighbors(config)
+
+    assert result["dense_rows_added"] == 1
+    assert result["reranked_rows_added"] == 1
+    assert neighbors["legalhk-0"] == ["legalhk-0", "legalhk-3", "legalhk-1"]
+
+
+def test_dpo_candidate_sampling_creates_four_seeded_plans(tmp_path: Path):
+    processed = tmp_path / "processed"
+    pool = tmp_path / "templates.jsonl"
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={"case_id": f"legalhk-{100 + index}"}
+        )
+        for index in range(3)
+    ]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [case.model_dump(mode="json") for case in cases],
+    )
+    write_jsonl(
+        processed / "xsim" / "xsim_neighbors.jsonl",
+        [
+            {
+                "anchor_case_id": cases[0].case_id,
+                "selected_neighbors": [],
+                "x_sim_case_ids": [case.case_id for case in cases],
+            }
+        ],
+    )
+    write_jsonl(
+        pool,
+        [
+            _template(
+                "LF001", "Debt entitlement", "debt", "rule_application"
+            ).model_dump(mode="json"),
+        ],
+    )
+    responses = [
+        _response(
+            {
+                "case_profile": f"profile {index}",
+                "planned_steps": [
+                    {
+                        "step_id": "S1",
+                        "step_name": "Debt entitlement",
+                        "template_tags": ["debt", "rule_application"],
+                        "purpose": f"Resolve entitlement variant {index}.",
+                    }
+                ],
+                "planning_rationale": f"rationale {index}",
+            }
+        )
+        for index in range(4)
+    ]
+    client = SequenceClient(responses)
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+        "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
+        "schemas_dir": str(Path(__file__).parents[1] / "schemas"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+
+    result = build_dpo_data(
+        config,
+        stage="sample",
+        case_limit=1,
+        client=client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    rows = read_jsonl(Path(result["candidates_path"]))
+
+    assert result["sample_records_added"] == 4
+    assert len(rows) == 4
+    assert [row["sample_index"] for row in rows] == [0, 1, 2, 3]
+    assert [call["seed"] for call in client.calls] == [
+        config["dpo"]["seed"] + index for index in range(4)
+    ]
+    assert all(
+        call["temperature"] == config["dpo"]["planner_temperature"]
+        for call in client.calls
+    )
+
+
+def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
     pool = tmp_path / "templates.jsonl"
     processed = tmp_path / "processed"
-    runs = tmp_path / "runs"
     write_jsonl(
         pool,
         [
@@ -775,8 +1209,20 @@ def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
             _template("LF002", "Procedural gate", "procedure", "threshold").model_dump(mode="json"),
         ],
     )
-    case = _case(split="planner_train")
-    write_jsonl(processed / "cases.jsonl", [case.model_dump(mode="json")])
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={
+                "case_id": f"legalhk-{100 + index}",
+                "gold_answer": answer,
+                "claim": f"Claim for case {100 + index}",
+            }
+        )
+        for index, answer in enumerate(["support", "reject", "support"])
+    ]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [case.model_dump(mode="json") for case in cases],
+    )
     plan_good = {
         "case_profile": "good debt profile",
         "planned_steps": [
@@ -801,41 +1247,68 @@ def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
         ],
         "planning_rationale": "This over-focuses on procedure.",
     }
+    plans = [
+        plan_good,
+        plan_bad,
+        {**plan_good, "case_profile": "second good profile"},
+        {**plan_bad, "case_profile": "second bad profile"},
+    ]
+    candidates = [
+        {
+            "run_hash": f"candidate-{index}",
+            "candidate_id": f"candidate-{index}",
+            "status": "ok",
+            "anchor_case_id": cases[0].case_id,
+            "sample_index": index,
+            "trajectory_plan": plan,
+            "retrieved_template_ids": ["LF001" if index in {0, 2} else "LF002"],
+            "retrieval_trace": [
+                {
+                    "retrieval_mode": (
+                        "exact_unique" if index in {1, 2} else "embedding_full_pool"
+                    ),
+                    "similarity": 1.0 if index in {1, 2} else 0.6,
+                }
+            ],
+        }
+        for index, plan in enumerate(plans)
+    ]
+    training_dir = processed / "planner_training"
     write_jsonl(
-        runs / "planner_train" / "scored.jsonl",
+        training_dir / "trajectory_candidates.jsonl",
+        candidates,
+    )
+    correctness = {
+        "candidate-0": [True, True, True],
+        "candidate-1": [False, False, False],
+        "candidate-2": [True, True, True],
+        "candidate-3": [False, False, False],
+    }
+    evaluations = []
+    for candidate_id, values in correctness.items():
+        for target, correct in zip(cases, values, strict=True):
+            evaluations.append(
+                {
+                    "run_hash": f"{candidate_id}-{target.case_id}",
+                    "status": "ok",
+                    "candidate_id": candidate_id,
+                    "anchor_case_id": cases[0].case_id,
+                    "target_case_id": target.case_id,
+                    "answer_correct": correct,
+                }
+            )
+    write_jsonl(
+        training_dir / "trajectory_evaluations.jsonl",
+        evaluations,
+    )
+    write_jsonl(
+        processed / "xsim" / "xsim_neighbors.jsonl",
         [
             {
-                "run_hash": "chosen",
-                "status": "ok",
-                "condition": "flux_rf_style",
-                "dataset": case.dataset,
-                "case_id": case.case_id,
-                "variant_id": case.variant_id,
-                "sample_index": 0,
-                "trajectory_plan": plan_good,
-                "executed_steps": [{"step_id": "S1"}],
-                "retrieved_template_ids": ["LF001"],
-                "trajectory_length": 1,
-                "schema_errors": [],
-                "answer_correct": True,
-                "binary_prediction_valid": True,
-            },
-            {
-                "run_hash": "rejected",
-                "status": "ok",
-                "condition": "flux_rf_style",
-                "dataset": case.dataset,
-                "case_id": case.case_id,
-                "variant_id": case.variant_id,
-                "sample_index": 1,
-                "trajectory_plan": plan_bad,
-                "executed_steps": [{"step_id": "S1"}, {"step_id": "S2"}],
-                "retrieved_template_ids": [],
-                "trajectory_length": 2,
-                "schema_errors": ["schema repair needed"],
-                "answer_correct": False,
-                "binary_prediction_valid": True,
-            },
+                "anchor_case_id": cases[0].case_id,
+                "selected_neighbors": [],
+                "x_sim_case_ids": [case.case_id for case in cases],
+            }
         ],
     )
     config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
@@ -843,7 +1316,6 @@ def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
     config["paths"] = {
         **config["paths"],
         "processed_dir": str(processed),
-        "runs_dir": str(runs),
         "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
     }
     config["legal_flux"] = {
@@ -856,9 +1328,151 @@ def test_trajectory_dpo_export_pairs_planner_train_samples(tmp_path: Path):
     rows = read_jsonl(Path(result["output_path"]))
 
     assert result["pairs"] == 1
-    assert "good debt profile" in rows[0]["chosen"]
-    assert "bad unrelated profile" in rows[0]["rejected"]
-    assert rows[0]["chosen_reward"] > rows[0]["rejected_reward"]
+    assert "second good profile" in rows[0]["chosen"]
+    assert "second bad profile" in rows[0]["rejected"]
+    assert rows[0]["chosen_reward"] == 1.0
+    assert rows[0]["rejected_reward"] == 0.0
+    assert rows[0]["chosen_candidate_id"] == "candidate-2"
+    assert rows[0]["rejected_candidate_id"] == "candidate-3"
+    assert rows[0]["metadata"]["chosen_tie_break"]["mean_retrieval_similarity"] == 1.0
+    assert rows[0]["metadata"]["rejected_tie_break"]["mean_retrieval_similarity"] == 0.6
+    assert rows[0]["metadata"]["x_sim_case_ids"] == [
+        case.case_id for case in cases
+    ]
+
+
+def test_trajectory_dpo_skips_group_when_all_accuracy_scores_tie():
+    case = _case(split="planner_train")
+    plan = {
+        "case_profile": "Debt dispute",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Debt entitlement",
+                "template_tags": ["debt", "rule_application"],
+                "purpose": "Resolve repayment.",
+            }
+        ],
+        "planning_rationale": "Use the debt template.",
+    }
+    candidates = [
+        {
+            "candidate_id": f"candidate-{index}",
+            "sample_index": index,
+            "trajectory_plan": plan,
+            "retrieval_trace": [
+                {
+                    "retrieval_mode": (
+                        "exact_unique" if index == 0 else "embedding_full_pool"
+                    ),
+                    "similarity": 1.0 if index == 0 else 0.5,
+                }
+            ],
+        }
+        for index in range(2)
+    ]
+    xsim_case_ids = [case.case_id, "legalhk-101", "legalhk-102"]
+    evaluations = {
+        candidate["candidate_id"]: [
+            {
+                "anchor_case_id": case.case_id,
+                "target_case_id": target_id,
+                "answer_correct": correct,
+            }
+            for target_id, correct in zip(
+                xsim_case_ids,
+                [True, False, True],
+                strict=True,
+            )
+        ]
+        for candidate in candidates
+    }
+
+    pair = _dpo_pair_from_xsim_group(
+        {},
+        case.case_id,
+        candidates,
+        case,
+        xsim_case_ids,
+        evaluations,
+        "",
+    )
+
+    assert pair is None
+
+
+def test_dpo_pipeline_executes_fixed_trajectory_on_all_xsim_cases(tmp_path: Path):
+    processed = tmp_path / "processed"
+    pool = tmp_path / "templates.jsonl"
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={
+                "case_id": f"legalhk-{100 + index}",
+                "gold_answer": answer,
+                "claim": f"Claim for case {100 + index}",
+            }
+        )
+        for index, answer in enumerate(["support", "reject", "support"])
+    ]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [case.model_dump(mode="json") for case in cases],
+    )
+    write_jsonl(
+        processed / "xsim" / "xsim_neighbors.jsonl",
+        [
+            {
+                "anchor_case_id": cases[0].case_id,
+                "selected_neighbors": [],
+                "x_sim_case_ids": [case.case_id for case in cases],
+            }
+        ],
+    )
+    write_jsonl(
+        pool,
+        [
+            _template(
+                "LF001", "Debt entitlement", "debt", "rule_application"
+            ).model_dump(mode="json"),
+        ],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+        "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
+        "schemas_dir": str(Path(__file__).parents[1] / "schemas"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+    client = FakeDpoPipelineClient(invalid_profiles={"profile 3"})
+
+    result = build_dpo_data(
+        config,
+        stage="all",
+        case_limit=1,
+        client=client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    evaluations = read_jsonl(Path(result["evaluations_path"]))
+    export = export_trajectory_dpo(config)
+    pairs = read_jsonl(Path(export["output_path"]))
+
+    assert result["sample_records_added"] == 4
+    assert result["evaluation_records_added"] == 12
+    assert result["invalid_answer_records"] == 3
+    assert len(evaluations) == 12
+    assert all(row["retrieved_template_ids"] == ["LF001"] for row in evaluations)
+    invalid = [row for row in evaluations if not row["answer_valid"]]
+    assert len(invalid) == 3
+    assert all(row["status"] == "ok" for row in invalid)
+    assert all(row["answer_correct"] is False for row in invalid)
+    assert export["pairs"] == 1
+    assert pairs[0]["chosen_reward"] == 1.0
+    assert pairs[0]["rejected_reward"] == 0.0
 
 
 def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
@@ -875,10 +1489,26 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
             "--phase",
             "final-test",
             "--dry-run",
+            "--num-shards",
+            "8",
+            "--shard-index",
+            "3",
+            "--conditions",
+            "direct",
+            "structured",
+            "--run-tag",
+            "baseline-check",
+            "--case-ids-file",
+            "dev_ids.json",
         ]
     )
     assert args.phase == "final-test"
     assert args.dry_run
+    assert args.num_shards == 8
+    assert args.shard_index == 3
+    assert args.conditions == ["direct", "structured"]
+    assert args.run_tag == "baseline-check"
+    assert args.case_ids_file == "dev_ids.json"
     train_args = parser.parse_args(
         [
             "--config",
@@ -895,6 +1525,57 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     assert parser.parse_args(
         ["--config", "configs/legal_flux.yaml", "flux-export-template-sft"]
     ).command == "flux-export-template-sft"
+    assert parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-train-template-sft",
+            "--dry-run",
+            "--learning-rate",
+            "5e-5",
+            "--num-train-epochs",
+            "6",
+            "--output-dir",
+            "runs/sft/lr-5e-5",
+        ]
+    ).learning_rate == 5e-5
+    assert parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-export-dev-tune",
+            "--count",
+            "256",
+        ]
+    ).count == 256
+    xsim_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-build-xsim",
+            "--stage",
+            "rerank",
+            "--case-limit",
+            "10",
+        ]
+    )
+    assert xsim_args.command == "flux-build-xsim"
+    assert xsim_args.stage == "rerank"
+    assert xsim_args.case_limit == 10
+    dpo_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-build-dpo-data",
+            "--stage",
+            "sample",
+            "--case-limit",
+            "10",
+        ]
+    )
+    assert dpo_args.command == "flux-build-dpo-data"
+    assert dpo_args.stage == "sample"
+    assert dpo_args.case_limit == 10
     assert parser.parse_args(
         ["--config", "configs/legal_flux.yaml", "flux-export-template-batches"]
     ).command == "flux-export-template-batches"
