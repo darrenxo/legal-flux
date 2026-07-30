@@ -26,7 +26,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd "$LEGAL_FLUX_ROOT"
 module reset
 module load pytorch-conda/2.8
-source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-train/bin/activate"
+source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-train-v2/bin/activate"
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 
 LEARNING_RATES=(5e-5 1e-4 2e-4)

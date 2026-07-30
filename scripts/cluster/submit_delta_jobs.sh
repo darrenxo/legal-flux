@@ -5,8 +5,8 @@ set -euo pipefail
 PROJECT_ROOT="${LEGAL_FLUX_PROJECT_ROOT:-/projects/bfua/${USER}/legal_nlp}"
 WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
 REPO="${LEGAL_FLUX_ROOT:-${PROJECT_ROOT}/repo}"
-TRAIN_ENV="${WORK_ROOT}/envs/legalflux-train"
-EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval"
+TRAIN_ENV="${WORK_ROOT}/envs/legalflux-train-v2"
+EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval-v2"
 CASES="${WORK_ROOT}/data/processed/legal_flux/cases.jsonl"
 MANIFEST="${WORK_ROOT}/data/processed/legal_flux/prepare_manifest.json"
 

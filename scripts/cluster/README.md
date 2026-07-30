@@ -78,9 +78,10 @@ REPO="$PROJECT_ROOT/repo"
 bash "$REPO/scripts/cluster/setup_delta_envs.sh"
 ```
 
-The job scripts load the same `pytorch-conda/2.8` module before activating
-these environments. The setup script also stages Qwen3.5-9B and BGE-M3 in the
-shared model cache so array tasks do not each start a separate download.
+The job scripts load the same `pytorch-conda/2.8` module before activating the
+isolated `legalflux-train-v2` and `legalflux-eval-v2` environments. The setup
+script also stages Qwen3.5-9B and BGE-M3 in the shared model cache so array
+tasks do not each start a separate download.
 
 ## 5. Preflight
 
@@ -119,7 +120,7 @@ export LEGAL_FLUX_WORK_ROOT="$WORK_ROOT"
 
 module reset
 module load pytorch-conda/2.8
-source "$WORK_ROOT/envs/legalflux-eval/bin/activate"
+source "$WORK_ROOT/envs/legalflux-eval-v2/bin/activate"
 python -m legal_pilot --config "$PROJECT_ROOT/repo/configs/legal_flux.cluster.yaml" \
   flux-score --phase trajectory-dev
 ```

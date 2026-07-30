@@ -28,7 +28,7 @@ export TOKENIZERS_PARALLELISM=false
 cd "$LEGAL_FLUX_ROOT"
 module reset
 module load pytorch-conda/2.8
-source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval/bin/activate"
+source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v2/bin/activate"
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 
 TRAIN_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/training/template_structure_sft/lr-${SFT_LR}"
