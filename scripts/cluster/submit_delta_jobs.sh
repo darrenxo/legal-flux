@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_ROOT="${LEGAL_FLUX_PROJECT_ROOT:-/projects/bfua/${USER}/legal_nlp}"
+WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
+REPO="${LEGAL_FLUX_ROOT:-${PROJECT_ROOT}/repo}"
+TRAIN_ENV="${WORK_ROOT}/envs/legalflux-train"
+EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval"
+CASES="${WORK_ROOT}/data/processed/legal_flux/cases.jsonl"
+MANIFEST="${WORK_ROOT}/data/processed/legal_flux/prepare_manifest.json"
+
+for required in \
+  "${REPO}/configs/legal_flux.cluster.yaml" \
+  "${TRAIN_ENV}/bin/python" \
+  "${EVAL_ENV}/bin/python" \
+  "$CASES" \
+  "$MANIFEST"; do
+  if [[ ! -e "$required" ]]; then
+    echo "Required path is missing: ${required}" >&2
+    exit 1
+  fi
+done
+
+mkdir -p "${PROJECT_ROOT}/logs" "${WORK_ROOT}/runs/legal_flux"
+export LEGAL_FLUX_PROJECT_ROOT="$PROJECT_ROOT"
+export LEGAL_FLUX_WORK_ROOT="$WORK_ROOT"
+export LEGAL_FLUX_ROOT="$REPO"
+export HF_HOME="${WORK_ROOT}/cache/huggingface"
+
+module reset
+module load pytorch-conda/2.8
+
+source "${TRAIN_ENV}/bin/activate"
+python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
+  flux-train-template-sft --dry-run
+deactivate
+
+source "${EVAL_ENV}/bin/activate"
+python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
+  flux-generate \
+  --phase trajectory-dev \
+  --conditions direct structured flux_rf_style \
+  --num-shards 8 \
+  --shard-index 0 \
+  --dry-run
+python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
+  flux-export-dev-tune --count 256
+deactivate
+
+cd "$REPO"
+BASE_JOB="$(sbatch --parsable scripts/cluster/run_no_training_eval.slurm)"
+SFT_JOB="$(sbatch --parsable scripts/cluster/run_template_sft_grid.slurm)"
+
+printf 'NO_TRAINING=%s\n' "$BASE_JOB"
+printf 'SFT_GRID=%s\n' "$SFT_JOB"
+squeue -u "$USER"

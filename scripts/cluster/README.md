@@ -68,69 +68,24 @@ The 227-template library is tracked in Git.
 
 ## 4. Build isolated environments
 
-On Delta:
+On Delta, use the checked setup script:
 
 ```bash
 PROJECT_ROOT=/projects/bfua/$USER/legal_nlp
 WORK_ROOT=/work/hdd/bfua/$USER/legal_nlp
 REPO="$PROJECT_ROOT/repo"
 
-module reset
-module load pytorch-conda/2.8
-
-python -m venv --system-site-packages "$WORK_ROOT/envs/legalflux-train"
-source "$WORK_ROOT/envs/legalflux-train/bin/activate"
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install -e "$REPO[train]"
-deactivate
-
-python -m venv --system-site-packages "$WORK_ROOT/envs/legalflux-eval"
-source "$WORK_ROOT/envs/legalflux-eval/bin/activate"
-python -m pip install --upgrade pip setuptools wheel uv
-uv pip install vllm --torch-backend=auto \
-  --extra-index-url https://wheels.vllm.ai/nightly
-uv pip install -e "$REPO[retrieval]"
-deactivate
+bash "$REPO/scripts/cluster/setup_delta_envs.sh"
 ```
 
 The job scripts load the same `pytorch-conda/2.8` module before activating
-these environments.
+these environments. The setup script also stages Qwen3.5-9B and BGE-M3 in the
+shared model cache so array tasks do not each start a separate download.
 
 ## 5. Preflight
 
-```bash
-PROJECT_ROOT=/projects/bfua/$USER/legal_nlp
-WORK_ROOT=/work/hdd/bfua/$USER/legal_nlp
-REPO="$PROJECT_ROOT/repo"
-
-mkdir -p "$PROJECT_ROOT/logs" \
-  "$WORK_ROOT/cache/huggingface" \
-  "$WORK_ROOT/runs/legal_flux" \
-  "$WORK_ROOT/reports/legal_flux"
-
-export LEGAL_FLUX_ROOT="$REPO"
-export LEGAL_FLUX_WORK_ROOT="$WORK_ROOT"
-export HF_HOME="$WORK_ROOT/cache/huggingface"
-
-source "$WORK_ROOT/envs/legalflux-train/bin/activate"
-python -m legal_pilot --config "$REPO/configs/legal_flux.cluster.yaml" \
-  flux-train-template-sft --dry-run
-deactivate
-
-source "$WORK_ROOT/envs/legalflux-eval/bin/activate"
-python -m legal_pilot --config "$REPO/configs/legal_flux.cluster.yaml" \
-  flux-generate \
-  --phase trajectory-dev \
-  --conditions direct structured flux_rf_style \
-  --case-limit 1 \
-  --dry-run
-python -m legal_pilot --config "$REPO/configs/legal_flux.cluster.yaml" \
-  flux-export-dev-tune --count 256
-deactivate
-```
-
-Expected SFT preflight: 227 training examples, no template holdout, six epochs,
-effective batch size 16, and 90 optimizer steps.
+The submission script below performs both preflights and stops before `sbatch`
+if the checkout, environments, prepared cases, or manifest are missing.
 
 ## 6. Submit the immediate jobs
 
@@ -140,14 +95,7 @@ The no-training job runs direct, fixed IRAC, and untrained LegalFlux over all
 sealed until the trained pipeline is selected and frozen.
 
 ```bash
-cd /projects/bfua/$USER/legal_nlp/repo
-
-BASE_JOB=$(sbatch --parsable scripts/cluster/run_no_training_eval.slurm)
-SFT_JOB=$(sbatch --parsable scripts/cluster/run_template_sft_grid.slurm)
-
-echo "NO_TRAINING=$BASE_JOB"
-echo "SFT_GRID=$SFT_JOB"
-squeue -u "$USER"
+bash /projects/bfua/$USER/legal_nlp/repo/scripts/cluster/submit_delta_jobs.sh
 ```
 
 The SFT job is an array of three learning rates: `5e-5`, `1e-4`, and `2e-4`.
