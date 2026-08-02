@@ -1593,6 +1593,7 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
             "baseline-check",
             "--case-ids-file",
             "dev_ids.json",
+            "--fail-on-errors",
         ]
     )
     assert args.phase == "final-test"
@@ -1602,6 +1603,7 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     assert args.conditions == ["direct", "structured"]
     assert args.run_tag == "baseline-check"
     assert args.case_ids_file == "dev_ids.json"
+    assert args.fail_on_errors
     train_args = parser.parse_args(
         [
             "--config",

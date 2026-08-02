@@ -146,9 +146,26 @@ The no-training aggregate is written to
 are written under
 `$WORK_ROOT/runs/legal_flux/training/template_structure_sft/`.
 
-Once SFT finishes, submit `run_sft_checkpoint_screen.slurm` to screen epochs
-2, 4, and 6. Do not evaluate `final_test` until the planner, template library,
-prompts, retrieval configuration, and executor are frozen.
+Once SFT finishes, evaluate epochs 2, 4, and 6 for all three learning rates on
+the complete 2,755-case development split:
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+sbatch scripts/cluster/run_sft_full_grid.slurm
+```
+
+This is one 72-task array: 3 learning rates x 3 epochs x 8 data shards, with at
+most four GPU tasks running concurrently. After every array task completes,
+score all nine configurations and build the checkpoint ranking:
+
+```bash
+bash scripts/cluster/score_sft_full_grid.sh
+```
+
+The ranking is written under
+`$WORK_ROOT/reports/legal_flux/sft_checkpoint_grid.*`. Do not evaluate
+`final_test` until the planner, template library, prompts, retrieval
+configuration, and executor are frozen.
 
 ## Resuming no-training shards
 
@@ -169,3 +186,15 @@ If a shard reports `No ledger`, generation never started and there is nothing
 to resume. After fixing the server environment, resubmit that entire shard. A
 vLLM startup failure now terminates the task promptly and prints the final 200
 server-log lines instead of waiting until the Slurm time limit.
+
+For a clean no-training rerun, use:
+
+```bash
+bash scripts/cluster/submit_no_training_eval.sh
+```
+
+Its canary checks schema-constrained visible JSON, not merely server startup.
+Cluster requests disable Qwen's hidden thinking because every LegalFlux role
+already emits its reasoning in required JSON fields. Generation tasks use four
+concurrent requests per server and exit nonzero if any record fails; successful
+ledger records remain resumable.

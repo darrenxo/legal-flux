@@ -254,13 +254,21 @@ class OpenAICompatibleClient:
             )
         message = choices[0].get("message") or {}
         raw_text = message.get("content") or ""
+        reasoning = message.get("reasoning_content") or ""
+        if not raw_text.strip():
+            raise GenerationResponseError(
+                "OpenAI-compatible response contained no visible JSON content "
+                f"(finish_reason={choices[0].get('finish_reason')!r}, "
+                f"reasoning_characters={len(reasoning)}).",
+                raw_text=raw_text,
+                payload=response_payload,
+            )
         parsed, repaired, merged = _parse_json_object(
             raw_text,
             payload=response_payload,
             source="OpenAI-compatible",
         )
         usage = response_payload.get("usage") or {}
-        reasoning = message.get("reasoning_content") or ""
         return ModelResponse(
             raw_text=raw_text,
             parsed=parsed,

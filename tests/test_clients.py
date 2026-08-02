@@ -2,7 +2,55 @@ import json
 
 import httpx
 
-from legal_pilot.clients import OllamaClient
+from legal_pilot.clients import OpenAICompatibleClient, OllamaClient
+
+
+def test_openai_compatible_generation_sends_extra_body_and_parses_json():
+    captured = {}
+
+    def handler(request):
+        captured.update(json.loads(request.content))
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": '{"answer":"ok"}',
+                        },
+                        "finish_reason": "stop",
+                    }
+                ],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 5},
+            },
+        )
+
+    client = OpenAICompatibleClient(
+        "http://test/v1",
+        extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+    )
+    client.client.close()
+    client.client = httpx.Client(
+        base_url="http://test/v1",
+        transport=httpx.MockTransport(handler),
+    )
+    try:
+        response = client.generate(
+            model="Qwen/Qwen3.5-9B",
+            prompt="test",
+            schema={"type": "object"},
+            temperature=0,
+            seed=1,
+            context_length=128,
+            max_tokens=32,
+        )
+    finally:
+        client.close()
+
+    assert captured["chat_template_kwargs"] == {"enable_thinking": False}
+    assert captured["response_format"]["type"] == "json_schema"
+    assert response.parsed == {"answer": "ok"}
 
 
 def test_ollama_generation_disables_hidden_thinking():

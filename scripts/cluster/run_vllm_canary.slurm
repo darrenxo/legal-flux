@@ -35,17 +35,33 @@ trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$BASE_URL" "$VLLM_LOG"
 
 RESPONSE="${TMPDIR:-/tmp}/legalflux-vllm-canary-${SLURM_JOB_ID}.json"
-PAYLOAD=$(printf '{"model":"%s","messages":[{"role":"user","content":"Return the single word ready."}],"temperature":0,"max_tokens":16}' "$LEGAL_FLUX_MODEL_NAME")
+PAYLOAD=$(printf '%s' "{\"model\":\"${LEGAL_FLUX_MODEL_NAME}\",\"messages\":[{\"role\":\"user\",\"content\":\"Return a JSON object with status set to ready.\"}],\"temperature\":0,\"max_tokens\":128,\"chat_template_kwargs\":{\"enable_thinking\":false},\"response_format\":{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"legalflux_canary\",\"schema\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\",\"enum\":[\"ready\"]}},\"required\":[\"status\"],\"additionalProperties\":false},\"strict\":true}}}")
 curl --silent --show-error --fail --max-time 600 \
   -H 'Content-Type: application/json' \
   --data "$PAYLOAD" \
   "${BASE_URL}/chat/completions" > "$RESPONSE"
 
-if ! grep -q '"choices"' "$RESPONSE"; then
-  echo "Canary response did not contain choices:" >&2
-  head -c 2000 "$RESPONSE" >&2
-  exit 1
-fi
+python3 - "$RESPONSE" <<'PY'
+import json
+import sys
+
+path = sys.argv[1]
+payload = json.load(open(path, encoding="utf-8"))
+choices = payload.get("choices") or []
+if not choices:
+    raise SystemExit("Canary response did not contain choices.")
+message = choices[0].get("message") or {}
+content = message.get("content") or ""
+if not content.strip():
+    reasoning = message.get("reasoning_content") or ""
+    raise SystemExit(
+        "Canary returned no visible content; "
+        f"reasoning_characters={len(reasoning)}."
+    )
+parsed = json.loads(content)
+if parsed != {"status": "ready"}:
+    raise SystemExit(f"Unexpected canary content: {parsed!r}")
+PY
 
 echo "vLLM canary succeeded."
 head -c 2000 "$RESPONSE"

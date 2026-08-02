@@ -5,8 +5,11 @@ model:
   base_url: http://127.0.0.1:8000/v1
   api_key_env: OPENAI_API_KEY
   name: Qwen/Qwen3.5-9B
-  concurrency: 8
+  concurrency: 4
   timeout_seconds: 900
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false
 
 legal_flux:
   rf_retrieval_backend: sentence_transformer

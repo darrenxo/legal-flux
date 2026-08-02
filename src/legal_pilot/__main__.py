@@ -67,6 +67,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Optional JSON file containing the exact case IDs to run.",
     )
+    flux_generate.add_argument(
+        "--fail-on-errors",
+        action="store_true",
+        help="Exit nonzero after preserving the ledger if any generation fails.",
+    )
 
     flux_score = subparsers.add_parser("flux-score")
     flux_score.add_argument(
@@ -176,6 +181,7 @@ def main(argv: list[str] | None = None) -> int:
             shard_index=args.shard_index,
             run_tag=args.run_tag,
             case_ids_file=args.case_ids_file,
+            fail_on_errors=args.fail_on_errors,
         )
     elif args.command == "flux-score":
         from .legal_flux_evaluation import score_legal_flux_run

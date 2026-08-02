@@ -31,7 +31,7 @@ source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
 export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
-export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-8}"
+export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-4}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
 
@@ -62,4 +62,5 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
   --phase trajectory-dev \
   --num-shards "$NUM_SHARDS" \
-  --shard-index "$SLURM_ARRAY_TASK_ID"
+  --shard-index "$SLURM_ARRAY_TASK_ID" \
+  --fail-on-errors

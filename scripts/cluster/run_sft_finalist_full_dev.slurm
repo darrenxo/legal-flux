@@ -46,7 +46,7 @@ RUN_TAG="sft-full-lr-${SFT_LR}-e${SFT_EPOCH}"
 ADAPTER_NAME="legalflux-${RUN_TAG}"
 export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
 export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
-export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-8}"
+export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-4}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 export LEGAL_FLUX_PLANNER_MODEL="$ADAPTER_NAME"
 export LEGAL_FLUX_REVIEWER_MODEL="$ADAPTER_NAME"
@@ -76,4 +76,5 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   --conditions flux_rf_style \
   --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID" \
-  --run-tag "$RUN_TAG"
+  --run-tag "$RUN_TAG" \
+  --fail-on-errors

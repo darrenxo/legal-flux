@@ -199,15 +199,13 @@ default six epochs, AdamW optimizer, and cosine schedule follow the settings
 disclosed for ReasonFlux's initialization training. The LoRA learning rate and
 batch settings are LegalFlux starting choices because the paper does not report
 those values. Every epoch checkpoint is retained. Select the epoch and
-hyperparameters by LegalFlux generation accuracy on `trajectory_dev`, first on
-a fixed development subset and then on the full split; never use `final_test`
-for this selection.
+hyperparameters by LegalFlux generation accuracy on the complete
+`trajectory_dev` split; never use `final_test` for this selection.
 
 The cluster workflow trains learning rates `5e-5`, `1e-4`, and `2e-4`, then
-screens epochs 2, 4, and 6 on the same stratified 256-case subset of
-`trajectory_dev`. Checkpoints are ranked by accuracy, weighted F1, and mean
-call count before the best one or two are confirmed on the complete development
-split. See [`scripts/cluster/README.md`](scripts/cluster/README.md).
+evaluates epochs 2, 4, and 6 for every learning rate on all 2,755
+`trajectory_dev` cases. Checkpoints are ranked by accuracy, weighted F1, and
+mean call count. See [`scripts/cluster/README.md`](scripts/cluster/README.md).
 
 For trained evaluation, serve the adapter under a distinct model name and set
 `legal_flux.planner_model` and `legal_flux.reviewer_model` to that name. Leave

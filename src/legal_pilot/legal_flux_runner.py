@@ -63,6 +63,7 @@ def run_legal_flux_generation(
     shard_index: int = 0,
     run_tag: str | None = None,
     case_ids_file: str | None = None,
+    fail_on_errors: bool = False,
 ) -> dict[str, Any]:
     normalized_phase = phase.replace("-", "_")
     normalized_run_tag = _validated_run_tag(run_tag)
@@ -292,7 +293,7 @@ def run_legal_flux_generation(
         client.close()
         if hasattr(similarity_backend, "close"):
             similarity_backend.close()
-    return {
+    result = {
         "phase": normalized_phase,
         "jobs": len(jobs),
         "completed": completed,
@@ -308,6 +309,13 @@ def run_legal_flux_generation(
         "run_tag": normalized_run_tag,
         "concurrency": concurrency,
     }
+    if fail_on_errors and errors:
+        raise RuntimeError(
+            f"LegalFlux generation recorded {errors} error(s) in {run_dir}. "
+            "Successful records were preserved; rerun the same shard to retry "
+            "only failed work."
+        )
+    return result
 
 
 def flux_run_hash(

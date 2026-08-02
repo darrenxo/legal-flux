@@ -46,8 +46,6 @@ python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
   --num-shards 8 \
   --shard-index 0 \
   --dry-run
-python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
-  flux-export-dev-tune --count 256
 deactivate
 
 cd "$REPO"
