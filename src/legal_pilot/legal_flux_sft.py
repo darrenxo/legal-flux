@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import inspect
 import json
 import math
 import os
@@ -88,58 +89,28 @@ def train_template_structure_sft(
     eval_dataset = Dataset.from_list(eval_rows) if eval_rows else None
     use_bf16 = bool(settings["bf16"]) and torch.cuda.is_bf16_supported()
     use_fp16 = not use_bf16
-    model_init_kwargs: dict[str, Any] = {
-        "dtype": torch.bfloat16 if use_bf16 else torch.float16,
-    }
-    if settings["attn_implementation"]:
-        model_init_kwargs["attn_implementation"] = settings["attn_implementation"]
-
-    training_args = SFTConfig(
-        output_dir=str(settings["output_dir"]),
-        model_init_kwargs=model_init_kwargs,
-        trust_remote_code=settings["trust_remote_code"],
-        max_length=settings["max_length"],
-        completion_only_loss=True,
-        packing=False,
-        num_train_epochs=settings["num_train_epochs"],
-        per_device_train_batch_size=settings["per_device_train_batch_size"],
-        per_device_eval_batch_size=settings["per_device_eval_batch_size"],
-        gradient_accumulation_steps=settings["gradient_accumulation_steps"],
-        learning_rate=settings["learning_rate"],
-        lr_scheduler_type="cosine",
-        warmup_ratio=settings["warmup_ratio"],
-        optim="adamw_torch_fused",
-        weight_decay=settings["weight_decay"],
-        max_grad_norm=settings["max_grad_norm"],
-        gradient_checkpointing=settings["gradient_checkpointing"],
-        gradient_checkpointing_kwargs={"use_reentrant": False},
-        bf16=use_bf16,
-        fp16=use_fp16,
-        tf32=settings["tf32"],
-        eval_strategy="epoch" if eval_dataset is not None else "no",
-        save_strategy="epoch",
-        load_best_model_at_end=eval_dataset is not None,
-        metric_for_best_model="eval_loss" if eval_dataset is not None else None,
-        greater_is_better=False if eval_dataset is not None else None,
-        save_total_limit=settings["save_total_limit"],
-        logging_steps=settings["logging_steps"],
-        report_to=settings["report_to"],
-        seed=settings["seed"],
-        data_seed=settings["seed"],
-        dataset_num_proc=settings["dataset_num_proc"],
-        remove_unused_columns=True,
+    sft_config_kwargs = _template_sft_config_kwargs(
+        settings,
+        model_dtype=torch.bfloat16 if use_bf16 else torch.float16,
+        use_bf16=use_bf16,
+        use_fp16=use_fp16,
+        has_eval=eval_dataset is not None,
     )
+    _validate_constructor_kwargs(
+        SFTConfig,
+        sft_config_kwargs,
+        component="TRL SFTConfig",
+    )
+    training_args = SFTConfig(**sft_config_kwargs)
     peft_config = None
     if settings["finetuning_type"] == "lora":
-        peft_config = LoraConfig(
-            r=settings["lora_r"],
-            lora_alpha=settings["lora_alpha"],
-            lora_dropout=settings["lora_dropout"],
-            target_modules=settings["lora_target_modules"],
-            exclude_modules=settings["lora_exclude_modules"],
-            bias="none",
-            task_type="CAUSAL_LM",
+        lora_config_kwargs = _template_lora_config_kwargs(settings)
+        _validate_constructor_kwargs(
+            LoraConfig,
+            lora_config_kwargs,
+            component="PEFT LoraConfig",
         )
+        peft_config = LoraConfig(**lora_config_kwargs)
     trainer = SFTTrainer(
         model=settings["model_name_or_path"],
         args=training_args,
@@ -178,6 +149,88 @@ def train_template_structure_sft(
         encoding="utf-8",
     )
     return {**manifest, "manifest_path": str(manifest_path)}
+
+
+def _template_sft_config_kwargs(
+    settings: dict[str, Any],
+    *,
+    model_dtype: Any,
+    use_bf16: bool,
+    use_fp16: bool,
+    has_eval: bool,
+) -> dict[str, Any]:
+    model_init_kwargs: dict[str, Any] = {
+        "dtype": model_dtype,
+        "trust_remote_code": settings["trust_remote_code"],
+    }
+    if settings["attn_implementation"]:
+        model_init_kwargs["attn_implementation"] = settings["attn_implementation"]
+
+    return dict(
+        output_dir=str(settings["output_dir"]),
+        model_init_kwargs=model_init_kwargs,
+        max_length=settings["max_length"],
+        completion_only_loss=True,
+        packing=False,
+        num_train_epochs=settings["num_train_epochs"],
+        per_device_train_batch_size=settings["per_device_train_batch_size"],
+        per_device_eval_batch_size=settings["per_device_eval_batch_size"],
+        gradient_accumulation_steps=settings["gradient_accumulation_steps"],
+        learning_rate=settings["learning_rate"],
+        lr_scheduler_type="cosine",
+        warmup_ratio=settings["warmup_ratio"],
+        optim="adamw_torch_fused",
+        weight_decay=settings["weight_decay"],
+        max_grad_norm=settings["max_grad_norm"],
+        gradient_checkpointing=settings["gradient_checkpointing"],
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        bf16=use_bf16,
+        fp16=use_fp16,
+        tf32=settings["tf32"],
+        eval_strategy="epoch" if has_eval else "no",
+        save_strategy="epoch",
+        load_best_model_at_end=has_eval,
+        metric_for_best_model="eval_loss" if has_eval else None,
+        greater_is_better=False if has_eval else None,
+        save_total_limit=settings["save_total_limit"],
+        logging_steps=settings["logging_steps"],
+        report_to=settings["report_to"],
+        seed=settings["seed"],
+        data_seed=settings["seed"],
+        dataset_num_proc=settings["dataset_num_proc"],
+        remove_unused_columns=True,
+    )
+
+
+def _validate_constructor_kwargs(
+    constructor: Any,
+    kwargs: dict[str, Any],
+    *,
+    component: str,
+) -> None:
+    parameters = inspect.signature(constructor).parameters.values()
+    if any(parameter.kind is inspect.Parameter.VAR_KEYWORD for parameter in parameters):
+        return
+    supported = {parameter.name for parameter in parameters}
+    unsupported = sorted(set(kwargs) - supported)
+    if unsupported:
+        names = ", ".join(unsupported)
+        raise RuntimeError(
+            f"Installed {component} does not support these configured arguments: "
+            f"{names}. Check the installed training dependency versions."
+        )
+
+
+def _template_lora_config_kwargs(settings: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "r": settings["lora_r"],
+        "lora_alpha": settings["lora_alpha"],
+        "lora_dropout": settings["lora_dropout"],
+        "target_modules": settings["lora_target_modules"],
+        "exclude_modules": settings["lora_exclude_modules"],
+        "bias": "none",
+        "task_type": "CAUSAL_LM",
+    }
 
 
 def prepare_template_sft_splits(config: dict[str, Any]) -> dict[str, Any]:

@@ -34,8 +34,12 @@ from legal_pilot.legal_flux_runner import (
 )
 from legal_pilot.legal_flux_setup import import_legal_flux_templates
 from legal_pilot.legal_flux_sft import (
+    _template_lora_config_kwargs,
+    _template_sft_config_kwargs,
+    _validate_constructor_kwargs,
     export_trajectory_dev_tune_subset,
     summarize_sft_checkpoint_grid,
+    template_sft_settings,
     train_template_structure_sft,
 )
 from legal_pilot.legal_flux_training import (
@@ -918,6 +922,55 @@ def test_template_structure_sft_dry_run_uses_full_template_library(tmp_path: Pat
     assert result["settings"]["learning_rate"] == 0.00005
     assert result["settings"]["save_total_limit"] == 6
     assert Path(result["output_dir"]).parts[-3:] == ("runs", "sft", "lr-5e-5")
+
+
+def test_template_sft_passes_trust_remote_code_to_model_loading():
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    settings = template_sft_settings(config)
+    settings["trust_remote_code"] = True
+    model_dtype = object()
+
+    kwargs = _template_sft_config_kwargs(
+        settings,
+        model_dtype=model_dtype,
+        use_bf16=True,
+        use_fp16=False,
+        has_eval=False,
+    )
+
+    assert "trust_remote_code" not in kwargs
+    assert kwargs["model_init_kwargs"]["trust_remote_code"] is True
+    assert kwargs["model_init_kwargs"]["dtype"] is model_dtype
+
+
+def test_template_sft_reports_unsupported_runtime_config_fields():
+    class MinimalConfig:
+        def __init__(self, output_dir: str):
+            self.output_dir = output_dir
+
+    with pytest.raises(RuntimeError, match="completion_only_loss"):
+        _validate_constructor_kwargs(
+            MinimalConfig,
+            {"output_dir": "checkpoint", "completion_only_loss": True},
+            component="test config",
+        )
+
+
+def test_template_sft_builds_expected_lora_config():
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    settings = template_sft_settings(config)
+
+    kwargs = _template_lora_config_kwargs(settings)
+
+    assert kwargs["r"] == 32
+    assert kwargs["target_modules"] == "all-linear"
+    assert kwargs["exclude_modules"] == [
+        "visual",
+        "vision_model",
+        "vision_tower",
+        "merger",
+    ]
+    assert kwargs["task_type"] == "CAUSAL_LM"
 
 
 def test_work_root_environment_redirects_generated_artifacts(
