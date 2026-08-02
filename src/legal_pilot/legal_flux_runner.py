@@ -252,6 +252,12 @@ def run_legal_flux_generation(
                     skipped=skipped,
                     errors=errors,
                 )
+                _print_generation_progress(
+                    completed=completed,
+                    skipped=skipped,
+                    errors=errors,
+                    total=len(jobs),
+                )
         else:
             with ThreadPoolExecutor(max_workers=concurrency) as executor:
                 futures = [
@@ -275,6 +281,12 @@ def run_legal_flux_generation(
                         completed=completed,
                         skipped=skipped,
                         errors=errors,
+                    )
+                    _print_generation_progress(
+                        completed=completed,
+                        skipped=skipped,
+                        errors=errors,
+                        total=len(jobs),
                     )
     finally:
         client.close()
@@ -533,6 +545,24 @@ def _update_run_counts(
         completed + 1,
         skipped,
         errors + (1 if record.get("status") != "ok" else 0),
+    )
+
+
+def _print_generation_progress(
+    *,
+    completed: int,
+    skipped: int,
+    errors: int,
+    total: int,
+) -> None:
+    processed = completed + skipped
+    if processed % 25 != 0 and processed != total:
+        return
+    print(
+        "LegalFlux progress: "
+        f"{processed}/{total} jobs; completed={completed}, "
+        f"skipped={skipped}, errors={errors}",
+        flush=True,
     )
 
 

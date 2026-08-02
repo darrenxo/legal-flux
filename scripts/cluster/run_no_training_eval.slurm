@@ -49,6 +49,7 @@ fi
 
 PORT=$((8000 + SLURM_ARRAY_TASK_ID))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
+VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log"
 
 vllm serve "$LEGAL_FLUX_MODEL_NAME" \
   --host 127.0.0.1 \
@@ -57,13 +58,27 @@ vllm serve "$LEGAL_FLUX_MODEL_NAME" \
   --gpu-memory-utilization 0.90 \
   --reasoning-parser qwen3 \
   --language-model-only \
-  > "${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log" 2>&1 &
+  > "$VLLM_LOG" 2>&1 &
 SERVER_PID=$!
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 
-until curl --silent --fail "${LEGAL_FLUX_MODEL_BASE_URL}/models" >/dev/null; do
+READY_TIMEOUT_SECONDS="${LEGAL_FLUX_VLLM_READY_TIMEOUT_SECONDS:-1800}"
+READY_DEADLINE=$((SECONDS + READY_TIMEOUT_SECONDS))
+until curl --silent --fail --max-time 5 "${LEGAL_FLUX_MODEL_BASE_URL}/models" >/dev/null; do
+  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+    echo "vLLM exited before becoming ready. Last 200 log lines:" >&2
+    tail -n 200 "$VLLM_LOG" >&2 || true
+    exit 1
+  fi
+  if (( SECONDS >= READY_DEADLINE )); then
+    echo "vLLM did not become ready within ${READY_TIMEOUT_SECONDS} seconds." >&2
+    echo "Last 200 log lines:" >&2
+    tail -n 200 "$VLLM_LOG" >&2 || true
+    exit 1
+  fi
   sleep 10
 done
+echo "vLLM is ready after ${SECONDS} seconds; starting shard ${SLURM_ARRAY_TASK_ID}/${NUM_SHARDS}."
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \

@@ -29,6 +29,7 @@ from legal_pilot.legal_flux_runner import (
     _execute_rf_style_case,
     _normalize_rf_review_payload,
     _normalize_step_artifact_payload,
+    _print_generation_progress,
     _select_generation_shard,
     flux_run_hash,
 )
@@ -72,6 +73,17 @@ def _case(split: str = "smoke") -> NormalizedCase:
         reference_issues=["Whether the defendant must repay the money."],
         metadata={"selection_split": split, "lawsuit_type": "Debt"},
     )
+
+
+def test_generation_progress_is_periodic_and_flushable(capsys: pytest.CaptureFixture[str]):
+    _print_generation_progress(completed=24, skipped=0, errors=0, total=100)
+    assert capsys.readouterr().out == ""
+
+    _print_generation_progress(completed=25, skipped=0, errors=1, total=100)
+    assert "25/100 jobs" in capsys.readouterr().out
+
+    _print_generation_progress(completed=99, skipped=1, errors=1, total=100)
+    assert "100/100 jobs" in capsys.readouterr().out
 
 
 def _template(template_id: str, name: str, *tags: str) -> LegalFluxTemplate:
