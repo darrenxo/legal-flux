@@ -110,8 +110,10 @@ bash /projects/bfua/$USER/legal_nlp/repo/scripts/cluster/submit_delta_jobs.sh
 
 This first submits a one-GPU vLLM canary. The no-training array has an
 `afterok` dependency on that canary, so it starts only after Qwen3.5 serves a
-successful chat-completion request. The SFT grid is independent and can start
-immediately because training does not use vLLM.
+successful chat-completion request. SFT learning-rate task 0 runs independently
+as the training canary; tasks 1 and 2 have an `afterok` dependency on task 0.
+This limits a new training-runtime failure to one GPU while retaining task 0 as
+part of the real checkpoint grid.
 
 The SFT job is an array of three learning rates: `5e-5`, `1e-4`, and `2e-4`.
 Each trains for six epochs and retains every epoch checkpoint.
