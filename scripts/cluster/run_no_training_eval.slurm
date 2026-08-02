@@ -32,6 +32,20 @@ export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
 export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
 export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-8}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
+NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
+
+if (( SLURM_ARRAY_TASK_ID >= NUM_SHARDS )); then
+  echo "Shard index ${SLURM_ARRAY_TASK_ID} is outside ${NUM_SHARDS} shards." >&2
+  exit 1
+fi
+
+LEDGER_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/trajectory_dev/shards"
+LEDGER_DIR+="/shard-$(printf '%05d' "$SLURM_ARRAY_TASK_ID")"
+LEDGER_DIR+="-of-$(printf '%05d' "$NUM_SHARDS")"
+LEDGER="${LEDGER_DIR}/generations.jsonl"
+if [[ -s "$LEDGER" ]] && [[ "$(tail -c 1 "$LEDGER" | wc -l)" -eq 0 ]]; then
+  printf '\n' >> "$LEDGER"
+fi
 
 PORT=$((8000 + SLURM_ARRAY_TASK_ID))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
@@ -54,5 +68,5 @@ done
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
   --phase trajectory-dev \
-  --num-shards "$SLURM_ARRAY_TASK_COUNT" \
+  --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID"

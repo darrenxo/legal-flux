@@ -133,3 +133,18 @@ are written under
 Once SFT finishes, submit `run_sft_checkpoint_screen.slurm` to screen epochs
 2, 4, and 6. Do not evaluate `final_test` until the planner, template library,
 prompts, retrieval configuration, and executor are frozen.
+
+## Resuming timed-out no-training shards
+
+Generation is recorded after each completed condition-level run. Resubmitting
+the same shard skips successful records and retries unfinished or failed ones.
+The total partition count remains fixed at eight even when only selected array
+indices are resubmitted. For example, to resume shards 0 through 3 while shards
+4 through 7 are still running:
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+sbatch --array=0-3%4 scripts/cluster/run_no_training_eval.slurm
+```
+
+After shards 4 through 7 stop, resume only whichever indices did not complete.

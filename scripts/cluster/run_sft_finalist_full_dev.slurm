@@ -50,6 +50,12 @@ export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 export LEGAL_FLUX_PLANNER_MODEL="$ADAPTER_NAME"
 export LEGAL_FLUX_REVIEWER_MODEL="$ADAPTER_NAME"
 export LEGAL_FLUX_EXECUTOR_MODEL="$LEGAL_FLUX_MODEL_NAME"
+NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
+
+if (( SLURM_ARRAY_TASK_ID >= NUM_SHARDS )); then
+  echo "Shard index ${SLURM_ARRAY_TASK_ID} is outside ${NUM_SHARDS} shards." >&2
+  exit 1
+fi
 
 PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 16 + SLURM_ARRAY_TASK_ID) % 30000))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
@@ -76,6 +82,6 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
   --phase trajectory-dev \
   --conditions flux_rf_style \
-  --num-shards "$SLURM_ARRAY_TASK_COUNT" \
+  --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID" \
   --run-tag "$RUN_TAG"
