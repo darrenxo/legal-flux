@@ -6,7 +6,8 @@ PROJECT_ROOT="${LEGAL_FLUX_PROJECT_ROOT:-/projects/bfua/${USER}/legal_nlp}"
 WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
 REPO="${LEGAL_FLUX_ROOT:-${PROJECT_ROOT}/repo}"
 TRAIN_ENV="${WORK_ROOT}/envs/legalflux-train-v2"
-EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval-v2"
+EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval-v3"
+VLLM_CONTAINER="${LEGAL_FLUX_VLLM_CONTAINER:-${WORK_ROOT}/containers/vllm-openai-v0.18.1.sif}"
 CASES="${WORK_ROOT}/data/processed/legal_flux/cases.jsonl"
 MANIFEST="${WORK_ROOT}/data/processed/legal_flux/prepare_manifest.json"
 
@@ -14,6 +15,7 @@ for required in \
   "${REPO}/configs/legal_flux.cluster.yaml" \
   "${TRAIN_ENV}/bin/python" \
   "${EVAL_ENV}/bin/python" \
+  "$VLLM_CONTAINER" \
   "$CASES" \
   "$MANIFEST"; do
   if [[ ! -e "$required" ]]; then
@@ -49,9 +51,12 @@ python -m legal_pilot --config "${REPO}/configs/legal_flux.cluster.yaml" \
 deactivate
 
 cd "$REPO"
-BASE_JOB="$(sbatch --parsable scripts/cluster/run_no_training_eval.slurm)"
+CANARY_SUBMISSION="$(sbatch --parsable scripts/cluster/run_vllm_canary.slurm)"
+CANARY_JOB="${CANARY_SUBMISSION%%;*}"
+BASE_JOB="$(sbatch --parsable --dependency="afterok:${CANARY_JOB}" scripts/cluster/run_no_training_eval.slurm)"
 SFT_JOB="$(sbatch --parsable scripts/cluster/run_template_sft_grid.slurm)"
 
+printf 'VLLM_CANARY=%s\n' "$CANARY_JOB"
 printf 'NO_TRAINING=%s\n' "$BASE_JOB"
 printf 'SFT_GRID=%s\n' "$SFT_JOB"
 squeue -u "$USER"

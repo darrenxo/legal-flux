@@ -78,15 +78,24 @@ REPO="$PROJECT_ROOT/repo"
 bash "$REPO/scripts/cluster/setup_delta_envs.sh"
 ```
 
-The job scripts load the same `pytorch-conda/2.8` module before activating the
-isolated `legalflux-train-v2` and `legalflux-eval-v2` environments. The setup
-script also stages Qwen3.5-9B and BGE-M3 in the shared model cache so array
-tasks do not each start a separate download.
+The job scripts load `pytorch-conda/2.8` before activating the isolated
+`legalflux-train-v2` and `legalflux-eval-v3` host environments. Inference runs
+inside the pinned `vllm/vllm-openai:v0.18.1` Apptainer image; this prevents pip
+from selecting a vLLM build compiled for a different CUDA major version. The
+setup script also stages Qwen3.5-9B and BGE-M3 in the shared model cache so
+array tasks do not each start a separate download.
+
+To rebuild only the evaluation environment and inference image:
+
+```bash
+bash "$REPO/scripts/cluster/setup_delta_eval.sh"
+```
 
 ## 5. Preflight
 
 The submission script below performs both preflights and stops before `sbatch`
-if the checkout, environments, prepared cases, or manifest are missing.
+if the checkout, environments, prepared cases, manifest, or pinned inference
+image is missing.
 
 ## 6. Submit the immediate jobs
 
@@ -98,6 +107,11 @@ sealed until the trained pipeline is selected and frozen.
 ```bash
 bash /projects/bfua/$USER/legal_nlp/repo/scripts/cluster/submit_delta_jobs.sh
 ```
+
+This first submits a one-GPU vLLM canary. The no-training array has an
+`afterok` dependency on that canary, so it starts only after Qwen3.5 serves a
+successful chat-completion request. The SFT grid is independent and can start
+immediately because training does not use vLLM.
 
 The SFT job is an array of three learning rates: `5e-5`, `1e-4`, and `2e-4`.
 Each trains for six epochs and retains every epoch checkpoint.
@@ -120,7 +134,7 @@ export LEGAL_FLUX_WORK_ROOT="$WORK_ROOT"
 
 module reset
 module load pytorch-conda/2.8
-source "$WORK_ROOT/envs/legalflux-eval-v2/bin/activate"
+source "$WORK_ROOT/envs/legalflux-eval-v3/bin/activate"
 python -m legal_pilot --config "$PROJECT_ROOT/repo/configs/legal_flux.cluster.yaml" \
   flux-score --phase trajectory-dev
 ```
@@ -134,7 +148,7 @@ Once SFT finishes, submit `run_sft_checkpoint_screen.slurm` to screen epochs
 2, 4, and 6. Do not evaluate `final_test` until the planner, template library,
 prompts, retrieval configuration, and executor are frozen.
 
-## Resuming timed-out no-training shards
+## Resuming no-training shards
 
 Generation is recorded after each completed condition-level run. Resubmitting
 the same shard skips successful records and retries unfinished or failed ones.
@@ -148,3 +162,8 @@ sbatch --array=0-3%4 scripts/cluster/run_no_training_eval.slurm
 ```
 
 After shards 4 through 7 stop, resume only whichever indices did not complete.
+
+If a shard reports `No ledger`, generation never started and there is nothing
+to resume. After fixing the server environment, resubmit that entire shard. A
+vLLM startup failure now terminates the task promptly and prints the final 200
+server-log lines instead of waiting until the Slurm time limit.

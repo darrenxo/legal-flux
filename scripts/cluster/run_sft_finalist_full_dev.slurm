@@ -28,7 +28,8 @@ export TOKENIZERS_PARALLELISM=false
 cd "$LEGAL_FLUX_ROOT"
 module reset
 module load pytorch-conda/2.8
-source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v2/bin/activate"
+source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
+source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 
 TRAIN_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/training/template_structure_sft/lr-${SFT_LR}"
@@ -60,23 +61,14 @@ fi
 PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 16 + SLURM_ARRAY_TASK_ID) % 30000))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
 
-vllm serve "$LEGAL_FLUX_MODEL_NAME" \
-  --host 127.0.0.1 \
-  --port "$PORT" \
-  --max-model-len 16384 \
-  --gpu-memory-utilization 0.90 \
-  --reasoning-parser qwen3 \
-  --language-model-only \
+VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log"
+legal_flux_start_vllm "$PORT" "$VLLM_LOG" \
   --enable-lora \
   --max-lora-rank 32 \
-  --lora-modules "${ADAPTER_NAME}=${CHECKPOINT}" \
-  > "${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log" 2>&1 &
-SERVER_PID=$!
+  --lora-modules "${ADAPTER_NAME}=${CHECKPOINT}"
+SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
-
-until curl --silent --fail "${LEGAL_FLUX_MODEL_BASE_URL}/models" >/dev/null; do
-  sleep 10
-done
+legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
