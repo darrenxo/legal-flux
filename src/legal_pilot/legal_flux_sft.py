@@ -74,6 +74,7 @@ def train_template_structure_sft(
         import trl
         from datasets import Dataset
         from peft import LoraConfig
+        from transformers import AutoTokenizer
         from trl import SFTConfig, SFTTrainer
     except ImportError as exc:
         raise RuntimeError(
@@ -111,12 +112,14 @@ def train_template_structure_sft(
             component="PEFT LoraConfig",
         )
         peft_config = LoraConfig(**lora_config_kwargs)
+    processing_class = _load_text_tokenizer(AutoTokenizer, settings)
     trainer = SFTTrainer(
         model=settings["model_name_or_path"],
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         peft_config=peft_config,
+        processing_class=processing_class,
     )
     train_result = trainer.train(
         resume_from_checkpoint=resume_from_checkpoint or None
@@ -219,6 +222,20 @@ def _validate_constructor_kwargs(
             f"Installed {component} does not support these configured arguments: "
             f"{names}. Check the installed training dependency versions."
         )
+
+
+def _load_text_tokenizer(auto_tokenizer: Any, settings: dict[str, Any]) -> Any:
+    tokenizer = auto_tokenizer.from_pretrained(
+        settings["model_name_or_path"],
+        trust_remote_code=settings["trust_remote_code"],
+    )
+    if tokenizer.pad_token is None:
+        if tokenizer.eos_token is None:
+            raise RuntimeError(
+                "The text tokenizer has neither a padding token nor an EOS token."
+            )
+        tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer
 
 
 def _template_lora_config_kwargs(settings: dict[str, Any]) -> dict[str, Any]:

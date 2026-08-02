@@ -35,6 +35,7 @@ from legal_pilot.legal_flux_runner import (
 )
 from legal_pilot.legal_flux_setup import import_legal_flux_templates
 from legal_pilot.legal_flux_sft import (
+    _load_text_tokenizer,
     _template_lora_config_kwargs,
     _template_sft_config_kwargs,
     _validate_constructor_kwargs,
@@ -966,6 +967,33 @@ def test_template_sft_reports_unsupported_runtime_config_fields():
             {"output_dir": "checkpoint", "completion_only_loss": True},
             component="test config",
         )
+
+
+def test_template_sft_uses_text_tokenizer_instead_of_multimodal_processor():
+    class FakeTokenizer:
+        pad_token = None
+        eos_token = "<eos>"
+
+    class FakeAutoTokenizer:
+        call = None
+
+        @classmethod
+        def from_pretrained(cls, model_name: str, **kwargs):
+            cls.call = (model_name, kwargs)
+            return FakeTokenizer()
+
+    settings = {
+        "model_name_or_path": "Qwen/Qwen3.5-9B",
+        "trust_remote_code": False,
+    }
+
+    tokenizer = _load_text_tokenizer(FakeAutoTokenizer, settings)
+
+    assert FakeAutoTokenizer.call == (
+        "Qwen/Qwen3.5-9B",
+        {"trust_remote_code": False},
+    )
+    assert tokenizer.pad_token == "<eos>"
 
 
 def test_template_sft_builds_expected_lora_config():
