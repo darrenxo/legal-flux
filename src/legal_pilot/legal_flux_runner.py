@@ -423,7 +423,7 @@ def _run_flux_job(
             **base,
             "status": "ok",
             "raw_response": trace["raw_response"],
-            "parsed_json": analysis.model_dump(mode="json"),
+            "parsed_json": analysis.model_dump(mode="json", exclude_defaults=True),
             "trajectory_plan": trace.get("trajectory_plan"),
             "executed_steps": trace.get("executed_steps"),
             "trajectory_reviews": trace.get("trajectory_reviews"),
@@ -799,12 +799,17 @@ def _review_rf_trajectory(
         remaining_steps=[step.model_dump(mode="json") for step in remaining],
         selected_templates=selected_templates,
         max_steps=max_steps,
-        finalization_requirement=(
-            "No remaining abstract steps are available. You must choose "
-            'decision "final_answer" and provide final_decision as exactly '
-            '"support" or "reject".'
+        review_output_requirement=(
+            "No remaining abstract steps are available. Return only "
+            "final_rationale followed by final_decision, with final_decision "
+            'exactly "support" or "reject".'
             if force_final_answer
-            else "If a useful remaining step is available, you may continue or revise; otherwise choose final_answer."
+            else (
+                "First provide concise review_analysis, then choose decision as "
+                '"continue", "revise", or "final_answer". Return '
+                "revised_remaining_steps, final_rationale, and final_decision; "
+                "use null for final_decision unless decision is final_answer."
+            )
         ),
     )
     schema_name = (
@@ -835,8 +840,8 @@ def _abstract_step_to_plan_step(
         template_id=template.template_id,
         purpose=(
             f"{step.step_name}\n"
-            f"Tags: {', '.join(step.template_tags)}\n"
-            f"Purpose: {step.purpose}"
+            f"Description: {step.step_description}\n"
+            f"Tags: {', '.join(step.template_tags)}"
         ),
         expected_artifact=(
             "A concise intermediate legal finding for this abstract step, "
@@ -849,9 +854,8 @@ def _analysis_from_rf_review(review: LegalFluxRfReview) -> FinalAnalysis:
     if review.final_decision not in {"support", "reject"}:
         raise ValueError("RF-style final_answer review did not include support/reject.")
     return FinalAnalysis(
-        issue_conclusions=[],
         final_decision=review.final_decision,
-        final_rationale=review.final_rationale or review.rationale,
+        final_rationale=review.final_rationale or review.review_analysis,
     )
 
 
@@ -963,7 +967,7 @@ def _normalize_abstract_plan_payload(
             elif value.isdigit():
                 step["step_id"] = f"S{value}"
                 repairs.append("abstract_step_id_prefixed")
-            for key in ("step_name", "purpose"):
+            for key in ("step_name", "step_description"):
                 if step.get(key) is None:
                     step[key] = ""
                     repairs.append(f"abstract_{key}_null_filled")
@@ -988,18 +992,28 @@ def _normalize_abstract_plan_payload(
         if len(steps) > max_steps:
             repairs.append("abstract_planned_steps_truncated_to_max_steps")
         repaired["planned_steps"] = normalized_steps
-    for key in ("case_profile", "planning_rationale"):
-        if repaired.get(key) is None:
-            repaired[key] = ""
-            repairs.append(f"abstract_plan_{key}_null_filled")
-        elif key in repaired and not isinstance(repaired[key], str):
-            repaired[key] = str(repaired[key])
-            repairs.append(f"abstract_plan_{key}_coerced_to_string")
+    if "planning_analysis" not in repaired:
+        legacy_parts = [
+            str(repaired.pop(key)).strip()
+            for key in ("case_profile", "planning_rationale")
+            if repaired.get(key) not in (None, "")
+        ]
+        if legacy_parts:
+            repaired["planning_analysis"] = " ".join(legacy_parts)
+            repairs.append("abstract_legacy_analysis_combined")
+    if repaired.get("planning_analysis") is None:
+        repaired["planning_analysis"] = ""
+        repairs.append("abstract_plan_planning_analysis_null_filled")
+    elif "planning_analysis" in repaired and not isinstance(
+        repaired["planning_analysis"], str
+    ):
+        repaired["planning_analysis"] = str(repaired["planning_analysis"])
+        repairs.append("abstract_plan_planning_analysis_coerced_to_string")
     repairs.extend(
         _fold_extra_fields_into_text(
             repaired,
-            allowed={"case_profile", "planned_steps", "planning_rationale"},
-            text_key="planning_rationale",
+            allowed={"planning_analysis", "planned_steps"},
+            text_key="planning_analysis",
             action_prefix="abstract_plan",
         )
     )
@@ -1020,12 +1034,17 @@ def _normalize_rf_review_payload(
             repaired["decision"] = normalized_decision
             if normalized_decision != decision:
                 repairs.append("rf_review_decision_lowercased")
-    if repaired.get("rationale") is None:
-        repaired["rationale"] = ""
-        repairs.append("rf_review_rationale_null_filled")
-    elif "rationale" in repaired and not isinstance(repaired["rationale"], str):
-        repaired["rationale"] = str(repaired["rationale"])
-        repairs.append("rf_review_rationale_coerced_to_string")
+    if "review_analysis" not in repaired and "rationale" in repaired:
+        repaired["review_analysis"] = repaired.pop("rationale")
+        repairs.append("rf_review_legacy_rationale_renamed")
+    if repaired.get("review_analysis") is None:
+        repaired["review_analysis"] = ""
+        repairs.append("rf_review_analysis_null_filled")
+    elif "review_analysis" in repaired and not isinstance(
+        repaired["review_analysis"], str
+    ):
+        repaired["review_analysis"] = str(repaired["review_analysis"])
+        repairs.append("rf_review_analysis_coerced_to_string")
     if repaired.get("final_decision") is not None:
         final_decision = str(repaired["final_decision"]).strip().lower()
         repaired["final_decision"] = (
@@ -1063,7 +1082,7 @@ def _normalize_rf_review_payload(
             elif value.isdigit():
                 step["step_id"] = f"S{value}"
                 repairs.append("rf_review_step_id_prefixed")
-            for key in ("step_name", "purpose"):
+            for key in ("step_name", "step_description"):
                 if step.get(key) is None:
                     step[key] = ""
                     repairs.append(f"rf_review_{key}_null_filled")
@@ -1091,12 +1110,12 @@ def _normalize_rf_review_payload(
             repaired,
             allowed={
                 "decision",
-                "rationale",
+                "review_analysis",
                 "revised_remaining_steps",
-                "final_decision",
                 "final_rationale",
+                "final_decision",
             },
-            text_key="rationale",
+            text_key="review_analysis",
             action_prefix="rf_review",
         )
     )
@@ -1193,7 +1212,13 @@ def _normalize_step_artifact_payload(
 
 
 def _unwrap_nested_abstract_step_object(step: dict[str, Any]) -> dict[str, Any]:
-    allowed = {"step_id", "step_name", "template_tags", "purpose"}
+    allowed = {
+        "step_id",
+        "step_name",
+        "step_description",
+        "template_tags",
+        "purpose",
+    }
     nested_keys = [
         key
         for key, value in step.items()
@@ -1202,7 +1227,9 @@ def _unwrap_nested_abstract_step_object(step: dict[str, Any]) -> dict[str, Any]:
     ]
     if nested_keys and not allowed.intersection(step):
         nested = dict(step[nested_keys[0]])
-        return {key: value for key, value in nested.items() if key in allowed}
+        return _migrate_legacy_step_purpose(
+            {key: value for key, value in nested.items() if key in allowed}
+        )
     merged = dict(step)
     for key in nested_keys:
         nested = step[key]
@@ -1210,7 +1237,17 @@ def _unwrap_nested_abstract_step_object(step: dict[str, Any]) -> dict[str, Any]:
             if allowed_key not in merged and allowed_key in nested:
                 merged[allowed_key] = nested[allowed_key]
         merged.pop(key, None)
-    return {key: value for key, value in merged.items() if key in allowed}
+    return _migrate_legacy_step_purpose(
+        {key: value for key, value in merged.items() if key in allowed}
+    )
+
+
+def _migrate_legacy_step_purpose(step: dict[str, Any]) -> dict[str, Any]:
+    migrated = dict(step)
+    if "step_description" not in migrated and "purpose" in migrated:
+        migrated["step_description"] = migrated["purpose"]
+    migrated.pop("purpose", None)
+    return migrated
 
 
 def _renumber_abstract_remaining_steps(

@@ -180,6 +180,12 @@ cd /projects/bfua/$USER/legal_nlp/repo
 sbatch --array=0-3%4 scripts/cluster/run_no_training_eval.slurm
 ```
 
+This resume behavior applies only when the workflow hash is unchanged. Changes
+to prompts, schemas, generation limits, retrieval code, or other hashed workflow
+components produce new hashes and regenerate every condition-level result. Old
+ledger rows remain intact, while the current `run_plan.json` keeps scoring scoped
+to the new workflow.
+
 After shards 4 through 7 stop, resume only whichever indices did not complete.
 
 If a shard reports `No ledger`, generation never started and there is nothing

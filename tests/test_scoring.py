@@ -62,6 +62,28 @@ def test_unresolved_without_fact_support_is_incorrect():
     assert scores["conclusion_with_fact_rate"] == 0.0
 
 
+def test_irac_reasoning_metrics_do_not_claim_issue_id_coverage():
+    case = NormalizedCase(
+        dataset="legalhk",
+        case_id="c3",
+        claim="Support the plaintiff's claim.",
+        facts={"F1": "A fact."},
+        gold_answer="support",
+        reference_issues=["Whether the claim is established."],
+    )
+    analysis = FinalAnalysis(
+        irac_reasoning="Issue: claim. Rule: supplied rule. Application: F1. Conclusion: support.",
+        final_decision="support",
+    )
+
+    scores = score_record(case, analysis)
+
+    assert scores["irac_reasoning_present"] == 1.0
+    assert scores["irac_reasoning_characters"] == len(analysis.irac_reasoning)
+    assert scores["issue_coverage_proxy"] is None
+    assert scores["unresolved_issue_rate"] is None
+
+
 def test_exact_match_accepts_equivalent_python_and_json_structures():
     gold = "{'Wisconsin': 0, 'Federal': 0}"
     prediction = '{"Federal":0,"Wisconsin":0}'

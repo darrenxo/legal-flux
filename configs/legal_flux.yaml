@@ -9,10 +9,10 @@ model:
   context_length: 16384
   temperature: 0.0
   seed: 20260619
-  analysis_max_tokens: 1000
-  flux_plan_max_tokens: 900
-  flux_step_max_tokens: 900
-  flux_review_max_tokens: 500
+  analysis_max_tokens: 1600
+  flux_plan_max_tokens: 1400
+  flux_step_max_tokens: 1400
+  flux_review_max_tokens: 1000
   timeout_seconds: 600
   concurrency: 1
 

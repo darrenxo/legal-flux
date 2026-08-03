@@ -493,7 +493,7 @@ def _execute_fixed_trajectory(
         "executed_steps": [
             artifact.model_dump(mode="json") for artifact in artifacts
         ],
-        "final_rationale": review.final_rationale or review.rationale,
+        "final_rationale": review.final_rationale or review.review_analysis,
         "prompt_hashes": prompt_hashes,
         "calls": calls,
         "elapsed_seconds": elapsed_seconds,

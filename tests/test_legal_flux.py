@@ -56,6 +56,7 @@ from legal_pilot.models import (
     LegalFluxTemplate,
     NormalizedCase,
 )
+from legal_pilot.runner import _execute_condition
 
 
 def _case(split: str = "smoke") -> NormalizedCase:
@@ -189,6 +190,47 @@ class SequenceClient:
         return self.responses.pop(0)
 
 
+def test_structured_baseline_uses_concise_irac_then_decision_contract():
+    client = SequenceClient(
+        [
+            _response(
+                {
+                    "irac_reasoning": (
+                        "Issue: whether repayment is due. Rule: an enforceable debt "
+                        "supports repayment. Application: F1 supports the debt and F2 "
+                        "does not defeat it. Conclusion: the claim is supported."
+                    ),
+                    "final_decision": "support",
+                }
+            )
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+
+    analysis, _ = _execute_condition(
+        client,
+        config,
+        _case(),
+        "structured",
+        temperature=0.0,
+        seed=1,
+    )
+
+    assert analysis.final_decision == "support"
+    assert analysis.irac_reasoning.startswith("Issue:")
+    assert analysis.final_rationale == ""
+    assert client.calls[0]["schema"]["required"] == [
+        "irac_reasoning",
+        "final_decision",
+    ]
+    assert set(client.calls[0]["schema"]["properties"]) == {
+        "irac_reasoning",
+        "final_decision",
+    }
+    assert client.calls[0]["max_tokens"] == 1600
+    assert "Keep\nirac_reasoning concise" in client.prompts[0]
+
+
 class FakeTemplateApiClient:
     def __init__(self, responses: list[str]):
         self.responses = list(responses)
@@ -251,16 +293,15 @@ class FakeDpoPipelineClient:
             self.plan_index += 1
             return _response(
                 {
-                    "case_profile": f"profile {index}",
+                    "planning_analysis": f"profile {index}; rationale {index}",
                     "planned_steps": [
                         {
                             "step_id": "S1",
                             "step_name": "Debt entitlement",
+                            "step_description": f"Resolve debt variant {index}.",
                             "template_tags": ["debt", "rule_application"],
-                            "purpose": f"Resolve debt variant {index}.",
                         }
                     ],
-                    "planning_rationale": f"rationale {index}",
                 }
             )
         if title == "LegalFluxStepArtifact":
@@ -295,11 +336,8 @@ class FakeDpoPipelineClient:
                 decision = "reject"
             return _response(
                 {
-                    "decision": "final_answer",
-                    "rationale": "The fixed trajectory has been completed.",
-                    "revised_remaining_steps": [],
-                    "final_decision": decision,
                     "final_rationale": "The artifacts support this binary result.",
+                    "final_decision": decision,
                 }
             )
         raise AssertionError(title)
@@ -364,19 +402,31 @@ def test_rf_retrieval_uses_exact_terms_then_embedding_and_excludes_repeats():
     step = LegalFluxAbstractStep(
         step_id="S1",
         step_name="Work injury employment status",
+        step_description="Determine whether employment/workplace rules are triggered.",
         template_tags=["workplace safety"],
-        purpose="Determine whether employment/workplace rules are triggered.",
     )
 
     result = retrieve_template_for_abstract_step(step, [target, distractor])
 
     assert result["template"].template_id == "LF001"
-    assert result["retrieval_mode"] == "exact_unique"
+    assert result["retrieval_mode"] == "exact_tag_unique"
+
+    exact_name = retrieve_template_for_abstract_step(
+        LegalFluxAbstractStep(
+            step_id="S1",
+            step_name="Employment status",
+            step_description="Resolve the employment relationship.",
+            template_tags=["contract_formation"],
+        ),
+        [target, distractor],
+    )
+    assert exact_name["template"].template_id == "LF001"
+    assert exact_name["retrieval_mode"] == "exact_name"
 
     query_text = (
         "Step: Possession and equitable property claim\n"
-        "Tags: property\n"
-        "Purpose: Decide whether property possession or beneficial ownership controls."
+        "Description: Decide whether property possession or beneficial ownership controls.\n"
+        "Tags: property"
     )
     possession_doc = (
         "Factual Possession of Land property possession "
@@ -396,8 +446,8 @@ def test_rf_retrieval_uses_exact_terms_then_embedding_and_excludes_repeats():
     ambiguous = LegalFluxAbstractStep(
         step_id="S1",
         step_name="Possession and equitable property claim",
+        step_description="Decide whether property possession or beneficial ownership controls.",
         template_tags=["property"],
-        purpose="Decide whether property possession or beneficial ownership controls.",
     )
 
     result = retrieve_template_for_abstract_step(
@@ -415,14 +465,14 @@ def test_rf_retrieval_uses_exact_terms_then_embedding_and_excludes_repeats():
     )
 
     assert result["template"].template_id == "LF076"
-    assert result["retrieval_mode"] == "embedding_ambiguous_exact"
+    assert result["retrieval_mode"] == "embedding_tag_overlap"
 
     repeated = retrieve_template_for_abstract_step(
         LegalFluxAbstractStep(
             step_id="S2",
             step_name="Debt repayment check",
+            step_description="Do not repeat the already selected debt template.",
             template_tags=["debt_payment"],
-            purpose="Do not repeat the already selected debt template.",
         ),
         [
             _template("LF001", "Debt entitlement", "debt_payment"),
@@ -447,16 +497,23 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
         [
             _response(
                 {
-                    "case_profile": "summary judgment debt dispute",
+                    "planning_analysis": (
+                        "A summary-judgment debt dispute turns on the procedural threshold."
+                    ),
                     "planned_steps": [
                         {
                             "step_id": "S1",
                             "step_name": "Summary judgment triable issue screen",
+                            "step_description": "Check whether the defense raises a genuine triable issue.",
                             "template_tags": ["summary_judgment", "triable_issue"],
-                            "purpose": "Check whether the defense raises a genuine triable issue.",
+                        },
+                        {
+                            "step_id": "S2",
+                            "step_name": "Evidence burden check",
+                            "step_description": "Resolve any evidentiary gap if one remains.",
+                            "template_tags": ["evidence", "burden"],
                         }
                     ],
-                    "planning_rationale": "The procedural threshold controls the outcome.",
                 }
             ),
             _response(
@@ -473,11 +530,11 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
             ),
             _response(
                 {
+                    "review_analysis": "The first artifact is sufficient to resolve the claim.",
                     "decision": "final_answer",
-                    "rationale": "The executed artifact is enough to decide the case.",
                     "revised_remaining_steps": [],
-                    "final_decision": "support",
                     "final_rationale": "The debt claim is supported because no genuine triable issue remains.",
+                    "final_decision": "support",
                 }
             ),
         ]
@@ -505,7 +562,23 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
     assert analysis.final_decision == "support"
     assert trace["calls"] == 3
     assert trace["retrieved_template_ids"] == ["LF025"]
-    assert trace["selected_templates"][0]["retrieval_mode"] == "exact_unique"
+    assert trace["selected_templates"][0]["retrieval_mode"] == "exact_tag_unique"
+    plan_schema = client.calls[0]["schema"]
+    assert plan_schema["required"] == ["planning_analysis", "planned_steps"]
+    assert plan_schema["properties"]["planned_steps"]["items"]["required"] == [
+        "step_id",
+        "step_name",
+        "step_description",
+        "template_tags",
+    ]
+    assert [call["max_tokens"] for call in client.calls] == [1400, 1400, 1000]
+    assert client.calls[-1]["schema"]["required"] == [
+        "review_analysis",
+        "decision",
+        "revised_remaining_steps",
+        "final_rationale",
+        "final_decision",
+    ]
     assert "TEMPLATE CATALOG" not in planner_prompt
     assert "TEMPLATE TAG EXAMPLES" in planner_prompt
     assert "AUTHORITY CONTEXT" in planner_prompt
@@ -518,16 +591,15 @@ def test_rf_style_forces_final_answer_after_exhausting_steps():
         [
             _response(
                 {
-                    "case_profile": "debt dispute",
+                    "planning_analysis": "The debt entitlement is dispositive.",
                     "planned_steps": [
                         {
                             "step_id": "S1",
                             "step_name": "Debt entitlement check",
+                            "step_description": "Check whether repayment is due.",
                             "template_tags": ["debt_payment"],
-                            "purpose": "Check whether repayment is due.",
                         }
                     ],
-                    "planning_rationale": "Debt entitlement is dispositive.",
                 }
             ),
             _response(
@@ -544,20 +616,8 @@ def test_rf_style_forces_final_answer_after_exhausting_steps():
             ),
             _response(
                 {
-                    "decision": "continue",
-                    "rationale": "Continue.",
-                    "revised_remaining_steps": [],
-                    "final_decision": None,
-                    "final_rationale": "",
-                }
-            ),
-            _response(
-                {
-                    "decision": "final_answer",
-                    "rationale": "No remaining step is needed.",
-                    "revised_remaining_steps": [],
-                    "final_decision": "support",
                     "final_rationale": "The repayment claim is supported.",
+                    "final_decision": "support",
                 }
             ),
         ]
@@ -567,14 +627,27 @@ def test_rf_style_forces_final_answer_after_exhausting_steps():
     analysis, trace = _execute_rf_style_case(client, config, _case(), templates=templates)
 
     assert analysis.final_decision == "support"
-    assert trace["calls"] == 4
+    assert trace["calls"] == 3
     assert "No remaining abstract steps are available" in client.prompts[-1]
-    assert client.calls[-1]["schema"]["properties"]["decision"]["enum"] == [
-        "final_answer"
+    assert client.calls[-1]["schema"]["required"] == [
+        "final_rationale",
+        "final_decision",
     ]
+    assert set(client.calls[-1]["schema"]["properties"]) == {
+        "final_rationale",
+        "final_decision",
+    }
 
 
 def test_output_normalizers_repair_common_rf_shapes():
+    legacy_step = LegalFluxAbstractStep.model_validate(
+        {
+            "step_id": "S1",
+            "step_name": "Legacy step",
+            "template_tags": ["legacy"],
+            "purpose": "Legacy description.",
+        }
+    )
     artifact, artifact_repairs = _normalize_step_artifact_payload(
         {
             "step_id": "wrong",
@@ -606,6 +679,8 @@ def test_output_normalizers_repair_common_rf_shapes():
     )
 
     assert artifact["step_id"] == "S1"
+    assert legacy_step.step_description == "Legacy description."
+    assert "purpose" not in legacy_step.model_dump(mode="json")
     assert artifact["template_id"] == "LF001"
     assert artifact["material_fact_ids"] == ["F1"]
     assert artifact["issue_ids"] == ["I1"]
@@ -614,7 +689,9 @@ def test_output_normalizers_repair_common_rf_shapes():
     assert "material_fact_ids_object_unwrapped" in artifact_repairs
     assert review["decision"] == "final_answer"
     assert review["final_decision"] == "support"
-    assert "rf_review_extra_fields_folded_into_rationale" in review_repairs
+    assert review["review_analysis"].startswith("Done.")
+    assert "rf_review_legacy_rationale_renamed" in review_repairs
+    assert "rf_review_extra_fields_folded_into_review_analysis" in review_repairs
 
 
 def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):
@@ -1243,16 +1320,15 @@ def test_dpo_candidate_sampling_creates_four_seeded_plans(tmp_path: Path):
     responses = [
         _response(
             {
-                "case_profile": f"profile {index}",
+                "planning_analysis": f"profile {index}; rationale {index}",
                 "planned_steps": [
                     {
                         "step_id": "S1",
                         "step_name": "Debt entitlement",
+                        "step_description": f"Resolve entitlement variant {index}.",
                         "template_tags": ["debt", "rule_application"],
-                        "purpose": f"Resolve entitlement variant {index}.",
                     }
                 ],
-                "planning_rationale": f"rationale {index}",
             }
         )
         for index in range(4)
@@ -1317,34 +1393,32 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
         [case.model_dump(mode="json") for case in cases],
     )
     plan_good = {
-        "case_profile": "good debt profile",
+        "planning_analysis": "good debt profile; the entitlement step is dispositive.",
         "planned_steps": [
             {
                 "step_id": "S1",
                 "step_name": "Debt entitlement",
+                "step_description": "Resolve whether repayment is due.",
                 "template_tags": ["debt", "rule_application"],
-                "purpose": "Resolve whether repayment is due.",
             }
         ],
-        "planning_rationale": "The entitlement step is dispositive.",
     }
     plan_bad = {
-        "case_profile": "bad unrelated profile",
+        "planning_analysis": "bad unrelated profile; this over-focuses on procedure.",
         "planned_steps": [
             {
                 "step_id": "S1",
                 "step_name": "Procedural gate",
+                "step_description": "Screen for a procedural issue not shown by the facts.",
                 "template_tags": ["procedure", "threshold"],
-                "purpose": "Screen for a procedural issue not shown by the facts.",
             }
         ],
-        "planning_rationale": "This over-focuses on procedure.",
     }
     plans = [
         plan_good,
         plan_bad,
-        {**plan_good, "case_profile": "second good profile"},
-        {**plan_bad, "case_profile": "second bad profile"},
+        {**plan_good, "planning_analysis": "second good profile"},
+        {**plan_bad, "planning_analysis": "second bad profile"},
     ]
     candidates = [
         {
@@ -1358,7 +1432,7 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
             "retrieval_trace": [
                 {
                     "retrieval_mode": (
-                        "exact_unique" if index in {1, 2} else "embedding_full_pool"
+                        "exact_name" if index in {1, 2} else "embedding_full_pool"
                     ),
                     "similarity": 1.0 if index in {1, 2} else 0.6,
                 }
@@ -1437,16 +1511,15 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
 def test_trajectory_dpo_skips_group_when_all_accuracy_scores_tie():
     case = _case(split="planner_train")
     plan = {
-        "case_profile": "Debt dispute",
+        "planning_analysis": "Debt dispute; use the debt template.",
         "planned_steps": [
             {
                 "step_id": "S1",
                 "step_name": "Debt entitlement",
+                "step_description": "Resolve repayment.",
                 "template_tags": ["debt", "rule_application"],
-                "purpose": "Resolve repayment.",
             }
         ],
-        "planning_rationale": "Use the debt template.",
     }
     candidates = [
         {
@@ -1456,7 +1529,7 @@ def test_trajectory_dpo_skips_group_when_all_accuracy_scores_tie():
             "retrieval_trace": [
                 {
                     "retrieval_mode": (
-                        "exact_unique" if index == 0 else "embedding_full_pool"
+                        "exact_name" if index == 0 else "embedding_full_pool"
                     ),
                     "similarity": 1.0 if index == 0 else 0.5,
                 }

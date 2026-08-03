@@ -162,16 +162,33 @@ def _normalize_final_analysis_payload(
         return payload, []
     repaired = json.loads(json.dumps(payload))
     actions: list[str] = []
+    accepted_keys = {
+        "irac_reasoning",
+        "issue_conclusions",
+        "final_decision",
+        "final_rationale",
+    }
     actions.extend(
-        _remove_schema_metadata_when_answer_present(
-            repaired, {"issue_conclusions", "final_decision", "final_rationale"}
-        )
+        _remove_schema_metadata_when_answer_present(repaired, accepted_keys)
     )
-    actions.extend(
-        _repair_mapping_keys(
-            repaired, {"issue_conclusions", "final_decision", "final_rationale"}
+    actions.extend(_repair_mapping_keys(repaired, accepted_keys))
+    if "irac_reasoning" in repaired:
+        if repaired["irac_reasoning"] is None:
+            repaired["irac_reasoning"] = ""
+            actions.append("irac_reasoning_null_filled")
+        elif not isinstance(repaired["irac_reasoning"], str):
+            repaired["irac_reasoning"] = str(repaired["irac_reasoning"])
+            actions.append("irac_reasoning_coerced_to_string")
+        actions.extend(_drop_obsolete_task_answer(repaired))
+        actions.extend(
+            _fold_extra_fields_into_text(
+                repaired,
+                allowed={"irac_reasoning", "final_decision"},
+                text_key="irac_reasoning",
+                action_prefix="structured_analysis",
+            )
         )
-    )
+        return repaired, actions
     conclusions = repaired.get("issue_conclusions", [])
     if isinstance(conclusions, dict):
         conclusions = [conclusions]

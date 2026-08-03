@@ -130,6 +130,8 @@ def _aggregate_frame(frame: pd.DataFrame) -> pd.DataFrame:
         for column in (
             "answer_correct",
             "binary_prediction_valid",
+            "irac_reasoning_present",
+            "irac_reasoning_characters",
             "conclusion_with_fact_rate",
             "valid_fact_reference_rate",
             "unknown_fact_reference_count",

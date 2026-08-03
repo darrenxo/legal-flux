@@ -97,8 +97,8 @@ def rf_template_document(template: LegalFluxTemplate) -> str:
 def abstract_step_query(step: LegalFluxAbstractStep) -> str:
     return (
         f"Step: {step.step_name}\n"
-        f"Tags: {', '.join(step.template_tags)}\n"
-        f"Purpose: {step.purpose}"
+        f"Description: {step.step_description}\n"
+        f"Tags: {', '.join(step.template_tags)}"
     )
 
 
@@ -115,21 +115,37 @@ def retrieve_template_for_abstract_step(
     available_templates = [
         template for template in templates if template.template_id not in exclude_template_ids
     ] or templates
-    step_terms = _abstract_step_match_terms(step)
-    exact_candidates = [
+    exact_name_candidates = [
         template
         for template in available_templates
-        if step_terms.intersection(_template_match_terms(template))
+        if _normalize_lookup_term(step.step_name)
+        == _normalize_lookup_term(template.template_name)
     ]
-    if len(exact_candidates) == 1:
+    if len(exact_name_candidates) == 1:
         return {
-            "template": exact_candidates[0],
+            "template": exact_name_candidates[0],
             "similarity": 1.0,
-            "retrieval_mode": "exact_unique",
-            "exact_candidate_ids": [exact_candidates[0].template_id],
+            "retrieval_mode": "exact_name",
+            "exact_candidate_ids": [exact_name_candidates[0].template_id],
         }
 
-    candidates = exact_candidates or available_templates
+    tag_candidates = []
+    if not exact_name_candidates:
+        step_tags = _abstract_step_tag_terms(step)
+        tag_candidates = [
+            template
+            for template in available_templates
+            if step_tags.intersection(_template_tag_terms(template))
+        ]
+        if len(tag_candidates) == 1:
+            return {
+                "template": tag_candidates[0],
+                "similarity": 1.0,
+                "retrieval_mode": "exact_tag_unique",
+                "exact_candidate_ids": [tag_candidates[0].template_id],
+            }
+
+    candidates = exact_name_candidates or tag_candidates or available_templates
     backend = similarity_backend or TfidfSimilarityBackend()
     query = abstract_step_query(step)
     documents = [rf_template_document(template) for template in candidates]
@@ -140,37 +156,41 @@ def retrieve_template_for_abstract_step(
         reverse=True,
     )
     winner, score = ranked[0]
-    if similarity_backend:
-        mode = "embedding_ambiguous_exact" if exact_candidates else "embedding_full_pool"
+    if exact_name_candidates:
+        candidate_mode = "ambiguous_name"
+    elif tag_candidates:
+        candidate_mode = "tag_overlap"
     else:
-        mode = "tfidf_ambiguous_exact" if exact_candidates else "tfidf_full_pool"
+        candidate_mode = "full_pool"
+    if similarity_backend:
+        mode = f"embedding_{candidate_mode}"
+    else:
+        mode = f"tfidf_{candidate_mode}"
     return {
         "template": winner,
         "similarity": float(score),
         "retrieval_mode": mode,
-        "exact_candidate_ids": [template.template_id for template in exact_candidates],
+        "exact_candidate_ids": [
+            template.template_id
+            for template in (exact_name_candidates or tag_candidates)
+        ],
     }
 
 
-def _abstract_step_match_terms(step: LegalFluxAbstractStep) -> set[str]:
-    terms = {
-        _normalize_lookup_term(term)
-        for term in [step.step_name, *step.template_tags]
-        if str(term).strip()
+def _abstract_step_tag_terms(step: LegalFluxAbstractStep) -> set[str]:
+    return {
+        normalized
+        for tag in step.template_tags
+        if (normalized := _normalize_lookup_term(tag))
     }
-    return {term for term in terms if term}
 
 
-def _template_match_terms(template: LegalFluxTemplate) -> set[str]:
-    terms = {
-        _normalize_lookup_term(template.template_name),
-        *{
-            _normalize_lookup_term(tag)
-            for tag in template.knowledge_tags
-            if str(tag).strip()
-        },
+def _template_tag_terms(template: LegalFluxTemplate) -> set[str]:
+    return {
+        normalized
+        for tag in template.knowledge_tags
+        if (normalized := _normalize_lookup_term(tag))
     }
-    return {term for term in terms if term}
 
 
 def _normalize_lookup_term(value: str) -> str:

@@ -3,9 +3,9 @@
   "title": "LegalFluxAbstractPlan",
   "type": "object",
   "additionalProperties": false,
-  "required": ["case_profile", "planned_steps", "planning_rationale"],
+  "required": ["planning_analysis", "planned_steps"],
   "properties": {
-    "case_profile": {"type": "string"},
+    "planning_analysis": {"type": "string"},
     "planned_steps": {
       "type": "array",
       "minItems": 1,
@@ -13,18 +13,17 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["step_id", "step_name", "template_tags", "purpose"],
+        "required": ["step_id", "step_name", "step_description", "template_tags"],
         "properties": {
           "step_id": {"type": "string"},
           "step_name": {"type": "string"},
+          "step_description": {"type": "string"},
           "template_tags": {
             "type": "array",
             "items": {"type": "string"}
-          },
-          "purpose": {"type": "string"}
+          }
         }
       }
-    },
-    "planning_rationale": {"type": "string"}
+    }
   }
 }

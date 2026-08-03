@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 Burden = Literal["plaintiff", "defendant", "unclear"]
@@ -50,9 +50,10 @@ class IssueConclusion(StrictModel):
 
 
 class FinalAnalysis(StrictModel):
-    issue_conclusions: list[IssueConclusion]
+    irac_reasoning: str = ""
+    issue_conclusions: list[IssueConclusion] = Field(default_factory=list)
     final_decision: FinalDecisionValue
-    final_rationale: str
+    final_rationale: str = ""
 
 
 class DirectAnalysis(StrictModel):
@@ -80,14 +81,39 @@ class LegalFluxPlanStep(StrictModel):
 class LegalFluxAbstractStep(StrictModel):
     step_id: str
     step_name: str
+    step_description: str
     template_tags: list[str] = Field(default_factory=list)
-    purpose: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_legacy_purpose(cls, value: Any) -> Any:
+        if not isinstance(value, dict) or "purpose" not in value:
+            return value
+        migrated = dict(value)
+        if "step_description" not in migrated:
+            migrated["step_description"] = migrated["purpose"]
+        migrated.pop("purpose", None)
+        return migrated
 
 
 class LegalFluxAbstractPlan(StrictModel):
-    case_profile: str
+    planning_analysis: str
     planned_steps: list[LegalFluxAbstractStep]
-    planning_rationale: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_legacy_analysis(cls, value: Any) -> Any:
+        if not isinstance(value, dict) or "planning_analysis" in value:
+            return value
+        migrated = dict(value)
+        parts = [
+            str(migrated.pop(key)).strip()
+            for key in ("case_profile", "planning_rationale")
+            if migrated.get(key) not in (None, "")
+        ]
+        if parts:
+            migrated["planning_analysis"] = " ".join(parts)
+        return migrated
 
 
 class LegalFluxStepArtifact(StrictModel):
@@ -102,11 +128,11 @@ class LegalFluxStepArtifact(StrictModel):
 
 
 class LegalFluxRfReview(StrictModel):
-    decision: FluxRfReviewDecision
-    rationale: str
+    review_analysis: str = ""
+    decision: FluxRfReviewDecision = "final_answer"
     revised_remaining_steps: list[LegalFluxAbstractStep] = Field(default_factory=list)
-    final_decision: BinaryFinalDecisionValue | None = None
     final_rationale: str = ""
+    final_decision: BinaryFinalDecisionValue | None = None
 
 
 class NormalizedCase(StrictModel):

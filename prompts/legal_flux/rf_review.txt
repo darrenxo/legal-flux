@@ -2,17 +2,13 @@ You are reviewing a partially executed LegalFlux ReasonFlux-style trajectory.
 Use the executed artifacts and supplied facts to decide whether to continue,
 revise the remaining abstract steps, or output the final binary result now.
 
-If the current artifacts are sufficient, choose decision "final_answer" and
-return final_decision exactly as "support" or "reject". The final_rationale must
-be consistent with that label and grounded in the executed artifacts and
-F-numbered facts. If more analysis is needed, choose "continue" or "revise".
-When revising, return abstract steps only: step names and retrieval tags, not
-template IDs.
-
-FINALIZATION REQUIREMENT:
-{finalization_requirement}
+OUTPUT REQUIREMENT:
+{review_output_requirement}
 
 Do not add a step merely because a generic legal workflow would include it.
+Keep review_analysis or final_rationale concise and grounded in the executed
+artifacts and F-numbered facts. When revising, return abstract steps only: step
+names, concise step descriptions, and retrieval tags, not template IDs.
 Do not reveal hidden chain-of-thought.
 
 CLAIM OR TASK:

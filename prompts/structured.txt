@@ -1,12 +1,12 @@
-Evaluate the plaintiff's claim using a concise IRAC-style structure: identify
-the dispositive issue or issues, state the relevant rule or decision criterion at
-a high level, apply the supplied F-numbered facts, and conclude whether the
-claim should be supported or rejected. Use only the supplied parties and facts.
-Every fact reference must use an existing F-number. Return JSON in the required
-schema with final_decision exactly "support" or "reject". Use at most 4 issue
-conclusions and keep each explanation under 40 words. Use supplied authority
-context if present, but do not invent facts, parties, rules, authorities, or
-citations beyond it. Do not reveal hidden chain-of-thought.
+Evaluate the plaintiff's claim using concise IRAC reasoning: identify the
+dispositive issue or issues, state the relevant rule or decision criterion at a
+high level, apply the supplied F-numbered facts, and conclude whether the claim
+should be supported or rejected. Put that explicit analysis in irac_reasoning,
+then return final_decision exactly as "support" or "reject". Keep
+irac_reasoning concise. Use only the supplied parties, facts, and authority
+context if present. Every fact reference must use an existing F-number. Do not
+invent facts, parties, rules, authorities, or citations beyond the supplied
+materials. Do not reveal hidden chain-of-thought.
 
 CLAIM OR TASK:
 {claim}

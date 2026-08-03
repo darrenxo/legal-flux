@@ -1,48 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "FinalAnalysis",
+  "title": "StructuredAnalysis",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "issue_conclusions",
-    "final_decision",
-    "final_rationale"
-  ],
+  "required": ["irac_reasoning", "final_decision"],
   "properties": {
-    "issue_conclusions": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "issue_id",
-          "conclusion",
-          "supporting_fact_ids",
-          "opposing_fact_ids",
-          "explanation"
-        ],
-        "properties": {
-          "issue_id": {"type": "string"},
-          "conclusion": {
-            "type": "string",
-            "enum": ["satisfied", "not_satisfied", "defeated", "unresolved"]
-          },
-          "supporting_fact_ids": {
-            "type": "array",
-            "items": {"type": "string"}
-          },
-          "opposing_fact_ids": {
-            "type": "array",
-            "items": {"type": "string"}
-          },
-          "explanation": {"type": "string"}
-        }
-      }
-    },
+    "irac_reasoning": {"type": "string"},
     "final_decision": {
       "type": "string",
       "enum": ["support", "reject", "mixed", "unresolved"]
-    },
-    "final_rationale": {"type": "string"}
+    }
   }
 }

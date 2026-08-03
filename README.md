@@ -256,9 +256,10 @@ Final-test runs are guarded by `flux-freeze`:
 For `flux_rf_style`, each case uses fresh model calls:
 
 1. Planner: reads the compact case and template-tag examples, then outputs
-   abstract steps with `step_name`, `template_tags`, and `purpose`.
-2. Retriever: exact-matches step name/tags against template names/tags. If
-   matching is ambiguous or absent, BGE ranks candidates by embedding similarity.
+   abstract steps with `step_name`, `step_description`, and `template_tags`.
+2. Retriever: first checks an exact step-name/template-name match, then narrows
+   by exact tag overlap. BGE ranks ambiguous tag matches or the full pool when
+   neither exact route selects a unique template.
 3. Executor: applies the selected template and returns a structured intermediate
    artifact.
 4. Reviewer: sees all executed artifacts so far and remaining abstract steps,

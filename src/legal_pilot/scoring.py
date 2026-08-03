@@ -24,13 +24,15 @@ def score_record(case: NormalizedCase, analysis: FinalAnalysis) -> dict[str, Any
     reference_count = len(case.reference_issues)
     issue_coverage = (
         min(len(conclusion_issue_ids) / reference_count, 1.0)
-        if reference_count
+        if reference_count and analysis.issue_conclusions
         else None
     )
 
     return {
         "answer_correct": answer_correct,
         "binary_prediction_valid": float(predicted in {"support", "reject"}),
+        "irac_reasoning_present": float(bool(analysis.irac_reasoning.strip())),
+        "irac_reasoning_characters": len(analysis.irac_reasoning),
         "conclusion_with_fact_rate": (
             sum(
                 bool(item.supporting_fact_ids or item.opposing_fact_ids)
@@ -48,7 +50,7 @@ def score_record(case: NormalizedCase, analysis: FinalAnalysis) -> dict[str, Any
             sum(item.conclusion == "unresolved" for item in analysis.issue_conclusions)
             / len(analysis.issue_conclusions)
             if analysis.issue_conclusions
-            else 1.0
+            else None
         ),
     }
 
