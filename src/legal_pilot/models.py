@@ -119,7 +119,7 @@ class LegalFluxAbstractPlan(StrictModel):
 class LegalFluxStepArtifact(StrictModel):
     step_id: str
     template_id: str
-    instantiated_result: str
+    instantiated_result: str = Field(max_length=1800)
     material_fact_ids: list[str] = Field(default_factory=list)
     issue_ids: list[str] = Field(default_factory=list)
     confidence: Literal["low", "medium", "high"]

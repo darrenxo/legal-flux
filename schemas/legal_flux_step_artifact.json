@@ -16,7 +16,7 @@
   "properties": {
     "step_id": {"type": "string"},
     "template_id": {"type": "string"},
-    "instantiated_result": {"type": "string"},
+    "instantiated_result": {"type": "string", "maxLength": 1800},
     "material_fact_ids": {
       "type": "array",
       "items": {"type": "string"}

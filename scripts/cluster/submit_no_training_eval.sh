@@ -17,4 +17,6 @@ EVAL_JOB="${EVAL_SUBMISSION%%;*}"
 
 printf 'STRUCTURED_CANARY=%s\n' "$CANARY_JOB"
 printf 'NO_TRAINING=%s\n' "$EVAL_JOB"
+printf 'CONDITIONS=%s\n' "${LEGAL_FLUX_CONDITIONS:-all configured conditions}"
+printf 'RUN_TAG=%s\n' "${LEGAL_FLUX_RUN_TAG:-default run directory}"
 squeue -u "$USER"

@@ -691,7 +691,10 @@ def _execute_rf_style_case(
         repairs.extend(review_trace["repair_actions"])
         schema_errors.extend(review_trace["schema_errors"])
         if review.decision == "final_answer":
-            analysis = _analysis_from_rf_review(review)
+            if review.final_decision in {"support", "reject"}:
+                analysis = _analysis_from_rf_review(review)
+            else:
+                repairs.append("rf_final_answer_missing_label_forced_retry")
             break
         if review.decision == "revise":
             remaining = _renumber_abstract_remaining_steps(
@@ -1188,9 +1191,6 @@ def _normalize_step_artifact_payload(
             repaired["confidence"] = normalized
             if normalized != confidence:
                 repairs.append("confidence_lowercased")
-    else:
-        repaired["confidence"] = "medium"
-        repairs.append("confidence_null_filled")
     repairs.extend(
         _fold_extra_fields_into_text(
             repaired,

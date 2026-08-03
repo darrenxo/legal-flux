@@ -53,6 +53,7 @@ from legal_pilot.legal_flux_xsim import build_xsim, load_xsim_neighbors
 from legal_pilot.models import (
     LegalFluxAbstractStep,
     LegalFluxPlanStep,
+    LegalFluxStepArtifact,
     LegalFluxTemplate,
     NormalizedCase,
 )
@@ -571,7 +572,11 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
         "step_description",
         "template_tags",
     ]
-    assert [call["max_tokens"] for call in client.calls] == [1400, 1400, 1000]
+    assert [call["max_tokens"] for call in client.calls] == [1400, 2000, 1000]
+    assert client.calls[1]["schema"]["properties"]["instantiated_result"][
+        "maxLength"
+    ] == 1800
+    assert "180 words" in client.prompts[1]
     assert client.calls[-1]["schema"]["required"] == [
         "review_analysis",
         "decision",
@@ -583,6 +588,74 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
     assert "TEMPLATE TAG EXAMPLES" in planner_prompt
     assert "AUTHORITY CONTEXT" in planner_prompt
     assert "HEURISTIC_FAMILY_SHOULD_NOT_LEAK" not in planner_prompt
+
+
+def test_rf_style_forces_binary_retry_when_adaptive_review_omits_label():
+    templates = [
+        _template("LF001", "Debt entitlement", "debt_payment"),
+        _template("LF002", "Evidence burden", "evidence"),
+    ]
+    client = SequenceClient(
+        [
+            _response(
+                {
+                    "planning_analysis": "Resolve entitlement, then evidence if needed.",
+                    "planned_steps": [
+                        {
+                            "step_id": "S1",
+                            "step_name": "Debt entitlement",
+                            "step_description": "Determine whether repayment is due.",
+                            "template_tags": ["debt_payment"],
+                        },
+                        {
+                            "step_id": "S2",
+                            "step_name": "Evidence burden",
+                            "step_description": "Check the evidentiary burden.",
+                            "template_tags": ["evidence"],
+                        },
+                    ],
+                }
+            ),
+            _response(
+                {
+                    "step_id": "S1",
+                    "template_id": "LF001",
+                    "instantiated_result": "F1 supports repayment.",
+                    "material_fact_ids": ["F1"],
+                    "issue_ids": [],
+                    "confidence": "high",
+                    "needs_revision": False,
+                    "revision_reason": "",
+                }
+            ),
+            _response(
+                {
+                    "review_analysis": "The first artifact is sufficient.",
+                    "decision": "final_answer",
+                    "revised_remaining_steps": [],
+                    "final_rationale": "The claim is supported.",
+                    "final_decision": None,
+                }
+            ),
+            _response(
+                {
+                    "final_rationale": "F1 supports the repayment claim.",
+                    "final_decision": "support",
+                }
+            ),
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+
+    analysis, trace = _execute_rf_style_case(client, config, _case(), templates=templates)
+
+    assert analysis.final_decision == "support"
+    assert trace["calls"] == 4
+    assert "rf_final_answer_missing_label_forced_retry" in trace["repair_actions"]
+    assert client.calls[-1]["schema"]["required"] == [
+        "final_rationale",
+        "final_decision",
+    ]
 
 
 def test_rf_style_forces_final_answer_after_exhausting_steps():
@@ -677,6 +750,24 @@ def test_output_normalizers_repair_common_rf_shapes():
             "extra": {"note": "fold me"},
         }
     )
+    missing_confidence, missing_confidence_repairs = _normalize_step_artifact_payload(
+        {
+            "step_id": "S1",
+            "template_id": "LF001",
+            "instantiated_result": "Possibly truncated result.",
+            "material_fact_ids": [],
+            "issue_ids": [],
+            "confidence": None,
+            "needs_revision": None,
+            "revision_reason": None,
+        },
+        LegalFluxPlanStep(
+            step_id="S1",
+            template_id="LF001",
+            purpose="Use a template.",
+            expected_artifact="Artifact.",
+        ),
+    )
 
     assert artifact["step_id"] == "S1"
     assert legacy_step.step_description == "Legacy description."
@@ -692,6 +783,21 @@ def test_output_normalizers_repair_common_rf_shapes():
     assert review["review_analysis"].startswith("Done.")
     assert "rf_review_legacy_rationale_renamed" in review_repairs
     assert "rf_review_extra_fields_folded_into_review_analysis" in review_repairs
+    assert missing_confidence["confidence"] is None
+    assert "confidence_null_filled" not in missing_confidence_repairs
+    with pytest.raises(ValueError, match="confidence"):
+        LegalFluxStepArtifact.model_validate(missing_confidence)
+    with pytest.raises(ValueError, match="instantiated_result"):
+        LegalFluxStepArtifact(
+            step_id="S1",
+            template_id="LF001",
+            instantiated_result="x" * 1801,
+            material_fact_ids=[],
+            issue_ids=[],
+            confidence="high",
+            needs_revision=False,
+            revision_reason="",
+        )
 
 
 def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):

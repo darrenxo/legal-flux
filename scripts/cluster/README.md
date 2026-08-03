@@ -199,7 +199,25 @@ For a clean no-training rerun, use:
 bash scripts/cluster/submit_no_training_eval.sh
 ```
 
-Its canary checks schema-constrained visible JSON, not merely server startup.
+To rerun only the untrained RF-style condition in an isolated experiment
+directory while preserving the completed direct and structured baselines, set a
+condition and run tag before using the same canary-dependent submission path:
+
+```bash
+LEGAL_FLUX_CONDITIONS="flux_rf_style" \
+LEGAL_FLUX_RUN_TAG="rf-executor-fix-v1" \
+bash scripts/cluster/submit_no_training_eval.sh
+```
+
+Score that isolated RF run with:
+
+```bash
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-score --phase trajectory-dev --run-tag rf-executor-fix-v1
+```
+
+Its canary checks schema-constrained visible JSON and compiles the active
+executor schema, not merely server startup.
 Cluster requests disable Qwen's hidden thinking because every LegalFlux role
 already emits its reasoning in required JSON fields. Generation tasks use four
 concurrent requests per server and exit nonzero if any record fails; successful

@@ -34,13 +34,33 @@ export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
 export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-4}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
+RUN_TAG="${LEGAL_FLUX_RUN_TAG:-}"
+CONDITION_ARGS=()
+RUN_TAG_ARGS=()
+
+if [[ -n "${LEGAL_FLUX_CONDITIONS:-}" ]]; then
+  read -r -a REQUESTED_CONDITIONS <<< "$LEGAL_FLUX_CONDITIONS"
+  CONDITION_ARGS=(--conditions "${REQUESTED_CONDITIONS[@]}")
+fi
+
+if [[ -n "$RUN_TAG" ]]; then
+  if [[ ! "$RUN_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+    echo "Invalid LEGAL_FLUX_RUN_TAG: ${RUN_TAG}" >&2
+    exit 1
+  fi
+  RUN_TAG_ARGS=(--run-tag "$RUN_TAG")
+fi
 
 if (( SLURM_ARRAY_TASK_ID >= NUM_SHARDS )); then
   echo "Shard index ${SLURM_ARRAY_TASK_ID} is outside ${NUM_SHARDS} shards." >&2
   exit 1
 fi
 
-LEDGER_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/trajectory_dev/shards"
+LEDGER_BASE="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/trajectory_dev"
+if [[ -n "$RUN_TAG" ]]; then
+  LEDGER_BASE+="/experiments/${RUN_TAG}"
+fi
+LEDGER_DIR="${LEDGER_BASE}/shards"
 LEDGER_DIR+="/shard-$(printf '%05d' "$SLURM_ARRAY_TASK_ID")"
 LEDGER_DIR+="-of-$(printf '%05d' "$NUM_SHARDS")"
 LEDGER="${LEDGER_DIR}/generations.jsonl"
@@ -63,4 +83,6 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   --phase trajectory-dev \
   --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID" \
+  "${CONDITION_ARGS[@]}" \
+  "${RUN_TAG_ARGS[@]}" \
   --fail-on-errors

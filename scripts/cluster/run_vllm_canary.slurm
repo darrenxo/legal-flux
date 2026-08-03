@@ -63,6 +63,79 @@ if parsed != {"status": "ready"}:
     raise SystemExit(f"Unexpected canary content: {parsed!r}")
 PY
 
-echo "vLLM canary succeeded."
+EXECUTOR_REQUEST="${TMPDIR:-/tmp}/legalflux-executor-request-${SLURM_JOB_ID}.json"
+EXECUTOR_RESPONSE="${TMPDIR:-/tmp}/legalflux-executor-response-${SLURM_JOB_ID}.json"
+python3 - \
+  "$LEGAL_FLUX_ROOT/schemas/legal_flux_step_artifact.json" \
+  "$EXECUTOR_REQUEST" \
+  "$LEGAL_FLUX_MODEL_NAME" <<'PY'
+import json
+import sys
+
+schema_path, request_path, model = sys.argv[1:]
+schema = json.load(open(schema_path, encoding="utf-8"))
+payload = {
+    "model": model,
+    "messages": [
+        {
+            "role": "user",
+            "content": (
+                "Return one concise executor artifact. Use step_id S1 and "
+                "template_id LF001, state that F1 is material, use no issue IDs, "
+                "set confidence to high, needs_revision to false, and leave "
+                "revision_reason empty."
+            ),
+        }
+    ],
+    "temperature": 0,
+    "seed": 20260619,
+    "max_tokens": 512,
+    "chat_template_kwargs": {"enable_thinking": False},
+    "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+            "name": "legalflux_executor_canary",
+            "schema": schema,
+            "strict": True,
+        },
+    },
+}
+json.dump(payload, open(request_path, "w", encoding="utf-8"))
+PY
+
+curl --silent --show-error --fail --max-time 600 \
+  -H 'Content-Type: application/json' \
+  --data "@$EXECUTOR_REQUEST" \
+  "${BASE_URL}/chat/completions" > "$EXECUTOR_RESPONSE"
+
+python3 - "$EXECUTOR_RESPONSE" <<'PY'
+import json
+import sys
+
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+choices = payload.get("choices") or []
+if not choices:
+    raise SystemExit("Executor canary response did not contain choices.")
+content = (choices[0].get("message") or {}).get("content") or ""
+parsed = json.loads(content)
+required = {
+    "step_id",
+    "template_id",
+    "instantiated_result",
+    "material_fact_ids",
+    "issue_ids",
+    "confidence",
+    "needs_revision",
+    "revision_reason",
+}
+if set(parsed) != required:
+    raise SystemExit(f"Executor canary fields were unexpected: {sorted(parsed)}")
+if len(parsed["instantiated_result"]) > 1800:
+    raise SystemExit("Executor canary violated instantiated_result maxLength.")
+if parsed["confidence"] not in {"low", "medium", "high"}:
+    raise SystemExit(f"Executor canary confidence was invalid: {parsed['confidence']!r}")
+PY
+
+echo "vLLM canary and executor-schema canary succeeded."
 head -c 2000 "$RESPONSE"
 echo
