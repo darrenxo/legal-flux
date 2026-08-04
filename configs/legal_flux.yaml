@@ -11,7 +11,7 @@ model:
   seed: 20260619
   analysis_max_tokens: 1600
   flux_plan_max_tokens: 1400
-  flux_step_max_tokens: 2000
+  flux_step_max_tokens: 768
   flux_review_max_tokens: 1000
   timeout_seconds: 600
   concurrency: 1

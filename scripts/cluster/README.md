@@ -199,21 +199,34 @@ For a clean no-training rerun, use:
 bash scripts/cluster/submit_no_training_eval.sh
 ```
 
-To rerun only the untrained RF-style condition in an isolated experiment
-directory while preserving the completed direct and structured baselines, set a
-condition and run tag before using the same canary-dependent submission path:
+Before another full RF-style run, exercise the real planner, retriever, executor,
+and reviewer on 32 cases using one shard. This is distinct from the server/schema
+canary and catches realistic output-contract failures cheaply:
 
 ```bash
 LEGAL_FLUX_CONDITIONS="flux_rf_style" \
-LEGAL_FLUX_RUN_TAG="rf-executor-fix-v1" \
+LEGAL_FLUX_RUN_TAG="rf-minimal-executor-smoke-v1" \
+LEGAL_FLUX_CASE_LIMIT=32 \
+LEGAL_FLUX_NUM_SHARDS=1 \
 bash scripts/cluster/submit_no_training_eval.sh
 ```
 
-Score that isolated RF run with:
+Score the smoke run with `LEGAL_FLUX_WORK_ROOT` exported. Continue only if all 32
+records are valid:
 
 ```bash
+export LEGAL_FLUX_WORK_ROOT=/work/hdd/bfua/$USER/legal_nlp
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
-  flux-score --phase trajectory-dev --run-tag rf-executor-fix-v1
+  flux-score --phase trajectory-dev --run-tag rf-minimal-executor-smoke-v1
+```
+
+Then submit the full untrained RF-style condition in a new isolated directory,
+preserving the completed direct and structured baselines:
+
+```bash
+LEGAL_FLUX_CONDITIONS="flux_rf_style" \
+LEGAL_FLUX_RUN_TAG="rf-minimal-executor-full-v1" \
+bash scripts/cluster/submit_no_training_eval.sh
 ```
 
 Its canary checks schema-constrained visible JSON and compiles the active

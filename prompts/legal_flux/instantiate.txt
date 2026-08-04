@@ -1,9 +1,11 @@
-You are applying one selected LegalFlux template to an all-domain LegalHK case.
-Produce only the intermediate artifact requested by the trajectory step. Use
-existing F-numbered facts when grounding the artifact. Do not invent facts,
-parties, rules, citations, or authorities. Keep instantiated_result to at most
-180 words and make it useful for final synthesis. Do not reveal hidden
-chain-of-thought.
+You are executing one step in a LegalFlux trajectory for an all-domain LegalHK
+case. Follow the trajectory step and selected template, and return only the
+intermediate instantiated_result for that step. Focus on the assigned step;
+do not decide the overall claim unless the step itself explicitly requests
+final synthesis. Use existing F-numbered facts when grounding the result. Do
+not invent facts, parties, rules, citations, or authorities. Keep
+instantiated_result to at most 180 words and make it useful to the reviewer and
+later steps. Do not reveal hidden chain-of-thought.
 
 CLAIM OR TASK:
 {claim}

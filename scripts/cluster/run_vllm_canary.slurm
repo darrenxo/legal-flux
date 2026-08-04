@@ -80,10 +80,9 @@ payload = {
         {
             "role": "user",
             "content": (
-                "Return one concise executor artifact. Use step_id S1 and "
-                "template_id LF001, state that F1 is material, use no issue IDs, "
-                "set confidence to high, needs_revision to false, and leave "
-                "revision_reason empty."
+                "Execute one intermediate legal-reasoning step. State concisely "
+                "in instantiated_result that F1 is material. Do not decide the "
+                "overall claim and do not return metadata or other fields."
             ),
         }
     ],
@@ -118,22 +117,11 @@ if not choices:
     raise SystemExit("Executor canary response did not contain choices.")
 content = (choices[0].get("message") or {}).get("content") or ""
 parsed = json.loads(content)
-required = {
-    "step_id",
-    "template_id",
-    "instantiated_result",
-    "material_fact_ids",
-    "issue_ids",
-    "confidence",
-    "needs_revision",
-    "revision_reason",
-}
+required = {"instantiated_result"}
 if set(parsed) != required:
     raise SystemExit(f"Executor canary fields were unexpected: {sorted(parsed)}")
 if len(parsed["instantiated_result"]) > 1800:
     raise SystemExit("Executor canary violated instantiated_result maxLength.")
-if parsed["confidence"] not in {"low", "medium", "high"}:
-    raise SystemExit(f"Executor canary confidence was invalid: {parsed['confidence']!r}")
 PY
 
 echo "vLLM canary and executor-schema canary succeeded."

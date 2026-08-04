@@ -57,7 +57,7 @@ from legal_pilot.models import (
     LegalFluxTemplate,
     NormalizedCase,
 )
-from legal_pilot.runner import _execute_condition
+from legal_pilot.runner import _execute_condition, _response_trace
 
 
 def _case(split: str = "smoke") -> NormalizedCase:
@@ -87,6 +87,28 @@ def test_generation_progress_is_periodic_and_flushable(capsys: pytest.CaptureFix
 
     _print_generation_progress(completed=99, skipped=1, errors=1, total=100)
     assert "100/100 jobs" in capsys.readouterr().out
+
+
+def test_response_trace_marks_length_limited_generation():
+    trace = _response_trace(
+        ModelResponse(
+            raw_text='{"instantiated_result":"partial"',
+            parsed={"instantiated_result": "partial"},
+            elapsed_seconds=1.0,
+            prompt_tokens=10,
+            output_tokens=768,
+            metadata={
+                "finish_reason": "length",
+                "json_repair_applied": True,
+            },
+        )
+    )
+
+    assert trace["finish_reason"] == "length"
+    assert trace["repair_actions"] == [
+        "deterministic_json_repair",
+        "generation_length_limit_reached",
+    ]
 
 
 def _template(template_id: str, name: str, *tags: str) -> LegalFluxTemplate:
@@ -308,14 +330,7 @@ class FakeDpoPipelineClient:
         if title == "LegalFluxStepArtifact":
             return _response(
                 {
-                    "step_id": "S1",
-                    "template_id": "LF001",
                     "instantiated_result": "The supplied facts resolve the claim.",
-                    "material_fact_ids": ["F1"],
-                    "issue_ids": [],
-                    "confidence": "high",
-                    "needs_revision": False,
-                    "revision_reason": "",
                 }
             )
         if title == "LegalFluxRfFinalReview":
@@ -519,14 +534,7 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
             ),
             _response(
                 {
-                    "step_id": "S1",
-                    "template_id": "LF025",
                     "instantiated_result": "F1 supports the debt and F2 does not create a genuine triable issue.",
-                    "material_fact_ids": ["F1", "F2"],
-                    "issue_ids": ["I1"],
-                    "confidence": "high",
-                    "needs_revision": False,
-                    "revision_reason": "",
                 }
             ),
             _response(
@@ -572,11 +580,21 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
         "step_description",
         "template_tags",
     ]
-    assert [call["max_tokens"] for call in client.calls] == [1400, 2000, 1000]
+    assert [call["max_tokens"] for call in client.calls] == [1400, 768, 1000]
+    assert client.calls[1]["schema"]["required"] == ["instantiated_result"]
+    assert set(client.calls[1]["schema"]["properties"]) == {"instantiated_result"}
     assert client.calls[1]["schema"]["properties"]["instantiated_result"][
         "maxLength"
     ] == 1800
     assert "180 words" in client.prompts[1]
+    assert "do not decide the overall claim" in client.prompts[1]
+    assert trace["executed_steps"] == [
+        {
+            "step_id": "S1",
+            "template_id": "LF025",
+            "instantiated_result": "F1 supports the debt and F2 does not create a genuine triable issue.",
+        }
+    ]
     assert client.calls[-1]["schema"]["required"] == [
         "review_analysis",
         "decision",
@@ -618,14 +636,7 @@ def test_rf_style_forces_binary_retry_when_adaptive_review_omits_label():
             ),
             _response(
                 {
-                    "step_id": "S1",
-                    "template_id": "LF001",
                     "instantiated_result": "F1 supports repayment.",
-                    "material_fact_ids": ["F1"],
-                    "issue_ids": [],
-                    "confidence": "high",
-                    "needs_revision": False,
-                    "revision_reason": "",
                 }
             ),
             _response(
@@ -677,14 +688,7 @@ def test_rf_style_forces_final_answer_after_exhausting_steps():
             ),
             _response(
                 {
-                    "step_id": "S1",
-                    "template_id": "LF001",
                     "instantiated_result": "F1 supports repayment and F2 does not defeat it.",
-                    "material_fact_ids": ["F1", "F2"],
-                    "issue_ids": ["I1"],
-                    "confidence": "high",
-                    "needs_revision": False,
-                    "revision_reason": "",
                 }
             ),
             _response(
@@ -750,16 +754,20 @@ def test_output_normalizers_repair_common_rf_shapes():
             "extra": {"note": "fold me"},
         }
     )
-    missing_confidence, missing_confidence_repairs = _normalize_step_artifact_payload(
+    truncated_artifact, truncated_repairs = _normalize_step_artifact_payload(
         {
-            "step_id": "S1",
-            "template_id": "LF001",
-            "instantiated_result": "Possibly truncated result.",
-            "material_fact_ids": [],
-            "issue_ids": [],
-            "confidence": None,
-            "needs_revision": None,
-            "revision_reason": None,
+            "instantiated_result": "x" * 1801,
+        },
+        LegalFluxPlanStep(
+            step_id="S1",
+            template_id="LF001",
+            purpose="Use a template.",
+            expected_artifact="Artifact.",
+        ),
+    )
+    word_truncated_artifact, word_truncated_repairs = _normalize_step_artifact_payload(
+        {
+            "instantiated_result": " ".join(f"word{i}" for i in range(181)),
         },
         LegalFluxPlanStep(
             step_id="S1",
@@ -773,30 +781,24 @@ def test_output_normalizers_repair_common_rf_shapes():
     assert legacy_step.step_description == "Legacy description."
     assert "purpose" not in legacy_step.model_dump(mode="json")
     assert artifact["template_id"] == "LF001"
-    assert artifact["material_fact_ids"] == ["F1"]
-    assert artifact["issue_ids"] == ["I1"]
-    assert artifact["confidence"] == "medium"
-    assert "Additional structured notes" in artifact["instantiated_result"]
-    assert "material_fact_ids_object_unwrapped" in artifact_repairs
+    assert artifact["instantiated_result"] == "result"
+    assert set(artifact) == {"step_id", "template_id", "instantiated_result"}
+    assert "obsolete_step_output_fields_removed" in artifact_repairs
     assert review["decision"] == "final_answer"
     assert review["final_decision"] == "support"
     assert review["review_analysis"].startswith("Done.")
     assert "rf_review_legacy_rationale_renamed" in review_repairs
     assert "rf_review_extra_fields_folded_into_review_analysis" in review_repairs
-    assert missing_confidence["confidence"] is None
-    assert "confidence_null_filled" not in missing_confidence_repairs
-    with pytest.raises(ValueError, match="confidence"):
-        LegalFluxStepArtifact.model_validate(missing_confidence)
+    assert len(truncated_artifact["instantiated_result"]) == 1800
+    assert "instantiated_result_truncated" in truncated_repairs
+    LegalFluxStepArtifact.model_validate(truncated_artifact)
+    assert len(word_truncated_artifact["instantiated_result"].split()) == 180
+    assert "instantiated_result_truncated" in word_truncated_repairs
     with pytest.raises(ValueError, match="instantiated_result"):
         LegalFluxStepArtifact(
             step_id="S1",
             template_id="LF001",
             instantiated_result="x" * 1801,
-            material_fact_ids=[],
-            issue_ids=[],
-            confidence="high",
-            needs_revision=False,
-            revision_reason="",
         )
 
 

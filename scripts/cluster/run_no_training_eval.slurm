@@ -35,8 +35,10 @@ export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-4}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
 RUN_TAG="${LEGAL_FLUX_RUN_TAG:-}"
+CASE_LIMIT="${LEGAL_FLUX_CASE_LIMIT:-}"
 CONDITION_ARGS=()
 RUN_TAG_ARGS=()
+CASE_LIMIT_ARGS=()
 
 if [[ -n "${LEGAL_FLUX_CONDITIONS:-}" ]]; then
   read -r -a REQUESTED_CONDITIONS <<< "$LEGAL_FLUX_CONDITIONS"
@@ -49,6 +51,14 @@ if [[ -n "$RUN_TAG" ]]; then
     exit 1
   fi
   RUN_TAG_ARGS=(--run-tag "$RUN_TAG")
+fi
+
+if [[ -n "$CASE_LIMIT" ]]; then
+  if [[ ! "$CASE_LIMIT" =~ ^[1-9][0-9]*$ ]]; then
+    echo "LEGAL_FLUX_CASE_LIMIT must be a positive integer: ${CASE_LIMIT}" >&2
+    exit 1
+  fi
+  CASE_LIMIT_ARGS=(--case-limit "$CASE_LIMIT")
 fi
 
 if (( SLURM_ARRAY_TASK_ID >= NUM_SHARDS )); then
@@ -76,7 +86,7 @@ legal_flux_start_vllm "$PORT" "$VLLM_LOG"
 SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"
-echo "Starting shard ${SLURM_ARRAY_TASK_ID}/${NUM_SHARDS}."
+echo "Starting shard ${SLURM_ARRAY_TASK_ID}/${NUM_SHARDS}; case_limit=${CASE_LIMIT:-all}."
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
@@ -85,4 +95,5 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   --shard-index "$SLURM_ARRAY_TASK_ID" \
   "${CONDITION_ARGS[@]}" \
   "${RUN_TAG_ARGS[@]}" \
+  "${CASE_LIMIT_ARGS[@]}" \
   --fail-on-errors

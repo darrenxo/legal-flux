@@ -1131,84 +1131,41 @@ def _normalize_step_artifact_payload(
 ) -> tuple[dict[str, Any] | None, list[str]]:
     if not isinstance(payload, dict):
         return payload, []
-    repaired = json.loads(json.dumps(payload))
     repairs: list[str] = []
-    if repaired.get("step_id") != step.step_id:
-        repaired["step_id"] = step.step_id
-        repairs.append("step_id_forced_to_planned_value")
-    if repaired.get("template_id") != step.template_id:
-        repaired["template_id"] = step.template_id
-        repairs.append("template_id_forced_to_planned_value")
-    for key in ("material_fact_ids", "issue_ids"):
-        value = repaired.get(key)
-        if value is None:
-            repaired[key] = []
-            repairs.append(f"{key}_null_filled")
-        elif isinstance(value, str):
-            repaired[key] = [value] if value.strip() else []
-            repairs.append(f"{key}_string_wrapped")
-        elif isinstance(value, list):
-            id_keys = ("fact_id", "id") if key == "material_fact_ids" else ("issue_id", "id")
-            normalized_values: list[str] = []
-            for item in value:
-                if isinstance(item, str):
-                    if item.strip():
-                        normalized_values.append(item)
-                    continue
-                if isinstance(item, dict):
-                    identifier = next(
-                        (
-                            item[id_key]
-                            for id_key in id_keys
-                            if isinstance(item.get(id_key), str)
-                        ),
-                        None,
-                    )
-                    if identifier:
-                        normalized_values.append(identifier)
-                        repairs.append(f"{key}_object_unwrapped")
-                    else:
-                        repairs.append(f"{key}_object_without_id_removed")
-                    continue
-                if item is not None:
-                    normalized_values.append(str(item))
-                    repairs.append(f"{key}_item_coerced_to_string")
-            repaired[key] = normalized_values
-    for key in ("instantiated_result", "revision_reason"):
-        if repaired.get(key) is None:
-            repaired[key] = ""
-            repairs.append(f"{key}_null_filled")
-        elif key in repaired and not isinstance(repaired[key], str):
-            repaired[key] = str(repaired[key])
-            repairs.append(f"{key}_coerced_to_string")
-    if repaired.get("needs_revision") is None:
-        repaired["needs_revision"] = False
-        repairs.append("needs_revision_null_filled")
-    confidence = repaired.get("confidence")
-    if isinstance(confidence, str):
-        normalized = confidence.strip().lower()
-        if normalized in {"low", "medium", "high"}:
-            repaired["confidence"] = normalized
-            if normalized != confidence:
-                repairs.append("confidence_lowercased")
-    repairs.extend(
-        _fold_extra_fields_into_text(
-            repaired,
-            allowed={
-                "step_id",
-                "template_id",
-                "instantiated_result",
-                "material_fact_ids",
-                "issue_ids",
-                "confidence",
-                "needs_revision",
-                "revision_reason",
-            },
-            text_key="instantiated_result",
-            action_prefix="step",
-        )
-    )
-    return repaired, repairs
+    value = payload.get("instantiated_result")
+    if value is None:
+        result = ""
+        repairs.append("instantiated_result_null_filled")
+    elif isinstance(value, str):
+        result = value
+    else:
+        result = str(value)
+        repairs.append("instantiated_result_coerced_to_string")
+
+    result, truncated = _truncate_step_result(result)
+    if truncated:
+        repairs.append("instantiated_result_truncated")
+    if set(payload) - {"instantiated_result"}:
+        repairs.append("obsolete_step_output_fields_removed")
+
+    return {
+        "step_id": step.step_id,
+        "template_id": step.template_id,
+        "instantiated_result": result,
+    }, repairs
+
+
+def _truncate_step_result(value: str) -> tuple[str, bool]:
+    result = value.strip()
+    truncated = False
+    words = result.split()
+    if len(words) > 180:
+        result = " ".join(words[:180])
+        truncated = True
+    if len(result) > 1800:
+        result = result[:1800].rstrip()
+        truncated = True
+    return result, truncated
 
 
 def _unwrap_nested_abstract_step_object(step: dict[str, Any]) -> dict[str, Any]:

@@ -80,13 +80,20 @@ def _execute_condition(
 
 def _response_trace(response: Any) -> dict[str, Any]:
     repaired = bool(response.metadata.get("json_repair_applied"))
+    finish_reason = response.metadata.get("finish_reason") or response.metadata.get(
+        "done_reason"
+    )
+    repair_actions = ["deterministic_json_repair"] if repaired else []
+    if finish_reason == "length":
+        repair_actions.append("generation_length_limit_reached")
     return {
         "raw_response": response.raw_text,
         "elapsed_seconds": response.elapsed_seconds,
         "prompt_tokens": response.prompt_tokens,
         "output_tokens": response.output_tokens,
+        "finish_reason": finish_reason,
         "schema_errors": ["malformed_json_repaired"] if repaired else [],
-        "repair_actions": ["deterministic_json_repair"] if repaired else [],
+        "repair_actions": repair_actions,
         "calls": 1,
     }
 
