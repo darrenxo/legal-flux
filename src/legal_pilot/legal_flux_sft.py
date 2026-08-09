@@ -18,6 +18,27 @@ from .legal_flux_training import export_template_structure_sft
 from .runner import load_cases
 
 
+_VLLM_TEXT_LORA_MODULES = frozenset(
+    {
+        "down_proj",
+        "gate_proj",
+        "in_proj_a",
+        "in_proj_b",
+        "in_proj_qkv",
+        "in_proj_z",
+        "k_proj",
+        "o_proj",
+        "out_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj",
+    }
+)
+_VISION_MODULE_SEGMENTS = frozenset(
+    {"visual", "vision_model", "vision_tower"}
+)
+
+
 def train_template_structure_sft(
     config: dict[str, Any],
     *,
@@ -248,6 +269,109 @@ def _template_lora_config_kwargs(settings: dict[str, Any]) -> dict[str, Any]:
         "bias": "none",
         "task_type": "CAUSAL_LM",
     }
+
+
+def prepare_vllm_text_adapter(
+    checkpoint_dir: str | Path,
+    *,
+    output_name: str = "vllm_text_only",
+) -> dict[str, Any]:
+    """Create a vLLM-compatible text-only copy of a PEFT LoRA checkpoint."""
+    checkpoint = Path(checkpoint_dir).resolve()
+    config_path = checkpoint / "adapter_config.json"
+    weights_path = checkpoint / "adapter_model.safetensors"
+    if not config_path.is_file() or not weights_path.is_file():
+        raise FileNotFoundError(
+            f"Expected adapter_config.json and adapter_model.safetensors under "
+            f"{checkpoint}."
+        )
+    if not output_name or Path(output_name).name != output_name:
+        raise ValueError("output_name must be one directory name.")
+    output_dir = checkpoint / output_name
+    if output_dir.exists():
+        raise FileExistsError(f"Refusing to overwrite existing {output_dir}.")
+
+    try:
+        from safetensors import safe_open
+        from safetensors.torch import save_file
+    except ImportError as exc:
+        raise RuntimeError(
+            "Preparing a vLLM adapter requires safetensors. Use the LegalFlux "
+            "training or evaluation environment."
+        ) from exc
+
+    retained: dict[str, Any] = {}
+    removed_keys: list[str] = []
+    retained_modules: set[str] = set()
+    removed_modules: set[str] = set()
+    removed_lora_b_max_abs = 0.0
+    with safe_open(weights_path, framework="pt", device="cpu") as handle:
+        metadata = handle.metadata()
+        for key in handle.keys():
+            tensor = handle.get_tensor(key)
+            module_name = _lora_module_name(key)
+            if _is_vision_adapter_key(key):
+                removed_keys.append(key)
+                if module_name:
+                    removed_modules.add(module_name)
+                if ".lora_B." in key and tensor.numel():
+                    removed_lora_b_max_abs = max(
+                        removed_lora_b_max_abs,
+                        float(tensor.abs().max().item()),
+                    )
+                continue
+            if module_name and module_name not in _VLLM_TEXT_LORA_MODULES:
+                raise ValueError(
+                    f"Retained LoRA tensor {key!r} targets unsupported module "
+                    f"{module_name!r}."
+                )
+            retained[key] = tensor
+            if module_name:
+                retained_modules.add(module_name)
+
+    if not retained:
+        raise ValueError(f"No text LoRA tensors found in {weights_path}.")
+
+    adapter_config = json.loads(config_path.read_text(encoding="utf-8"))
+    original_target_modules = adapter_config.get("target_modules")
+    adapter_config["target_modules"] = sorted(retained_modules)
+    output_dir.mkdir()
+    save_file(
+        retained,
+        output_dir / "adapter_model.safetensors",
+        metadata=metadata,
+    )
+    (output_dir / "adapter_config.json").write_text(
+        json.dumps(adapter_config, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    manifest = {
+        "source_checkpoint": str(checkpoint),
+        "source_weights": str(weights_path),
+        "output_dir": str(output_dir),
+        "retained_tensor_count": len(retained),
+        "removed_tensor_count": len(removed_keys),
+        "retained_target_modules": sorted(retained_modules),
+        "removed_target_modules": sorted(removed_modules),
+        "original_target_modules": original_target_modules,
+        "removed_lora_b_max_abs": removed_lora_b_max_abs,
+    }
+    (output_dir / "conversion_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def _is_vision_adapter_key(key: str) -> bool:
+    return bool(_VISION_MODULE_SEGMENTS.intersection(key.split(".")))
+
+
+def _lora_module_name(key: str) -> str | None:
+    for marker in (".lora_A.", ".lora_B."):
+        if marker in key:
+            return key.split(marker, 1)[0].rsplit(".", 1)[-1]
+    return None
 
 
 def prepare_template_sft_splits(config: dict[str, Any]) -> dict[str, Any]:

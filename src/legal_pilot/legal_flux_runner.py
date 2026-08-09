@@ -1012,14 +1012,15 @@ def _normalize_abstract_plan_payload(
     ):
         repaired["planning_analysis"] = str(repaired["planning_analysis"])
         repairs.append("abstract_plan_planning_analysis_coerced_to_string")
-    repairs.extend(
-        _fold_extra_fields_into_text(
-            repaired,
-            allowed={"planning_analysis", "planned_steps"},
-            text_key="planning_analysis",
-            action_prefix="abstract_plan",
-        )
-    )
+    extra_fields = [
+        key
+        for key in repaired
+        if key not in {"planning_analysis", "planned_steps"}
+    ]
+    if extra_fields:
+        for key in extra_fields:
+            repaired.pop(key)
+        repairs.append("abstract_plan_extra_fields_removed")
     return repaired, repairs
 
 

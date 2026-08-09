@@ -27,6 +27,7 @@ from legal_pilot.legal_flux_gemini import run_gemini_template_workflow
 from legal_pilot.legal_flux_evaluation import _aggregate_frame
 from legal_pilot.legal_flux_runner import (
     _execute_rf_style_case,
+    _normalize_abstract_plan_payload,
     _normalize_rf_review_payload,
     _normalize_step_artifact_payload,
     _print_generation_progress,
@@ -717,6 +718,23 @@ def test_rf_style_forces_final_answer_after_exhausting_steps():
 
 
 def test_output_normalizers_repair_common_rf_shapes():
+    plan, plan_repairs = _normalize_abstract_plan_payload(
+        {
+            "planning_analysis": "Check liability before selecting a template.",
+            "confidence": "high",
+            "final_decision": "support",
+            "planned_steps": [
+                {
+                    "step_id": "S1",
+                    "step_name": "Liability check",
+                    "step_description": "Determine whether the elements are met.",
+                    "template_tags": ["liability"],
+                    "irrelevant_note": "do not retain",
+                }
+            ],
+        },
+        max_steps=4,
+    )
     legacy_step = LegalFluxAbstractStep.model_validate(
         {
             "step_id": "S1",
@@ -777,6 +795,18 @@ def test_output_normalizers_repair_common_rf_shapes():
         ),
     )
 
+    assert plan == {
+        "planning_analysis": "Check liability before selecting a template.",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Liability check",
+                "step_description": "Determine whether the elements are met.",
+                "template_tags": ["liability"],
+            }
+        ],
+    }
+    assert "abstract_plan_extra_fields_removed" in plan_repairs
     assert artifact["step_id"] == "S1"
     assert legacy_step.step_description == "Legacy description."
     assert "purpose" not in legacy_step.model_dump(mode="json")
@@ -1188,7 +1218,20 @@ def test_template_sft_builds_expected_lora_config():
     kwargs = _template_lora_config_kwargs(settings)
 
     assert kwargs["r"] == 32
-    assert kwargs["target_modules"] == "all-linear"
+    assert kwargs["target_modules"] == [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj",
+        "in_proj_a",
+        "in_proj_b",
+        "in_proj_z",
+        "in_proj_qkv",
+        "out_proj",
+    ]
     assert kwargs["exclude_modules"] == [
         "visual",
         "vision_model",

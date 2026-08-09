@@ -53,6 +53,13 @@ if [[ -z "$CHECKPOINT" ]]; then
   echo "Epoch ${EPOCH} checkpoint not found under ${TRAIN_DIR}." >&2
   exit 1
 fi
+SERVING_CHECKPOINT="${CHECKPOINT}/vllm_text_only"
+if [[ ! -f "${SERVING_CHECKPOINT}/adapter_config.json" ]] || \
+   [[ ! -f "${SERVING_CHECKPOINT}/adapter_model.safetensors" ]]; then
+  echo "Prepared text-only adapter not found under ${SERVING_CHECKPOINT}." >&2
+  echo "Run flux-prepare-vllm-adapter for the selected checkpoints first." >&2
+  exit 1
+fi
 
 RUN_TAG="sft-full-lr-${LR}-e${EPOCH}"
 ADAPTER_NAME="legalflux-${RUN_TAG}"
@@ -69,9 +76,10 @@ export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
 VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log"
 
 legal_flux_start_vllm "$PORT" "$VLLM_LOG" \
+  --enforce-eager \
   --enable-lora \
   --max-lora-rank 32 \
-  --lora-modules "${ADAPTER_NAME}=${CHECKPOINT}"
+  --lora-modules "${ADAPTER_NAME}=${SERVING_CHECKPOINT}"
 SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"

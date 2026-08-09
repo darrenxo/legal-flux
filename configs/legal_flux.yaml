@@ -115,7 +115,19 @@ training:
     lora_r: 32
     lora_alpha: 64
     lora_dropout: 0.05
-    lora_target_modules: all-linear
+    lora_target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+      - in_proj_a
+      - in_proj_b
+      - in_proj_z
+      - in_proj_qkv
+      - out_proj
     lora_exclude_modules:
       - visual
       - vision_model

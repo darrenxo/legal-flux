@@ -95,6 +95,9 @@ def build_parser() -> argparse.ArgumentParser:
     template_sft.add_argument("--learning-rate", type=float, default=None)
     template_sft.add_argument("--num-train-epochs", type=int, default=None)
     template_sft.add_argument("--output-dir", default=None)
+    vllm_adapter = subparsers.add_parser("flux-prepare-vllm-adapter")
+    vllm_adapter.add_argument("checkpoints", nargs="+")
+    vllm_adapter.add_argument("--output-name", default="vllm_text_only")
     dev_tune = subparsers.add_parser("flux-export-dev-tune")
     dev_tune.add_argument("--count", type=int, default=256)
     sft_grid = subparsers.add_parser("flux-summarize-sft-grid")
@@ -210,6 +213,18 @@ def main(argv: list[str] | None = None) -> int:
         from .legal_flux_sft import export_trajectory_dev_tune_subset
 
         result = export_trajectory_dev_tune_subset(config, count=args.count)
+    elif args.command == "flux-prepare-vllm-adapter":
+        from .legal_flux_sft import prepare_vllm_text_adapter
+
+        result = {
+            "adapters": [
+                prepare_vllm_text_adapter(
+                    checkpoint,
+                    output_name=args.output_name,
+                )
+                for checkpoint in args.checkpoints
+            ]
+        }
     elif args.command == "flux-summarize-sft-grid":
         from .legal_flux_sft import summarize_sft_checkpoint_grid
 

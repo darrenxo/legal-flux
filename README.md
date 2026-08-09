@@ -241,7 +241,10 @@ similarity, then fewer steps, then sample index as a deterministic fallback. A
 completed evaluation with an invalid final label counts as incorrect; transport
 or execution failures leave the candidate incomplete. A group is omitted when
 all complete candidates have the same accuracy. v1 intentionally does not add
-trajectory SFT.
+trajectory SFT. Chosen and rejected responses contain only the canonical
+`planning_analysis` and `planned_steps` schema. Extra planner fields are removed
+from the normalized plan while the untouched raw response remains in the
+candidate ledger for auditing.
 
 Final-test runs are guarded by `flux-freeze`:
 
