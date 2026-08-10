@@ -80,7 +80,7 @@ bash "$REPO/scripts/cluster/setup_delta_envs.sh"
 
 The job scripts load `pytorch-conda/2.8` before activating the isolated
 `legalflux-train-v2` and `legalflux-eval-v3` host environments. Inference runs
-inside the pinned `vllm/vllm-openai:v0.18.1` Apptainer image; this prevents pip
+inside the pinned `vllm/vllm-openai:v0.21.0` Apptainer image; this prevents pip
 from selecting a vLLM build compiled for a different CUDA major version. The
 setup script also stages Qwen3.5-9B and BGE-M3 in the shared model cache so
 array tasks do not each start a separate download.
@@ -151,6 +151,17 @@ the complete 2,755-case development split:
 
 ```bash
 cd /projects/bfua/$USER/legal_nlp/repo
+CHECKPOINT=/work/hdd/bfua/$USER/legal_nlp/runs/legal_flux/training/template_structure_sft/lr-5e-5/checkpoint-30
+sbatch \
+  --export=ALL,LEGAL_FLUX_CANARY_LORA_PATH="$CHECKPOINT/vllm_text_only" \
+  scripts/cluster/run_vllm_canary.slurm
+```
+
+This short canary attaches the prepared SFT adapter and sends one constrained
+request to it while retaining the base model for the executor-schema request.
+Submit the full grid only after the canary completes successfully:
+
+```bash
 sbatch scripts/cluster/run_sft_full_grid.slurm
 ```
 

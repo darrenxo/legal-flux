@@ -6,8 +6,8 @@ PROJECT_ROOT="${LEGAL_FLUX_PROJECT_ROOT:-/projects/bfua/${USER}/legal_nlp}"
 WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
 REPO="${LEGAL_FLUX_ROOT:-${PROJECT_ROOT}/repo}"
 EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval-v3"
-VLLM_CONTAINER="${LEGAL_FLUX_VLLM_CONTAINER:-${WORK_ROOT}/containers/vllm-openai-v0.18.1.sif}"
-VLLM_IMAGE="${LEGAL_FLUX_VLLM_IMAGE:-docker://vllm/vllm-openai:v0.18.1}"
+VLLM_CONTAINER="${LEGAL_FLUX_VLLM_CONTAINER:-${WORK_ROOT}/containers/vllm-openai-v0.21.0.sif}"
+VLLM_IMAGE="${LEGAL_FLUX_VLLM_IMAGE:-docker://vllm/vllm-openai:v0.21.0}"
 
 if [[ ! -f "${REPO}/pyproject.toml" ]]; then
   echo "LegalFlux checkout not found at ${REPO}." >&2

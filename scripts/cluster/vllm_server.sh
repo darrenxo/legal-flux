@@ -14,7 +14,7 @@ legal_flux_start_vllm() {
   : "${HF_HOME:?HF_HOME must be set}"
   : "${LEGAL_FLUX_MODEL_NAME:?LEGAL_FLUX_MODEL_NAME must be set}"
 
-  local container="${LEGAL_FLUX_VLLM_CONTAINER:-${LEGAL_FLUX_WORK_ROOT}/containers/vllm-openai-v0.18.1.sif}"
+  local container="${LEGAL_FLUX_VLLM_CONTAINER:-${LEGAL_FLUX_WORK_ROOT}/containers/vllm-openai-v0.21.0.sif}"
   if [[ ! -r "$container" ]]; then
     echo "vLLM container is missing: ${container}" >&2
     echo "Run scripts/cluster/setup_delta_eval.sh before submitting GPU jobs." >&2

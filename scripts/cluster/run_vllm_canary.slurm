@@ -29,13 +29,31 @@ PORT=$((20000 + SLURM_JOB_ID % 30000))
 BASE_URL="http://127.0.0.1:${PORT}/v1"
 VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-canary-${SLURM_JOB_ID}.log"
 
-legal_flux_start_vllm "$PORT" "$VLLM_LOG"
+CANARY_MODEL="$LEGAL_FLUX_MODEL_NAME"
+VLLM_ARGS=()
+if [[ -n "${LEGAL_FLUX_CANARY_LORA_PATH:-}" ]]; then
+  CANARY_LORA_NAME="${LEGAL_FLUX_CANARY_LORA_NAME:-legalflux-sft-canary}"
+  if [[ ! -f "${LEGAL_FLUX_CANARY_LORA_PATH}/adapter_config.json" ]] || \
+     [[ ! -f "${LEGAL_FLUX_CANARY_LORA_PATH}/adapter_model.safetensors" ]]; then
+    echo "Prepared canary adapter not found under ${LEGAL_FLUX_CANARY_LORA_PATH}." >&2
+    exit 1
+  fi
+  CANARY_MODEL="$CANARY_LORA_NAME"
+  VLLM_ARGS=(
+    --enforce-eager
+    --enable-lora
+    --max-lora-rank 32
+    --lora-modules "${CANARY_LORA_NAME}=${LEGAL_FLUX_CANARY_LORA_PATH}"
+  )
+fi
+
+legal_flux_start_vllm "$PORT" "$VLLM_LOG" "${VLLM_ARGS[@]}"
 SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$BASE_URL" "$VLLM_LOG"
 
 RESPONSE="${TMPDIR:-/tmp}/legalflux-vllm-canary-${SLURM_JOB_ID}.json"
-PAYLOAD=$(printf '%s' "{\"model\":\"${LEGAL_FLUX_MODEL_NAME}\",\"messages\":[{\"role\":\"user\",\"content\":\"Return a JSON object with status set to ready.\"}],\"temperature\":0,\"max_tokens\":128,\"chat_template_kwargs\":{\"enable_thinking\":false},\"response_format\":{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"legalflux_canary\",\"schema\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\",\"enum\":[\"ready\"]}},\"required\":[\"status\"],\"additionalProperties\":false},\"strict\":true}}}")
+PAYLOAD=$(printf '%s' "{\"model\":\"${CANARY_MODEL}\",\"messages\":[{\"role\":\"user\",\"content\":\"Return a JSON object with status set to ready.\"}],\"temperature\":0,\"max_tokens\":128,\"chat_template_kwargs\":{\"enable_thinking\":false},\"response_format\":{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"legalflux_canary\",\"schema\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\",\"enum\":[\"ready\"]}},\"required\":[\"status\"],\"additionalProperties\":false},\"strict\":true}}}")
 curl --silent --show-error --fail --max-time 600 \
   -H 'Content-Type: application/json' \
   --data "$PAYLOAD" \

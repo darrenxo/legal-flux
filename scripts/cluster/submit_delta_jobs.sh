@@ -7,7 +7,7 @@ WORK_ROOT="${LEGAL_FLUX_WORK_ROOT:-/work/hdd/bfua/${USER}/legal_nlp}"
 REPO="${LEGAL_FLUX_ROOT:-${PROJECT_ROOT}/repo}"
 TRAIN_ENV="${WORK_ROOT}/envs/legalflux-train-v2"
 EVAL_ENV="${WORK_ROOT}/envs/legalflux-eval-v3"
-VLLM_CONTAINER="${LEGAL_FLUX_VLLM_CONTAINER:-${WORK_ROOT}/containers/vllm-openai-v0.18.1.sif}"
+VLLM_CONTAINER="${LEGAL_FLUX_VLLM_CONTAINER:-${WORK_ROOT}/containers/vllm-openai-v0.21.0.sif}"
 CASES="${WORK_ROOT}/data/processed/legal_flux/cases.jsonl"
 MANIFEST="${WORK_ROOT}/data/processed/legal_flux/prepare_manifest.json"
 
