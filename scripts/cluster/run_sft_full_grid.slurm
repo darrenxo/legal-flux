@@ -24,7 +24,6 @@ export HF_HOME="${HF_HOME:-${LEGAL_FLUX_WORK_ROOT}/cache/huggingface}"
 export TOKENIZERS_PARALLELISM=false
 cd "$LEGAL_FLUX_ROOT"
 module reset
-module load pytorch-conda/2.8
 source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"

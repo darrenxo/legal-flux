@@ -11,7 +11,6 @@ export LEGAL_FLUX_WORK_ROOT="$WORK_ROOT"
 export LEGAL_FLUX_ROOT="$REPO"
 
 module reset
-module load pytorch-conda/2.8
 source "${WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 cd "$REPO"
 
