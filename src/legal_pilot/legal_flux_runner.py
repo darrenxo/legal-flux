@@ -678,7 +678,7 @@ def _execute_rf_style_case(
             remaining=remaining,
             selected_templates=selected_templates,
             common=reviewer_common,
-            max_steps=max_steps - len(artifacts),
+            max_steps=max_steps,
             force_final_answer=not remaining or len(artifacts) >= max_steps,
         )
         reviews.append(review)
@@ -697,9 +697,8 @@ def _execute_rf_style_case(
                 repairs.append("rf_final_answer_missing_label_forced_retry")
             break
         if review.decision == "revise":
-            remaining = _renumber_abstract_remaining_steps(
-                review.revised_remaining_steps[: max_steps - len(artifacts)],
-                start_index=len(artifacts) + 1,
+            remaining = list(
+                review.revised_remaining_steps[: max_steps - len(artifacts)]
             )
             repairs.append("rf_remaining_trajectory_revised")
 
@@ -713,7 +712,7 @@ def _execute_rf_style_case(
             remaining=[],
             selected_templates=selected_templates,
             common=reviewer_common,
-            max_steps=0,
+            max_steps=max_steps,
             force_final_answer=True,
         )
         reviews.append(review)
@@ -793,6 +792,7 @@ def _review_rf_trajectory(
     max_steps: int,
     force_final_answer: bool = False,
 ) -> tuple[LegalFluxRfReview, dict[str, Any]]:
+    remaining_step_limit = max_steps - len(artifacts)
     prompt, prompt_hash = render_prompt(
         config,
         "legal_flux/rf_review",
@@ -804,14 +804,38 @@ def _review_rf_trajectory(
         max_steps=max_steps,
         review_output_requirement=(
             "No remaining abstract steps are available. Return only "
-            "final_rationale followed by final_decision, with final_decision "
-            'exactly "support" or "reject".'
+            "final_rationale, followed by final_decision. final_decision must "
+            'be exactly "support" or "reject". Interpret the label relative '
+            "to the supplied plaintiff's claim. support means that the court "
+            "grants or allows the claim. reject means that the court dismisses, "
+            "refuses, or denies it. Make sure that final_decision agrees with "
+            "final_rationale."
             if force_final_answer
             else (
-                "First provide concise review_analysis, then choose decision as "
-                '"continue", "revise", or "final_answer". Return '
-                "revised_remaining_steps, final_rationale, and final_decision; "
-                "use null for final_decision unless decision is final_answer."
+                "Use the executed artifacts and supplied facts to decide whether "
+                "to continue with the existing plan, revise the remaining abstract "
+                "steps, or return the final decision.\n\n"
+                "First provide a concise review_analysis, then set decision to "
+                'exactly "continue", "revise", or "final_answer".\n\n'
+                "continue means that the remaining abstract steps are still "
+                "appropriate and the trajectory should simply proceed to the next "
+                "planned step. If decision is continue, output only review_analysis "
+                "and decision.\n\n"
+                "revise means that the remaining abstract steps need revision. If "
+                "decision is revise, also output revised_remaining_steps with the "
+                "revised steps in order. Each revised step must contain step_name, "
+                "step_description, and template_tags for template retrieval. Return "
+                "at least 1 and at most "
+                f"{remaining_step_limit} revised_remaining_steps.\n\n"
+                "final_answer means that the artifacts executed so far are already "
+                "sufficient to reach a decision, or that the configured limit of "
+                f"{max_steps} executed steps has been reached. If decision is "
+                "final_answer, also output final_rationale and final_decision. "
+                'final_decision must be exactly "support" or "reject". Interpret '
+                "the label relative to the supplied plaintiff's claim. support "
+                "means that the court grants or allows the claim. reject means "
+                "that the court dismisses, refuses, or denies it. Make sure that "
+                "final_decision agrees with final_rationale."
             )
         ),
     )
@@ -820,14 +844,35 @@ def _review_rf_trajectory(
         if force_final_answer
         else "legal_flux_rf_review.json"
     )
+    schema = _load_schema(resolve_path(config, "schemas_dir") / schema_name)
+    if not force_final_answer:
+        revise_branch = next(
+            branch
+            for branch in schema["oneOf"]
+            if branch["properties"]["decision"].get("const") == "revise"
+        )
+        revised_steps_schema = revise_branch["properties"][
+            "revised_remaining_steps"
+        ]
+        revised_steps_schema["minItems"] = 1
+        revised_steps_schema["maxItems"] = remaining_step_limit
     response = client.generate(
         prompt=prompt,
-        schema=_load_schema(resolve_path(config, "schemas_dir") / schema_name),
+        schema=schema,
         max_tokens=config["model"]["flux_review_max_tokens"],
         **common,
     )
     normalized_review, repairs = _normalize_rf_review_payload(response.parsed)
     review = LegalFluxRfReview.model_validate(normalized_review)
+    if review.decision == "revise":
+        review = review.model_copy(
+            update={
+                "revised_remaining_steps": _renumber_abstract_remaining_steps(
+                    review.revised_remaining_steps,
+                    start_index=len(artifacts) + 1,
+                )
+            }
+        )
     trace = _response_trace(response)
     trace["prompt_hash"] = prompt_hash
     trace["repair_actions"].extend(repairs)
@@ -1080,8 +1125,10 @@ def _normalize_rf_review_payload(
             step = _unwrap_nested_abstract_step_object(step)
             index = len(normalized_steps) + 1
             value = step.get("step_id")
-            if not isinstance(value, str):
-                step["step_id"] = f"S{value}" if value is not None else f"S{index}"
+            if value is None:
+                step["step_id"] = f"S{index}"
+            elif not isinstance(value, str):
+                step["step_id"] = f"S{value}"
                 repairs.append("rf_review_step_id_coerced_to_string")
             elif value.isdigit():
                 step["step_id"] = f"S{value}"

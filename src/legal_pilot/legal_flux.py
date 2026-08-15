@@ -263,6 +263,7 @@ def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:
         "legal_flux.py",
         "legal_flux_chatgpt.py",
         "legal_flux_evaluation.py",
+        "legal_flux_rereview.py",
         "legal_flux_runner.py",
         "legal_flux_setup.py",
         "legal_flux_training.py",

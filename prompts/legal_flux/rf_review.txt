@@ -1,15 +1,10 @@
-You are reviewing a partially executed LegalFlux ReasonFlux-style trajectory.
-Use the executed artifacts and supplied facts to decide whether to continue,
-revise the remaining abstract steps, or output the final binary result now.
+You are reviewing a partially executed trajectory built from high-level legal templates.
 
 OUTPUT REQUIREMENT:
 {review_output_requirement}
 
-Do not add a step merely because a generic legal workflow would include it.
-Keep review_analysis or final_rationale concise and grounded in the executed
-artifacts and F-numbered facts. When revising, return abstract steps only: step
-names, concise step descriptions, and retrieval tags, not template IDs.
-Do not reveal hidden chain-of-thought.
+Keep review_analysis or final_rationale, if present, concise and grounded in the
+executed artifacts and F-numbered facts.
 
 CLAIM OR TASK:
 {claim}

@@ -88,6 +88,28 @@ def build_parser() -> argparse.ArgumentParser:
         default="trajectory-dev",
     )
     flux_score.add_argument("--run-tag", default=None)
+    flux_rereview = subparsers.add_parser("flux-rereview")
+    flux_rereview.add_argument(
+        "--phase",
+        choices=[
+            "trajectory-dev",
+            "trajectory_dev",
+            "final-test",
+            "final_test",
+        ],
+        default="trajectory-dev",
+    )
+    flux_rereview.add_argument("--source-run-tag", required=True)
+    flux_rereview.add_argument("--run-tag", required=True)
+    flux_rereview.add_argument("--dry-run", action="store_true")
+    flux_rereview.add_argument("--case-limit", type=int, default=None)
+    flux_rereview.add_argument("--num-shards", type=int, default=1)
+    flux_rereview.add_argument("--shard-index", type=int, default=0)
+    flux_rereview.add_argument(
+        "--fail-on-errors",
+        action="store_true",
+        help="Exit nonzero after preserving the ledger if any replay fails.",
+    )
     subparsers.add_parser("flux-export-template-sft")
     template_sft = subparsers.add_parser("flux-train-template-sft")
     template_sft.add_argument("--dry-run", action="store_true")
@@ -193,6 +215,20 @@ def main(argv: list[str] | None = None) -> int:
             config,
             phase=args.phase,
             run_tag=args.run_tag,
+        )
+    elif args.command == "flux-rereview":
+        from .legal_flux_rereview import run_legal_flux_final_review_replay
+
+        result = run_legal_flux_final_review_replay(
+            config,
+            phase=args.phase,
+            source_run_tag=args.source_run_tag,
+            run_tag=args.run_tag,
+            dry_run=args.dry_run,
+            case_limit=args.case_limit,
+            num_shards=args.num_shards,
+            shard_index=args.shard_index,
+            fail_on_errors=args.fail_on_errors,
         )
     elif args.command == "flux-export-template-sft":
         from .legal_flux_training import export_template_structure_sft

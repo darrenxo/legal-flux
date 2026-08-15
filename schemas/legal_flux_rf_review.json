@@ -1,43 +1,64 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LegalFluxRfReview",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "review_analysis",
-    "decision",
-    "revised_remaining_steps",
-    "final_rationale",
-    "final_decision"
-  ],
-  "properties": {
-    "review_analysis": {"type": "string"},
-    "decision": {
-      "type": "string",
-      "enum": ["continue", "revise", "final_answer"]
+  "oneOf": [
+    {
+      "title": "ContinueReview",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_analysis", "decision"],
+      "properties": {
+        "review_analysis": {"type": "string"},
+        "decision": {"type": "string", "const": "continue"}
+      }
     },
-    "revised_remaining_steps": {
-      "type": "array",
-      "maxItems": 4,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["step_id", "step_name", "step_description", "template_tags"],
-        "properties": {
-          "step_id": {"type": "string"},
-          "step_name": {"type": "string"},
-          "step_description": {"type": "string"},
-          "template_tags": {
-            "type": "array",
-            "items": {"type": "string"}
+    {
+      "title": "ReviseReview",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_analysis", "decision", "revised_remaining_steps"],
+      "properties": {
+        "review_analysis": {"type": "string"},
+        "decision": {"type": "string", "const": "revise"},
+        "revised_remaining_steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["step_name", "step_description", "template_tags"],
+            "properties": {
+              "step_name": {"type": "string"},
+              "step_description": {"type": "string"},
+              "template_tags": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
           }
         }
       }
     },
-    "final_rationale": {"type": "string"},
-    "final_decision": {
-      "type": ["string", "null"],
-      "enum": ["support", "reject", null]
+    {
+      "title": "FinalAnswerReview",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_analysis",
+        "decision",
+        "final_rationale",
+        "final_decision"
+      ],
+      "properties": {
+        "review_analysis": {"type": "string"},
+        "decision": {"type": "string", "const": "final_answer"},
+        "final_rationale": {"type": "string"},
+        "final_decision": {
+          "type": "string",
+          "enum": ["support", "reject"]
+        }
+      }
     }
-  }
+  ]
 }

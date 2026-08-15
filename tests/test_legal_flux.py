@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from jsonschema import Draft202012Validator
 
 from legal_pilot.__main__ import build_parser
 from legal_pilot.adaptive_profiles import profile_row
@@ -24,7 +25,8 @@ from legal_pilot.legal_flux_chatgpt import export_legal_flux_chatgpt_batches
 from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
 from legal_pilot.legal_flux_dpo import build_dpo_data
 from legal_pilot.legal_flux_gemini import run_gemini_template_workflow
-from legal_pilot.legal_flux_evaluation import _aggregate_frame
+from legal_pilot.legal_flux_evaluation import _aggregate_frame, score_legal_flux_run
+from legal_pilot.legal_flux_rereview import run_legal_flux_final_review_replay
 from legal_pilot.legal_flux_runner import (
     _execute_rf_style_case,
     _normalize_abstract_plan_payload,
@@ -212,6 +214,12 @@ class SequenceClient:
         self.prompts.append(kwargs["prompt"])
         self.calls.append(kwargs)
         return self.responses.pop(0)
+
+    def model_info(self, model_name: str):
+        return {"name": model_name, "digest": f"fake-digest:{model_name}"}
+
+    def close(self):
+        return None
 
 
 def test_structured_baseline_uses_concise_irac_then_decision_contract():
@@ -542,7 +550,6 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
                 {
                     "review_analysis": "The first artifact is sufficient to resolve the claim.",
                     "decision": "final_answer",
-                    "revised_remaining_steps": [],
                     "final_rationale": "The debt claim is supported because no genuine triable issue remains.",
                     "final_decision": "support",
                 }
@@ -596,17 +603,319 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
             "instantiated_result": "F1 supports the debt and F2 does not create a genuine triable issue.",
         }
     ]
-    assert client.calls[-1]["schema"]["required"] == [
+    review_schema = client.calls[-1]["schema"]
+    branches = {
+        branch["properties"]["decision"]["const"]: branch
+        for branch in review_schema["oneOf"]
+    }
+    assert set(branches) == {"continue", "revise", "final_answer"}
+    assert branches["continue"]["required"] == ["review_analysis", "decision"]
+    assert branches["revise"]["required"] == [
         "review_analysis",
         "decision",
         "revised_remaining_steps",
+    ]
+    revised_steps_schema = branches["revise"]["properties"][
+        "revised_remaining_steps"
+    ]
+    assert revised_steps_schema["minItems"] == 1
+    assert revised_steps_schema["maxItems"] == 3
+    assert revised_steps_schema["items"]["required"] == [
+        "step_name",
+        "step_description",
+        "template_tags",
+    ]
+    assert "step_id" not in revised_steps_schema["items"]["properties"]
+    assert branches["final_answer"]["required"] == [
+        "review_analysis",
+        "decision",
         "final_rationale",
         "final_decision",
     ]
+    assert "configured limit of 4 executed steps" in client.prompts[-1]
+    assert "at most 3 revised_remaining_steps" in client.prompts[-1]
     assert "TEMPLATE CATALOG" not in planner_prompt
     assert "TEMPLATE TAG EXAMPLES" in planner_prompt
     assert "AUTHORITY CONTEXT" in planner_prompt
     assert "HEURISTIC_FAMILY_SHOULD_NOT_LEAK" not in planner_prompt
+
+
+def test_rf_review_schema_enforces_decision_specific_fields():
+    schema_path = Path(__file__).parents[1] / "schemas" / "legal_flux_rf_review.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+
+    valid_payloads = [
+        {
+            "review_analysis": "The remaining plan is still appropriate.",
+            "decision": "continue",
+        },
+        {
+            "review_analysis": "The remaining plan needs a narrower next step.",
+            "decision": "revise",
+            "revised_remaining_steps": [
+                {
+                    "step_name": "Check the dispositive defense",
+                    "step_description": "Determine whether F2 defeats the claim.",
+                    "template_tags": ["defense", "claim_disposition"],
+                }
+            ],
+        },
+        {
+            "review_analysis": "The executed artifact resolves the claim.",
+            "decision": "final_answer",
+            "final_rationale": "F1 establishes the requested relief.",
+            "final_decision": "support",
+        },
+    ]
+    for payload in valid_payloads:
+        assert not list(validator.iter_errors(payload))
+
+    continue_with_final_fields = {
+        **valid_payloads[0],
+        "final_rationale": "This field should be absent.",
+        "final_decision": "support",
+    }
+    final_with_revised_steps = {
+        **valid_payloads[2],
+        "revised_remaining_steps": [],
+    }
+    revise_without_steps = {
+        "review_analysis": "The plan needs revision.",
+        "decision": "revise",
+        "revised_remaining_steps": [],
+    }
+    assert list(validator.iter_errors(continue_with_final_fields))
+    assert list(validator.iter_errors(final_with_revised_steps))
+    assert list(validator.iter_errors(revise_without_steps))
+
+
+def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
+    templates = [
+        _template("LF001", "Debt entitlement", "debt_payment"),
+        _template("LF002", "Dispositive defense", "defense"),
+    ]
+    client = SequenceClient(
+        [
+            _response(
+                {
+                    "planning_analysis": "Resolve entitlement, then any defense.",
+                    "planned_steps": [
+                        {
+                            "step_id": "S1",
+                            "step_name": "Debt entitlement",
+                            "step_description": "Determine whether repayment is due.",
+                            "template_tags": ["debt_payment"],
+                        },
+                        {
+                            "step_id": "S2",
+                            "step_name": "Initial defense check",
+                            "step_description": "Check whether a defense defeats repayment.",
+                            "template_tags": ["defense"],
+                        },
+                    ],
+                }
+            ),
+            _response({"instantiated_result": "F1 establishes a debt."}),
+            _response(
+                {
+                    "review_analysis": "The remaining defense step should be narrowed.",
+                    "decision": "revise",
+                    "revised_remaining_steps": [
+                        {
+                            "step_name": "Dispositive defense check",
+                            "step_description": "Determine whether F2 defeats repayment.",
+                            "template_tags": ["defense"],
+                        }
+                    ],
+                }
+            ),
+            _response(
+                {
+                    "instantiated_result": "F2 does not defeat the debt established by F1."
+                }
+            ),
+            _response(
+                {
+                    "final_rationale": "F1 establishes repayment and F2 does not defeat it.",
+                    "final_decision": "support",
+                }
+            ),
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+
+    analysis, trace = _execute_rf_style_case(
+        client,
+        config,
+        _case(),
+        templates=templates,
+    )
+
+    revise_schema = next(
+        branch
+        for branch in client.calls[2]["schema"]["oneOf"]
+        if branch["properties"]["decision"].get("const") == "revise"
+    )["properties"]["revised_remaining_steps"]
+    assert revise_schema["minItems"] == 1
+    assert revise_schema["maxItems"] == 3
+    assert "at most 3 revised_remaining_steps" in client.prompts[2]
+    assert trace["trajectory_reviews"][0]["revised_remaining_steps"][0][
+        "step_id"
+    ] == "S2"
+    assert trace["executed_steps"][1]["step_id"] == "S2"
+    assert analysis.final_decision == "support"
+
+
+def test_final_review_replay_reuses_original_inputs_without_old_decision_leakage(
+    tmp_path: Path,
+):
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    runs_dir = tmp_path / "runs" / "legal_flux"
+    processed_dir = tmp_path / "data" / "processed" / "legal_flux"
+    config["paths"] = {
+        **config["paths"],
+        "runs_dir": str(runs_dir),
+        "processed_dir": str(processed_dir),
+    }
+    config["model"] = {**config["model"], "concurrency": 1}
+    case = _case(split="trajectory_dev")
+    write_jsonl(processed_dir / "cases.jsonl", [case.model_dump(mode="json")])
+
+    source_tag = "source-final-review"
+    target_tag = "refined-final-review"
+    source_dir = runs_dir / "trajectory_dev" / "experiments" / source_tag
+    source_hash = "source-run-hash"
+    initial_plan = {
+        "planning_analysis": "INITIAL PLAN SENTINEL: determine debt entitlement.",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Initial debt entitlement step",
+                "step_description": "Apply the debt rule to F1 and F2.",
+                "template_tags": ["debt_payment"],
+            }
+        ],
+    }
+    artifacts = [
+        {
+            "step_id": "S1",
+            "template_id": "LF001",
+            "instantiated_result": "EXECUTED ARTIFACT SENTINEL: F1 establishes the debt.",
+        }
+    ]
+    selected_templates = [
+        {
+            "step_id": "S1",
+            "step_name": "Initial debt entitlement step",
+            "template_id": "LF001",
+            "template_name": "SELECTED TEMPLATE SENTINEL",
+        }
+    ]
+    source_record = {
+        "run_hash": source_hash,
+        "status": "ok",
+        "dataset": case.dataset,
+        "case_id": case.case_id,
+        "variant_id": case.variant_id,
+        "condition": "flux_rf_style",
+        "phase": "trajectory_dev",
+        "model_name": config["model"]["name"],
+        "role_models": {"reviewer": config["model"]["name"]},
+        "model_digest": "source-model-digest",
+        "workflow_hash": "source-workflow-hash",
+        "template_pool_hash": "source-template-hash",
+        "seed": 987,
+        "sample_index": 0,
+        "decoding": {"temperature": 0.0, "context_length": 16384},
+        "gold_answer": case.gold_answer,
+        "metadata": case.metadata,
+        "parsed_json": {
+            "final_rationale": "OLD FINAL DECISION SENTINEL",
+            "final_decision": "reject",
+        },
+        "trajectory_plan": initial_plan,
+        "executed_steps": artifacts,
+        "trajectory_reviews": [
+            {
+                "review_analysis": "OLD REVIEW ANALYSIS SENTINEL",
+                "decision": "revise",
+                "revised_remaining_steps": [
+                    {
+                        "step_id": "S2",
+                        "step_name": "REVISED PLAN SENTINEL",
+                        "step_description": "This must not enter the replay prompt.",
+                        "template_tags": ["leakage"],
+                    }
+                ],
+                "final_rationale": "",
+                "final_decision": None,
+            }
+        ],
+        "retrieved_template_ids": ["LF001"],
+        "selected_templates": selected_templates,
+    }
+    write_jsonl(source_dir / "generations.jsonl", [source_record])
+    (source_dir / "run_plan.json").write_text(
+        json.dumps({"jobs": [{"run_hash": source_hash}]}) + "\n",
+        encoding="utf-8",
+    )
+    client = SequenceClient(
+        [
+            _response(
+                {
+                    "final_rationale": "F1 supports the requested repayment.",
+                    "final_decision": "support",
+                }
+            )
+        ]
+    )
+
+    result = run_legal_flux_final_review_replay(
+        config,
+        phase="trajectory-dev",
+        source_run_tag=source_tag,
+        run_tag=target_tag,
+        client=client,
+    )
+
+    assert result["completed"] == 1
+    assert result["errors"] == 0
+    assert len(client.calls) == 1
+    prompt = client.prompts[0]
+    assert case.claim in prompt
+    assert "F1: The plaintiff advanced money to the defendant." in prompt
+    assert "INITIAL PLAN SENTINEL" in prompt
+    assert "EXECUTED ARTIFACT SENTINEL" in prompt
+    assert "SELECTED TEMPLATE SENTINEL" in prompt
+    assert "OLD FINAL DECISION SENTINEL" not in prompt
+    assert "OLD REVIEW ANALYSIS SENTINEL" not in prompt
+    assert "REVISED PLAN SENTINEL" not in prompt
+    assert client.calls[0]["seed"] == 987
+    assert client.calls[0]["schema"]["required"] == [
+        "final_rationale",
+        "final_decision",
+    ]
+
+    target_dir = runs_dir / "trajectory_dev" / "experiments" / target_tag
+    replay_rows = read_jsonl(target_dir / "generations.jsonl")
+    assert len(replay_rows) == 1
+    replay = replay_rows[0]
+    assert replay["source_run_hash"] == source_hash
+    assert replay["parsed_json"]["final_decision"] == "support"
+    assert replay["trajectory_plan"] == initial_plan
+    assert replay["executed_steps"] == artifacts
+    assert replay["selected_templates"] == selected_templates
+    assert replay["calls"] == 1
+
+    score = score_legal_flux_run(
+        config,
+        phase="trajectory-dev",
+        run_tag=target_tag,
+    )
+    assert score["records"] == 1
+    assert score["ok_records"] == 1
 
 
 def test_rf_style_forces_binary_retry_when_adaptive_review_omits_label():
@@ -1828,6 +2137,33 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     assert args.run_tag == "baseline-check"
     assert args.case_ids_file == "dev_ids.json"
     assert args.fail_on_errors
+    rereview_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-rereview",
+            "--phase",
+            "trajectory-dev",
+            "--source-run-tag",
+            "source-run",
+            "--run-tag",
+            "refined-review",
+            "--case-limit",
+            "32",
+            "--num-shards",
+            "8",
+            "--shard-index",
+            "3",
+            "--fail-on-errors",
+        ]
+    )
+    assert rereview_args.command == "flux-rereview"
+    assert rereview_args.source_run_tag == "source-run"
+    assert rereview_args.run_tag == "refined-review"
+    assert rereview_args.case_limit == 32
+    assert rereview_args.num_shards == 8
+    assert rereview_args.shard_index == 3
+    assert rereview_args.fail_on_errors
     train_args = parser.parse_args(
         [
             "--config",
