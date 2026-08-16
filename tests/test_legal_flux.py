@@ -1698,6 +1698,8 @@ def test_standardized_cluster_rerun_has_isolated_model_roles_and_vllm_version():
     assert "LEGAL_FLUX_CASE_LIMIT=32" in submit
     assert "afterok:" in submit
     assert 'LEGAL_FLUX_VLLM_VERSION:-0.21.0' in server
+    assert "vllm-*.dist-info/METADATA" in server
+    assert "vllm --version" not in server
 
 
 def test_dev_tune_subset_is_fixed_and_stratified(tmp_path: Path):

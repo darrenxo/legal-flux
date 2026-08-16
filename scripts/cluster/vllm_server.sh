@@ -28,13 +28,22 @@ legal_flux_start_vllm() {
   local expected_version="${LEGAL_FLUX_VLLM_VERSION:-0.21.0}"
   local version_output
   if ! version_output="$(
-    apptainer exec --cleanenv "$container" /bin/bash -c 'vllm --version' 2>&1
+    apptainer exec --cleanenv "$container" /bin/bash -c '
+      for metadata in \
+        /usr/local/lib/python*/dist-packages/vllm-*.dist-info/METADATA \
+        /usr/local/lib/python*/site-packages/vllm-*.dist-info/METADATA; do
+        if [ -f "$metadata" ]; then
+          sed -n "s/^Version: //p" "$metadata" | head -n 1
+          exit 0
+        fi
+      done
+      exit 1
+    '
   )"; then
-    echo "Could not read the vLLM version from ${container}:" >&2
-    echo "$version_output" >&2
+    echo "Could not read vLLM package metadata from ${container}." >&2
     return 1
   fi
-  if [[ " $version_output " != *" $expected_version "* ]]; then
+  if [[ "$version_output" != "$expected_version" ]]; then
     echo "Expected vLLM ${expected_version}, but ${container} reported:" >&2
     echo "$version_output" >&2
     return 1
