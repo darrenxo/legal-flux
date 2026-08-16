@@ -116,14 +116,23 @@ merged templates, audit notes, and manifests are written under
 
 For Google Vertex AI / Gemini with Application Default Credentials, first run
 `gcloud auth application-default login` and set the Vertex environment variables.
-Then run a dry run and one-batch canary before launching all batches. The default
-Gemini config uses `gemini-3.5-flash` with high thinking:
+This workflow is orchestrated locally: BGE-M3 clustering and all ledgers remain
+on the local machine, while generation requests are sent to Vertex AI. Both
+semantic KMeans and Gemini generation use the configured `project.seed`.
+The refined builder uses `gemini-3.1-pro-preview` with high thinking. It first
+partitions cases into coarse civil, criminal, immigration, public-law, and
+uncertain families. Within each family, it combines equally weighted normalized
+BGE-M3 embeddings of the case view and human-reasoning view, then applies seeded
+KMeans and similarity-based size rebalancing. Every template-source case appears
+exactly once. Batches include source `court_reasoning` and `judgment_decision`
+but not the derived support/reject label:
 
 ```powershell
 $env:GOOGLE_CLOUD_PROJECT = "legalflux-gemini"
 $env:GOOGLE_CLOUD_LOCATION = "global"
 $env:GOOGLE_GENAI_USE_VERTEXAI = "true"
 $env:GOOGLE_APPLICATION_CREDENTIALS = "$env:APPDATA\gcloud\application_default_credentials.json"
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-export-gemini-batches
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates --dry-run
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates --limit 1
 ```
@@ -133,11 +142,19 @@ After inspecting the first batch output, continue with:
 ```powershell
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage merge
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage audit --limit 1
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage audit
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage similarity-audit
 ```
 
 Gemini outputs are written under
-`reports/legal_flux/template_distillation/gemini_api/`.
+`reports/legal_flux/template_distillation/gemini31_pro_api/`. Candidate and gap
+records retain source-case provenance. Candidate IDs and final `LF...` IDs are
+assigned deterministically after generation. The executable final pool contains
+only `template_id`, `template_name`, `knowledge_tags`, `description`,
+`application_scenario`, `reasoning_flow`, and `example_application`. The
+similarity audit flags cosine scores of 0.90-0.95 for manual review and scores at
+or above 0.95 as likely duplicates; it never deletes templates automatically.
 
 To import a revised final template pool:
 

@@ -674,6 +674,10 @@ def _normalize_flux_case(index: Any, row: pd.Series, *, split: str) -> Normalize
         "authority_bucket": str(row.get("authority_bucket", "")),
         "relevant_cases": str(row.get("relevant_cases", "")),
     }
+    if split == "template_source":
+        metadata["facts_verbatim"] = str(row.get("more_facts", ""))
+        metadata["court_reasoning"] = str(row.get("court_reasoning", ""))
+        metadata["judgment_decision"] = str(row.get("judgment_decision", ""))
     authorities = str(row.get("related_laws", "")).strip() or None
     return case.model_copy(update={"authorities": authorities, "metadata": metadata})
 
@@ -713,10 +717,13 @@ def _template_source_packet(case: NormalizedCase) -> dict[str, Any]:
         "requested_remedy": case.requested_remedy,
         "parties": case.parties,
         "facts": case.facts,
+        "facts_verbatim": case.metadata.get("facts_verbatim"),
         "lawsuit_type": case.metadata.get("lawsuit_type"),
         "reference_issues": case.reference_issues,
         "reference_state": reference_state,
         "authorities": case.authorities,
+        "court_reasoning": case.metadata.get("court_reasoning"),
+        "judgment_decision": case.metadata.get("judgment_decision"),
     }
 
 
@@ -726,8 +733,9 @@ def _template_distillation_instructions(*, case_count: int, target_count: Any) -
 Use `template_source_cases.jsonl` to create a fixed pool of {target_count}
 high-level legal reasoning templates. The packet contains {case_count}
 template-source cases only. It does not contain planner-train, trajectory-dev,
-or final-test cases, judgment decisions, support/reject labels, or heuristic
-family/demand labels.
+or final-test cases, support/reject labels, or heuristic family/demand labels.
+It includes the source court reasoning and judgment decision so reusable human
+reasoning operations can be distilled from the template-source split.
 
 Return JSONL, one object per template, matching `legal_flux_template.schema.json`.
 Follow the ReasonFlux-style schema:

@@ -71,6 +71,46 @@ class LegalFluxTemplate(StrictModel):
     example_application: str
 
 
+class LegalFluxCandidateDraft(StrictModel):
+    template_name: str
+    knowledge_tags: list[str]
+    description: str
+    application_scenario: str
+    reasoning_flow: list[str] = Field(min_length=2)
+    example_application: str
+    supporting_case_ids: list[str] = Field(min_length=1)
+    shared_pattern: str
+    scope_exclusions: str
+    support_count: int = Field(ge=1)
+
+
+class LegalFluxCandidate(LegalFluxCandidateDraft):
+    candidate_id: str
+
+
+class LegalFluxCandidateResponse(StrictModel):
+    candidates: list[LegalFluxCandidateDraft] = Field(max_length=5)
+
+
+class LegalFluxConsolidatedTemplateDraft(StrictModel):
+    template_name: str
+    knowledge_tags: list[str]
+    description: str
+    application_scenario: str
+    reasoning_flow: list[str] = Field(min_length=2)
+    example_application: str
+    source_candidate_ids: list[str] = Field(min_length=1)
+
+
+class LegalFluxConsolidationResponse(StrictModel):
+    templates: list[LegalFluxConsolidatedTemplateDraft]
+
+
+class LegalFluxGapAuditResponse(StrictModel):
+    coverage_analysis: str
+    gap_candidates: list[LegalFluxCandidateDraft] = Field(max_length=5)
+
+
 class LegalFluxPlanStep(StrictModel):
     step_id: str
     template_id: str

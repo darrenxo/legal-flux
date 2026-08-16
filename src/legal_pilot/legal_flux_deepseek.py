@@ -390,6 +390,7 @@ def _batch_file_path(batch: dict[str, Any], batch_root: Path) -> Path:
     subdir = {
         "homogeneous": "01_homogeneous_batches",
         "mixed": "02_mixed_contrast_batches",
+        "semantic_family": "01_semantic_family_batches",
     }.get(str(batch.get("kind", "")))
     if subdir:
         candidate = batch_root / subdir / path.name

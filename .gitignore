@@ -18,3 +18,5 @@ _external_reasonflux_inspect/
 *.egg-info/
 build/
 dist/
+reports/legal_flux/template_distillation/gemini31_pro_batches/
+reports/legal_flux/template_distillation/gemini31_pro_api/

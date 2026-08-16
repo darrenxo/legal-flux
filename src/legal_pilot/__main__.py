@@ -18,6 +18,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("flux-export-templates")
     subparsers.add_parser("flux-export-template-batches")
     subparsers.add_parser("flux-export-chatgpt-batches")
+    subparsers.add_parser("flux-export-gemini-batches")
 
     flux_import = subparsers.add_parser("flux-import-templates")
     flux_import.add_argument("--input", required=True)
@@ -163,7 +164,7 @@ def build_parser() -> argparse.ArgumentParser:
     gemini_templates = subparsers.add_parser("flux-gemini-templates")
     gemini_templates.add_argument(
         "--stage",
-        choices=["candidates", "merge", "audit", "all"],
+        choices=["candidates", "merge", "audit", "similarity-audit", "all"],
         default="candidates",
     )
     gemini_templates.add_argument("--limit", type=int, default=None)
@@ -184,7 +185,11 @@ def main(argv: list[str] | None = None) -> int:
         from .legal_flux_setup import export_legal_flux_template_inputs
 
         result = export_legal_flux_template_inputs(config)
-    elif args.command in {"flux-export-template-batches", "flux-export-chatgpt-batches"}:
+    elif args.command in {
+        "flux-export-template-batches",
+        "flux-export-chatgpt-batches",
+        "flux-export-gemini-batches",
+    }:
         from .legal_flux_chatgpt import export_legal_flux_chatgpt_batches
 
         result = export_legal_flux_chatgpt_batches(config)

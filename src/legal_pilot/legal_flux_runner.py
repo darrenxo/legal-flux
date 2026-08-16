@@ -902,8 +902,8 @@ def _active_executed_trajectory(
     for artifact, selected in zip(artifacts, selected_templates, strict=True):
         step_id = str(selected.get("step_id") or "")
         template_id = str(selected.get("template_id") or "")
-        step_name = str(selected.get("step_name") or "")
-        template_name = str(selected.get("template_name") or "")
+        template_name = str(selected.get("template_name") or "").strip()
+        step_name = str(selected.get("step_name") or "").strip() or template_name
         if step_id != artifact.step_id:
             raise ValueError(
                 "Executed artifact and selected template have different step IDs: "
@@ -914,9 +914,9 @@ def _active_executed_trajectory(
                 "Executed artifact and selected template have different template IDs: "
                 f"{artifact.template_id!r} != {template_id!r}."
             )
-        if not step_name or not template_name:
+        if not template_name:
             raise ValueError(
-                "Selected-template trace must include step_name and template_name."
+                "Selected-template trace must include template_name."
             )
         executed.append(
             {
@@ -1004,6 +1004,40 @@ def _native_case_input_payload(
     return payload
 
 
+def _repair_blank_abstract_step_text(
+    step: dict[str, Any],
+    *,
+    index: int,
+    action_prefix: str,
+    repairs: list[str],
+) -> None:
+    step_name = str(step.get("step_name") or "").strip()
+    step_description = str(step.get("step_description") or "").strip()
+    template_tags = [
+        str(tag).strip()
+        for tag in (step.get("template_tags") or [])
+        if str(tag).strip()
+    ]
+    if not step_name:
+        if step_description:
+            step_name = step_description
+            source = "description"
+        elif template_tags:
+            step_name = " / ".join(template_tags[:3])
+            source = "template_tags"
+        else:
+            step_id = str(step.get("step_id") or f"S{index}").strip() or f"S{index}"
+            step_name = f"Legal reasoning step {step_id}"
+            source = "fallback"
+        step["step_name"] = step_name
+        repairs.append(f"{action_prefix}_step_name_derived_from_{source}")
+    if not step_description:
+        step["step_description"] = (
+            f"Apply {step_name} to the supplied facts and authorities."
+        )
+        repairs.append(f"{action_prefix}_step_description_derived_from_name")
+
+
 def _normalize_abstract_plan_payload(
     payload: dict[str, Any] | None,
     *,
@@ -1040,6 +1074,10 @@ def _normalize_abstract_plan_payload(
                 elif not isinstance(step.get(key), str):
                     step[key] = str(step[key])
                     repairs.append(f"abstract_{key}_coerced_to_string")
+                stripped = step[key].strip()
+                if stripped != step[key]:
+                    step[key] = stripped
+                    repairs.append(f"abstract_{key}_whitespace_stripped")
             tags = step.get("template_tags")
             if tags is None:
                 step["template_tags"] = []
@@ -1050,10 +1088,18 @@ def _normalize_abstract_plan_payload(
                 ]
                 repairs.append("abstract_template_tags_split_from_string")
             elif isinstance(tags, list):
-                step["template_tags"] = [str(tag) for tag in tags if str(tag).strip()]
+                step["template_tags"] = [
+                    str(tag).strip() for tag in tags if str(tag).strip()
+                ]
             else:
                 step["template_tags"] = [str(tags)]
                 repairs.append("abstract_template_tags_coerced_to_array")
+            _repair_blank_abstract_step_text(
+                step,
+                index=index,
+                action_prefix="abstract",
+                repairs=repairs,
+            )
             normalized_steps.append(step)
         if len(steps) > max_steps:
             repairs.append("abstract_planned_steps_truncated_to_max_steps")
@@ -1158,6 +1204,10 @@ def _normalize_rf_review_payload(
                 elif not isinstance(step.get(key), str):
                     step[key] = str(step[key])
                     repairs.append(f"rf_review_{key}_coerced_to_string")
+                stripped = step[key].strip()
+                if stripped != step[key]:
+                    step[key] = stripped
+                    repairs.append(f"rf_review_{key}_whitespace_stripped")
             tags = step.get("template_tags")
             if tags is None:
                 step["template_tags"] = []
@@ -1168,10 +1218,18 @@ def _normalize_rf_review_payload(
                 ]
                 repairs.append("rf_review_template_tags_split_from_string")
             elif isinstance(tags, list):
-                step["template_tags"] = [str(tag) for tag in tags if str(tag).strip()]
+                step["template_tags"] = [
+                    str(tag).strip() for tag in tags if str(tag).strip()
+                ]
             else:
                 step["template_tags"] = [str(tags)]
                 repairs.append("rf_review_template_tags_coerced_to_array")
+            _repair_blank_abstract_step_text(
+                step,
+                index=index,
+                action_prefix="rf_review",
+                repairs=repairs,
+            )
             normalized_steps.append(step)
         repaired["revised_remaining_steps"] = normalized_steps
     repairs.extend(

@@ -16,8 +16,8 @@
         "required": ["step_id", "step_name", "step_description", "template_tags"],
         "properties": {
           "step_id": {"type": "string"},
-          "step_name": {"type": "string"},
-          "step_description": {"type": "string"},
+          "step_name": {"type": "string", "minLength": 1},
+          "step_description": {"type": "string", "minLength": 1},
           "template_tags": {
             "type": "array",
             "items": {"type": "string"}

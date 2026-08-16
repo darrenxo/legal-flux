@@ -23,6 +23,7 @@ legal_flux:
     planner_train: 0.50
     trajectory_dev: 0.15
     final_test: 0.15
+  # Legacy manual-export guidance only; the Gemini workflow has no final-size quota.
   template_pool_target: 200-300
   max_steps: 4
   planner_train_samples: 4
@@ -52,11 +53,22 @@ legal_flux:
   template_export_dir: reports/legal_flux/template_distillation
   chatgpt_batch_dir: reports/legal_flux/template_distillation/azure_gpt56_batches
   deepseek_template_dir: reports/legal_flux/template_distillation/deepseek_api
-  gemini_template_dir: reports/legal_flux/template_distillation/gemini_api
-  chatgpt_homogeneous_batches: 40
-  chatgpt_mixed_batches: 10
-  chatgpt_cases_per_batch: 80
-  template_batch_full_coverage: true
+  gemini_batch_dir: reports/legal_flux/template_distillation/gemini31_pro_batches
+  gemini_template_dir: reports/legal_flux/template_distillation/gemini31_pro_api
+  template_batch_min_cases: 24
+  template_batch_target_cases: 30
+  template_batch_max_cases: 36
+  template_batch_max_candidates: 5
+  template_batch_minimum_support_cases: 3
+  template_batch_embedding_model: BAAI/bge-m3
+  template_batch_embedding_max_length: 8192
+  template_batch_embedding_batch_size: 8
+  template_batch_device:
+  template_include_court_reasoning: true
+  template_include_judgment_decision: true
+  template_include_verbatim_facts: true
+  template_similarity_review_threshold: 0.90
+  template_similarity_likely_duplicate_threshold: 0.95
   freeze_manifest_file: data/processed/legal_flux/legal_flux_frozen_manifest.json
   conditions:
     - direct
@@ -176,13 +188,14 @@ deepseek:
   reasoning_effort: high
 
 gemini:
-  model: gemini-3.5-flash
+  model: gemini-3.1-pro-preview
   project:
   location: global
   api_version: v1
   temperature:
   thinking_level: high
   include_thoughts: false
+  max_input_tokens: 900000
   max_output_tokens: 65536
   timeout_seconds: 600
   application_credentials_file:
