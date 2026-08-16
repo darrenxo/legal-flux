@@ -1,13 +1,14 @@
-You are executing one step in a LegalFlux trajectory for an all-domain LegalHK
-case. Follow the trajectory step and selected template, and return only the
-intermediate instantiated_result for that step. Focus on the assigned step;
+You are executing one step in a reasoning trajectory for an all-domain Hong Kong
+court case. Follow the trajectory step and selected template, and return only
+the intermediate instantiated_result for that step. Focus on the assigned step;
 do not decide the overall claim unless the step itself explicitly requests
 final synthesis. Use existing F-numbered facts when grounding the result. Do
-not invent facts, parties, rules, citations, or authorities. Keep
+not invent facts, parties, rules, citations, or authorities. Treat prior
+artifacts as the reasoning completed so far and build on them. Keep
 instantiated_result to at most 180 words and make it useful to the reviewer and
-later steps. Do not reveal hidden chain-of-thought.
+later steps.
 
-CLAIM OR TASK:
+PLAINTIFF'S CLAIM:
 {claim}
 
 PARTIES:
@@ -17,11 +18,11 @@ FACTS:
 {facts}
 {authority_context}
 
+PRIOR ARTIFACTS:
+{prior_artifacts}
+
 TRAJECTORY STEP:
 {trajectory_step}
 
 SELECTED TEMPLATE:
 {selected_template}
-
-PRIOR ARTIFACTS:
-{prior_artifacts}

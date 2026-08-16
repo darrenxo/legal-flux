@@ -34,7 +34,6 @@ legal_flux:
   rf_sentence_transformer_model: BAAI/bge-m3
   rf_embedding_cache_file: data/processed/legal_flux/rf_template_embeddings_bge_m3.json
   rf_embedding_timeout_seconds: 600
-  rf_tag_example_limit: 36
   include_authority_input: true
   force_binary_final_decision: true
   max_input_characters: 12000
@@ -49,6 +48,7 @@ legal_flux:
   planner_model:
   executor_model:
   reviewer_model:
+  source_checkpoint:
   template_export_dir: reports/legal_flux/template_distillation
   chatgpt_batch_dir: reports/legal_flux/template_distillation/azure_gpt56_batches
   deepseek_template_dir: reports/legal_flux/template_distillation/deepseek_api
@@ -82,6 +82,7 @@ dpo:
   samples_per_anchor: 4
   planner_model:
   executor_model:
+  reviewer_model:
   planner_temperature: 0.7
   seed: 20260619
   candidates_file: trajectory_candidates.jsonl
@@ -133,6 +134,33 @@ training:
       - vision_model
       - vision_tower
       - merger
+  trajectory_dpo:
+    model_name_or_path:
+    output_dir: runs/legal_flux/training/trajectory_dpo
+    eval_fraction: 0.0
+    num_train_epochs: 1
+    learning_rate: 0.00001
+    beta: 0.1
+    loss_type: sigmoid
+    per_device_train_batch_size: 1
+    per_device_eval_batch_size: 1
+    gradient_accumulation_steps: 16
+    warmup_ratio: 0.05
+    weight_decay: 0.01
+    max_grad_norm: 1.0
+    max_length: 6144
+    gradient_checkpointing: true
+    bf16: true
+    tf32: true
+    save_total_limit: 2
+    logging_steps: 5
+    dataset_num_proc: 4
+    report_to: none
+    trust_remote_code: false
+    attn_implementation: sdpa
+    precompute_ref_log_probs: false
+    chat_template_kwargs:
+      enable_thinking: false
 
 audit:
   provider: none

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -8,8 +9,7 @@ from typing import Any
 from .config import resolve_path
 from .io_utils import latest_by_run_hash, read_jsonl, sha256_text, write_jsonl
 from .legal_flux import load_template_pool, template_pool_hash
-from .legal_flux_dpo import _dpo_settings
-from .legal_flux_runner import _template_tag_examples
+from .legal_flux_dpo import _dpo_settings, dpo_construction_workflow_hash
 from .legal_flux_xsim import load_xsim_neighbors
 from .models import LegalFluxAbstractPlan, LegalFluxTemplate, NormalizedCase
 from .prompting import render_prompt
@@ -69,19 +69,35 @@ def export_trajectory_dpo(
     settings = _dpo_settings(config)
     candidates_path = output_dir / settings["candidates_file"]
     evaluations_path = output_dir / settings["evaluations_file"]
-    if not candidates_path.exists() or not evaluations_path.exists():
+    candidate_paths = _dpo_artifact_files(
+        output_dir,
+        settings["candidates_file"],
+    )
+    evaluation_paths = _dpo_artifact_files(
+        output_dir,
+        settings["evaluations_file"],
+    )
+    collection_manifest_paths = _dpo_artifact_files(
+        output_dir,
+        settings["manifest_file"],
+    )
+    if not candidate_paths or not evaluation_paths:
         raise RuntimeError(
             "DPO trajectory candidates or X_sim evaluations are missing. Run "
             "`flux-build-dpo-data --stage all` first."
         )
     candidates = [
         row
-        for row in latest_by_run_hash(read_jsonl(candidates_path))
+        for row in latest_by_run_hash(
+            [row for path in candidate_paths for row in read_jsonl(path)]
+        )
         if row.get("status") == "ok"
     ]
     evaluations = [
         row
-        for row in latest_by_run_hash(read_jsonl(evaluations_path))
+        for row in latest_by_run_hash(
+            [row for path in evaluation_paths for row in read_jsonl(path)]
+        )
         if row.get("status") == "ok"
     ]
     cases = {
@@ -91,7 +107,53 @@ def export_trajectory_dpo(
     }
     xsim = load_xsim_neighbors(config)
     templates = load_template_pool(config)
-    template_examples = _template_tag_examples(config, templates)
+    current_template_hash = template_pool_hash(templates)
+    collection_context = _resolve_dpo_collection_context(
+        config,
+        collection_manifest_paths,
+        template_hash=current_template_hash,
+        rows_have_context=any(
+            row.get("workflow_hash") for row in candidates + evaluations
+        ),
+    )
+    current_workflow_hash = str(
+        collection_context.get("workflow_hash")
+        or dpo_construction_workflow_hash(config)
+    )
+    candidates = _filter_current_dpo_rows(
+        candidates,
+        workflow_hash=current_workflow_hash,
+        template_hash=current_template_hash,
+        role_fields={
+            "planner_model": collection_context.get(
+                "planner_model", settings["planner_model"]
+            ),
+            "source_checkpoint": collection_context.get(
+                "source_checkpoint", settings["source_checkpoint"]
+            ),
+        },
+    )
+    evaluations = _filter_current_dpo_rows(
+        evaluations,
+        workflow_hash=current_workflow_hash,
+        template_hash=current_template_hash,
+        role_fields={
+            "executor_model": collection_context.get(
+                "executor_model", settings["executor_model"]
+            ),
+            "reviewer_model": collection_context.get(
+                "reviewer_model", settings["reviewer_model"]
+            ),
+            "source_checkpoint": collection_context.get(
+                "source_checkpoint", settings["source_checkpoint"]
+            ),
+        },
+    )
+    if collection_context and (not candidates or not evaluations):
+        raise RuntimeError(
+            "The selected DPO collection context has no complete candidate/evaluation "
+            "rows. Inspect the shard ledgers before exporting pairs."
+        )
     evaluations_by_candidate: dict[str, list[dict[str, Any]]] = {}
     for row in evaluations:
         evaluations_by_candidate.setdefault(str(row["candidate_id"]), []).append(row)
@@ -110,7 +172,7 @@ def export_trajectory_dpo(
                 cases[anchor_id],
                 xsim.get(anchor_id, []),
                 evaluations_by_candidate,
-                template_examples,
+                expected_candidate_count=settings["samples_per_anchor"],
             )
             for anchor_id, group in candidates_by_anchor.items()
         )
@@ -124,13 +186,28 @@ def export_trajectory_dpo(
         "phase": normalized_phase,
         "candidates_path": str(candidates_path),
         "evaluations_path": str(evaluations_path),
+        "candidate_files": [str(path) for path in candidate_paths],
+        "evaluation_files": [str(path) for path in evaluation_paths],
         "candidate_rows": len(candidates),
         "evaluation_rows": len(evaluations),
         "case_groups": len(candidates_by_anchor),
         "pairs": len(pairs),
         "output_path": str(output_path),
         "output_sha256": sha256_text(output_path.read_text(encoding="utf-8")),
-        "template_pool_hash": template_pool_hash(templates),
+        "workflow_hash": current_workflow_hash,
+        "template_pool_hash": current_template_hash,
+        "planner_model": collection_context.get(
+            "planner_model", settings["planner_model"]
+        ),
+        "executor_model": collection_context.get(
+            "executor_model", settings["executor_model"]
+        ),
+        "reviewer_model": collection_context.get(
+            "reviewer_model", settings["reviewer_model"]
+        ),
+        "source_checkpoint": collection_context.get(
+            "source_checkpoint", settings["source_checkpoint"]
+        ),
         "reward": "mean binary accuracy over anchor plus two X_sim neighbors",
         "notes": [
             "Chosen/rejected responses are planner trajectory JSON objects.",
@@ -154,6 +231,101 @@ def export_trajectory_dpo(
 
 def _training_dir(config: dict[str, Any]) -> Path:
     return resolve_path(config, "processed_dir") / "planner_training"
+
+
+def _dpo_artifact_files(output_dir: Path, filename: str) -> list[Path]:
+    paths: list[Path] = []
+    root_path = output_dir / filename
+    if root_path.is_file():
+        paths.append(root_path)
+    paths.extend(
+        sorted((output_dir / "dpo_shards").glob(f"shard-*-of-*/{filename}"))
+    )
+    return paths
+
+
+def _filter_current_dpo_rows(
+    rows: list[dict[str, Any]],
+    *,
+    workflow_hash: str,
+    template_hash: str,
+    role_fields: dict[str, Any],
+) -> list[dict[str, Any]]:
+    has_context = any(row.get("workflow_hash") for row in rows)
+    if not has_context:
+        return rows
+    return [
+        row
+        for row in rows
+        if row.get("workflow_hash") == workflow_hash
+        and row.get("template_pool_hash") == template_hash
+        and all(row.get(key) == value for key, value in role_fields.items())
+    ]
+
+
+def _resolve_dpo_collection_context(
+    config: dict[str, Any],
+    manifest_paths: list[Path],
+    *,
+    template_hash: str,
+    rows_have_context: bool,
+) -> dict[str, Any]:
+    """Select one code-compatible collection without relying on shell state."""
+    contexts: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for path in manifest_paths:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        if manifest.get("template_pool_hash") != template_hash:
+            continue
+        required = (
+            "workflow_hash",
+            "planner_model",
+            "executor_model",
+            "reviewer_model",
+        )
+        if any(manifest.get(field) is None for field in required):
+            continue
+        context_config = deepcopy(config)
+        legal_flux = context_config.setdefault("legal_flux", {})
+        dpo = context_config.setdefault("dpo", {})
+        for role in ("planner", "executor", "reviewer"):
+            value = str(manifest[f"{role}_model"])
+            legal_flux[f"{role}_model"] = value
+            dpo[f"{role}_model"] = value
+        source_checkpoint = manifest.get("source_checkpoint")
+        if source_checkpoint:
+            dpo["source_checkpoint"] = str(source_checkpoint)
+        else:
+            dpo.pop("source_checkpoint", None)
+        if dpo_construction_workflow_hash(context_config) != manifest["workflow_hash"]:
+            continue
+        key = (
+            manifest["workflow_hash"],
+            manifest["planner_model"],
+            manifest["executor_model"],
+            manifest["reviewer_model"],
+            source_checkpoint,
+        )
+        contexts[key] = {
+            "workflow_hash": manifest["workflow_hash"],
+            "planner_model": manifest["planner_model"],
+            "executor_model": manifest["executor_model"],
+            "reviewer_model": manifest["reviewer_model"],
+            "source_checkpoint": source_checkpoint,
+        }
+    if len(contexts) > 1:
+        raise RuntimeError(
+            "More than one code-compatible DPO collection context was found. "
+            "Move old collection shards aside or export each checkpoint separately."
+        )
+    if contexts:
+        return next(iter(contexts.values()))
+    if rows_have_context:
+        raise RuntimeError(
+            "Context-bearing DPO ledgers were found, but no collection manifest "
+            "matches the current prompts, schemas, implementation, and template "
+            "pool. Re-run DPO collection with the current code."
+        )
+    return {}
 
 
 def _template_structure_sft_row(template: LegalFluxTemplate) -> dict[str, Any]:
@@ -197,9 +369,10 @@ def _dpo_pair_from_xsim_group(
     case: NormalizedCase,
     xsim_case_ids: list[str],
     evaluations_by_candidate: dict[str, list[dict[str, Any]]],
-    template_examples: str,
+    *,
+    expected_candidate_count: int = 4,
 ) -> dict[str, Any] | None:
-    if len(candidates) < 2 or len(xsim_case_ids) != 3:
+    if len(candidates) != expected_candidate_count or len(xsim_case_ids) != 3:
         return None
     expected_targets = set(xsim_case_ids)
     ranked: list[dict[str, Any]] = []
@@ -214,7 +387,7 @@ def _dpo_pair_from_xsim_group(
             if str(row.get("anchor_case_id")) == anchor_id
         }
         if set(by_target) != expected_targets:
-            continue
+            return None
         ordered_evaluations = [by_target[target_id] for target_id in xsim_case_ids]
         reward = sum(
             1.0 if bool(row.get("answer_correct")) else 0.0
@@ -260,8 +433,17 @@ def _dpo_pair_from_xsim_group(
         "legal_flux/rf_plan",
         case,
         max_steps=int(config["legal_flux"].get("max_steps", 4)),
-        template_tag_examples=template_examples,
     )
+    recorded_prompt_hashes = {
+        str(candidate.get("prompt_hash"))
+        for candidate in (chosen, rejected)
+        if candidate.get("prompt_hash")
+    }
+    if recorded_prompt_hashes and recorded_prompt_hashes != {prompt_hash}:
+        raise RuntimeError(
+            f"DPO candidates for anchor {anchor_id} were sampled with a different "
+            "planner prompt. Rebuild the DPO construction artifacts."
+        )
     return {
         "id": f"trajectory-dpo-{case.case_id}-{case.variant_id}",
         "task": "trajectory_dpo",

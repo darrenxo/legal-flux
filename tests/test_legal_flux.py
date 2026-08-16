@@ -23,7 +23,13 @@ from legal_pilot.legal_flux import (
 )
 from legal_pilot.legal_flux_chatgpt import export_legal_flux_chatgpt_batches
 from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
-from legal_pilot.legal_flux_dpo import build_dpo_data
+from legal_pilot.legal_flux_dpo import _dpo_settings, build_dpo_data
+from legal_pilot.legal_flux_dpo_train import (
+    _dpo_trainer_rows,
+    prepare_trajectory_dpo_splits,
+    train_trajectory_dpo,
+    trajectory_dpo_settings,
+)
 from legal_pilot.legal_flux_gemini import run_gemini_template_workflow
 from legal_pilot.legal_flux_evaluation import _aggregate_frame, score_legal_flux_run
 from legal_pilot.legal_flux_rereview import run_legal_flux_final_review_replay
@@ -337,9 +343,20 @@ class FakeDpoPipelineClient:
                 }
             )
         if title == "LegalFluxStepArtifact":
+            prompt = kwargs["prompt"]
+            profile = next(
+                (
+                    f"profile {index}"
+                    for index in range(4)
+                    if f"Resolve debt variant {index}." in prompt
+                ),
+                "profile unknown",
+            )
             return _response(
                 {
-                    "instantiated_result": "The supplied facts resolve the claim.",
+                    "instantiated_result": (
+                        f"{profile}: The supplied facts resolve the claim."
+                    ),
                 }
             )
         if title == "LegalFluxRfFinalReview":
@@ -594,8 +611,16 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
     assert client.calls[1]["schema"]["properties"]["instantiated_result"][
         "maxLength"
     ] == 1800
-    assert "180 words" in client.prompts[1]
-    assert "do not decide the overall claim" in client.prompts[1]
+    executor_prompt = client.prompts[1]
+    assert "180 words" in executor_prompt
+    assert "do not decide the overall claim" in executor_prompt
+    assert (
+        "Treat prior artifacts as the reasoning completed so far and build on them."
+        in " ".join(executor_prompt.split())
+    )
+    assert executor_prompt.index("PRIOR ARTIFACTS:") < executor_prompt.index(
+        "TRAJECTORY STEP:"
+    )
     assert trace["executed_steps"] == [
         {
             "step_id": "S1",
@@ -634,8 +659,32 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
     ]
     assert "configured limit of 4 executed steps" in client.prompts[-1]
     assert "at most 3 revised_remaining_steps" in client.prompts[-1]
+    reviewer_prompt = client.prompts[-1]
+    assert "ABSTRACT TRAJECTORY PLAN:" not in reviewer_prompt
+    assert "SELECTED TEMPLATE TRACE:" not in reviewer_prompt
+    assert "EXECUTED TRAJECTORY:" in reviewer_prompt
+    assert '"step_id": "S1"' in reviewer_prompt
+    assert '"step_name": "Summary judgment triable issue screen"' in reviewer_prompt
+    assert '"template_id": "LF025"' in reviewer_prompt
+    assert (
+        '"template_name": "Test for Summary Disposition or a Genuine Triable Issue"'
+        in reviewer_prompt
+    )
+    assert (
+        '"instantiated_result": "F1 supports the debt and F2 does not create '
+        'a genuine triable issue."' in reviewer_prompt
+    )
+    assert (
+        "A summary-judgment debt dispute turns on the procedural threshold."
+        not in reviewer_prompt
+    )
     assert "TEMPLATE CATALOG" not in planner_prompt
-    assert "TEMPLATE TAG EXAMPLES" in planner_prompt
+    assert "TEMPLATE TAG EXAMPLES" not in planner_prompt
+    assert "Example template names for step_name style" not in planner_prompt
+    assert "PLAINTIFF'S CLAIM:" in planner_prompt
+    assert "CLAIM OR TASK:" not in planner_prompt
+    assert "PLAINTIFF'S CLAIM:" in executor_prompt
+    assert "PLAINTIFF'S CLAIM:" in reviewer_prompt
     assert "AUTHORITY CONTEXT" in planner_prompt
     assert "HEURISTIC_FAMILY_SHOULD_NOT_LEAK" not in planner_prompt
 
@@ -695,6 +744,7 @@ def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
     templates = [
         _template("LF001", "Debt entitlement", "debt_payment"),
         _template("LF002", "Dispositive defense", "defense"),
+        _template("LF003", "Remedy selection", "remedy"),
     ]
     client = SequenceClient(
         [
@@ -710,9 +760,15 @@ def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
                         },
                         {
                             "step_id": "S2",
-                            "step_name": "Initial defense check",
+                            "step_name": "OBSOLETE initial defense check",
                             "step_description": "Check whether a defense defeats repayment.",
                             "template_tags": ["defense"],
+                        },
+                        {
+                            "step_id": "S3",
+                            "step_name": "OBSOLETE initial remedy check",
+                            "step_description": "Determine the initially proposed remedy.",
+                            "template_tags": ["remedy"],
                         },
                     ],
                 }
@@ -727,6 +783,11 @@ def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
                             "step_name": "Dispositive defense check",
                             "step_description": "Determine whether F2 defeats repayment.",
                             "template_tags": ["defense"],
+                        },
+                        {
+                            "step_name": "Revised remedy check",
+                            "step_description": "Determine the remedy after resolving F2.",
+                            "template_tags": ["remedy"],
                         }
                     ],
                 }
@@ -738,7 +799,18 @@ def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
             ),
             _response(
                 {
-                    "final_rationale": "F1 establishes repayment and F2 does not defeat it.",
+                    "review_analysis": "The revised remedy step remains appropriate.",
+                    "decision": "continue",
+                }
+            ),
+            _response(
+                {
+                    "instantiated_result": "F1 and F2 support granting the repayment remedy."
+                }
+            ),
+            _response(
+                {
+                    "final_rationale": "F1 establishes repayment, F2 does not defeat it, and the remedy follows.",
                     "final_decision": "support",
                 }
             ),
@@ -765,6 +837,20 @@ def test_rf_style_revise_assigns_step_ids_and_limits_revised_steps():
         "step_id"
     ] == "S2"
     assert trace["executed_steps"][1]["step_id"] == "S2"
+    assert trace["executed_steps"][2]["step_id"] == "S3"
+    second_review_prompt = client.prompts[4]
+    assert "ABSTRACT TRAJECTORY PLAN:" not in second_review_prompt
+    assert "SELECTED TEMPLATE TRACE:" not in second_review_prompt
+    assert "EXECUTED TRAJECTORY:" in second_review_prompt
+    assert "OBSOLETE initial defense check" not in second_review_prompt
+    assert "OBSOLETE initial remedy check" not in second_review_prompt
+    assert '"step_name": "Dispositive defense check"' in second_review_prompt
+    assert '"template_name": "Dispositive defense"' in second_review_prompt
+    assert '"step_name": "Revised remedy check"' in second_review_prompt
+    assert (
+        '"instantiated_result": "F2 does not defeat the debt established by F1."'
+        in second_review_prompt
+    )
     assert analysis.final_decision == "support"
 
 
@@ -886,7 +972,10 @@ def test_final_review_replay_reuses_original_inputs_without_old_decision_leakage
     prompt = client.prompts[0]
     assert case.claim in prompt
     assert "F1: The plaintiff advanced money to the defendant." in prompt
-    assert "INITIAL PLAN SENTINEL" in prompt
+    assert "INITIAL PLAN SENTINEL" not in prompt
+    assert "ABSTRACT TRAJECTORY PLAN:" not in prompt
+    assert "SELECTED TEMPLATE TRACE:" not in prompt
+    assert "EXECUTED TRAJECTORY:" in prompt
     assert "EXECUTED ARTIFACT SENTINEL" in prompt
     assert "SELECTED TEMPLATE SENTINEL" in prompt
     assert "OLD FINAL DECISION SENTINEL" not in prompt
@@ -1556,6 +1645,9 @@ def test_work_root_environment_redirects_generated_artifacts(
 ):
     work_root = tmp_path / "cluster-work"
     monkeypatch.setenv("LEGAL_FLUX_WORK_ROOT", str(work_root))
+    monkeypatch.setenv(
+        "LEGAL_FLUX_SOURCE_CHECKPOINT", "/cluster/checkpoints/selected-sft"
+    )
 
     config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
 
@@ -1573,6 +1665,39 @@ def test_work_root_environment_redirects_generated_artifacts(
         / "training"
         / "template_structure_sft"
     )
+    assert config["legal_flux"]["source_checkpoint"] == (
+        "/cluster/checkpoints/selected-sft"
+    )
+
+
+def test_standardized_cluster_rerun_has_isolated_model_roles_and_vllm_version():
+    root = Path(__file__).parents[1]
+    no_training = (
+        root / "scripts" / "cluster" / "run_no_training_eval.slurm"
+    ).read_text(encoding="utf-8")
+    sft = (
+        root / "scripts" / "cluster" / "run_sft_finalist_full_dev.slurm"
+    ).read_text(encoding="utf-8")
+    submit = (
+        root / "scripts" / "cluster" / "submit_refined_eval_suite.sh"
+    ).read_text(encoding="utf-8")
+    server = (
+        root / "scripts" / "cluster" / "vllm_server.sh"
+    ).read_text(encoding="utf-8")
+
+    assert 'export LEGAL_FLUX_PLANNER_MODEL="$BASE_MODEL"' in no_training
+    assert 'export LEGAL_FLUX_EXECUTOR_MODEL="$BASE_MODEL"' in no_training
+    assert 'export LEGAL_FLUX_REVIEWER_MODEL="$BASE_MODEL"' in no_training
+    assert '"$VLLM_LOG" --enforce-eager' in no_training
+    assert 'SERVING_CHECKPOINT="${CHECKPOINT}/vllm_text_only"' in sft
+    assert 'export LEGAL_FLUX_PLANNER_MODEL="$ADAPTER_NAME"' in sft
+    assert 'export LEGAL_FLUX_EXECUTOR_MODEL="$BASE_MODEL"' in sft
+    assert 'export LEGAL_FLUX_REVIEWER_MODEL="$ADAPTER_NAME"' in sft
+    assert "--enforce-eager" in sft
+    assert 'LEGAL_FLUX_CONDITIONS="direct structured flux_rf_style"' in submit
+    assert "LEGAL_FLUX_CASE_LIMIT=32" in submit
+    assert "afterok:" in submit
+    assert 'LEGAL_FLUX_VLLM_VERSION:-0.21.0' in server
 
 
 def test_dev_tune_subset_is_fixed_and_stratified(tmp_path: Path):
@@ -1810,13 +1935,17 @@ def test_dpo_candidate_sampling_creates_four_seeded_plans(tmp_path: Path):
     result = build_dpo_data(
         config,
         stage="sample",
-        case_limit=1,
+        num_shards=3,
+        shard_index=0,
         client=client,
         similarity_backend=FixedEmbeddingBackend({}),
     )
     rows = read_jsonl(Path(result["candidates_path"]))
 
     assert result["sample_records_added"] == 4
+    assert result["num_shards"] == 3
+    assert result["shard_index"] == 0
+    assert "shard-00000-of-00003" in result["candidates_path"]
     assert len(rows) == 4
     assert [row["sample_index"] for row in rows] == [0, 1, 2, 3]
     assert [call["seed"] for call in client.calls] == [
@@ -1826,6 +1955,16 @@ def test_dpo_candidate_sampling_creates_four_seeded_plans(tmp_path: Path):
         call["temperature"] == config["dpo"]["planner_temperature"]
         for call in client.calls
     )
+    config["model"]["flux_step_max_tokens"] += 1
+    with pytest.raises(RuntimeError, match="different settings"):
+        build_dpo_data(
+            config,
+            stage="sample",
+            num_shards=3,
+            shard_index=0,
+            client=client,
+            similarity_backend=FixedEmbeddingBackend({}),
+        )
 
 
 def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
@@ -1901,8 +2040,9 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
         for index, plan in enumerate(plans)
     ]
     training_dir = processed / "planner_training"
+    shard_dir = training_dir / "dpo_shards" / "shard-00000-of-00008"
     write_jsonl(
-        training_dir / "trajectory_candidates.jsonl",
+        shard_dir / "trajectory_candidates.jsonl",
         candidates,
     )
     correctness = {
@@ -1925,7 +2065,7 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
                 }
             )
     write_jsonl(
-        training_dir / "trajectory_evaluations.jsonl",
+        shard_dir / "trajectory_evaluations.jsonl",
         evaluations,
     )
     write_jsonl(
@@ -1955,6 +2095,9 @@ def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):
     rows = read_jsonl(Path(result["output_path"]))
 
     assert result["pairs"] == 1
+    assert result["candidate_files"] == [
+        str(shard_dir / "trajectory_candidates.jsonl")
+    ]
     assert "second good profile" in rows[0]["chosen"]
     assert "second bad profile" in rows[0]["rejected"]
     assert rows[0]["chosen_reward"] == 1.0
@@ -2021,7 +2164,6 @@ def test_trajectory_dpo_skips_group_when_all_accuracy_scores_tie():
         case,
         xsim_case_ids,
         evaluations,
-        "",
     )
 
     assert pair is None
@@ -2073,6 +2215,15 @@ def test_dpo_pipeline_executes_fixed_trajectory_on_all_xsim_cases(tmp_path: Path
     config["legal_flux"] = {
         **config["legal_flux"],
         "template_pool_file": str(pool),
+        "planner_model": "selected-sft-planner",
+        "executor_model": "selected-sft-executor",
+        "reviewer_model": "selected-sft-reviewer",
+    }
+    source_checkpoint = tmp_path / "selected-sft-checkpoint"
+    source_checkpoint.mkdir()
+    config["dpo"] = {
+        **config["dpo"],
+        "source_checkpoint": str(source_checkpoint),
     }
     client = FakeDpoPipelineClient(invalid_profiles={"profile 3"})
 
@@ -2084,6 +2235,16 @@ def test_dpo_pipeline_executes_fixed_trajectory_on_all_xsim_cases(tmp_path: Path
         similarity_backend=FixedEmbeddingBackend({}),
     )
     evaluations = read_jsonl(Path(result["evaluations_path"]))
+    # Export may run in a later shell where serving-role environment variables
+    # are no longer present. It must recover the coherent collection context
+    # from the manifest rather than silently filtering every ledger row out.
+    config["legal_flux"].update(
+        {
+            "planner_model": "unrelated-default-planner",
+            "executor_model": "unrelated-default-executor",
+            "reviewer_model": "unrelated-default-reviewer",
+        }
+    )
     export = export_trajectory_dpo(config)
     pairs = read_jsonl(Path(export["output_path"]))
 
@@ -2096,9 +2257,148 @@ def test_dpo_pipeline_executes_fixed_trajectory_on_all_xsim_cases(tmp_path: Path
     assert len(invalid) == 3
     assert all(row["status"] == "ok" for row in invalid)
     assert all(row["answer_correct"] is False for row in invalid)
+    complete = [row for row in evaluations if row["answer_valid"]]
+    assert all(row["executor_calls"] == 1 for row in complete)
+    assert all(row["intermediate_review_calls"] == 0 for row in complete)
+    assert all(row["forced_finalization_calls"] == 1 for row in complete)
     assert export["pairs"] == 1
+    assert export["planner_model"] == "selected-sft-planner"
+    assert export["executor_model"] == config["model"]["name"]
+    assert export["reviewer_model"] == "selected-sft-reviewer"
+    assert export["source_checkpoint"] == str(source_checkpoint)
     assert pairs[0]["chosen_reward"] == 1.0
     assert pairs[0]["rejected_reward"] == 0.0
+    planner_calls = [
+        call for call in client.calls if call["schema"]["title"] == "LegalFluxAbstractPlan"
+    ]
+    executor_calls = [
+        call for call in client.calls if call["schema"]["title"] == "LegalFluxStepArtifact"
+    ]
+    finalizer_calls = [
+        call
+        for call in client.calls
+        if call["schema"]["title"] == "LegalFluxRfFinalReview"
+    ]
+    assert {call["model"] for call in planner_calls} == {"selected-sft-planner"}
+    assert {call["model"] for call in executor_calls} == {config["model"]["name"]}
+    assert {call["model"] for call in finalizer_calls} == {"selected-sft-reviewer"}
+    assert len(planner_calls) == 4
+    assert len(executor_calls) == 12
+    assert len(finalizer_calls) == 12
+    assert {
+        call["schema"]["title"] for call in client.calls
+    } == {
+        "LegalFluxAbstractPlan",
+        "LegalFluxStepArtifact",
+        "LegalFluxRfFinalReview",
+    }
+    assert all("EXECUTED TRAJECTORY:" in call["prompt"] for call in finalizer_calls)
+    assert all("ABSTRACT TRAJECTORY PLAN:" not in call["prompt"] for call in finalizer_calls)
+    config["training"]["trajectory_dpo"] = {
+        **config["training"]["trajectory_dpo"],
+        "model_name_or_path": str(source_checkpoint),
+        "output_dir": str(tmp_path / "dpo-output"),
+    }
+    split = prepare_trajectory_dpo_splits(config)
+    assert split["train_examples"] == 1
+    config["training"]["trajectory_dpo"]["model_name_or_path"] = str(
+        tmp_path / "wrong-sft-checkpoint"
+    )
+    with pytest.raises(RuntimeError, match="same checkpoint"):
+        prepare_trajectory_dpo_splits(config)
+
+
+def test_dpo_settings_use_sft_planner_base_executor_and_sft_finalizer():
+    config = {
+        "project": {"seed": 7},
+        "model": {"name": "base"},
+        "legal_flux": {
+            "planner_model": "sft-planner",
+            "executor_model": "sft-executor",
+            "reviewer_model": "sft-reviewer",
+        },
+        "dpo": {},
+    }
+
+    settings = _dpo_settings(config)
+
+    assert settings["planner_model"] == "sft-planner"
+    assert settings["executor_model"] == "base"
+    assert settings["reviewer_model"] == "sft-reviewer"
+
+
+def test_trajectory_dpo_training_preflight_validates_canonical_pairs(tmp_path: Path):
+    processed = tmp_path / "processed"
+    plan = {
+        "planning_analysis": "Resolve the recurring entitlement issue.",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Debt entitlement",
+                "step_description": "Determine whether repayment is due.",
+                "template_tags": ["debt", "entitlement"],
+            }
+        ],
+    }
+    rejected = {
+        **plan,
+        "planning_analysis": "Focus on an unrelated procedural issue.",
+        "planned_steps": [
+            {
+                **plan["planned_steps"][0],
+                "step_name": "Unrelated procedure",
+                "template_tags": ["procedure"],
+            }
+        ],
+    }
+    write_jsonl(
+        processed / "planner_training" / "trajectory_dpo.jsonl",
+        [
+            {
+                "id": "trajectory-dpo-1",
+                "prompt": "Current refined planner prompt",
+                "chosen": json.dumps(plan),
+                "rejected": json.dumps(rejected),
+                "chosen_reward": 1.0,
+                "rejected_reward": 0.0,
+            }
+        ],
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {**config["paths"], "processed_dir": str(processed)}
+    config["training"]["trajectory_dpo"] = {
+        **config["training"]["trajectory_dpo"],
+        "model_name_or_path": "selected-sft-checkpoint",
+        "output_dir": str(tmp_path / "dpo-output"),
+    }
+
+    split = prepare_trajectory_dpo_splits(config)
+    preflight = train_trajectory_dpo(config, dry_run=True)
+    settings = trajectory_dpo_settings(config)
+    class FakeTokenizer:
+        def apply_chat_template(self, messages, **kwargs):
+            assert messages == [
+                {"role": "user", "content": "Current refined planner prompt"}
+            ]
+            assert kwargs["enable_thinking"] is False
+            assert kwargs["add_generation_prompt"] is True
+            return "<user>Current refined planner prompt</user><assistant>"
+
+    trainer_rows = _dpo_trainer_rows(
+        Path(split["train_file"]),
+        tokenizer=FakeTokenizer(),
+        chat_template_kwargs={"enable_thinking": False},
+    )
+
+    assert split["train_examples"] == 1
+    assert split["eval_examples"] == 0
+    assert preflight["model_name_or_path"] == "selected-sft-checkpoint"
+    assert preflight["objective"].startswith("DPO on the current planner prompt")
+    assert settings["beta"] == 0.1
+    assert settings["max_length"] == 6144
+    assert trainer_rows[0]["prompt"].endswith("<assistant>")
+    assert "planning_analysis" in trainer_rows[0]["chosen"]
 
 
 def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
@@ -2226,17 +2526,40 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
             "sample",
             "--case-limit",
             "10",
+            "--num-shards",
+            "8",
+            "--shard-index",
+            "3",
+            "--fail-on-errors",
         ]
     )
     assert dpo_args.command == "flux-build-dpo-data"
     assert dpo_args.stage == "sample"
     assert dpo_args.case_limit == 10
+    assert dpo_args.num_shards == 8
+    assert dpo_args.shard_index == 3
+    assert dpo_args.fail_on_errors
     assert parser.parse_args(
         ["--config", "configs/legal_flux.yaml", "flux-export-template-batches"]
     ).command == "flux-export-template-batches"
     assert parser.parse_args(
         ["--config", "configs/legal_flux.yaml", "flux-export-trajectory-dpo"]
     ).command == "flux-export-trajectory-dpo"
+    train_dpo_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-train-trajectory-dpo",
+            "--dry-run",
+            "--model-name-or-path",
+            "selected-sft-checkpoint",
+            "--output-dir",
+            "runs/dpo",
+        ]
+    )
+    assert train_dpo_args.command == "flux-train-trajectory-dpo"
+    assert train_dpo_args.dry_run
+    assert train_dpo_args.model_name_or_path == "selected-sft-checkpoint"
     gemini_args = parser.parse_args(
         [
             "--config",
@@ -2279,6 +2602,15 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     assert "legal_flux/plan.txt" not in components["prompts"]
     assert "legal_flux_abstract_plan.json" in components["schemas"]
     assert "legal_flux_trajectory_plan.json" not in components["schemas"]
+    cluster_config = load_config(
+        Path(__file__).parents[1] / "configs" / "legal_flux.cluster.yaml"
+    )
+    cluster_components = legal_flux_workflow_components(cluster_config)
+    assert cluster_components["model"]["inference_runtime"] == "vllm"
+    assert cluster_components["model"]["inference_runtime_version"] == "0.21.0"
+    assert cluster_components["model"]["extra_body"] == {
+        "chat_template_kwargs": {"enable_thinking": False}
+    }
     assert flux_run_hash(
         _case(),
         condition="flux_rf_style",

@@ -101,6 +101,15 @@ def _apply_runtime_environment(config: dict[str, Any]) -> None:
             / "training"
             / "template_structure_sft"
         )
+        config.setdefault("training", {}).setdefault("trajectory_dpo", {})[
+            "output_dir"
+        ] = str(
+            work_path
+            / "runs"
+            / "legal_flux"
+            / "training"
+            / "trajectory_dpo"
+        )
     model = config.setdefault("model", {})
     if os.environ.get("LEGAL_FLUX_MODEL_BASE_URL"):
         model["base_url"] = os.environ["LEGAL_FLUX_MODEL_BASE_URL"]
@@ -108,6 +117,11 @@ def _apply_runtime_environment(config: dict[str, Any]) -> None:
         model["name"] = os.environ["LEGAL_FLUX_MODEL_NAME"]
     if os.environ.get("LEGAL_FLUX_MODEL_CONCURRENCY"):
         model["concurrency"] = int(os.environ["LEGAL_FLUX_MODEL_CONCURRENCY"])
+    if os.environ.get("LEGAL_FLUX_VLLM_VERSION"):
+        model["inference_runtime"] = "vllm"
+        model["inference_runtime_version"] = os.environ[
+            "LEGAL_FLUX_VLLM_VERSION"
+        ]
     if os.environ.get("LEGAL_FLUX_RETRIEVAL_DEVICE"):
         config.setdefault("xsim", {})["device"] = os.environ[
             "LEGAL_FLUX_RETRIEVAL_DEVICE"
@@ -117,3 +131,11 @@ def _apply_runtime_environment(config: dict[str, Any]) -> None:
         environment_name = f"LEGAL_FLUX_{role.upper()}_MODEL"
         if os.environ.get(environment_name):
             legal_flux[f"{role}_model"] = os.environ[environment_name]
+    if os.environ.get("LEGAL_FLUX_SOURCE_CHECKPOINT"):
+        legal_flux["source_checkpoint"] = os.environ[
+            "LEGAL_FLUX_SOURCE_CHECKPOINT"
+        ]
+    if os.environ.get("LEGAL_FLUX_DPO_SFT_CHECKPOINT"):
+        config.setdefault("dpo", {})["source_checkpoint"] = os.environ[
+            "LEGAL_FLUX_DPO_SFT_CHECKPOINT"
+        ]

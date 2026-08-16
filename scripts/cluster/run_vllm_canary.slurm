@@ -30,7 +30,7 @@ BASE_URL="http://127.0.0.1:${PORT}/v1"
 VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-canary-${SLURM_JOB_ID}.log"
 
 CANARY_MODEL="$LEGAL_FLUX_MODEL_NAME"
-VLLM_ARGS=()
+VLLM_ARGS=(--enforce-eager)
 if [[ -n "${LEGAL_FLUX_CANARY_LORA_PATH:-}" ]]; then
   CANARY_LORA_NAME="${LEGAL_FLUX_CANARY_LORA_NAME:-legalflux-sft-canary}"
   if [[ ! -f "${LEGAL_FLUX_CANARY_LORA_PATH}/adapter_config.json" ]] || \
@@ -39,8 +39,7 @@ if [[ -n "${LEGAL_FLUX_CANARY_LORA_PATH:-}" ]]; then
     exit 1
   fi
   CANARY_MODEL="$CANARY_LORA_NAME"
-  VLLM_ARGS=(
-    --enforce-eager
+  VLLM_ARGS+=(
     --enable-lora
     --max-lora-rank 32
     --lora-modules "${CANARY_LORA_NAME}=${LEGAL_FLUX_CANARY_LORA_PATH}"

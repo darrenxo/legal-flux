@@ -140,9 +140,17 @@ def build_parser() -> argparse.ArgumentParser:
         default="all",
     )
     dpo_data.add_argument("--case-limit", type=int, default=None)
+    dpo_data.add_argument("--num-shards", type=int, default=1)
+    dpo_data.add_argument("--shard-index", type=int, default=0)
     dpo_data.add_argument("--force", action="store_true")
+    dpo_data.add_argument("--fail-on-errors", action="store_true")
     trajectory_dpo = subparsers.add_parser("flux-export-trajectory-dpo")
     trajectory_dpo.add_argument("--phase", default="planner-train")
+    train_dpo = subparsers.add_parser("flux-train-trajectory-dpo")
+    train_dpo.add_argument("--dry-run", action="store_true")
+    train_dpo.add_argument("--resume-from-checkpoint", default=None)
+    train_dpo.add_argument("--model-name-or-path", default=None)
+    train_dpo.add_argument("--output-dir", default=None)
     deepseek_templates = subparsers.add_parser("flux-deepseek-templates")
     deepseek_templates.add_argument(
         "--stage",
@@ -276,7 +284,10 @@ def main(argv: list[str] | None = None) -> int:
             config,
             stage=args.stage,
             case_limit=args.case_limit,
+            num_shards=args.num_shards,
+            shard_index=args.shard_index,
             force=args.force,
+            fail_on_errors=args.fail_on_errors,
         )
     elif args.command == "flux-build-dpo-data":
         from .legal_flux_dpo import build_dpo_data
@@ -291,6 +302,16 @@ def main(argv: list[str] | None = None) -> int:
         from .legal_flux_training import export_trajectory_dpo
 
         result = export_trajectory_dpo(config, phase=args.phase)
+    elif args.command == "flux-train-trajectory-dpo":
+        from .legal_flux_dpo_train import train_trajectory_dpo
+
+        result = train_trajectory_dpo(
+            config,
+            dry_run=args.dry_run,
+            resume_from_checkpoint=args.resume_from_checkpoint,
+            model_name_or_path=args.model_name_or_path,
+            output_dir=args.output_dir,
+        )
     elif args.command == "flux-deepseek-templates":
         from .legal_flux_deepseek import run_deepseek_template_workflow
 

@@ -178,6 +178,52 @@ The ranking is written under
 `final_test` until the planner, template library, prompts, retrieval
 configuration, and executor are frozen.
 
+## Standardized vLLM 0.21 refined-pipeline rerun
+
+To rerun the complete development comparison after selecting the best SFT
+checkpoint, use the suite wrapper. It creates four isolated results:
+
+- direct base-Qwen prompting;
+- structured-IRAC base-Qwen prompting;
+- refined LegalFlux with base Qwen in all three roles;
+- refined LegalFlux with the selected SFT adapter as planner/reviewer and base
+  Qwen as executor.
+
+Every server verifies that the container reports vLLM 0.21.0, uses
+`--enforce-eager`, disables hidden thinking through the shared client config,
+and runs against the complete 2,755-case `trajectory_dev` split. Each full run
+has an `afterok` dependency on its own 32-case real-pipeline smoke run.
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+export LEGAL_FLUX_SFT_CHECKPOINT=/work/hdd/bfua/$USER/legal_nlp/runs/legal_flux/training/template_structure_sft/lr-2e-4/checkpoint-N
+export LEGAL_FLUX_EVAL_SUITE_TAG=vllm021-refined-pipeline-v1
+export LEGAL_FLUX_NUM_SHARDS=8
+export LEGAL_FLUX_MAX_PARALLEL_SHARDS=4
+bash scripts/cluster/submit_refined_eval_suite.sh
+```
+
+Replace `checkpoint-N` with the exact selected epoch-6 checkpoint. The script
+serves its `vllm_text_only` child but records the original checkpoint path for
+provenance. Its full run tags are `${LEGAL_FLUX_EVAL_SUITE_TAG}-base-full` and
+`${LEGAL_FLUX_EVAL_SUITE_TAG}-sft-full`. Job IDs and tags are also saved in
+`$LEGAL_FLUX_WORK_ROOT/runs/legal_flux/submissions/<suite-tag>.env`.
+
+After both full arrays complete, score them from the evaluation environment:
+
+```bash
+source /work/hdd/bfua/$USER/legal_nlp/envs/legalflux-eval-v3/bin/activate
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-score --phase trajectory-dev \
+  --run-tag "${LEGAL_FLUX_EVAL_SUITE_TAG}-base-full"
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-score --phase trajectory-dev \
+  --run-tag "${LEGAL_FLUX_EVAL_SUITE_TAG}-sft-full"
+```
+
+The base aggregate contains the direct, structured, and no-training LegalFlux
+rows. The SFT aggregate contains the trained LegalFlux row.
+
 ## Resuming no-training shards
 
 Generation is recorded after each completed condition-level run. Resubmitting
@@ -246,3 +292,58 @@ Cluster requests disable Qwen's hidden thinking because every LegalFlux role
 already emits its reasoning in required JSON fields. Generation tasks use four
 concurrent requests per server and exit nonzero if any record fails; successful
 ledger records remain resumable.
+
+## DPO trajectory construction and training
+
+Use the original selected SFT checkpoint for training and its prepared
+`vllm_text_only` child for generation. A 32-anchor real-pipeline canary is:
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+export LEGAL_FLUX_DPO_SFT_CHECKPOINT=/work/hdd/bfua/$USER/legal_nlp/runs/legal_flux/training/template_structure_sft/lr-2e-4/checkpoint-N
+export LEGAL_FLUX_DPO_NUM_SHARDS=1
+export LEGAL_FLUX_DPO_CASE_LIMIT=32
+sbatch --array=0 scripts/cluster/run_dpo_collection.slurm
+```
+
+Replace the example checkpoint with the actual selected checkpoint path. After
+the canary succeeds, submit the full planner-train collection:
+
+```bash
+unset LEGAL_FLUX_DPO_CASE_LIMIT
+export LEGAL_FLUX_DPO_NUM_SHARDS=144
+sbatch --array=0-143%4 scripts/cluster/run_dpo_collection.slurm
+```
+
+Each anchor receives four stochastic plans. The templates are retrieved once
+from each anchor plan, and that fixed trajectory is executed on the anchor plus
+its two X-sim neighbors. The selected SFT adapter serves as planner. The
+unchanged base Qwen model executes every template step, with no intermediate
+reviewer calls. After all steps finish, the selected SFT adapter is called once
+under the forced-finalization schema to produce `support` or `reject`. Shards
+are isolated and resumable.
+
+After all shards finish, export canonical preference pairs and run the DPO
+preflight:
+
+```bash
+source /work/hdd/bfua/$USER/legal_nlp/envs/legalflux-eval-v3/bin/activate
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-export-trajectory-dpo
+
+source /work/hdd/bfua/$USER/legal_nlp/envs/legalflux-train-v2/bin/activate
+python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+  flux-train-trajectory-dpo --dry-run \
+  --model-name-or-path "$LEGAL_FLUX_DPO_SFT_CHECKPOINT"
+```
+
+Then submit training:
+
+```bash
+sbatch --export=ALL,LEGAL_FLUX_DPO_SFT_CHECKPOINT="$LEGAL_FLUX_DPO_SFT_CHECKPOINT" \
+  scripts/cluster/run_trajectory_dpo.slurm
+```
+
+The DPO checkpoint is trained only to prefer better planner trajectory JSON.
+Executor artifacts and final support/reject labels are reward evidence in the
+construction ledgers, not assistant targets in the DPO dataset.

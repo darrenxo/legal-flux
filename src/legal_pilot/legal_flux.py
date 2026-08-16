@@ -298,6 +298,9 @@ def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:
         "model": {
             key: config["model"].get(key)
             for key in (
+                "provider",
+                "inference_runtime",
+                "inference_runtime_version",
                 "name",
                 "context_length",
                 "temperature",
@@ -306,6 +309,7 @@ def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:
                 "flux_plan_max_tokens",
                 "flux_step_max_tokens",
                 "flux_review_max_tokens",
+                "extra_body",
             )
         },
         "prompts": {

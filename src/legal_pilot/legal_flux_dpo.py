@@ -2,17 +2,19 @@ from __future__ import annotations
 
 import json
 import traceback
+from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
-from .clients import ModelResponse, OllamaClient
+from .clients import ModelResponse, build_generation_client
 from .config import resolve_path
 from .embeddings import SimilarityBackend
-from .io_utils import atomic_write_json, read_jsonl
+from .io_utils import atomic_write_json, canonical_json, read_jsonl, sha256_text
 from .ledger import JsonlLedger, make_run_hash
 from .legal_flux import (
     load_template_pool,
+    legal_flux_workflow_hash,
     retrieve_template_for_abstract_step,
     template_pool_hash,
 )
@@ -23,7 +25,6 @@ from .legal_flux_runner import (
     _load_schema,
     _normalize_abstract_plan_payload,
     _review_rf_trajectory,
-    _template_tag_examples,
 )
 from .legal_flux_xsim import load_xsim_neighbors
 from .models import (
@@ -50,20 +51,32 @@ def build_dpo_data(
     *,
     stage: str = "all",
     case_limit: int | None = None,
+    num_shards: int = 1,
+    shard_index: int = 0,
     force: bool = False,
+    fail_on_errors: bool = False,
     client: GenerationClient | None = None,
     similarity_backend: SimilarityBackend | None = None,
 ) -> dict[str, Any]:
     if stage not in {"sample", "evaluate", "all"}:
         raise ValueError(f"Unsupported DPO construction stage: {stage}")
     settings = _dpo_settings(config)
+    if num_shards < 1:
+        raise ValueError("num_shards must be at least 1.")
+    if not 0 <= shard_index < num_shards:
+        raise ValueError("shard_index must be in [0, num_shards).")
     if settings["samples_per_anchor"] != 4:
         raise ValueError(
             "LegalFlux DPO construction is configured for exactly four "
             "candidate trajectories per anchor."
         )
     cases = _planner_train_cases(config)
-    anchors = cases[:case_limit] if case_limit is not None else cases
+    requested_anchors = cases[:case_limit] if case_limit is not None else cases
+    anchors = _select_dpo_shard(
+        requested_anchors,
+        num_shards=num_shards,
+        shard_index=shard_index,
+    )
     case_by_id = {case.case_id: case for case in cases}
     xsim = load_xsim_neighbors(config)
     missing_xsim = [case.case_id for case in anchors if case.case_id not in xsim]
@@ -75,32 +88,56 @@ def build_dpo_data(
 
     templates = load_template_pool(config)
     template_hash = template_pool_hash(templates)
+    workflow_hash = dpo_construction_workflow_hash(config)
+    xsim_hash = _xsim_neighbors_hash(config)
     output_dir = _training_dir(config)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    candidates_path = output_dir / settings["candidates_file"]
-    evaluations_path = output_dir / settings["evaluations_file"]
-    manifest_path = output_dir / settings["manifest_file"]
+    artifact_dir = _dpo_artifact_dir(
+        output_dir,
+        num_shards=num_shards,
+        shard_index=shard_index,
+    )
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    candidates_path = artifact_dir / settings["candidates_file"]
+    evaluations_path = artifact_dir / settings["evaluations_file"]
+    manifest_path = artifact_dir / settings["manifest_file"]
+    owned_client = client is None
+    if client is None:
+        client = build_generation_client(config)
+    required_models = {
+        settings["planner_model"],
+        settings["executor_model"],
+        settings["reviewer_model"],
+    }
+    model_digests = _model_digests(
+        client,
+        required_models,
+        provider=str(config["model"].get("provider", "ollama")),
+        base_url=str(config["model"]["base_url"]),
+        require_available=owned_client,
+    )
     manifest_key = {
+        "workflow_hash": workflow_hash,
         "template_pool_hash": template_hash,
+        "xsim_hash": xsim_hash,
         "planner_model": settings["planner_model"],
         "executor_model": settings["executor_model"],
+        "reviewer_model": settings["reviewer_model"],
+        "source_checkpoint": settings["source_checkpoint"],
+        "model_digests": model_digests,
         "samples_per_anchor": settings["samples_per_anchor"],
         "planner_temperature": settings["planner_temperature"],
+        "seed": settings["seed"],
         "max_steps": int(config["legal_flux"].get("max_steps", 4)),
+        "num_shards": num_shards,
+        "shard_index": shard_index,
+        "anchor_ids_hash": sha256_text(
+            canonical_json([case.case_id for case in anchors])
+        ),
     }
     _guard_existing_manifest(manifest_path, manifest_key, force=force)
     if force:
         candidates_path.unlink(missing_ok=True)
         evaluations_path.unlink(missing_ok=True)
-
-    owned_client = client is None
-    if client is None:
-        required_models = set()
-        if stage in {"sample", "all"}:
-            required_models.add(settings["planner_model"])
-        if stage in {"evaluate", "all"}:
-            required_models.add(settings["executor_model"])
-        client = _ollama_client(config, required_models)
     owned_similarity = (
         similarity_backend is None and stage in {"sample", "all"}
     )
@@ -121,6 +158,8 @@ def build_dpo_data(
                 anchors=anchors,
                 templates=templates,
                 template_hash=template_hash,
+                workflow_hash=workflow_hash,
+                planner_digest=model_digests[settings["planner_model"]],
                 output_path=candidates_path,
                 settings=settings,
                 similarity_backend=similarity_backend,
@@ -138,6 +177,10 @@ def build_dpo_data(
                 case_by_id=case_by_id,
                 xsim=xsim,
                 templates=templates,
+                template_hash=template_hash,
+                workflow_hash=workflow_hash,
+                executor_digest=model_digests[settings["executor_model"]],
+                reviewer_digest=model_digests[settings["reviewer_model"]],
                 candidates_path=candidates_path,
                 output_path=evaluations_path,
                 settings=settings,
@@ -155,6 +198,7 @@ def build_dpo_data(
         "stage": stage,
         "planner_train_cases": len(cases),
         "requested_anchors": len(anchors),
+        "unsharded_requested_anchors": len(requested_anchors),
         "sample_records_added": sampled,
         "evaluation_records_added": evaluated,
         "errors": errors,
@@ -162,13 +206,22 @@ def build_dpo_data(
         "candidates_path": str(candidates_path),
         "evaluations_path": str(evaluations_path),
         "xsim_cases_per_anchor": 3,
+        "num_shards": num_shards,
+        "shard_index": shard_index,
         "reward": "mean binary accuracy over anchor plus two X_sim neighbors",
         "trajectory_evaluation": (
             "Retrieve each candidate template sequence once from the anchor plan, "
-            "then execute that fixed sequence on all three X_sim cases."
+            "then execute every step of that fixed sequence on all three X_sim "
+            "cases with no intermediate review, followed by one forced-finalization "
+            "call."
         ),
     }
     atomic_write_json(manifest_path, manifest)
+    if fail_on_errors and errors:
+        raise RuntimeError(
+            f"DPO construction preserved {errors} error record(s) under "
+            f"{artifact_dir}. Rerun the same shard to retry failed work."
+        )
     return {**manifest, "manifest_path": str(manifest_path)}
 
 
@@ -179,6 +232,8 @@ def _sample_candidate_trajectories(
     anchors: list[NormalizedCase],
     templates: list[LegalFluxTemplate],
     template_hash: str,
+    workflow_hash: str,
+    planner_digest: str,
     output_path: Path,
     settings: dict[str, Any],
     similarity_backend: SimilarityBackend,
@@ -187,7 +242,6 @@ def _sample_candidate_trajectories(
     schema = _load_schema(
         resolve_path(config, "schemas_dir") / "legal_flux_abstract_plan.json"
     )
-    template_examples = _template_tag_examples(config, templates)
     added = 0
     errors = 0
     for anchor in anchors:
@@ -196,7 +250,6 @@ def _sample_candidate_trajectories(
             "legal_flux/rf_plan",
             anchor,
             max_steps=int(config["legal_flux"].get("max_steps", 4)),
-            template_tag_examples=template_examples,
         )
         for sample_index in range(settings["samples_per_anchor"]):
             seed = settings["seed"] + sample_index
@@ -206,8 +259,11 @@ def _sample_candidate_trajectories(
                 sample_index=sample_index,
                 seed=seed,
                 planner_model=settings["planner_model"],
+                planner_digest=planner_digest,
                 prompt_hash=prompt_hash,
+                workflow_hash=workflow_hash,
                 template_pool_hash=template_hash,
+                source_checkpoint=settings["source_checkpoint"],
             )
             if ledger.contains(run_hash):
                 continue
@@ -218,10 +274,13 @@ def _sample_candidate_trajectories(
                 "anchor_case_id": anchor.case_id,
                 "sample_index": sample_index,
                 "planner_model": settings["planner_model"],
+                "planner_digest": planner_digest,
                 "planner_temperature": settings["planner_temperature"],
                 "seed": seed,
                 "prompt_hash": prompt_hash,
                 "template_pool_hash": template_hash,
+                "workflow_hash": workflow_hash,
+                "source_checkpoint": settings["source_checkpoint"],
             }
             try:
                 response = client.generate(
@@ -282,6 +341,10 @@ def _evaluate_candidate_trajectories(
     case_by_id: dict[str, NormalizedCase],
     xsim: dict[str, list[str]],
     templates: list[LegalFluxTemplate],
+    template_hash: str,
+    workflow_hash: str,
+    executor_digest: str,
+    reviewer_digest: str,
     candidates_path: Path,
     output_path: Path,
     settings: dict[str, Any],
@@ -297,6 +360,9 @@ def _evaluate_candidate_trajectories(
         for row in read_jsonl(candidates_path)
         if row.get("status") == "ok"
         and row.get("anchor_case_id") in requested_anchors
+        and row.get("template_pool_hash") == template_hash
+        and row.get("workflow_hash") == workflow_hash
+        and row.get("source_checkpoint") == settings["source_checkpoint"]
     ]
     template_by_id = {template.template_id: template for template in templates}
     ledger = JsonlLedger(output_path)
@@ -315,6 +381,12 @@ def _evaluate_candidate_trajectories(
                 candidate_id=candidate["candidate_id"],
                 target_case_id=target_id,
                 executor_model=settings["executor_model"],
+                reviewer_model=settings["reviewer_model"],
+                executor_digest=executor_digest,
+                reviewer_digest=reviewer_digest,
+                workflow_hash=workflow_hash,
+                template_pool_hash=template_hash,
+                source_checkpoint=settings["source_checkpoint"],
             )
             if ledger.contains(run_hash):
                 continue
@@ -327,6 +399,12 @@ def _evaluate_candidate_trajectories(
                 "is_anchor": target_id == anchor_id,
                 "sample_index": candidate["sample_index"],
                 "executor_model": settings["executor_model"],
+                "reviewer_model": settings["reviewer_model"],
+                "executor_digest": executor_digest,
+                "reviewer_digest": reviewer_digest,
+                "workflow_hash": workflow_hash,
+                "template_pool_hash": template_hash,
+                "source_checkpoint": settings["source_checkpoint"],
                 "gold_answer": target.gold_answer,
             }
             try:
@@ -337,6 +415,7 @@ def _evaluate_candidate_trajectories(
                     abstract_plan=plan,
                     templates=selected_templates,
                     executor_model=settings["executor_model"],
+                    reviewer_model=settings["reviewer_model"],
                     seed=settings["seed"],
                 )
                 record = {
@@ -415,16 +494,18 @@ def _execute_fixed_trajectory(
     abstract_plan: LegalFluxAbstractPlan,
     templates: list[LegalFluxTemplate],
     executor_model: str,
+    reviewer_model: str,
     seed: int,
 ) -> tuple[str, dict[str, Any]]:
     if len(abstract_plan.planned_steps) != len(templates):
         raise ValueError("Fixed trajectory step and template counts do not match.")
-    common = {
+    executor_common = {
         "model": executor_model,
         "temperature": 0.0,
         "seed": seed,
         "context_length": int(config["model"]["context_length"]),
     }
+    reviewer_common = {**executor_common, "model": reviewer_model}
     artifacts: list[LegalFluxStepArtifact] = []
     selected_trace: list[dict[str, Any]] = []
     prompt_hashes: dict[str, str] = {}
@@ -446,7 +527,7 @@ def _execute_fixed_trajectory(
             step=step,
             template=template,
             prior_artifacts=artifacts,
-            common=common,
+            common=executor_common,
         )
         artifacts.append(artifact)
         selected_trace.append(
@@ -469,12 +550,11 @@ def _execute_fixed_trajectory(
         client,
         config,
         case,
-        abstract_plan=abstract_plan,
         artifacts=artifacts,
         remaining=[],
         selected_templates=selected_trace,
-        common=common,
-        max_steps=0,
+        common=reviewer_common,
+        max_steps=int(config["legal_flux"].get("max_steps", 4)),
         force_final_answer=True,
     )
     if review.final_decision not in {"support", "reject"}:
@@ -496,6 +576,9 @@ def _execute_fixed_trajectory(
         "final_rationale": review.final_rationale or review.review_analysis,
         "prompt_hashes": prompt_hashes,
         "calls": calls,
+        "executor_calls": len(artifacts),
+        "intermediate_review_calls": 0,
+        "forced_finalization_calls": 1,
         "elapsed_seconds": elapsed_seconds,
         "prompt_tokens": prompt_tokens,
         "output_tokens": output_tokens,
@@ -514,10 +597,31 @@ def _planner_train_cases(config: dict[str, Any]) -> list[NormalizedCase]:
 
 def _dpo_settings(config: dict[str, Any]) -> dict[str, Any]:
     values = config.get("dpo", {})
+    flux_values = config.get("legal_flux", {})
+    planner_model = (
+        values.get("planner_model")
+        or flux_values.get("planner_model")
+        or config["model"]["name"]
+    )
+    executor_model = (
+        values.get("executor_model")
+        or config["model"]["name"]
+    )
+    reviewer_model = (
+        values.get("reviewer_model")
+        or flux_values.get("reviewer_model")
+        or planner_model
+    )
     return {
         "samples_per_anchor": int(values.get("samples_per_anchor", 4)),
-        "planner_model": values.get("planner_model") or config["model"]["name"],
-        "executor_model": values.get("executor_model") or config["model"]["name"],
+        "planner_model": str(planner_model),
+        "executor_model": str(executor_model),
+        "reviewer_model": str(reviewer_model),
+        "source_checkpoint": (
+            str(values["source_checkpoint"])
+            if values.get("source_checkpoint")
+            else None
+        ),
         "planner_temperature": float(values.get("planner_temperature", 0.7)),
         "seed": int(values.get("seed", config["project"]["seed"])),
         "candidates_file": values.get(
@@ -536,23 +640,85 @@ def _training_dir(config: dict[str, Any]) -> Path:
     return resolve_path(config, "processed_dir") / "planner_training"
 
 
-def _ollama_client(
-    config: dict[str, Any],
-    required_models: set[str],
-) -> OllamaClient:
-    client = OllamaClient(
-        config["model"]["base_url"],
-        config["model"]["timeout_seconds"],
+def dpo_construction_workflow_hash(config: dict[str, Any]) -> str:
+    runtime_config = deepcopy(config)
+    settings = _dpo_settings(config)
+    legal_flux = runtime_config.setdefault("legal_flux", {})
+    for role in ("planner", "executor", "reviewer"):
+        legal_flux[f"{role}_model"] = settings[f"{role}_model"]
+    return sha256_text(
+        canonical_json(
+            {
+                "runtime_workflow_hash": legal_flux_workflow_hash(runtime_config),
+                "dpo_construction_implementation": sha256_text(
+                    Path(__file__).read_text(encoding="utf-8")
+                ),
+            }
+        )
     )
-    missing = [
-        model
-        for model in required_models
-        if not client.model_info(model)
+
+
+def _select_dpo_shard(
+    anchors: list[NormalizedCase],
+    *,
+    num_shards: int,
+    shard_index: int,
+) -> list[NormalizedCase]:
+    ordered = sorted(anchors, key=lambda case: (case.case_id, case.variant_id))
+    return [
+        case
+        for index, case in enumerate(ordered)
+        if index % num_shards == shard_index
     ]
+
+
+def _dpo_artifact_dir(
+    output_dir: Path,
+    *,
+    num_shards: int,
+    shard_index: int,
+) -> Path:
+    if num_shards == 1:
+        return output_dir
+    return (
+        output_dir
+        / "dpo_shards"
+        / f"shard-{shard_index:05d}-of-{num_shards:05d}"
+    )
+
+
+def _model_digests(
+    client: GenerationClient,
+    required_models: set[str],
+    *,
+    provider: str,
+    base_url: str,
+    require_available: bool,
+) -> dict[str, str]:
+    if not require_available or not hasattr(client, "model_info"):
+        return {model: f"injected:{model}" for model in sorted(required_models)}
+    model_infos = {
+        model: client.model_info(model)  # type: ignore[attr-defined]
+        for model in sorted(required_models)
+    }
+    missing = [model for model, info in model_infos.items() if not info]
     if missing:
-        client.close()
-        raise RuntimeError(f"Configured Ollama models are unavailable: {missing}")
-    return client
+        raise RuntimeError(
+            f"Models {missing!r} are not exposed by {provider} at {base_url}."
+        )
+    return {
+        model: str(info.get("digest", "unknown"))
+        for model, info in model_infos.items()
+        if info is not None
+    }
+
+
+def _xsim_neighbors_hash(config: dict[str, Any]) -> str:
+    filename = str(
+        config.get("xsim", {}).get("neighbors_file", "xsim_neighbors.jsonl")
+    )
+    path = resolve_path(config, "processed_dir") / "xsim" / filename
+    return sha256_text(path.read_text(encoding="utf-8"))
 
 
 def _guard_existing_manifest(

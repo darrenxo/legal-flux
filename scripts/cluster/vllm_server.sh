@@ -25,6 +25,21 @@ legal_flux_start_vllm() {
     return 1
   fi
 
+  local expected_version="${LEGAL_FLUX_VLLM_VERSION:-0.21.0}"
+  local version_output
+  if ! version_output="$(
+    apptainer exec --cleanenv "$container" /bin/bash -c 'vllm --version' 2>&1
+  )"; then
+    echo "Could not read the vLLM version from ${container}:" >&2
+    echo "$version_output" >&2
+    return 1
+  fi
+  if [[ " $version_output " != *" $expected_version "* ]]; then
+    echo "Expected vLLM ${expected_version}, but ${container} reported:" >&2
+    echo "$version_output" >&2
+    return 1
+  fi
+
   mkdir -p "$(dirname "$log_file")"
   local -a container_env=(
     --env "HF_HOME=${HF_HOME}"

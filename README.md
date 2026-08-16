@@ -180,6 +180,8 @@ Planner-training data preparation:
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-dpo-data --stage sample
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-build-dpo-data --stage evaluate
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-export-trajectory-dpo
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-train-trajectory-dpo --dry-run --model-name-or-path path\to\selected-sft-checkpoint
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-train-trajectory-dpo --model-name-or-path path\to\selected-sft-checkpoint
 ```
 
 `flux-export-template-sft` produces the ReasonFlux-style template-structure
@@ -234,7 +236,11 @@ the corpus or retrieval settings change and the artifacts must be rebuilt.
 
 `flux-build-dpo-data` samples exactly four trajectories per anchor from the SFT
 planner. It retrieves each template sequence once and executes that fixed
-trajectory on all three `X_sim` cases using `dpo.executor_model`. The final
+trajectory on all three `X_sim` cases using the unchanged base model. There are
+no intermediate reviewer calls: all planned steps execute in order, after which
+the selected SFT adapter is called once with the forced-finalization contract.
+Thus `dpo.reviewer_model` denotes only this finalizer, not an adaptive reviewer.
+The final
 export chooses the trajectory with the highest mean binary accuracy and rejects
 the lowest. Ties inside the best or worst tier are resolved by mean retrieval
 similarity, then fewer steps, then sample index as a deterministic fallback. A
@@ -245,6 +251,22 @@ trajectory SFT. Chosen and rejected responses contain only the canonical
 `planning_analysis` and `planned_steps` schema. Extra planner fields are removed
 from the normalized plan while the untouched raw response remains in the
 candidate ledger for auditing.
+
+DPO construction supports `--num-shards` and `--shard-index`. Every candidate
+and evaluation record is keyed by the current planner/executor/reviewer models,
+source checkpoint, template pool, X-sim file, prompts, schemas, and construction
+workflow. Therefore, a refined prompt or schema cannot silently reuse an old
+evaluation. `flux-export-trajectory-dpo` aggregates compatible root and sharded
+ledgers and excludes rows from stale contexts.
+
+`flux-train-trajectory-dpo` continues training the selected template-structure
+SFT LoRA checkpoint with TRL DPO. The training prompt is rendered with the same
+one-user-message chat template and `enable_thinking=false` setting used by the
+vLLM planner. Chosen and rejected completions contain only canonical trajectory
+JSON. The initial SFT adapter is the DPO reference policy; DPO directly improves
+trajectory planning and does not train on executor artifacts or final labels.
+Training aborts instead of silently truncating a preference example that exceeds
+`training.trajectory_dpo.max_length`.
 
 Final-test runs are guarded by `flux-freeze`:
 

@@ -362,7 +362,6 @@ def _run_final_review_replay_job(
             client,
             config,
             case,
-            abstract_plan=abstract_plan,
             artifacts=artifacts,
             remaining=[],
             selected_templates=selected_templates,

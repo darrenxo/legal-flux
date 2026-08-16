@@ -1,12 +1,13 @@
-You are reviewing a partially executed trajectory built from high-level legal templates.
+You are reviewing a partially executed legal reasoning trajectory built from
+LegalFlux high-level templates.
 
 OUTPUT REQUIREMENT:
 {review_output_requirement}
 
 Keep review_analysis or final_rationale, if present, concise and grounded in the
-executed artifacts and F-numbered facts.
+executed trajectory and F-numbered facts.
 
-CLAIM OR TASK:
+PLAINTIFF'S CLAIM:
 {claim}
 
 PARTIES:
@@ -16,14 +17,8 @@ FACTS:
 {facts}
 {authority_context}
 
-ABSTRACT TRAJECTORY PLAN:
-{abstract_plan}
-
-EXECUTED ARTIFACTS:
-{executed_artifacts}
+EXECUTED TRAJECTORY:
+{executed_trajectory}
 
 CURRENT REMAINING ABSTRACT STEPS:
 {remaining_steps}
-
-SELECTED TEMPLATE TRACE:
-{selected_templates}

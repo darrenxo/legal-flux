@@ -10,7 +10,7 @@
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus-per-task=1
 #SBATCH --gpu-bind=closest
-#SBATCH --time=48:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=/projects/bfua/ychen129/legal_nlp/logs/legalflux-dev-%A_%a.out
 #SBATCH --error=/projects/bfua/ychen129/legal_nlp/logs/legalflux-dev-%A_%a.err
 #SBATCH --export=ALL
@@ -30,9 +30,15 @@ source scripts/cluster/vllm_server.sh
 
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
-export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
+BASE_MODEL="${LEGAL_FLUX_BASE_MODEL:-Qwen/Qwen3.5-9B}"
+export LEGAL_FLUX_MODEL_NAME="$BASE_MODEL"
 export LEGAL_FLUX_MODEL_CONCURRENCY="${LEGAL_FLUX_MODEL_CONCURRENCY:-4}"
 export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
+# A no-training run must not inherit adapter role names from the submit shell.
+export LEGAL_FLUX_PLANNER_MODEL="$BASE_MODEL"
+export LEGAL_FLUX_EXECUTOR_MODEL="$BASE_MODEL"
+export LEGAL_FLUX_REVIEWER_MODEL="$BASE_MODEL"
+unset LEGAL_FLUX_SOURCE_CHECKPOINT
 NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
 RUN_TAG="${LEGAL_FLUX_RUN_TAG:-}"
 CASE_LIMIT="${LEGAL_FLUX_CASE_LIMIT:-}"
@@ -82,7 +88,7 @@ PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 16 + SLURM_ARRAY_TASK_ID) % 30000))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
 VLLM_LOG="${LEGAL_FLUX_PROJECT_ROOT}/logs/vllm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log"
 
-legal_flux_start_vllm "$PORT" "$VLLM_LOG"
+legal_flux_start_vllm "$PORT" "$VLLM_LOG" --enforce-eager
 SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"

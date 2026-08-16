@@ -211,6 +211,13 @@ def run_legal_flux_generation(
                 "phase": normalized_phase,
                 "model_digest": digest,
                 "model_digests": model_digests,
+                "inference_runtime": config["model"].get("inference_runtime"),
+                "inference_runtime_version": config["model"].get(
+                    "inference_runtime_version"
+                ),
+                "chat_template_kwargs": (
+                    config["model"].get("extra_body") or {}
+                ).get("chat_template_kwargs", {}),
                 "workflow_hash": workflow_hash,
                 "template_pool_hash": template_hash,
                 "num_shards": num_shards,
@@ -383,6 +390,13 @@ def _run_flux_job(
         "phase": phase,
         "prompt_hash": _condition_prompt_hash(config, case, condition, templates),
         "model_name": config["model"]["name"],
+        "inference_runtime": config["model"].get("inference_runtime"),
+        "inference_runtime_version": config["model"].get(
+            "inference_runtime_version"
+        ),
+        "chat_template_kwargs": (config["model"].get("extra_body") or {}).get(
+            "chat_template_kwargs", {}
+        ),
         "role_models": {
             role: _role_model(config, role)
             for role in ("planner", "executor", "reviewer")
@@ -605,7 +619,6 @@ def _execute_rf_style_case(
         "legal_flux/rf_plan",
         case,
         max_steps=max_steps,
-        template_tag_examples=_template_tag_examples(config, templates),
     )
     response = client.generate(
         prompt=plan_prompt,
@@ -673,7 +686,6 @@ def _execute_rf_style_case(
             client,
             config,
             case,
-            abstract_plan=abstract_plan,
             artifacts=artifacts,
             remaining=remaining,
             selected_templates=selected_templates,
@@ -707,7 +719,6 @@ def _execute_rf_style_case(
             client,
             config,
             case,
-            abstract_plan=abstract_plan,
             artifacts=artifacts,
             remaining=[],
             selected_templates=selected_templates,
@@ -784,7 +795,6 @@ def _review_rf_trajectory(
     config: dict[str, Any],
     case: NormalizedCase,
     *,
-    abstract_plan: LegalFluxAbstractPlan,
     artifacts: list[LegalFluxStepArtifact],
     remaining: list[LegalFluxAbstractStep],
     selected_templates: list[dict[str, Any]],
@@ -797,10 +807,11 @@ def _review_rf_trajectory(
         config,
         "legal_flux/rf_review",
         case,
-        abstract_plan=abstract_plan.model_dump(mode="json"),
-        executed_artifacts=[artifact.model_dump(mode="json") for artifact in artifacts],
+        executed_trajectory=_active_executed_trajectory(
+            artifacts,
+            selected_templates,
+        ),
         remaining_steps=[step.model_dump(mode="json") for step in remaining],
-        selected_templates=selected_templates,
         max_steps=max_steps,
         review_output_requirement=(
             "No remaining abstract steps are available. Return only "
@@ -812,7 +823,7 @@ def _review_rf_trajectory(
             "final_rationale."
             if force_final_answer
             else (
-                "Use the executed artifacts and supplied facts to decide whether "
+                "Use the executed trajectory and supplied facts to decide whether "
                 "to continue with the existing plan, revise the remaining abstract "
                 "steps, or return the final decision.\n\n"
                 "First provide a concise review_analysis, then set decision to "
@@ -827,7 +838,7 @@ def _review_rf_trajectory(
                 "step_description, and template_tags for template retrieval. Return "
                 "at least 1 and at most "
                 f"{remaining_step_limit} revised_remaining_steps.\n\n"
-                "final_answer means that the artifacts executed so far are already "
+                "final_answer means that the executed trajectory so far is already "
                 "sufficient to reach a decision, or that the configured limit of "
                 f"{max_steps} executed steps has been reached. If decision is "
                 "final_answer, also output final_rationale and final_decision. "
@@ -879,6 +890,46 @@ def _review_rf_trajectory(
     return review, trace
 
 
+def _active_executed_trajectory(
+    artifacts: list[LegalFluxStepArtifact],
+    selected_templates: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    if len(artifacts) != len(selected_templates):
+        raise ValueError(
+            "Executed artifact and selected-template trace counts do not match."
+        )
+    executed: list[dict[str, str]] = []
+    for artifact, selected in zip(artifacts, selected_templates, strict=True):
+        step_id = str(selected.get("step_id") or "")
+        template_id = str(selected.get("template_id") or "")
+        step_name = str(selected.get("step_name") or "")
+        template_name = str(selected.get("template_name") or "")
+        if step_id != artifact.step_id:
+            raise ValueError(
+                "Executed artifact and selected template have different step IDs: "
+                f"{artifact.step_id!r} != {step_id!r}."
+            )
+        if template_id != artifact.template_id:
+            raise ValueError(
+                "Executed artifact and selected template have different template IDs: "
+                f"{artifact.template_id!r} != {template_id!r}."
+            )
+        if not step_name or not template_name:
+            raise ValueError(
+                "Selected-template trace must include step_name and template_name."
+            )
+        executed.append(
+            {
+                "step_id": artifact.step_id,
+                "step_name": step_name,
+                "template_id": artifact.template_id,
+                "template_name": template_name,
+                "instantiated_result": artifact.instantiated_result,
+            }
+        )
+    return executed
+
+
 def _abstract_step_to_plan_step(
     step: LegalFluxAbstractStep,
     template: LegalFluxTemplate,
@@ -926,7 +977,6 @@ def _condition_prompt_hash(
         ),
         "template_pool_hash": template_pool_hash(templates),
         "max_steps": config["legal_flux"].get("max_steps", 4),
-        "rf_tag_example_limit": config["legal_flux"].get("rf_tag_example_limit", 36),
         "include_authority_input": config["legal_flux"].get("include_authority_input", False),
         "rf_retrieval_backend": config["legal_flux"].get(
             "rf_retrieval_backend", "ollama_embedding"
@@ -952,38 +1002,6 @@ def _native_case_input_payload(
         payload["authorities"] = case.authorities
         payload["relevant_cases"] = case.metadata.get("relevant_cases")
     return payload
-
-
-def _template_tag_examples(
-    config: dict[str, Any],
-    templates: list[LegalFluxTemplate],
-) -> str:
-    limit = int(config["legal_flux"].get("rf_tag_example_limit", 36))
-    if limit <= 0:
-        return "No tag examples supplied."
-    tags: list[str] = []
-    seen_tags: set[str] = set()
-    for template in templates:
-        for tag in template.knowledge_tags:
-            normalized = str(tag).strip()
-            if normalized and normalized not in seen_tags:
-                seen_tags.add(normalized)
-                tags.append(normalized)
-            if len(tags) >= limit:
-                break
-        if len(tags) >= limit:
-            break
-    names = [
-        template.template_name
-        for template in templates[: min(12, len(templates))]
-        if template.template_name
-    ]
-    return (
-        "Use snake_case template_tags that resemble available pool tags. Examples: "
-        + ", ".join(tags)
-        + "\nExample template names for step_name style: "
-        + "; ".join(names)
-    )
 
 
 def _normalize_abstract_plan_payload(
