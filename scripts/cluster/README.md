@@ -162,12 +162,16 @@ request to it while retaining the base model for the executor-schema request.
 Submit the full grid only after the canary completes successfully:
 
 ```bash
+export LEGAL_FLUX_SFT_GRID_RUN_TAG_PREFIX=refined-vllm021-sft-grid-v2-
 sbatch scripts/cluster/run_sft_full_grid.slurm
 ```
 
 This is one 72-task array: 3 learning rates x 3 epochs x 8 data shards, with at
-most four GPU tasks running concurrently. After every array task completes,
-score all nine configurations and build the checkpoint ranking:
+most four GPU tasks running concurrently. Use a new run-tag prefix whenever
+prompts, schemas, templates, retrieval, models, or inference settings change so
+that results are not mixed with a previous grid. After every array task
+completes, score all nine configurations and build the checkpoint ranking with
+the same exported prefix:
 
 ```bash
 bash scripts/cluster/score_sft_full_grid.sh

@@ -52,6 +52,7 @@ if [[ -z "$CHECKPOINT" ]]; then
   echo "Epoch ${EPOCH} checkpoint not found under ${TRAIN_DIR}." >&2
   exit 1
 fi
+CHECKPOINT="$(readlink -f "$CHECKPOINT")"
 SERVING_CHECKPOINT="${CHECKPOINT}/vllm_text_only"
 if [[ ! -f "${SERVING_CHECKPOINT}/adapter_config.json" ]] || \
    [[ ! -f "${SERVING_CHECKPOINT}/adapter_model.safetensors" ]]; then
@@ -60,7 +61,12 @@ if [[ ! -f "${SERVING_CHECKPOINT}/adapter_config.json" ]] || \
   exit 1
 fi
 
-RUN_TAG="sft-full-lr-${LR}-e${EPOCH}"
+RUN_TAG_PREFIX="${LEGAL_FLUX_SFT_GRID_RUN_TAG_PREFIX:-sft-full-}"
+RUN_TAG="${RUN_TAG_PREFIX}lr-${LR}-e${EPOCH}"
+if [[ ! "$RUN_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+  echo "Invalid SFT grid run tag: ${RUN_TAG}" >&2
+  exit 1
+fi
 ADAPTER_NAME="legalflux-${RUN_TAG}"
 export OPENAI_API_KEY="${OPENAI_API_KEY:-EMPTY}"
 export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
@@ -69,6 +75,7 @@ export LEGAL_FLUX_RETRIEVAL_DEVICE="${LEGAL_FLUX_RETRIEVAL_DEVICE:-cpu}"
 export LEGAL_FLUX_PLANNER_MODEL="$ADAPTER_NAME"
 export LEGAL_FLUX_REVIEWER_MODEL="$ADAPTER_NAME"
 export LEGAL_FLUX_EXECUTOR_MODEL="$LEGAL_FLUX_MODEL_NAME"
+export LEGAL_FLUX_SOURCE_CHECKPOINT="$CHECKPOINT"
 
 PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 128 + SLURM_ARRAY_TASK_ID) % 30000))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
