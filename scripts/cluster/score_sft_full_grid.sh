@@ -16,7 +16,8 @@ if [[ ! "${RUN_TAG_PREFIX}lr-5e-5-e2" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
   exit 1
 fi
 
-module reset
+# Avoid reloading Delta's currently inconsistent default MPI module stack.
+module --force purge
 source "${WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 cd "$REPO"
 

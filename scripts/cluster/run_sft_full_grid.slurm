@@ -23,7 +23,8 @@ export LEGAL_FLUX_ROOT="${LEGAL_FLUX_ROOT:-${LEGAL_FLUX_PROJECT_ROOT}/repo}"
 export HF_HOME="${HF_HOME:-${LEGAL_FLUX_WORK_ROOT}/cache/huggingface}"
 export TOKENIZERS_PARALLELISM=false
 cd "$LEGAL_FLUX_ROOT"
-module reset
+# Avoid reloading Delta's currently inconsistent default MPI module stack.
+module --force purge
 source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
