@@ -65,7 +65,7 @@ legal_flux_start_vllm() {
     "${container_env[@]}" \
     "$container" \
     /bin/bash -c \
-      'export LD_LIBRARY_PATH="/usr/local/cuda/compat:${LD_LIBRARY_PATH:-}"; exec vllm serve "$@"' \
+      'exec vllm serve "$@"' \
     legalflux-vllm \
     "$LEGAL_FLUX_MODEL_NAME" \
     --host 127.0.0.1 \

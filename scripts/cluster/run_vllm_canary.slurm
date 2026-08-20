@@ -22,7 +22,8 @@ export LEGAL_FLUX_ROOT="${LEGAL_FLUX_ROOT:-${LEGAL_FLUX_PROJECT_ROOT}/repo}"
 export HF_HOME="${HF_HOME:-${LEGAL_FLUX_WORK_ROOT}/cache/huggingface}"
 export LEGAL_FLUX_MODEL_NAME="${LEGAL_FLUX_MODEL_NAME:-Qwen/Qwen3.5-9B}"
 cd "$LEGAL_FLUX_ROOT"
-module reset
+# Avoid reloading Delta's currently inconsistent default MPI module stack.
+module --force purge
 
 source scripts/cluster/vllm_server.sh
 PORT=$((20000 + SLURM_JOB_ID % 30000))
