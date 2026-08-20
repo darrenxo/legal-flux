@@ -1,0 +1,15 @@
+extends: legal_benchmarks.yaml
+
+model:
+  provider: openai_compatible
+  inference_runtime: vllm
+  inference_runtime_version: 0.21.0
+  runtime_variant: vllm-bfloat16
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: OPENAI_API_KEY
+  name: Qwen/Qwen3.5-9B
+  concurrency: 4
+  timeout_seconds: 900
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false

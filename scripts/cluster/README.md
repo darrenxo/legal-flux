@@ -12,6 +12,98 @@ This workflow uses:
 Each array task requests one A40 GPU, 16 CPU cores, and 64 GB RAM. These
 settings follow the NCSA Delta one-GPU batch pattern.
 
+## Cross-dataset direct and structured benchmark
+
+Prepare the three benchmark datasets locally first. AnnoCaseLaw and
+Realistic_LJP_Facts download without authentication. IL-TUR requires that the
+Hugging Face account associated with `HF_TOKEN` has accepted the dataset gate:
+
+```powershell
+cd "C:\Users\Darrenxo\OneDrive\桌面\RA\Legal_agri\legal_flux"
+$env:PYTHONUTF8 = "1"
+.\.venv-codex\Scripts\python.exe -m huggingface_hub.cli.hf auth login
+.\.venv-codex\Scripts\python.exe -m legal_pilot `
+  --config configs\legal_benchmarks.yaml benchmark-prepare `
+  --datasets annocaselaw realistic_ljp_facts il_tur_cjpe
+```
+
+The preparer accepts either the cached `hf auth login` credential or an
+`HF_TOKEN`/`HUGGING_FACE_HUB_TOKEN` environment variable and never writes the
+token into benchmark outputs.
+
+The relative `python.exe` path above requires the repository root as the
+current folder. Calling the CLI as a Python module deliberately avoids stale
+Windows console launchers after a virtual environment is moved. Authentication
+is stored in the user's Hugging Face cache, so an absolute path to this Python
+executable can be invoked from any folder.
+
+Copy only the prepared evaluation artifacts to Delta; the 140 MB raw source
+CSV and source repositories are not needed by the GPU jobs:
+
+```powershell
+ssh ychen129@login.delta.ncsa.illinois.edu "mkdir -p /work/hdd/bfua/ychen129/legal_nlp/data/processed/legal_benchmarks"
+scp -r ".\data\processed\legal_benchmarks\*" `
+  ychen129@login.delta.ncsa.illinois.edu:/work/hdd/bfua/ychen129/legal_nlp/data/processed/legal_benchmarks/
+```
+
+Alternatively, after all three datasets are prepared, run the checked upload
+wrapper from any local folder. It verifies that every prepared dataset is
+present before opening the SSH/SCP authentication prompts:
+
+```powershell
+& "C:\Users\Darrenxo\OneDrive\桌面\RA\Legal_agri\legal_flux\scripts\cluster\upload_legal_benchmarks.ps1"
+```
+
+Submit the default pilot comparison on full-precision BF16 Qwen3.5-9B:
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+export LEGAL_BENCHMARK_SUBSET=pilot
+export LEGAL_BENCHMARK_RUN_TAG=delta-bf16-pilot-v1
+export LEGAL_BENCHMARK_NUM_SHARDS=16
+export LEGAL_BENCHMARK_MAX_PARALLEL_SHARDS=4
+# The default is the two currently accessible datasets.
+export LEGAL_BENCHMARK_DATASETS="annocaselaw realistic_ljp_facts"
+bash scripts/cluster/submit_legal_benchmarks.sh
+```
+
+After accepting the IL-TUR gate and rerunning `benchmark-prepare`, include all
+three datasets under a new run tag:
+
+```bash
+export LEGAL_BENCHMARK_RUN_TAG=delta-bf16-three-dataset-pilot-v1
+export LEGAL_BENCHMARK_DATASETS="annocaselaw realistic_ljp_facts il_tur_cjpe"
+bash scripts/cluster/submit_legal_benchmarks.sh
+```
+
+For the full comparison, the dedicated wrapper selects all 394 AnnoCaseLaw
+cases, the 1,509-case Realistic_LJP_Facts test split, and IL-TUR CJPE's
+1,517-case official test file. This is 3,420 cases and 6,840 paired-condition
+generation jobs:
+
+```bash
+cd /projects/bfua/$USER/legal_nlp/repo
+bash scripts/cluster/submit_legal_benchmarks_full.sh
+```
+
+Override `LEGAL_BENCHMARK_RUN_TAG`, `LEGAL_BENCHMARK_DATASETS`, shard count, or
+maximum parallel shards before invoking the wrapper when a different isolated
+run is needed.
+
+After all array tasks finish, score the paired direct/structured predictions:
+
+```bash
+source /work/hdd/bfua/$USER/legal_nlp/envs/legalflux-eval-v3/bin/activate
+export LEGAL_FLUX_ROOT=/projects/bfua/$USER/legal_nlp/repo
+export LEGAL_BENCHMARK_WORK_ROOT=/work/hdd/bfua/$USER/legal_nlp
+python -m legal_pilot --config configs/legal_benchmarks.cluster.yaml \
+  benchmark-score --subset pilot --run-tag delta-bf16-pilot-v1
+```
+
+The local config records Ollama's Q4_K_M runtime separately from the Delta
+vLLM BF16 runtime. Use a new run tag for every runtime and subset so the two
+sets of ledgers cannot be mixed.
+
 ## 1. Push the local repository
 
 From Windows:

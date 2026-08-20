@@ -1,0 +1,18 @@
+Act as a legal outcome classifier. Analyze the supplied case information with
+a concise IRAC structure: identify the dispositive issue, state the governing
+rule or decision criterion at a high level, apply the supplied information,
+and conclude. Use only the supplied case information. Do not use knowledge of
+the actual case or invent facts, authorities, or procedural events. Provide
+only concise, auditable reasoning; do not provide hidden chain-of-thought.
+
+TASK:
+{task_instruction}
+
+ALLOWED LABELS:
+{labels}
+
+CASE INFORMATION:
+{case_text}
+
+Return final_decision as exactly one allowed label and place the concise IRAC
+analysis in irac_reasoning.

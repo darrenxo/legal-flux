@@ -170,6 +170,45 @@ def build_parser() -> argparse.ArgumentParser:
     gemini_templates.add_argument("--limit", type=int, default=None)
     gemini_templates.add_argument("--force", action="store_true")
     gemini_templates.add_argument("--dry-run", action="store_true")
+
+    benchmark_prepare = subparsers.add_parser("benchmark-prepare")
+    benchmark_prepare.add_argument(
+        "--datasets",
+        nargs="+",
+        choices=["annocaselaw", "realistic_ljp_facts", "il_tur_cjpe"],
+        default=None,
+    )
+    benchmark_generate = subparsers.add_parser("benchmark-generate")
+    benchmark_generate.add_argument(
+        "--datasets",
+        nargs="+",
+        choices=["annocaselaw", "realistic_ljp_facts", "il_tur_cjpe"],
+        default=None,
+    )
+    benchmark_generate.add_argument(
+        "--subset",
+        choices=["pilot", "full"],
+        default="pilot",
+    )
+    benchmark_generate.add_argument(
+        "--conditions",
+        nargs="+",
+        choices=["direct", "structured"],
+        default=None,
+    )
+    benchmark_generate.add_argument("--run-tag", required=True)
+    benchmark_generate.add_argument("--case-limit", type=int, default=None)
+    benchmark_generate.add_argument("--num-shards", type=int, default=1)
+    benchmark_generate.add_argument("--shard-index", type=int, default=0)
+    benchmark_generate.add_argument("--dry-run", action="store_true")
+    benchmark_generate.add_argument("--fail-on-errors", action="store_true")
+    benchmark_score = subparsers.add_parser("benchmark-score")
+    benchmark_score.add_argument(
+        "--subset",
+        choices=["pilot", "full"],
+        default="pilot",
+    )
+    benchmark_score.add_argument("--run-tag", required=True)
     return parser
 
 
@@ -336,6 +375,33 @@ def main(argv: list[str] | None = None) -> int:
             limit=args.limit,
             force=args.force,
             dry_run=args.dry_run,
+        )
+    elif args.command == "benchmark-prepare":
+        from .legal_benchmark_data import prepare_legal_benchmarks
+
+        result = prepare_legal_benchmarks(config, datasets=args.datasets)
+    elif args.command == "benchmark-generate":
+        from .legal_benchmark_runner import generate_legal_benchmarks
+
+        result = generate_legal_benchmarks(
+            config,
+            datasets=args.datasets,
+            subset=args.subset,
+            conditions=args.conditions,
+            run_tag=args.run_tag,
+            case_limit=args.case_limit,
+            num_shards=args.num_shards,
+            shard_index=args.shard_index,
+            dry_run=args.dry_run,
+            fail_on_errors=args.fail_on_errors,
+        )
+    elif args.command == "benchmark-score":
+        from .legal_benchmark_runner import score_legal_benchmarks
+
+        result = score_legal_benchmarks(
+            config,
+            subset=args.subset,
+            run_tag=args.run_tag,
         )
     else:
         raise AssertionError(args.command)
