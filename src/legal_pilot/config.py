@@ -110,6 +110,19 @@ def _apply_runtime_environment(config: dict[str, Any]) -> None:
             / "training"
             / "trajectory_dpo"
         )
+    benchmark_work_root = os.environ.get("LEGAL_BENCHMARK_WORK_ROOT") or work_root
+    if benchmark_work_root and config.get("benchmarks"):
+        benchmark_path = Path(benchmark_work_root).expanduser()
+        config.setdefault("benchmarks", {}).setdefault("paths", {}).update(
+            {
+                "processed_dir": str(
+                    benchmark_path / "data" / "processed" / "legal_benchmarks"
+                ),
+                "runs_dir": str(
+                    benchmark_path / "runs" / "legal_benchmarks"
+                ),
+            }
+        )
     model = config.setdefault("model", {})
     if os.environ.get("LEGAL_FLUX_MODEL_BASE_URL"):
         model["base_url"] = os.environ["LEGAL_FLUX_MODEL_BASE_URL"]

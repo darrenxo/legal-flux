@@ -1,0 +1,30 @@
+extends: legal_flux.yaml
+
+model:
+  runtime_variant: ollama-q4_k_m
+
+benchmarks:
+  max_input_characters: 48000
+  input_truncation: head
+  direct_max_tokens: 400
+  structured_max_tokens: 1000
+  conditions:
+    - direct
+    - structured
+  paths:
+    raw_dir: data/raw/benchmarks
+    processed_dir: data/processed/legal_benchmarks
+    runs_dir: runs/legal_benchmarks
+  datasets:
+    annocaselaw:
+      pilot_split: all
+      pilot_size: all
+      full_split: all
+    realistic_ljp_facts:
+      pilot_split: dev
+      pilot_size: 500
+      full_split: test
+    il_tur_cjpe:
+      pilot_split: multi_dev
+      pilot_size: 300
+      full_split: test

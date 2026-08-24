@@ -1,0 +1,16 @@
+Act as a legal outcome classifier. Predict the result directly from only the
+supplied case information. Do not use knowledge of the actual case or invent
+facts, authorities, or procedural events. Give a short, auditable rationale;
+do not provide hidden chain-of-thought.
+
+TASK:
+{task_instruction}
+
+ALLOWED LABELS:
+{labels}
+
+CASE INFORMATION:
+{case_text}
+
+Return final_decision as exactly one allowed label and include a concise
+final_rationale.
