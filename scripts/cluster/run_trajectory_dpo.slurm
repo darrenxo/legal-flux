@@ -31,8 +31,9 @@ if [[ -d "$OUTPUT_DIR" ]] && find "$OUTPUT_DIR" -mindepth 1 -print -quit | grep 
 fi
 
 cd "$LEGAL_FLUX_ROOT"
-module reset
-module load pytorch-conda/2.8
+# The project training environment already provides PyTorch and CUDA support;
+# avoid Delta's currently inconsistent default MPI module stack.
+module --force purge
 source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-train-v2/bin/activate"
 mkdir -p "$HF_HOME" "$OUTPUT_DIR"
 

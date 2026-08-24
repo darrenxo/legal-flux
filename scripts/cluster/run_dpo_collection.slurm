@@ -40,7 +40,8 @@ if [[ ! -f "${SERVING_CHECKPOINT}/adapter_config.json" ]] || \
 fi
 
 cd "$LEGAL_FLUX_ROOT"
-module reset
+# Avoid reloading Delta's currently inconsistent default MPI module stack.
+module --force purge
 source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_PROJECT_ROOT}/logs"

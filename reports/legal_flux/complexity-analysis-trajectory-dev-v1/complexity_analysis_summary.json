@@ -1,0 +1,7 @@
+{
+  "paired_cases": 2755,
+  "valid_fact_cases": 2755,
+  "valid_issue_cases": 2690,
+  "valid_gold_length_cases": 2755,
+  "output_dir": "reports\\legal_flux\\complexity-analysis-trajectory-dev-v1"
+}

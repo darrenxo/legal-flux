@@ -105,6 +105,9 @@ def build_paired_frame(args: argparse.Namespace) -> pd.DataFrame:
                 "sft_prediction": sft_row["prediction"],
                 "fact_count": len(case.get("facts") or {}),
                 "issue_count": len(issues) if issues else pd.NA,
+                "court_reasoning_words": (
+                    word_count(reasoning) if reasoning else pd.NA
+                ),
                 "gold_reasoning_judgment_words": (
                     word_count(combined_gold) if combined_gold else pd.NA
                 ),
@@ -135,29 +138,29 @@ def weighted_f1(gold: pd.Series, prediction: pd.Series) -> float:
     return weighted_sum / total if total else 0.0
 
 
-def interval_labels(values: pd.Series, *, unit: str) -> pd.Series:
-    categories = pd.qcut(values, q=4, duplicates="drop")
-    category_order = list(categories.cat.categories)
-    labels: dict[Any, str] = {}
-    for position, interval in enumerate(category_order, start=1):
-        selected = values[categories == interval]
-        lower = int(selected.min())
-        upper = int(selected.max())
-        span = str(lower) if lower == upper else f"{lower}–{upper}"
-        labels[interval] = f"Q{position}: {span} {unit}"
-    return categories.map(labels).astype(str)
-
-
 def issue_labels(values: pd.Series) -> pd.Series:
     numeric = values.astype(int)
     return numeric.map(lambda value: str(value) if value <= 3 else "4+")
 
 
-def quartile_order(labels: pd.Series) -> list[str]:
-    return sorted(
-        set(labels),
-        key=lambda label: int(str(label).split(":", maxsplit=1)[0][1:]),
-    )
+def fact_labels(values: pd.Series) -> pd.Series:
+    return pd.cut(
+        values,
+        bins=[1, 5, 10, 15, float("inf")],
+        labels=["2–5", "6–10", "11–15", "16+"],
+        include_lowest=True,
+        right=True,
+    ).astype(str)
+
+
+def gold_length_labels(values: pd.Series) -> pd.Series:
+    return pd.cut(
+        values,
+        bins=[11, 100, 200, 300, float("inf")],
+        labels=["12–100", "101–200", "201–300", "301+"],
+        include_lowest=True,
+        right=True,
+    ).astype(str)
 
 
 def summarize_bins(
@@ -214,24 +217,90 @@ def markdown_table(frame: pd.DataFrame) -> list[str]:
     return lines
 
 
+def draw_accuracy_chart(
+    frame: pd.DataFrame,
+    *,
+    title: str,
+    output_path: Path,
+) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    positions = np.arange(len(frame))
+    width = 0.34
+    direct = frame["direct_accuracy"].to_numpy() * 100
+    sft = frame["sft_legalflux_accuracy"].to_numpy() * 100
+    labels = [f"{row.bin}\n(n={row.n:,})" for row in frame.itertuples(index=False)]
+
+    plt.rcParams.update(
+        {
+            "font.family": "DejaVu Sans",
+            "font.size": 11,
+            "axes.titlesize": 16,
+            "axes.labelsize": 12,
+        }
+    )
+    figure, axis = plt.subplots(figsize=(10, 5.6), dpi=180)
+    direct_bars = axis.bar(
+        positions - width / 2,
+        direct,
+        width,
+        label="Direct",
+        color="#4472C4",
+    )
+    sft_bars = axis.bar(
+        positions + width / 2,
+        sft,
+        width,
+        label="SFT LegalFlux",
+        color="#ED7D31",
+    )
+    axis.set_title(title, pad=14, weight="bold")
+    axis.set_ylabel("Accuracy (%)")
+    axis.set_xticks(positions, labels)
+    axis.set_ylim(0, 100)
+    axis.set_yticks(range(0, 101, 20))
+    axis.grid(axis="y", alpha=0.25, linewidth=0.8)
+    axis.set_axisbelow(True)
+    axis.spines["top"].set_visible(False)
+    axis.spines["right"].set_visible(False)
+    axis.legend(frameon=False, ncol=2, loc="upper center")
+    axis.bar_label(direct_bars, labels=[f"{value:.1f}%" for value in direct], padding=3)
+    axis.bar_label(sft_bars, labels=[f"{value:.1f}%" for value in sft], padding=3)
+    figure.tight_layout()
+    figure.savefig(output_path, bbox_inches="tight", facecolor="white")
+    plt.close(figure)
+
+
 def main() -> None:
     args = parse_args()
     frame = build_paired_frame(args)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     facts = frame[frame["fact_count"].notna()].copy()
-    facts["complexity_bin"] = interval_labels(facts["fact_count"], unit="facts")
-    fact_order = quartile_order(facts["complexity_bin"])
+    facts["complexity_bin"] = fact_labels(facts["fact_count"])
+    fact_order = [
+        label
+        for label in ("2–5", "6–10", "11–15", "16+")
+        if label in set(facts["complexity_bin"])
+    ]
 
     issues = frame[frame["issue_count"].notna()].copy()
     issues["complexity_bin"] = issue_labels(issues["issue_count"])
     issue_order = [label for label in ("1", "2", "3", "4+") if label in set(issues["complexity_bin"])]
 
     gold_length = frame[frame["gold_reasoning_judgment_words"].notna()].copy()
-    gold_length["complexity_bin"] = interval_labels(
-        gold_length["gold_reasoning_judgment_words"], unit="words"
+    gold_length["complexity_bin"] = gold_length_labels(
+        gold_length["gold_reasoning_judgment_words"]
     )
-    length_order = quartile_order(gold_length["complexity_bin"])
+    gold_length_order = [
+        label
+        for label in ("12–100", "101–200", "201–300", "301+")
+        if label in set(gold_length["complexity_bin"])
+    ]
 
     tables = {
         "facts": summarize_bins(
@@ -250,7 +319,7 @@ def main() -> None:
             gold_length,
             feature="gold_reasoning_plus_judgment_words",
             bin_column="complexity_bin",
-            order=length_order,
+            order=gold_length_order,
         ),
     }
 
@@ -261,7 +330,13 @@ def main() -> None:
     markdown = [
         "# LegalHK trajectory-dev complexity analysis",
         "",
-        f"Paired cases: {len(frame):,}. Fact-count and gold-text-length bins are approximately equal-frequency quartiles. Issue-count bins are 1, 2, 3, and 4+. Cases missing a measure are excluded only from that measure.",
+        (
+            f"Paired cases: {len(frame):,}. Fact-count bins are 2–5, 6–10, "
+            "11–15, and 16+. Issue-count bins are 1, 2, 3, and 4+. "
+            "Court-reasoning-plus-judgment length uses fixed 12–100, 101–200, "
+            "201–300, and 301+ word bins. Cases missing a measure are excluded "
+            "only from that measure."
+        ),
     ]
     titles = {
         "facts": "Number of facts",
@@ -279,15 +354,32 @@ def main() -> None:
         "valid_fact_cases": len(facts),
         "valid_issue_cases": len(issues),
         "valid_gold_length_cases": len(gold_length),
+        "shortest_gold_reasoning_judgment_words": int(
+            gold_length["gold_reasoning_judgment_words"].min()
+        ),
+        "longest_gold_reasoning_judgment_words": int(
+            gold_length["gold_reasoning_judgment_words"].max()
+        ),
         "output_dir": str(args.output_dir),
     }
     (args.output_dir / "complexity_analysis_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(json.dumps(summary, ensure_ascii=False, indent=2))
-    print()
-    print((args.output_dir / "complexity_analysis.md").read_text(encoding="utf-8"))
+
+    chart_specs = {
+        "facts": "Accuracy by number of facts",
+        "issues": "Accuracy by number of issues",
+        "gold_length": "Accuracy by court-reasoning + judgment length",
+    }
+    for name, title in chart_specs.items():
+        draw_accuracy_chart(
+            tables[name],
+            title=title,
+            output_path=args.output_dir / f"accuracy_by_{name}.png",
+        )
+
+    print(json.dumps(summary, ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":
