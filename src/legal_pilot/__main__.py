@@ -340,7 +340,10 @@ def main(argv: list[str] | None = None) -> int:
             config,
             stage=args.stage,
             case_limit=args.case_limit,
+            num_shards=args.num_shards,
+            shard_index=args.shard_index,
             force=args.force,
+            fail_on_errors=args.fail_on_errors,
         )
     elif args.command == "flux-export-trajectory-dpo":
         from .legal_flux_training import export_trajectory_dpo

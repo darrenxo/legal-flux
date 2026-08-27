@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 from jsonschema import Draft202012Validator
 
-from legal_pilot.__main__ import build_parser
+from legal_pilot.__main__ import build_parser, main as cli_main
 from legal_pilot.adaptive_profiles import profile_row
 from legal_pilot.clients import ModelResponse
 from legal_pilot.config import load_config
@@ -2756,6 +2756,55 @@ def test_trajectory_dpo_training_preflight_validates_canonical_pairs(tmp_path: P
     assert settings["max_length"] == 6144
     assert trainer_rows[0]["prompt"].endswith("<assistant>")
     assert "planning_analysis" in trainer_rows[0]["chosen"]
+
+
+def test_dpo_cli_forwards_sharding_and_error_policy(monkeypatch, capsys):
+    config = {"test": "config"}
+    captured: dict[str, object] = {}
+
+    def fake_build_dpo_data(received_config, **kwargs):
+        captured["config"] = received_config
+        captured["kwargs"] = kwargs
+        return {"status": "ok"}
+
+    monkeypatch.setattr("legal_pilot.__main__.load_config", lambda _: config)
+    monkeypatch.setattr(
+        "legal_pilot.legal_flux_dpo.build_dpo_data",
+        fake_build_dpo_data,
+    )
+
+    assert (
+        cli_main(
+            [
+                "--config",
+                "ignored.yaml",
+                "flux-build-dpo-data",
+                "--stage",
+                "sample",
+                "--case-limit",
+                "10",
+                "--num-shards",
+                "8",
+                "--shard-index",
+                "3",
+                "--fail-on-errors",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+
+    assert captured == {
+        "config": config,
+        "kwargs": {
+            "stage": "sample",
+            "case_limit": 10,
+            "num_shards": 8,
+            "shard_index": 3,
+            "force": False,
+            "fail_on_errors": True,
+        },
+    }
 
 
 def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
