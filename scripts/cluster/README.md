@@ -440,6 +440,13 @@ sbatch --export=ALL,LEGAL_FLUX_DPO_SFT_CHECKPOINT="$LEGAL_FLUX_DPO_SFT_CHECKPOIN
   scripts/cluster/run_trajectory_dpo.slurm
 ```
 
+The DPO trainer loads the selected SFT checkpoint twice as PEFT adapters on one
+shared base model. The root-level `default` adapter is the trainable policy and
+the named `reference` adapter is a frozen copy of the same SFT checkpoint. The
+launcher verifies that the installed TRL exposes these adapter controls before
+training starts; `ref_model=None` therefore does not mean that bare base Qwen is
+used as the reference policy.
+
 The DPO checkpoint is trained only to prefer better planner trajectory JSON.
 Executor artifacts and final support/reject labels are reward evidence in the
 construction ledgers, not assistant targets in the DPO dataset.

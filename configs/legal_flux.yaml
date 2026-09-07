@@ -171,6 +171,10 @@ training:
     trust_remote_code: false
     attn_implementation: sdpa
     precompute_ref_log_probs: false
+    # Both adapters load the selected SFT checkpoint on one shared base model.
+    # Only `default` is optimized; `reference` remains the frozen SFT policy.
+    model_adapter_name: default
+    ref_adapter_name: reference
     chat_template_kwargs:
       enable_thinking: false
 

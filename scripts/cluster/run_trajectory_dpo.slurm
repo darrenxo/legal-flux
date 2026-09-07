@@ -37,6 +37,30 @@ module --force purge
 source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-train-v2/bin/activate"
 mkdir -p "$HF_HOME" "$OUTPUT_DIR"
 
+python - <<'PY'
+import inspect
+
+import peft
+import transformers
+import trl
+from trl import DPOConfig
+
+required = {"model_adapter_name", "ref_adapter_name"}
+available = set(inspect.signature(DPOConfig).parameters)
+missing = sorted(required - available)
+if missing:
+    raise RuntimeError(
+        "Installed TRL cannot represent the required frozen SFT reference "
+        f"adapter; missing DPOConfig fields: {missing}"
+    )
+print(
+    "DPO runtime:",
+    f"transformers={transformers.__version__}",
+    f"peft={peft.__version__}",
+    f"trl={trl.__version__}",
+)
+PY
+
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-train-trajectory-dpo \
   --dry-run \
