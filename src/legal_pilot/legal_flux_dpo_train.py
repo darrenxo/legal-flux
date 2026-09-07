@@ -18,7 +18,7 @@ from .models import LegalFluxAbstractPlan
 
 
 DPO_POLICY_ADAPTER_NAME = "default"
-DPO_REFERENCE_ADAPTER_NAME = "reference"
+DPO_REFERENCE_ADAPTER_NAME = "ref"
 
 
 def train_trajectory_dpo(
@@ -51,11 +51,11 @@ def train_trajectory_dpo(
         "dry_run": dry_run,
         "model_name_or_path": settings["model_name_or_path"],
         "reference_policy": (
-            "A frozen reference adapter loaded from the same selected SFT "
-            "checkpoint as the trainable policy adapter."
+            "TRL 0.29 copies the selected SFT `default` adapter to a frozen "
+            "`ref` adapter before DPO training starts."
         ),
-        "policy_adapter_name": settings["model_adapter_name"],
-        "reference_adapter_name": settings["ref_adapter_name"],
+        "policy_adapter_name": DPO_POLICY_ADAPTER_NAME,
+        "reference_adapter_name": DPO_REFERENCE_ADAPTER_NAME,
         "train_examples": data["train_examples"],
         "eval_examples": data["eval_examples"],
         "train_file": data["train_file"],
@@ -81,6 +81,7 @@ def train_trajectory_dpo(
         import trl
         from datasets import Dataset
         from peft import AutoPeftModelForCausalLM
+        from packaging.version import Version
         from transformers import AutoTokenizer
         from trl import DPOConfig, DPOTrainer
     except ImportError as exc:
@@ -90,6 +91,13 @@ def train_trajectory_dpo(
         ) from exc
     if not torch.cuda.is_available():
         raise RuntimeError("Trajectory DPO requires a CUDA GPU.")
+    trl_version = Version(trl.__version__)
+    if not Version("0.29") <= trl_version < Version("0.30"):
+        raise RuntimeError(
+            "Trajectory DPO requires TRL >=0.29,<0.30 so the trainer copies "
+            "the initial SFT adapter into its native frozen `ref` adapter; "
+            f"found TRL {trl.__version__}."
+        )
 
     use_bf16 = bool(settings["bf16"]) and torch.cuda.is_bf16_supported()
     use_fp16 = not use_bf16
@@ -141,13 +149,11 @@ def train_trajectory_dpo(
         component="TRL DPOConfig",
     )
     training_args = DPOConfig(**dpo_config_kwargs)
-    model = _load_dpo_policy_with_reference(
-        AutoPeftModelForCausalLM,
-        model_name_or_path=settings["model_name_or_path"],
-        model_kwargs=model_kwargs,
-        model_adapter_name=settings["model_adapter_name"],
-        ref_adapter_name=settings["ref_adapter_name"],
+    model = AutoPeftModelForCausalLM.from_pretrained(
+        settings["model_name_or_path"],
+        **model_kwargs,
     )
+    _validate_initial_sft_policy_adapter(model)
     trainer = DPOTrainer(
         model=model,
         ref_model=None,
@@ -156,6 +162,7 @@ def train_trajectory_dpo(
         eval_dataset=eval_dataset,
         processing_class=tokenizer,
     )
+    _validate_trl_created_reference_adapter(model)
     train_result = trainer.train(
         resume_from_checkpoint=resume_from_checkpoint or None
     )
@@ -281,16 +288,6 @@ def trajectory_dpo_settings(config: dict[str, Any]) -> dict[str, Any]:
             "training.trajectory_dpo.model_name_or_path must identify the selected "
             "template-structure SFT adapter checkpoint."
         )
-    model_adapter_name = str(
-        values.get("model_adapter_name", DPO_POLICY_ADAPTER_NAME)
-    ).strip()
-    ref_adapter_name = str(
-        values.get("ref_adapter_name", DPO_REFERENCE_ADAPTER_NAME)
-    ).strip()
-    if not model_adapter_name or not ref_adapter_name:
-        raise ValueError("DPO policy and reference adapter names must be nonempty.")
-    if model_adapter_name == ref_adapter_name:
-        raise ValueError("DPO policy and reference adapter names must differ.")
     return {
         "model_name_or_path": model_name,
         "output_dir": resolve_project_path(
@@ -331,8 +328,6 @@ def trajectory_dpo_settings(config: dict[str, Any]) -> dict[str, Any]:
         "precompute_ref_log_probs": bool(
             values.get("precompute_ref_log_probs", False)
         ),
-        "model_adapter_name": model_adapter_name,
-        "ref_adapter_name": ref_adapter_name,
         "chat_template_kwargs": dict(
             values.get("chat_template_kwargs", {"enable_thinking": False})
         ),
@@ -380,88 +375,82 @@ def _trajectory_dpo_config_kwargs(
         "dataset_num_proc": settings["dataset_num_proc"],
         "remove_unused_columns": True,
         "precompute_ref_log_probs": settings["precompute_ref_log_probs"],
-        "model_adapter_name": settings["model_adapter_name"],
-        "ref_adapter_name": settings["ref_adapter_name"],
+        "sync_ref_model": False,
     }
 
 
-def _load_dpo_policy_with_reference(
-    auto_peft_model_cls: Any,
-    *,
-    model_name_or_path: str,
-    model_kwargs: dict[str, Any],
-    model_adapter_name: str,
-    ref_adapter_name: str,
-) -> Any:
-    """Load one SFT checkpoint as trainable policy and frozen DPO reference."""
-    if not model_adapter_name or not ref_adapter_name:
-        raise ValueError("DPO policy and reference adapter names must be nonempty.")
-    if model_adapter_name == ref_adapter_name:
-        raise ValueError("DPO policy and reference adapter names must differ.")
-
-    model = auto_peft_model_cls.from_pretrained(
-        model_name_or_path,
-        **model_kwargs,
-    )
+def _validate_initial_sft_policy_adapter(model: Any) -> None:
+    """Require the original SFT adapter expected by TRL 0.29's copy path."""
     adapters = getattr(model, "peft_config", {})
-    if model_adapter_name not in adapters:
+    if DPO_POLICY_ADAPTER_NAME not in adapters:
         raise RuntimeError(
             "The selected SFT checkpoint did not load the expected policy adapter "
-            f"{model_adapter_name!r}; available adapters: {sorted(adapters)}."
+            f"{DPO_POLICY_ADAPTER_NAME!r}; available adapters: {sorted(adapters)}."
         )
-    if ref_adapter_name in adapters:
+    if DPO_REFERENCE_ADAPTER_NAME in adapters:
         raise RuntimeError(
-            f"Reference adapter name {ref_adapter_name!r} is already present in "
+            f"Reference adapter name {DPO_REFERENCE_ADAPTER_NAME!r} is already "
+            "present in "
             "the selected checkpoint. Use the original SFT checkpoint, not a DPO "
             "output checkpoint."
         )
-
-    model.load_adapter(
-        model_name_or_path,
-        adapter_name=ref_adapter_name,
-        is_trainable=False,
-    )
-    if ref_adapter_name not in getattr(model, "peft_config", {}):
-        raise RuntimeError("PEFT did not register the frozen DPO reference adapter.")
-
-    model.set_adapter(model_adapter_name)
-    if hasattr(model, "set_requires_grad"):
-        model.set_requires_grad(ref_adapter_name, requires_grad=False)
-        model.set_requires_grad(model_adapter_name, requires_grad=True)
-    _validate_dpo_adapter_trainability(
-        model,
-        model_adapter_name=model_adapter_name,
-        ref_adapter_name=ref_adapter_name,
-    )
-    return model
-
-
-def _validate_dpo_adapter_trainability(
-    model: Any,
-    *,
-    model_adapter_name: str,
-    ref_adapter_name: str,
-) -> None:
-    parameters = list(model.named_parameters())
     policy_parameters = [
         parameter
-        for name, parameter in parameters
-        if f".{model_adapter_name}." in name
+        for name, parameter in model.named_parameters()
+        if f".{DPO_POLICY_ADAPTER_NAME}." in name
     ]
-    reference_parameters = [
-        parameter
-        for name, parameter in parameters
-        if f".{ref_adapter_name}." in name
-    ]
-    if not policy_parameters or not reference_parameters:
-        raise RuntimeError(
-            "Could not identify both named PEFT adapters after loading the DPO "
-            "policy and reference."
-        )
+    if not policy_parameters:
+        raise RuntimeError("Could not identify the selected SFT policy parameters.")
     if not any(parameter.requires_grad for parameter in policy_parameters):
+        raise RuntimeError("The selected SFT policy adapter has no trainable parameters.")
+
+
+def _validate_trl_created_reference_adapter(model: Any) -> None:
+    """Verify TRL copied the initial policy into a separate frozen adapter."""
+    adapters = getattr(model, "peft_config", {})
+    required = {DPO_POLICY_ADAPTER_NAME, DPO_REFERENCE_ADAPTER_NAME}
+    if not required.issubset(adapters):
+        raise RuntimeError(
+            "TRL did not create both required DPO adapters; available adapters: "
+            f"{sorted(adapters)}."
+        )
+    parameters = dict(model.named_parameters())
+    policy_names = [
+        name
+        for name in parameters
+        if f".{DPO_POLICY_ADAPTER_NAME}." in name
+    ]
+    reference_names = [
+        name
+        for name in parameters
+        if f".{DPO_REFERENCE_ADAPTER_NAME}." in name
+    ]
+    if not policy_names or not reference_names:
+        raise RuntimeError(
+            "Could not identify both the policy and TRL-created reference "
+            "adapter parameters."
+        )
+    if not any(parameters[name].requires_grad for name in policy_names):
         raise RuntimeError("The DPO policy adapter has no trainable parameters.")
-    if any(parameter.requires_grad for parameter in reference_parameters):
+    if any(parameters[name].requires_grad for name in reference_names):
         raise RuntimeError("The DPO reference adapter must remain frozen.")
+    for policy_name in policy_names:
+        reference_name = policy_name.replace(
+            f".{DPO_POLICY_ADAPTER_NAME}.",
+            f".{DPO_REFERENCE_ADAPTER_NAME}.",
+        )
+        if reference_name not in parameters:
+            raise RuntimeError(
+                "TRL's DPO reference adapter is missing the counterpart of "
+                f"{policy_name}."
+            )
+        policy_value = parameters[policy_name].detach()
+        reference_value = parameters[reference_name].detach()
+        if not policy_value.equal(reference_value):
+            raise RuntimeError(
+                "TRL's DPO reference adapter was not initialized identically "
+                "to the selected SFT policy."
+            )
 
 
 def _validated_dpo_row(row: dict[str, Any]) -> dict[str, Any]:

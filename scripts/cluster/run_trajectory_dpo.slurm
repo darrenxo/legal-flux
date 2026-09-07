@@ -38,20 +38,16 @@ source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-train-v2/bin/activate"
 mkdir -p "$HF_HOME" "$OUTPUT_DIR"
 
 python - <<'PY'
-import inspect
-
 import peft
 import transformers
 import trl
-from trl import DPOConfig
+from packaging.version import Version
 
-required = {"model_adapter_name", "ref_adapter_name"}
-available = set(inspect.signature(DPOConfig).parameters)
-missing = sorted(required - available)
-if missing:
+version = Version(trl.__version__)
+if not Version("0.29") <= version < Version("0.30"):
     raise RuntimeError(
-        "Installed TRL cannot represent the required frozen SFT reference "
-        f"adapter; missing DPOConfig fields: {missing}"
+        "Trajectory DPO requires TRL >=0.29,<0.30 for its native frozen "
+        f"SFT-reference adapter behavior; found TRL {trl.__version__}."
     )
 print(
     "DPO runtime:",

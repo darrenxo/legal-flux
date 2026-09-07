@@ -32,8 +32,9 @@ from legal_pilot.legal_flux_dpo import _dpo_settings, build_dpo_data
 from legal_pilot.legal_flux_dpo_recovery import recover_dpo_candidates
 from legal_pilot.legal_flux_dpo_train import (
     _dpo_trainer_rows,
-    _load_dpo_policy_with_reference,
     _trajectory_dpo_config_kwargs,
+    _validate_initial_sft_policy_adapter,
+    _validate_trl_created_reference_adapter,
     prepare_trajectory_dpo_splits,
     train_trajectory_dpo,
     trajectory_dpo_settings,
@@ -3004,8 +3005,8 @@ def test_trajectory_dpo_training_preflight_validates_canonical_pairs(tmp_path: P
     assert split["eval_examples"] == 0
     assert preflight["model_name_or_path"] == "selected-sft-checkpoint"
     assert preflight["policy_adapter_name"] == "default"
-    assert preflight["reference_adapter_name"] == "reference"
-    assert "frozen reference adapter" in preflight["reference_policy"]
+    assert preflight["reference_adapter_name"] == "ref"
+    assert "TRL 0.29" in preflight["reference_policy"]
     assert preflight["objective"].startswith("DPO on the current planner prompt")
     assert settings["beta"] == 0.1
     assert settings["max_length"] == 6144
@@ -3013,61 +3014,33 @@ def test_trajectory_dpo_training_preflight_validates_canonical_pairs(tmp_path: P
     assert "planning_analysis" in trainer_rows[0]["chosen"]
 
 
-def test_trajectory_dpo_uses_named_sft_policy_and_reference_adapters():
+def test_trajectory_dpo_validates_trl_native_sft_reference_adapter():
     class FakeParameter:
-        def __init__(self, requires_grad: bool):
+        def __init__(self, value: int, requires_grad: bool):
+            self.value = value
             self.requires_grad = requires_grad
+
+        def detach(self):
+            return self
+
+        def equal(self, other):
+            return self.value == other.value
 
     class FakeModel:
         def __init__(self):
             self.peft_config = {"default": object()}
             self.parameters = {
-                "layer.lora_A.default.weight": FakeParameter(True),
+                "layer.lora_A.default.weight": FakeParameter(7, True),
             }
-            self.active_adapter = "default"
-            self.load_calls = []
-
-        def load_adapter(self, path, *, adapter_name, is_trainable):
-            self.load_calls.append((path, adapter_name, is_trainable))
-            self.peft_config[adapter_name] = object()
-            self.parameters[f"layer.lora_A.{adapter_name}.weight"] = FakeParameter(
-                is_trainable
-            )
-
-        def set_adapter(self, adapter_name):
-            self.active_adapter = adapter_name
-
-        def set_requires_grad(self, adapter_name, *, requires_grad):
-            marker = f".{adapter_name}."
-            for name, parameter in self.parameters.items():
-                if marker in name:
-                    parameter.requires_grad = requires_grad
 
         def named_parameters(self):
             return self.parameters.items()
 
-    class FakeAutoPeftModel:
-        model = FakeModel()
-
-        @classmethod
-        def from_pretrained(cls, path, **kwargs):
-            assert path == "selected-sft-checkpoint"
-            assert kwargs["is_trainable"] is True
-            return cls.model
-
-    model = _load_dpo_policy_with_reference(
-        FakeAutoPeftModel,
-        model_name_or_path="selected-sft-checkpoint",
-        model_kwargs={"is_trainable": True},
-        model_adapter_name="default",
-        ref_adapter_name="reference",
-    )
-    assert model.load_calls == [
-        ("selected-sft-checkpoint", "reference", False)
-    ]
-    assert model.active_adapter == "default"
-    assert model.parameters["layer.lora_A.default.weight"].requires_grad is True
-    assert model.parameters["layer.lora_A.reference.weight"].requires_grad is False
+    model = FakeModel()
+    _validate_initial_sft_policy_adapter(model)
+    model.peft_config["ref"] = object()
+    model.parameters["layer.lora_A.ref.weight"] = FakeParameter(7, False)
+    _validate_trl_created_reference_adapter(model)
 
     config_kwargs = _trajectory_dpo_config_kwargs(
         {
@@ -3088,8 +3061,9 @@ def test_trajectory_dpo_uses_named_sft_policy_and_reference_adapters():
         use_fp16=False,
         has_eval=False,
     )
-    assert config_kwargs["model_adapter_name"] == "default"
-    assert config_kwargs["ref_adapter_name"] == "reference"
+    assert "model_adapter_name" not in config_kwargs
+    assert "ref_adapter_name" not in config_kwargs
+    assert config_kwargs["sync_ref_model"] is False
 
 
 def test_dpo_cli_forwards_sharding_and_error_policy(monkeypatch, capsys):

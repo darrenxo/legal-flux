@@ -171,10 +171,8 @@ training:
     trust_remote_code: false
     attn_implementation: sdpa
     precompute_ref_log_probs: false
-    # Both adapters load the selected SFT checkpoint on one shared base model.
-    # Only `default` is optimized; `reference` remains the frozen SFT policy.
-    model_adapter_name: default
-    ref_adapter_name: reference
+    # TRL 0.29 copies the loaded `default` SFT adapter to a frozen `ref`
+    # adapter on the same shared base model before optimization begins.
     chat_template_kwargs:
       enable_thinking: false
 
