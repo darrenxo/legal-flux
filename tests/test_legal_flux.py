@@ -14,7 +14,7 @@ from legal_pilot.adaptive_profiles import profile_row
 from legal_pilot.clients import ModelResponse
 from legal_pilot.config import load_config
 from legal_pilot.embeddings import FixedEmbeddingBackend
-from legal_pilot.io_utils import read_jsonl, write_jsonl
+from legal_pilot.io_utils import latest_by_run_hash, read_jsonl, write_jsonl
 from legal_pilot.legal_flux import (
     legal_flux_workflow_components,
     load_template_pool,
@@ -29,6 +29,7 @@ from legal_pilot.legal_flux_chatgpt import (
 )
 from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
 from legal_pilot.legal_flux_dpo import _dpo_settings, build_dpo_data
+from legal_pilot.legal_flux_dpo_recovery import recover_dpo_candidates
 from legal_pilot.legal_flux_dpo_train import (
     _dpo_trainer_rows,
     prepare_trajectory_dpo_splits,
@@ -2322,6 +2323,255 @@ def test_dpo_candidate_sampling_creates_four_seeded_plans(tmp_path: Path):
             client=client,
             similarity_backend=FixedEmbeddingBackend({}),
         )
+
+
+def test_dpo_candidate_recovery_uses_alternate_seed_and_same_logical_id(
+    tmp_path: Path,
+):
+    processed = tmp_path / "processed"
+    pool = tmp_path / "templates.jsonl"
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={"case_id": f"legalhk-{100 + index}"}
+        )
+        for index in range(3)
+    ]
+    case = cases[0]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [item.model_dump(mode="json") for item in cases],
+    )
+    write_jsonl(
+        processed / "xsim" / "xsim_neighbors.jsonl",
+        [
+            {
+                "anchor_case_id": case.case_id,
+                "selected_neighbors": [cases[1].case_id, cases[2].case_id],
+                "x_sim_case_ids": [item.case_id for item in cases],
+            }
+        ],
+    )
+    write_jsonl(
+        pool,
+        [
+            _template(
+                "LF001", "Debt entitlement", "debt", "rule_application"
+            ).model_dump(mode="json")
+        ],
+    )
+    valid_plan = {
+        "planning_analysis": "The disputed debt requires an entitlement step.",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Debt entitlement",
+                "step_description": "Resolve whether repayment is due.",
+                "template_tags": ["debt", "rule_application"],
+            }
+        ],
+    }
+    initial_client = SequenceClient(
+        [
+            _response(valid_plan),
+            _response(valid_plan),
+            _response(valid_plan),
+            _response({"planning_analysis": "prima facie " * 50}),
+        ]
+    )
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+        "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
+        "schemas_dir": str(Path(__file__).parents[1] / "schemas"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+
+    sampled = build_dpo_data(
+        config,
+        stage="sample",
+        case_limit=1,
+        client=initial_client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    candidates_path = Path(sampled["candidates_path"])
+    before = latest_by_run_hash(read_jsonl(candidates_path))
+    failed = next(row for row in before if row["status"] == "error")
+    original_run_hash = failed["run_hash"]
+    original_seed = failed["seed"]
+    recovery_client = SequenceClient([_response(valid_plan)])
+
+    result = recover_dpo_candidates(
+        config,
+        num_shards=1,
+        shard_index=0,
+        case_limit=1,
+        evaluate_missing=False,
+        client=recovery_client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    rows = read_jsonl(candidates_path)
+    latest = {row["run_hash"]: row for row in latest_by_run_hash(rows)}
+    recovered = latest[original_run_hash]
+
+    assert result["complete"] is True
+    assert result["candidate_records_added"] == 1
+    assert result["remaining_candidate_errors"] == 0
+    assert len(rows) == 5
+    assert len(latest) == 4
+    assert recovered["status"] == "ok"
+    assert recovered["candidate_id"] == original_run_hash
+    assert recovered["seed"] == original_seed
+    assert recovered["generation_seed"] == original_seed + 4
+    assert recovered["generation_attempt"] == 1
+    assert recovered["recovery_implementation_hash"] in result[
+        "candidate_recovery_implementation_hashes"
+    ]
+    assert recovery_client.calls[0]["seed"] == original_seed + 4
+
+    idempotent_client = SequenceClient([])
+    second = recover_dpo_candidates(
+        config,
+        num_shards=1,
+        shard_index=0,
+        case_limit=1,
+        evaluate_missing=False,
+        client=idempotent_client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    assert second["candidate_records_added"] == 0
+    assert idempotent_client.calls == []
+
+
+def test_dpo_candidate_recovery_refuses_non_schema_failure():
+    with pytest.raises(RuntimeError, match="restricted"):
+        from legal_pilot.legal_flux_dpo_recovery import (
+            _validate_recoverable_candidate_error,
+        )
+
+        _validate_recoverable_candidate_error(
+            {
+                "run_hash": "candidate-1",
+                "candidate_id": "candidate-1",
+                "status": "error",
+                "error_type": "RuntimeError",
+                "error": "Retrieval backend failed.",
+            }
+        )
+
+
+def test_dpo_candidate_recovery_fills_only_three_missing_evaluations(
+    tmp_path: Path,
+):
+    processed = tmp_path / "processed"
+    pool = tmp_path / "templates.jsonl"
+    cases = [
+        _case(split="planner_train").model_copy(
+            update={"case_id": f"legalhk-{100 + index}"}
+        )
+        for index in range(3)
+    ]
+    write_jsonl(
+        processed / "cases.jsonl",
+        [case.model_dump(mode="json") for case in cases],
+    )
+    write_jsonl(
+        processed / "xsim" / "xsim_neighbors.jsonl",
+        [
+            {
+                "anchor_case_id": cases[0].case_id,
+                "selected_neighbors": [cases[1].case_id, cases[2].case_id],
+                "x_sim_case_ids": [case.case_id for case in cases],
+            }
+        ],
+    )
+    write_jsonl(
+        pool,
+        [
+            _template(
+                "LF001", "Debt entitlement", "debt", "rule_application"
+            ).model_dump(mode="json")
+        ],
+    )
+    valid_plan = {
+        "planning_analysis": "The disputed debt requires an entitlement step.",
+        "planned_steps": [
+            {
+                "step_id": "S1",
+                "step_name": "Debt entitlement",
+                "step_description": "Resolve whether repayment is due.",
+                "template_tags": ["debt", "rule_application"],
+            }
+        ],
+    }
+    executor_response = _response(
+        {"instantiated_result": "F1 supports resolving the disputed debt."}
+    )
+    final_response = _response(
+        {
+            "final_rationale": "The supplied facts support the claim.",
+            "final_decision": "support",
+        }
+    )
+    initial_responses = [
+        _response(valid_plan),
+        _response(valid_plan),
+        _response(valid_plan),
+        _response({"planning_analysis": "prima facie " * 50}),
+    ]
+    for _ in range(9):
+        initial_responses.extend([executor_response, final_response])
+    initial_client = SequenceClient(initial_responses)
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
+    config["_project_root"] = str(tmp_path)
+    config["paths"] = {
+        **config["paths"],
+        "processed_dir": str(processed),
+        "prompts_dir": str(Path(__file__).parents[1] / "prompts"),
+        "schemas_dir": str(Path(__file__).parents[1] / "schemas"),
+    }
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_pool_file": str(pool),
+    }
+
+    initial = build_dpo_data(
+        config,
+        stage="all",
+        num_shards=3,
+        shard_index=0,
+        client=initial_client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    assert initial["sample_records_added"] == 4
+    assert initial["evaluation_records_added"] == 9
+    recovery_responses = [_response(valid_plan)]
+    for _ in range(3):
+        recovery_responses.extend([executor_response, final_response])
+    recovery_client = SequenceClient(recovery_responses)
+
+    result = recover_dpo_candidates(
+        config,
+        num_shards=3,
+        shard_index=0,
+        client=recovery_client,
+        similarity_backend=FixedEmbeddingBackend({}),
+    )
+    evaluations = latest_by_run_hash(
+        read_jsonl(Path(initial["evaluations_path"]))
+    )
+
+    assert result["complete"] is True
+    assert result["candidate_records_added"] == 1
+    assert result["evaluation_records_added"] == 3
+    assert result["logical_evaluations"] == 12
+    assert result["missing_evaluations"] == 0
+    assert len(evaluations) == 12
+    assert len(recovery_client.calls) == 7
 
 
 def test_trajectory_dpo_export_uses_three_case_xsim_accuracy(tmp_path: Path):

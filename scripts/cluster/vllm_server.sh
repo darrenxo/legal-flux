@@ -93,11 +93,19 @@ legal_flux_wait_for_vllm() {
   local started_at=$SECONDS
   local deadline=$((started_at + timeout_seconds))
 
-  until curl --silent --fail --max-time 5 "${base_url}/models" >/dev/null; do
+  while true; do
     if ! kill -0 "$server_pid" 2>/dev/null; then
       echo "vLLM exited before becoming ready. Last 200 log lines:" >&2
       tail -n 200 "$log_file" >&2 || true
       return 1
+    fi
+    if curl --silent --fail --max-time 5 "${base_url}/models" >/dev/null; then
+      if ! kill -0 "$server_pid" 2>/dev/null; then
+        echo "vLLM exited during its readiness check. Last 200 log lines:" >&2
+        tail -n 200 "$log_file" >&2 || true
+        return 1
+      fi
+      break
     fi
     if (( SECONDS >= deadline )); then
       echo "vLLM did not become ready within ${timeout_seconds} seconds." >&2
