@@ -24,7 +24,20 @@ export TOKENIZERS_PARALLELISM=false
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 : "${LEGAL_FLUX_DPO_SFT_CHECKPOINT:?Set this to the selected original SFT checkpoint directory}"
 
+DPO_POLICY_ADAPTER="${LEGAL_FLUX_DPO_SFT_CHECKPOINT}/vllm_text_only"
+if [[ ! -f "${DPO_POLICY_ADAPTER}/adapter_config.json" ]] || \
+   [[ ! -f "${DPO_POLICY_ADAPTER}/adapter_model.safetensors" ]]; then
+  echo "Prepared text-only SFT adapter not found under ${DPO_POLICY_ADAPTER}." >&2
+  echo "Run flux-prepare-vllm-adapter on the selected SFT checkpoint first." >&2
+  exit 1
+fi
+
 OUTPUT_DIR="${LEGAL_FLUX_DPO_OUTPUT_DIR:-${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/training/trajectory_dpo}"
+VALIDATE_ONLY="${LEGAL_FLUX_DPO_VALIDATE_MODEL_LOAD_ONLY:-0}"
+if [[ "$VALIDATE_ONLY" != "0" ]] && [[ "$VALIDATE_ONLY" != "1" ]]; then
+  echo "LEGAL_FLUX_DPO_VALIDATE_MODEL_LOAD_ONLY must be 0 or 1." >&2
+  exit 1
+fi
 if [[ -d "$OUTPUT_DIR" ]] && find "$OUTPUT_DIR" -mindepth 1 -print -quit | grep -q .; then
   echo "${OUTPUT_DIR} is not empty. Move it aside or resume explicitly." >&2
   exit 1
@@ -62,6 +75,15 @@ python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   --dry-run \
   --model-name-or-path "$LEGAL_FLUX_DPO_SFT_CHECKPOINT" \
   --output-dir "$OUTPUT_DIR"
+
+if [[ "$VALIDATE_ONLY" == "1" ]]; then
+  python -m legal_pilot --config configs/legal_flux.cluster.yaml \
+    flux-train-trajectory-dpo \
+    --validate-model-load \
+    --model-name-or-path "$LEGAL_FLUX_DPO_SFT_CHECKPOINT" \
+    --output-dir "$OUTPUT_DIR"
+  exit 0
+fi
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-train-trajectory-dpo \

@@ -124,8 +124,8 @@ partitions cases into coarse civil, criminal, immigration, public-law, and
 uncertain families. Within each family, it combines equally weighted normalized
 BGE-M3 embeddings of the case view and human-reasoning view, then applies seeded
 KMeans and similarity-based size rebalancing. Every template-source case appears
-exactly once. Batches include source `court_reasoning` and `judgment_decision`
-but not the derived support/reject label:
+exactly once. For LegalHK, batches include source `court_reasoning` and
+`judgment_decision` but not the derived support/reject label:
 
 ```powershell
 $env:GOOGLE_CLOUD_PROJECT = "legalflux-gemini"
@@ -137,7 +137,34 @@ $env:GOOGLE_APPLICATION_CREDENTIALS = "$env:APPDATA\gcloud\application_default_c
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates --limit 1
 ```
 
-After inspecting the first batch output, continue with:
+For a reasoning-rich CJPE template pool, use the dedicated config. It reads only
+the 994 `multi_dev` cases, sends each case as one verbatim `full_text` field,
+and never includes the outcome label. Do not change this source split to
+`test`: CJPE test overlaps the Realistic_LJP_Facts test cases intended for
+prediction evaluation.
+
+```powershell
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-export-gemini-batches
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage candidates --dry-run
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage candidates --limit 1
+```
+
+Inspect the generated batch, prompt, and one-model-call output before running
+all candidate calls. CJPE prompt text describes Indian Supreme Court cases and
+the unsegmented full document; the remaining candidate, merge, and coverage
+criteria are shared with the LegalHK workflow.
+
+For CJPE, continue the remaining stages with the same dedicated config:
+
+```powershell
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage candidates
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage merge
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage audit --limit 1
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage audit
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage similarity-audit
+```
+
+For LegalHK, after inspecting the first batch output, continue with:
 
 ```powershell
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates
@@ -147,8 +174,9 @@ After inspecting the first batch output, continue with:
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage similarity-audit
 ```
 
-Gemini outputs are written under
-`reports/legal_flux/template_distillation/gemini31_pro_api/`. Candidate and gap
+LegalHK Gemini outputs are written under
+`reports/legal_flux/template_distillation/gemini31_pro_api/`; CJPE outputs use
+`reports/legal_flux/template_distillation/cjpe_gemini31_pro_api/`. Candidate and gap
 records retain source-case provenance. Candidate IDs and final `LF...` IDs are
 assigned deterministically after generation. The executable final pool contains
 only `template_id`, `template_name`, `knowledge_tags`, `description`,

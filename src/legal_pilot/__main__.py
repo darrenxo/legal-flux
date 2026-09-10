@@ -148,7 +148,9 @@ def build_parser() -> argparse.ArgumentParser:
     trajectory_dpo = subparsers.add_parser("flux-export-trajectory-dpo")
     trajectory_dpo.add_argument("--phase", default="planner-train")
     train_dpo = subparsers.add_parser("flux-train-trajectory-dpo")
-    train_dpo.add_argument("--dry-run", action="store_true")
+    train_dpo_mode = train_dpo.add_mutually_exclusive_group()
+    train_dpo_mode.add_argument("--dry-run", action="store_true")
+    train_dpo_mode.add_argument("--validate-model-load", action="store_true")
     train_dpo.add_argument("--resume-from-checkpoint", default=None)
     train_dpo.add_argument("--model-name-or-path", default=None)
     train_dpo.add_argument("--output-dir", default=None)
@@ -355,6 +357,7 @@ def main(argv: list[str] | None = None) -> int:
         result = train_trajectory_dpo(
             config,
             dry_run=args.dry_run,
+            validate_model_load=args.validate_model_load,
             resume_from_checkpoint=args.resume_from_checkpoint,
             model_name_or_path=args.model_name_or_path,
             output_dir=args.output_dir,

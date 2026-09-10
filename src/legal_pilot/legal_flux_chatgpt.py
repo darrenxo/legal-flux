@@ -14,6 +14,7 @@ from sklearn.cluster import KMeans
 
 from .config import resolve_path
 from .io_utils import canonical_json, sha256_text, write_jsonl
+from .legal_benchmark_data import BenchmarkCase, load_benchmark_cases
 from .legal_flux import resolve_project_file
 from .legalhk_data import LEGALHK_PARQUET_URL, download_file, legalhk_index
 from .models import (
@@ -25,6 +26,9 @@ from .models import (
 )
 from .runner import load_cases
 from .legal_flux_xsim import SentenceTransformerDenseEncoder
+
+
+TemplateSourceCase = NormalizedCase | BenchmarkCase
 
 
 DEMAND_PRIORITY = [
@@ -69,13 +73,12 @@ def export_legal_flux_chatgpt_batches(
     *,
     dense_encoder: TemplateBatchEncoder | None = None,
 ) -> dict[str, Any]:
-    cases = [
-        case
-        for case in load_cases(config)
-        if case.metadata.get("selection_split") == "template_source"
-    ]
+    source_dataset, source_split, cases = _load_template_source_cases(config)
     if not cases:
-        raise RuntimeError("No LegalFlux template-source cases found. Run flux-prepare first.")
+        raise RuntimeError(
+            f"No {source_dataset} template-source cases found for split "
+            f"{source_split!r}."
+        )
     flux_config = config["legal_flux"]
     output_dir = resolve_project_file(
         flux_config.get(
@@ -95,7 +98,11 @@ def export_legal_flux_chatgpt_batches(
     _clear_generated_files(prompts_dir, patterns=("*.md",))
     _clear_generated_files(output_dir, patterns=("*.json", "*.md"))
 
-    human_outputs = _template_source_human_outputs(config, cases)
+    human_outputs = _template_source_human_outputs(
+        config,
+        cases,
+        source_dataset=source_dataset,
+    )
     min_cases = int(flux_config.get("template_batch_min_cases", 24))
     target_cases = int(flux_config.get("template_batch_target_cases", 30))
     max_cases = int(flux_config.get("template_batch_max_cases", 36))
@@ -177,6 +184,7 @@ def export_legal_flux_chatgpt_batches(
         coverage,
         max_candidates=max_candidates,
         minimum_support_cases=minimum_support_cases,
+        source_dataset=source_dataset,
     )
     coverage["candidate_prompt_size_estimates"] = _candidate_prompt_size_estimates(
         manifest_batches=manifest_batches,
@@ -196,8 +204,31 @@ def export_legal_flux_chatgpt_batches(
     ]
     unique_batched_case_ids = set(batch_case_ids)
     source_case_ids = {case.case_id for case in cases}
+    if source_dataset == "il_tur_cjpe":
+        clustering_views = {
+            "full_text_view": ["full_text"],
+            "combination": "Single L2-normalized full-case-text embedding",
+        }
+        source_record_format = "full_text"
+    else:
+        clustering_views = {
+            "case_view": [
+                "lawsuit_type",
+                "claim_and_remedy",
+                "issues",
+                "authorities",
+                "relevant_cases",
+                "facts_verbatim",
+            ],
+            "reasoning_view": ["court_reasoning", "judgment_decision"],
+            "combination": "L2-normalize each view, concatenate equally, L2-normalize",
+        }
+        source_record_format = "structured_sections"
     manifest = {
         "created_at": datetime.now(timezone.utc).isoformat(),
+        "template_source_dataset": source_dataset,
+        "template_source_split": source_split,
+        "source_record_format": source_record_format,
         "template_source_cases": len(cases),
         "semantic_family_batches": len(semantic_batches),
         "batch_size_bounds": {
@@ -220,18 +251,7 @@ def export_legal_flux_chatgpt_batches(
             Counter(batch["coarse_legal_family"] for batch in manifest_batches).most_common()
         ),
         "coarse_legal_family_mapping": COARSE_LEGAL_FAMILY_BY_BROAD_DOMAIN,
-        "clustering_views": {
-            "case_view": [
-                "lawsuit_type",
-                "claim_and_remedy",
-                "issues",
-                "authorities",
-                "relevant_cases",
-                "facts_verbatim",
-            ],
-            "reasoning_view": ["court_reasoning", "judgment_decision"],
-            "combination": "L2-normalize each view, concatenate equally, L2-normalize",
-        },
+        "clustering_views": clustering_views,
         "court_reasoning_included": bool(
             flux_config.get("template_include_court_reasoning", True)
         ),
@@ -275,10 +295,50 @@ def export_legal_flux_chatgpt_batches(
     }
 
 
+def _load_template_source_cases(
+    config: dict[str, Any],
+) -> tuple[str, str, list[TemplateSourceCase]]:
+    flux_config = config["legal_flux"]
+    source_dataset = str(
+        flux_config.get("template_source_dataset", "legalhk")
+    ).strip()
+    if source_dataset == "legalhk":
+        source_split = str(
+            flux_config.get("template_source_split", "template_source")
+        ).strip()
+        cases: list[TemplateSourceCase] = [
+            case
+            for case in load_cases(config)
+            if case.metadata.get("selection_split") == source_split
+        ]
+        return source_dataset, source_split, cases
+    if source_dataset == "il_tur_cjpe":
+        source_split = str(
+            flux_config.get("template_source_split", "multi_dev")
+        ).strip()
+        cases = [
+            case
+            for case in load_benchmark_cases(config, source_dataset)
+            if case.source_split == source_split
+        ]
+        return source_dataset, source_split, cases
+    raise ValueError(
+        "legal_flux.template_source_dataset must be 'legalhk' or 'il_tur_cjpe'."
+    )
+
+
 def _template_source_human_outputs(
     config: dict[str, Any],
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
+    *,
+    source_dataset: str,
 ) -> dict[str, dict[str, str]]:
+    if source_dataset == "il_tur_cjpe":
+        return {
+            case.case_id: {"full_text": case.input_text}
+            for case in cases
+            if isinstance(case, BenchmarkCase)
+        }
     flux_config = config["legal_flux"]
     include_reasoning = bool(
         flux_config.get("template_include_court_reasoning", True)
@@ -330,7 +390,7 @@ def _template_source_human_outputs(
 
 
 def _build_semantic_batches(
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
     *,
     human_outputs: dict[str, dict[str, str]],
     min_cases: int,
@@ -358,18 +418,21 @@ def _build_semantic_batches(
         cache_dir=cache_dir,
         cache_key="case_view",
     )
-    reasoning_embeddings = _load_or_encode_template_embeddings(
-        cases=cases,
-        texts=reasoning_view_texts,
-        encoder=encoder,
-        batch_size=batch_size,
-        cache_dir=cache_dir,
-        cache_key="reasoning_view",
-    )
-    embeddings = _combine_dual_view_embeddings(
-        case_embeddings,
-        reasoning_embeddings,
-    )
+    if reasoning_view_texts == case_view_texts:
+        embeddings = case_embeddings
+    else:
+        reasoning_embeddings = _load_or_encode_template_embeddings(
+            cases=cases,
+            texts=reasoning_view_texts,
+            encoder=encoder,
+            batch_size=batch_size,
+            cache_dir=cache_dir,
+            cache_key="reasoning_view",
+        )
+        embeddings = _combine_dual_view_embeddings(
+            case_embeddings,
+            reasoning_embeddings,
+        )
     family_indices: dict[str, list[int]] = defaultdict(list)
     for index, case in enumerate(cases):
         family_indices[_coarse_legal_family(case)].append(index)
@@ -395,7 +458,7 @@ def _build_semantic_batches(
 
 
 def _cluster_legal_family(
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
     *,
     embeddings: np.ndarray,
     family: str,
@@ -443,7 +506,7 @@ def _cluster_legal_family(
 
 
 def _semantic_family_batch(
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
     *,
     embeddings: np.ndarray,
     family: str,
@@ -466,7 +529,7 @@ def _semantic_family_batch(
 
 def _load_or_encode_template_embeddings(
     *,
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
     texts: list[str],
     encoder: TemplateBatchEncoder,
     batch_size: int,
@@ -576,9 +639,13 @@ def _rebalance_cluster_labels(
 
 
 def _template_case_view_text(
-    case: NormalizedCase,
+    case: TemplateSourceCase,
     human_output: dict[str, str],
 ) -> str:
+    if full_text := human_output.get("full_text"):
+        return f"[FULL CASE TEXT]\n{full_text}"
+    if not isinstance(case, NormalizedCase):
+        raise TypeError("Structured template records require a NormalizedCase.")
     facts = human_output.get("facts_verbatim") or "\n".join(case.facts.values())
     return (
         f"[LAWSUIT TYPE]\n{case.metadata.get('lawsuit_type', '')}\n\n"
@@ -591,9 +658,11 @@ def _template_case_view_text(
 
 
 def _template_reasoning_view_text(
-    case: NormalizedCase,
+    case: TemplateSourceCase,
     human_output: dict[str, str],
 ) -> str:
+    if full_text := human_output.get("full_text"):
+        return f"[FULL CASE TEXT]\n{full_text}"
     return (
         f"[COURT REASONING]\n{human_output.get('court_reasoning', '')}\n\n"
         f"[JUDGMENT DECISION]\n{human_output.get('judgment_decision', '')}"
@@ -644,29 +713,35 @@ def _batch_manifest_row(
 
 
 def _case_record(
-    case: NormalizedCase,
+    case: TemplateSourceCase,
     human_outputs: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, Any]:
+    human_output = (human_outputs or {}).get(case.case_id, {})
+    if "full_text" in human_output:
+        return {
+            "case_id": case.case_id,
+            "full_text": human_output["full_text"],
+        }
+    if not isinstance(case, NormalizedCase):
+        raise TypeError("Structured template records require a NormalizedCase.")
     record = {
         "case_id": case.case_id,
         "claim": case.claim,
         "requested_remedy": case.requested_remedy,
         "parties": case.parties,
         "facts": case.facts,
-        "facts_verbatim": (human_outputs or {}).get(case.case_id, {}).get(
-            "facts_verbatim"
-        ),
+        "facts_verbatim": human_output.get("facts_verbatim"),
         "lawsuit_type": case.metadata.get("lawsuit_type"),
         "reference_issues": case.reference_issues,
         "authorities": case.authorities,
         "relevant_cases": case.metadata.get("relevant_cases"),
     }
-    record.update((human_outputs or {}).get(case.case_id, {}))
+    record.update(human_output)
     return record
 
 
 def _coverage_summary(
-    cases: list[NormalizedCase],
+    cases: list[TemplateSourceCase],
     manifest_batches: list[dict[str, Any]],
 ) -> dict[str, Any]:
     return {
@@ -763,18 +838,18 @@ def _ceil_div(value: int, divisor: float) -> int:
     return int((value + divisor - 1) // divisor)
 
 
-def _all_demand_counts(cases: list[NormalizedCase]) -> Counter[str]:
+def _all_demand_counts(cases: list[TemplateSourceCase]) -> Counter[str]:
     counter: Counter[str] = Counter()
     for case in cases:
         counter.update(_split_profile(case, "reasoning_demands"))
     return counter
 
 
-def _primary_family(case: NormalizedCase) -> str:
+def _primary_family(case: TemplateSourceCase) -> str:
     return (_split_profile(case, "template_families") or ["general_legal_reasoning"])[0]
 
 
-def _coarse_legal_family(case: NormalizedCase) -> str:
+def _coarse_legal_family(case: TemplateSourceCase) -> str:
     broad_domain = str(case.metadata.get("broad_domain") or "").strip()
     return COARSE_LEGAL_FAMILY_BY_BROAD_DOMAIN.get(
         broad_domain,
@@ -782,7 +857,7 @@ def _coarse_legal_family(case: NormalizedCase) -> str:
     )
 
 
-def _demand_focus(case: NormalizedCase) -> str:
+def _demand_focus(case: TemplateSourceCase) -> str:
     demands = set(_split_profile(case, "reasoning_demands"))
     for demand in DEMAND_PRIORITY:
         if demand in demands:
@@ -790,14 +865,14 @@ def _demand_focus(case: NormalizedCase) -> str:
     return "general_resolution"
 
 
-def _trajectory_prefix(case: NormalizedCase) -> str:
+def _trajectory_prefix(case: TemplateSourceCase) -> str:
     profile = case.metadata.get("legal_flux_profile") or {}
     signature = str(profile.get("trajectory_signature") or "")
     parts = [part.strip() for part in signature.split(" > ") if part.strip()]
     return " > ".join(parts[:5]) if parts else "unknown"
 
 
-def _split_profile(case: NormalizedCase, key: str) -> list[str]:
+def _split_profile(case: TemplateSourceCase, key: str) -> list[str]:
     profile = case.metadata.get("legal_flux_profile") or {}
     value = str(profile.get(key) or "")
     return [part for part in value.split("|") if part]
@@ -821,20 +896,22 @@ def _write_prompts(
     *,
     max_candidates: int,
     minimum_support_cases: int,
+    source_dataset: str,
 ) -> None:
     (prompts_dir / "01_generate_candidate_templates.md").write_text(
         _candidate_generation_prompt(
             max_candidates=max_candidates,
             minimum_support_cases=minimum_support_cases,
+            source_dataset=source_dataset,
         ),
         encoding="utf-8",
     )
     (prompts_dir / "02_merge_deduplicate_templates.md").write_text(
-        _merge_prompt(),
+        _merge_prompt(source_dataset=source_dataset),
         encoding="utf-8",
     )
     (prompts_dir / "03_coverage_audit_and_gap_fill.md").write_text(
-        _coverage_audit_prompt(coverage),
+        _coverage_audit_prompt(coverage, source_dataset=source_dataset),
         encoding="utf-8",
     )
 
@@ -843,9 +920,14 @@ def _candidate_generation_prompt(
     *,
     max_candidates: int,
     minimum_support_cases: int,
+    source_dataset: str = "legalhk",
 ) -> str:
+    corpus_description = _template_corpus_description(source_dataset)
+    source_guidance = _template_source_guidance(source_dataset)
     return f"""You are constructing a compact, high-quality library of reusable legal
-reasoning templates for all-domain Hong Kong court cases.
+reasoning templates for {corpus_description}.
+
+{source_guidance}
 
 Analyze the supplied batch and return at most {max_candidates} candidate
 templates. Zero candidates is valid and preferable to creating a weak,
@@ -905,9 +987,10 @@ Return one JSON object matching the candidate-template output schema.
 """
 
 
-def _merge_prompt() -> str:
-    return """You are consolidating candidate LegalFlux templates into one compact,
-high-quality library for all-domain Hong Kong court cases.
+def _merge_prompt(*, source_dataset: str = "legalhk") -> str:
+    corpus_description = _template_corpus_description(source_dataset)
+    return f"""You are consolidating candidate LegalFlux templates into one compact,
+high-quality library for {corpus_description}.
 
 Review the complete candidate set together. Keep only reusable, distinct legal
 reasoning operations at a middle-to-high abstraction level. There is no required
@@ -934,12 +1017,26 @@ will be assigned deterministically after this consolidation call.
 """
 
 
-def _coverage_audit_prompt(coverage: dict[str, Any]) -> str:
+def _coverage_audit_prompt(
+    coverage: dict[str, Any],
+    *,
+    source_dataset: str = "legalhk",
+) -> str:
+    if source_dataset == "il_tur_cjpe":
+        inspection_guidance = (
+            "Inspect every supplied case's full_text, including the facts, procedural "
+            "history, arguments, authorities, lower-court rulings, and present-court "
+            "reasoning or judgment it contains."
+        )
+    else:
+        inspection_guidance = (
+            "Inspect every supplied case, including its court reasoning and judgment "
+            "decision."
+        )
     return f"""You are auditing one original source-case batch against the current
 consolidated LegalFlux template library.
 
-Inspect every supplied case, including its court reasoning and judgment
-decision. Identify whether the library covers the recurring legal reasoning
+{inspection_guidance} Identify whether the library covers the recurring legal reasoning
 operations actually exhibited by this batch. An individual uncovered case is
 not a library gap. Propose a gap candidate only when the same missing operation
 is supported by the configured minimum number of supplied cases and satisfies
@@ -959,6 +1056,23 @@ Aggregate source coverage metadata:
 {json.dumps(coverage, ensure_ascii=False, indent=2)}
 ```
 """
+
+
+def _template_corpus_description(source_dataset: str) -> str:
+    if source_dataset == "il_tur_cjpe":
+        return "Indian Supreme Court cases"
+    return "all-domain Hong Kong court cases"
+
+
+def _template_source_guidance(source_dataset: str) -> str:
+    if source_dataset != "il_tur_cjpe":
+        return ""
+    return """Each supplied source case provides its complete case text in one
+`full_text` field. Infer reusable legal reasoning operations from that text,
+which may include facts, procedural history, party arguments, authorities,
+lower-court rulings, and the present court's reasoning or judgment. Treat
+explicit or implicit outcome language as evidence of the court's reasoning
+process, never as a template target or prediction shortcut."""
 
 
 def _readme() -> str:

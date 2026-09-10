@@ -31,9 +31,12 @@ from legal_pilot.legal_flux_deepseek import run_deepseek_template_workflow
 from legal_pilot.legal_flux_dpo import _dpo_settings, build_dpo_data
 from legal_pilot.legal_flux_dpo_recovery import recover_dpo_candidates
 from legal_pilot.legal_flux_dpo_train import (
+    _dpo_adapter_key_mapping,
+    _dpo_policy_adapter_source,
     _dpo_trainer_rows,
     _trajectory_dpo_config_kwargs,
     _validate_initial_sft_policy_adapter,
+    _validate_loaded_policy_state,
     _validate_trl_created_reference_adapter,
     prepare_trajectory_dpo_splits,
     train_trajectory_dpo,
@@ -1491,6 +1494,100 @@ def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):
     assert (manifest.parent / "prompts" / "02_merge_deduplicate_templates.md").exists()
 
 
+def test_cjpe_template_export_uses_multi_dev_full_text_without_labels(tmp_path: Path):
+    processed = (
+        tmp_path
+        / "data"
+        / "processed"
+        / "legal_benchmarks"
+        / "il_tur_cjpe"
+    )
+    cases = [
+        {
+            "dataset": "il_tur_cjpe",
+            "case_id": f"cjpe-case-{index}",
+            "source_split": "multi_dev",
+            "input_text": (
+                f"Supreme Court case {index}. Facts, arguments, authorities, "
+                "lower-court rulings, and the Court's reasoning appear here."
+            ),
+            "gold_label": "accepted" if index % 2 else "rejected",
+            "labels": ["accepted", "rejected"],
+            "label_descriptions": {
+                "accepted": "The appeal was accepted.",
+                "rejected": "The appeal was rejected.",
+            },
+            "task_instruction": "Predict the appeal outcome.",
+            "metadata": {"source_id": f"source-{index}"},
+        }
+        for index in range(1, 5)
+    ]
+    cases.append(
+        {
+            **cases[0],
+            "case_id": "cjpe-test-case",
+            "source_split": "test",
+            "input_text": "Supreme Court test case that must not enter the pool.",
+        }
+    )
+    write_jsonl(processed / "cases.jsonl", cases)
+    config = load_config(Path(__file__).parents[1] / "configs" / "legal_benchmarks.yaml")
+    config["_project_root"] = str(tmp_path)
+    output_dir = tmp_path / "reports" / "cjpe_template_batches"
+    config["legal_flux"] = {
+        **config["legal_flux"],
+        "template_source_dataset": "il_tur_cjpe",
+        "template_source_split": "multi_dev",
+        "gemini_batch_dir": str(output_dir),
+        "template_batch_min_cases": 4,
+        "template_batch_target_cases": 4,
+        "template_batch_max_cases": 4,
+    }
+
+    result = export_legal_flux_chatgpt_batches(
+        config,
+        dense_encoder=FakeTemplateBatchEncoder(),
+    )
+
+    rows = read_jsonl(next((output_dir / "01_semantic_family_batches").glob("*.jsonl")))
+    prompt = (output_dir / "prompts" / "01_generate_candidate_templates.md").read_text(
+        encoding="utf-8"
+    )
+    merge_prompt = (
+        output_dir / "prompts" / "02_merge_deduplicate_templates.md"
+    ).read_text(encoding="utf-8")
+    audit_prompt = (
+        output_dir / "prompts" / "03_coverage_audit_and_gap_fill.md"
+    ).read_text(encoding="utf-8")
+    manifest = json.loads((output_dir / "batch_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["template_source_cases"] == 4
+    assert {row["case_id"] for row in rows} == {
+        "cjpe-case-1",
+        "cjpe-case-2",
+        "cjpe-case-3",
+        "cjpe-case-4",
+    }
+    assert set(rows[0]) == {"case_id", "full_text"}
+    assert "gold_label" not in json.dumps(rows)
+    assert "Hong Kong" not in prompt
+    assert "Indian Supreme Court" in prompt
+    assert "full_text" in prompt
+    assert "at most 5 candidate" in prompt
+    assert "LegalHK" not in prompt
+    assert "Hong Kong" not in merge_prompt
+    assert "Indian Supreme Court" in merge_prompt
+    assert "case's full_text" in audit_prompt
+    assert manifest["template_source_dataset"] == "il_tur_cjpe"
+    assert manifest["template_source_split"] == "multi_dev"
+    assert manifest["source_record_format"] == "full_text"
+    assert manifest["clustering_views"]["full_text_view"] == ["full_text"]
+    assert (output_dir / "00_semantic_clustering" / "case_view_embeddings.npy").exists()
+    assert not (
+        output_dir / "00_semantic_clustering" / "reasoning_view_embeddings.npy"
+    ).exists()
+
+
 def test_dual_view_embedding_combination_has_equal_cosine_weight():
     case_embeddings = np.asarray([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32)
     reasoning_embeddings = np.asarray([[1.0, 0.0], [1.0, 0.0]], dtype=np.float32)
@@ -1747,7 +1844,10 @@ def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path:
     ).exists()
     assert (output_root / "legal_flux_templates_gemini_merged.jsonl").exists()
     assert (output_root / "legal_flux_templates_gemini_final.jsonl").exists()
-    assert "BATCH_ID" in client.messages[0][-1]["content"]
+    assert "BATCH_ID:" not in client.messages[0][-1]["content"]
+    assert "BATCH LABEL:" not in client.messages[0][-1]["content"]
+    assert "BATCH_ID:" not in client.messages[2][-1]["content"]
+    assert "BATCH LABEL:" not in client.messages[2][-1]["content"]
     candidate_row = read_jsonl(
         output_root
         / "03_candidate_templates"
@@ -3066,6 +3166,87 @@ def test_trajectory_dpo_validates_trl_native_sft_reference_adapter():
     assert config_kwargs["sync_ref_model"] is False
 
 
+def test_dpo_policy_adapter_source_prefers_prepared_text_adapter(tmp_path: Path):
+    checkpoint = tmp_path / "checkpoint-60"
+    checkpoint.mkdir()
+
+    assert _dpo_policy_adapter_source(str(checkpoint)) == str(checkpoint.resolve())
+
+    text_adapter = checkpoint / "vllm_text_only"
+    text_adapter.mkdir()
+    (text_adapter / "adapter_config.json").write_text("{}", encoding="utf-8")
+    (text_adapter / "adapter_model.safetensors").write_bytes(b"weights")
+
+    assert _dpo_policy_adapter_source(str(checkpoint)) == str(
+        text_adapter.resolve()
+    )
+
+
+def test_dpo_adapter_key_mapping_handles_qwen35_conditional_wrapper():
+    keys = [
+        "base_model.model.model.language_model.layers.0.self_attn.q_proj."
+        "lora_A.weight"
+    ]
+
+    mapping = _dpo_adapter_key_mapping(keys)
+    assert mapping == {
+        r"^(?:model\.)?language_model\.": "model."
+    }
+    pattern, replacement = next(iter(mapping.items()))
+    relative_key = keys[0].removeprefix("base_model.model.")
+    assert re.sub(pattern, replacement, relative_key) == (
+        "model.layers.0.self_attn.q_proj.lora_A.weight"
+    )
+    assert _dpo_adapter_key_mapping(
+        ["base_model.model.model.layers.0.self_attn.q_proj.lora_A.weight"]
+    ) is None
+
+
+def test_dpo_loaded_policy_state_requires_exact_nonzero_sft_weights():
+    torch = pytest.importorskip("torch")
+    source = {
+        "layer.lora_A.weight": torch.tensor([1.0]),
+        "layer.lora_B.weight": torch.tensor([2.0]),
+    }
+
+    result = _validate_loaded_policy_state(
+        source_state=source,
+        loaded_state={key: value.clone() for key, value in source.items()},
+        adapter_source="prepared-sft",
+    )
+
+    assert result == {
+        "adapter_source": "prepared-sft",
+        "tensor_count": 2,
+        "lora_b_tensor_count": 1,
+        "nonzero_lora_b_tensor_count": 1,
+        "all_tensors_exact": True,
+    }
+
+    with pytest.raises(RuntimeError, match="not loaded exactly"):
+        _validate_loaded_policy_state(
+            source_state=source,
+            loaded_state={
+                "layer.lora_A.weight": torch.tensor([9.0]),
+                "layer.lora_B.weight": torch.tensor([2.0]),
+            },
+            adapter_source="prepared-sft",
+        )
+
+    with pytest.raises(RuntimeError, match="no nonzero LoRA-B"):
+        _validate_loaded_policy_state(
+            source_state={
+                "layer.lora_A.weight": torch.tensor([1.0]),
+                "layer.lora_B.weight": torch.tensor([0.0]),
+            },
+            loaded_state={
+                "layer.lora_A.weight": torch.tensor([1.0]),
+                "layer.lora_B.weight": torch.tensor([0.0]),
+            },
+            adapter_source="fresh-adapter",
+        )
+
+
 def test_dpo_cli_forwards_sharding_and_error_policy(monkeypatch, capsys):
     config = {"test": "config"}
     captured: dict[str, object] = {}
@@ -3273,7 +3454,18 @@ def test_cli_and_workflow_hash_only_expose_current_legal_flux_surface():
     )
     assert train_dpo_args.command == "flux-train-trajectory-dpo"
     assert train_dpo_args.dry_run
+    assert not train_dpo_args.validate_model_load
     assert train_dpo_args.model_name_or_path == "selected-sft-checkpoint"
+    validate_dpo_args = parser.parse_args(
+        [
+            "--config",
+            "configs/legal_flux.yaml",
+            "flux-train-trajectory-dpo",
+            "--validate-model-load",
+        ]
+    )
+    assert validate_dpo_args.validate_model_load
+    assert not validate_dpo_args.dry_run
     gemini_args = parser.parse_args(
         [
             "--config",

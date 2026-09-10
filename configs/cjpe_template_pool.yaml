@@ -1,0 +1,9 @@
+extends: legal_benchmarks.yaml
+
+legal_flux:
+  # Use CJPE's development cases as reasoning-rich template supervision. Keep
+  # CJPE test out of the pool because its case IDs overlap the LJP test set.
+  template_source_dataset: il_tur_cjpe
+  template_source_split: multi_dev
+  gemini_batch_dir: reports/legal_flux/template_distillation/cjpe_gemini31_pro_batches
+  gemini_template_dir: reports/legal_flux/template_distillation/cjpe_gemini31_pro_api

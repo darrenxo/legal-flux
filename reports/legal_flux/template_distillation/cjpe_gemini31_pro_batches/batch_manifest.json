@@ -1,0 +1,2242 @@
+{
+  "created_at": "2026-09-09T15:59:53.405333+00:00",
+  "template_source_dataset": "il_tur_cjpe",
+  "template_source_split": "multi_dev",
+  "source_record_format": "full_text",
+  "template_source_cases": 994,
+  "semantic_family_batches": 33,
+  "batch_size_bounds": {
+    "minimum": 24,
+    "target": 30,
+    "maximum": 36
+  },
+  "max_candidates_per_batch": 5,
+  "minimum_support_cases": 3,
+  "clustering_model": "BAAI/bge-m3",
+  "clustering_method": "coarse legal-family partition, equal-weight normalized case/reasoning view concatenation, seeded KMeans, deterministic similarity rebalancing",
+  "clustering_seed": 20260619,
+  "coarse_legal_family_counts": {
+    "other_uncertain": 994
+  },
+  "coarse_legal_family_batch_counts": {
+    "other_uncertain": 33
+  },
+  "coarse_legal_family_mapping": {
+    "criminal": "criminal",
+    "immigration_public": "immigration",
+    "public_law": "public_administrative",
+    "procedure_appeal": "civil_private",
+    "company_insolvency": "civil_private",
+    "contract_debt": "civil_private",
+    "property_land": "civil_private",
+    "family_trust_probate": "civil_private",
+    "tort_damages": "civil_private",
+    "employment_labor": "civil_private",
+    "other_legal": "other_uncertain"
+  },
+  "clustering_views": {
+    "full_text_view": [
+      "full_text"
+    ],
+    "combination": "Single L2-normalized full-case-text embedding"
+  },
+  "court_reasoning_included": true,
+  "judgment_decision_included": true,
+  "verbatim_facts_included": true,
+  "unique_batched_source_cases": 994,
+  "source_case_coverage_rate": 1.0,
+  "duplicate_case_appearances": 0,
+  "unbatched_source_case_ids": [],
+  "output_dir": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches",
+  "schema": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\legal_flux_template.schema.json",
+  "candidate_schema": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\legal_flux_candidate_response.schema.json",
+  "consolidation_schema": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\legal_flux_consolidation_response.schema.json",
+  "gap_audit_schema": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\legal_flux_gap_audit_response.schema.json",
+  "readme": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\README.md",
+  "coverage_summary": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\coverage_summary.json",
+  "batches": [
+    {
+      "batch_id": "semantic_family_001",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_001_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 31,
+      "case_ids": [
+        "il-tur-cjpe-1950_22",
+        "il-tur-cjpe-1953_42",
+        "il-tur-cjpe-1953_70",
+        "il-tur-cjpe-1959_185",
+        "il-tur-cjpe-1965_90",
+        "il-tur-cjpe-1966_210",
+        "il-tur-cjpe-1966_31",
+        "il-tur-cjpe-1969_30",
+        "il-tur-cjpe-1969_323",
+        "il-tur-cjpe-1974_261",
+        "il-tur-cjpe-1974_302",
+        "il-tur-cjpe-1974_425",
+        "il-tur-cjpe-1974_427",
+        "il-tur-cjpe-1975_54",
+        "il-tur-cjpe-1975_6",
+        "il-tur-cjpe-1978_286",
+        "il-tur-cjpe-1980_143",
+        "il-tur-cjpe-1980_334",
+        "il-tur-cjpe-1981_183",
+        "il-tur-cjpe-1981_276",
+        "il-tur-cjpe-1981_329",
+        "il-tur-cjpe-1981_340",
+        "il-tur-cjpe-1982_91",
+        "il-tur-cjpe-1983_72",
+        "il-tur-cjpe-1985_359",
+        "il-tur-cjpe-1986_216",
+        "il-tur-cjpe-1987_409",
+        "il-tur-cjpe-1988_369",
+        "il-tur-cjpe-1988_391",
+        "il-tur-cjpe-1989_224",
+        "il-tur-cjpe-1992_5"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 31
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.882862,
+        "p10_cosine_to_centroid": 0.848575,
+        "minimum_cosine_to_centroid": 0.809537
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 31
+      },
+      "demand_focus_counts": {
+        "general_resolution": 31
+      },
+      "broad_domain_counts": {
+        "": 31
+      },
+      "authority_bucket_counts": {
+        "": 31
+      },
+      "lawsuit_type_top10": {
+        "": 31
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "9f35d8bd2a0aa5a548bdc55e2e2fa870a908b78d855d41c9a6a91dba7ccc777e"
+    },
+    {
+      "batch_id": "semantic_family_002",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_002_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1950_27",
+        "il-tur-cjpe-1957_56",
+        "il-tur-cjpe-1966_43",
+        "il-tur-cjpe-1970_195",
+        "il-tur-cjpe-1974_371",
+        "il-tur-cjpe-1977_200",
+        "il-tur-cjpe-1978_222",
+        "il-tur-cjpe-1981_74",
+        "il-tur-cjpe-1982_168",
+        "il-tur-cjpe-1983_107",
+        "il-tur-cjpe-1984_116",
+        "il-tur-cjpe-1984_252",
+        "il-tur-cjpe-1985_331",
+        "il-tur-cjpe-1986_444",
+        "il-tur-cjpe-1987_318",
+        "il-tur-cjpe-1987_347",
+        "il-tur-cjpe-1988_161",
+        "il-tur-cjpe-1988_248",
+        "il-tur-cjpe-1989_200",
+        "il-tur-cjpe-1989_474",
+        "il-tur-cjpe-1989_481",
+        "il-tur-cjpe-1992_316",
+        "il-tur-cjpe-1993_128",
+        "il-tur-cjpe-2008_2534"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.838902,
+        "p10_cosine_to_centroid": 0.794843,
+        "minimum_cosine_to_centroid": 0.771533
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "190d7d5612fa4bc2c1e02e7dab2fd4f14c2b092688b5bb14705d44eca460dd88"
+    },
+    {
+      "batch_id": "semantic_family_003",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_003_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1950_55",
+        "il-tur-cjpe-1956_55",
+        "il-tur-cjpe-1958_0",
+        "il-tur-cjpe-1958_136",
+        "il-tur-cjpe-1960_0",
+        "il-tur-cjpe-1960_229",
+        "il-tur-cjpe-1960_342",
+        "il-tur-cjpe-1960_41",
+        "il-tur-cjpe-1960_97",
+        "il-tur-cjpe-1961_112",
+        "il-tur-cjpe-1961_162",
+        "il-tur-cjpe-1961_433",
+        "il-tur-cjpe-1962_185",
+        "il-tur-cjpe-1962_264",
+        "il-tur-cjpe-1963_249",
+        "il-tur-cjpe-1963_3",
+        "il-tur-cjpe-1964_114",
+        "il-tur-cjpe-1964_59",
+        "il-tur-cjpe-1964_70",
+        "il-tur-cjpe-1965_192",
+        "il-tur-cjpe-1968_179",
+        "il-tur-cjpe-1971_138",
+        "il-tur-cjpe-1971_86",
+        "il-tur-cjpe-1977_0",
+        "il-tur-cjpe-1978_282",
+        "il-tur-cjpe-1980_132",
+        "il-tur-cjpe-1980_274",
+        "il-tur-cjpe-1980_351",
+        "il-tur-cjpe-1988_186",
+        "il-tur-cjpe-1988_426",
+        "il-tur-cjpe-1989_14",
+        "il-tur-cjpe-1990_352",
+        "il-tur-cjpe-1991_43",
+        "il-tur-cjpe-1992_252",
+        "il-tur-cjpe-1993_254",
+        "il-tur-cjpe-1993_326"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.902763,
+        "p10_cosine_to_centroid": 0.880609,
+        "minimum_cosine_to_centroid": 0.864623
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "a31aa05beaf8981dec1c8f504e72239f3d5cdf8acf923d4e4ac136fd6184f69e"
+    },
+    {
+      "batch_id": "semantic_family_004",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_004_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 34,
+      "case_ids": [
+        "il-tur-cjpe-1951_50",
+        "il-tur-cjpe-1957_79",
+        "il-tur-cjpe-1960_250",
+        "il-tur-cjpe-1961_271",
+        "il-tur-cjpe-1966_291",
+        "il-tur-cjpe-1966_5",
+        "il-tur-cjpe-1969_505",
+        "il-tur-cjpe-1972_302",
+        "il-tur-cjpe-1973_16",
+        "il-tur-cjpe-1974_369",
+        "il-tur-cjpe-1976_449",
+        "il-tur-cjpe-1976_65",
+        "il-tur-cjpe-1979_285",
+        "il-tur-cjpe-1979_353",
+        "il-tur-cjpe-1979_363",
+        "il-tur-cjpe-1981_186",
+        "il-tur-cjpe-1981_264",
+        "il-tur-cjpe-1983_150",
+        "il-tur-cjpe-1983_158",
+        "il-tur-cjpe-1985_187",
+        "il-tur-cjpe-1985_205",
+        "il-tur-cjpe-1986_442",
+        "il-tur-cjpe-1988_142",
+        "il-tur-cjpe-1988_150",
+        "il-tur-cjpe-1988_232",
+        "il-tur-cjpe-1988_307",
+        "il-tur-cjpe-1988_349",
+        "il-tur-cjpe-1989_21",
+        "il-tur-cjpe-1990_355",
+        "il-tur-cjpe-1990_38",
+        "il-tur-cjpe-1992_21",
+        "il-tur-cjpe-1992_3",
+        "il-tur-cjpe-1992_90",
+        "il-tur-cjpe-1993_153"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 34
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.860114,
+        "p10_cosine_to_centroid": 0.82325,
+        "minimum_cosine_to_centroid": 0.809439
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 34
+      },
+      "demand_focus_counts": {
+        "general_resolution": 34
+      },
+      "broad_domain_counts": {
+        "": 34
+      },
+      "authority_bucket_counts": {
+        "": 34
+      },
+      "lawsuit_type_top10": {
+        "": 34
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "5b751316632dea37425e39d655343679d3a6bd9cf2ec804db96decb025296fe7"
+    },
+    {
+      "batch_id": "semantic_family_005",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_005_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 30,
+      "case_ids": [
+        "il-tur-cjpe-1951_53",
+        "il-tur-cjpe-1958_142",
+        "il-tur-cjpe-1958_27",
+        "il-tur-cjpe-1958_5",
+        "il-tur-cjpe-1960_8",
+        "il-tur-cjpe-1964_263",
+        "il-tur-cjpe-1970_297",
+        "il-tur-cjpe-1972_417",
+        "il-tur-cjpe-1973_2",
+        "il-tur-cjpe-1973_222",
+        "il-tur-cjpe-1974_161",
+        "il-tur-cjpe-1976_302",
+        "il-tur-cjpe-1976_397",
+        "il-tur-cjpe-1977_117",
+        "il-tur-cjpe-1978_201",
+        "il-tur-cjpe-1979_274",
+        "il-tur-cjpe-1980_42",
+        "il-tur-cjpe-1981_2",
+        "il-tur-cjpe-1981_363",
+        "il-tur-cjpe-1981_6",
+        "il-tur-cjpe-1983_120",
+        "il-tur-cjpe-1983_290",
+        "il-tur-cjpe-1984_45",
+        "il-tur-cjpe-1987_388",
+        "il-tur-cjpe-1988_126",
+        "il-tur-cjpe-1988_228",
+        "il-tur-cjpe-1988_300",
+        "il-tur-cjpe-1991_129",
+        "il-tur-cjpe-1991_487",
+        "il-tur-cjpe-1992_1"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 30
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.899127,
+        "p10_cosine_to_centroid": 0.872303,
+        "minimum_cosine_to_centroid": 0.856223
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 30
+      },
+      "demand_focus_counts": {
+        "general_resolution": 30
+      },
+      "broad_domain_counts": {
+        "": 30
+      },
+      "authority_bucket_counts": {
+        "": 30
+      },
+      "lawsuit_type_top10": {
+        "": 30
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "e8d6c49dafe9d646b0e30e0f1724bd6edbf4acb16333cc4bb88d822651b2e31c"
+    },
+    {
+      "batch_id": "semantic_family_006",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_006_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 33,
+      "case_ids": [
+        "il-tur-cjpe-1951_77",
+        "il-tur-cjpe-1952_5",
+        "il-tur-cjpe-1954_63",
+        "il-tur-cjpe-1957_112",
+        "il-tur-cjpe-1959_53",
+        "il-tur-cjpe-1961_262",
+        "il-tur-cjpe-1961_289",
+        "il-tur-cjpe-1961_53",
+        "il-tur-cjpe-1962_255",
+        "il-tur-cjpe-1962_270",
+        "il-tur-cjpe-1963_189",
+        "il-tur-cjpe-1963_26",
+        "il-tur-cjpe-1965_273",
+        "il-tur-cjpe-1966_36",
+        "il-tur-cjpe-1966_88",
+        "il-tur-cjpe-1967_78",
+        "il-tur-cjpe-1968_54",
+        "il-tur-cjpe-1973_202",
+        "il-tur-cjpe-1973_428",
+        "il-tur-cjpe-1974_358",
+        "il-tur-cjpe-1975_217",
+        "il-tur-cjpe-1975_510",
+        "il-tur-cjpe-1976_278",
+        "il-tur-cjpe-1978_113",
+        "il-tur-cjpe-1979_370",
+        "il-tur-cjpe-1979_86",
+        "il-tur-cjpe-1985_245",
+        "il-tur-cjpe-1987_331",
+        "il-tur-cjpe-1987_570",
+        "il-tur-cjpe-1988_129",
+        "il-tur-cjpe-1988_151",
+        "il-tur-cjpe-1988_242",
+        "il-tur-cjpe-1988_323"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 33
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.885453,
+        "p10_cosine_to_centroid": 0.859801,
+        "minimum_cosine_to_centroid": 0.808697
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 33
+      },
+      "demand_focus_counts": {
+        "general_resolution": 33
+      },
+      "broad_domain_counts": {
+        "": 33
+      },
+      "authority_bucket_counts": {
+        "": 33
+      },
+      "lawsuit_type_top10": {
+        "": 33
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "0148daac97e5444093ad9eab027513d5f3879a760253d7c00483fc4c6d9e59f2"
+    },
+    {
+      "batch_id": "semantic_family_007",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_007_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1951_84",
+        "il-tur-cjpe-1963_8",
+        "il-tur-cjpe-1965_211",
+        "il-tur-cjpe-1968_191",
+        "il-tur-cjpe-1968_280",
+        "il-tur-cjpe-1969_287",
+        "il-tur-cjpe-1973_299",
+        "il-tur-cjpe-1975_405",
+        "il-tur-cjpe-1979_470",
+        "il-tur-cjpe-1979_55",
+        "il-tur-cjpe-1983_169",
+        "il-tur-cjpe-1984_108",
+        "il-tur-cjpe-1984_47",
+        "il-tur-cjpe-1984_69",
+        "il-tur-cjpe-1986_405",
+        "il-tur-cjpe-1987_581",
+        "il-tur-cjpe-1988_273",
+        "il-tur-cjpe-1988_30",
+        "il-tur-cjpe-1989_2",
+        "il-tur-cjpe-1992_641",
+        "il-tur-cjpe-1995_374",
+        "il-tur-cjpe-1995_380",
+        "il-tur-cjpe-1995_393",
+        "il-tur-cjpe-1997_1513"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.825415,
+        "p10_cosine_to_centroid": 0.787912,
+        "minimum_cosine_to_centroid": 0.751803
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "93a64b36df6db3344b996b903b85b074e296e1a6aeb9af93d17dbb4929c14156"
+    },
+    {
+      "batch_id": "semantic_family_008",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_008_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1952_102",
+        "il-tur-cjpe-1958_57",
+        "il-tur-cjpe-1961_234",
+        "il-tur-cjpe-1963_304",
+        "il-tur-cjpe-1964_107",
+        "il-tur-cjpe-1965_317",
+        "il-tur-cjpe-1965_50",
+        "il-tur-cjpe-1967_224",
+        "il-tur-cjpe-1967_248",
+        "il-tur-cjpe-1969_386",
+        "il-tur-cjpe-1972_449",
+        "il-tur-cjpe-1973_18",
+        "il-tur-cjpe-1973_97",
+        "il-tur-cjpe-1975_462",
+        "il-tur-cjpe-1980_213",
+        "il-tur-cjpe-1980_50",
+        "il-tur-cjpe-1981_260",
+        "il-tur-cjpe-1982_6",
+        "il-tur-cjpe-1991_205",
+        "il-tur-cjpe-1992_237",
+        "il-tur-cjpe-1993_930",
+        "il-tur-cjpe-1997_1543",
+        "il-tur-cjpe-2005_200",
+        "il-tur-cjpe-2005_266"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.883573,
+        "p10_cosine_to_centroid": 0.844024,
+        "minimum_cosine_to_centroid": 0.788667
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "56233d653e96ebec3de819dda820457d7f92a21065350cf25bc71fafe8583808"
+    },
+    {
+      "batch_id": "semantic_family_009",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_009_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 33,
+      "case_ids": [
+        "il-tur-cjpe-1952_104",
+        "il-tur-cjpe-1952_6",
+        "il-tur-cjpe-1953_100",
+        "il-tur-cjpe-1954_22",
+        "il-tur-cjpe-1954_27",
+        "il-tur-cjpe-1957_62",
+        "il-tur-cjpe-1958_74",
+        "il-tur-cjpe-1962_9",
+        "il-tur-cjpe-1963_216",
+        "il-tur-cjpe-1964_141",
+        "il-tur-cjpe-1964_340",
+        "il-tur-cjpe-1965_303",
+        "il-tur-cjpe-1965_349",
+        "il-tur-cjpe-1966_10",
+        "il-tur-cjpe-1966_263",
+        "il-tur-cjpe-1966_98",
+        "il-tur-cjpe-1967_154",
+        "il-tur-cjpe-1968_103",
+        "il-tur-cjpe-1968_161",
+        "il-tur-cjpe-1969_250",
+        "il-tur-cjpe-1969_511",
+        "il-tur-cjpe-1971_592",
+        "il-tur-cjpe-1972_340",
+        "il-tur-cjpe-1973_189",
+        "il-tur-cjpe-1979_278",
+        "il-tur-cjpe-1979_77",
+        "il-tur-cjpe-1980_32",
+        "il-tur-cjpe-1988_408",
+        "il-tur-cjpe-1988_444",
+        "il-tur-cjpe-1988_466",
+        "il-tur-cjpe-1990_342",
+        "il-tur-cjpe-1990_364",
+        "il-tur-cjpe-1993_180"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 33
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.878258,
+        "p10_cosine_to_centroid": 0.84559,
+        "minimum_cosine_to_centroid": 0.819755
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 33
+      },
+      "demand_focus_counts": {
+        "general_resolution": 33
+      },
+      "broad_domain_counts": {
+        "": 33
+      },
+      "authority_bucket_counts": {
+        "": 33
+      },
+      "lawsuit_type_top10": {
+        "": 33
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "9e461664ce74cf1c88813ac7bcd7bfe2901ce116c9d36a31b51f01e522d936e5"
+    },
+    {
+      "batch_id": "semantic_family_010",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_010_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 33,
+      "case_ids": [
+        "il-tur-cjpe-1952_4",
+        "il-tur-cjpe-1958_129",
+        "il-tur-cjpe-1958_35",
+        "il-tur-cjpe-1959_218",
+        "il-tur-cjpe-1959_38",
+        "il-tur-cjpe-1960_240",
+        "il-tur-cjpe-1960_6",
+        "il-tur-cjpe-1962_301",
+        "il-tur-cjpe-1964_34",
+        "il-tur-cjpe-1965_373",
+        "il-tur-cjpe-1966_115",
+        "il-tur-cjpe-1968_171",
+        "il-tur-cjpe-1968_279",
+        "il-tur-cjpe-1968_294",
+        "il-tur-cjpe-1968_372",
+        "il-tur-cjpe-1968_98",
+        "il-tur-cjpe-1970_83",
+        "il-tur-cjpe-1971_653",
+        "il-tur-cjpe-1973_71",
+        "il-tur-cjpe-1977_359",
+        "il-tur-cjpe-1978_218",
+        "il-tur-cjpe-1979_271",
+        "il-tur-cjpe-1980_396",
+        "il-tur-cjpe-1980_90",
+        "il-tur-cjpe-1983_213",
+        "il-tur-cjpe-1984_0",
+        "il-tur-cjpe-1985_113",
+        "il-tur-cjpe-1988_211",
+        "il-tur-cjpe-1988_399",
+        "il-tur-cjpe-1988_442",
+        "il-tur-cjpe-1991_41",
+        "il-tur-cjpe-1992_199",
+        "il-tur-cjpe-1992_668"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 33
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.889519,
+        "p10_cosine_to_centroid": 0.866209,
+        "minimum_cosine_to_centroid": 0.838784
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 33
+      },
+      "demand_focus_counts": {
+        "general_resolution": 33
+      },
+      "broad_domain_counts": {
+        "": 33
+      },
+      "authority_bucket_counts": {
+        "": 33
+      },
+      "lawsuit_type_top10": {
+        "": 33
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "e5f37e1be7fa7ea3c8af70ab427d8eb2d69b31dab080f941d4c5bb482a0fcc24"
+    },
+    {
+      "batch_id": "semantic_family_011",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_011_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1952_41",
+        "il-tur-cjpe-1956_29",
+        "il-tur-cjpe-1958_58",
+        "il-tur-cjpe-1958_87",
+        "il-tur-cjpe-1962_346",
+        "il-tur-cjpe-1965_3",
+        "il-tur-cjpe-1966_184",
+        "il-tur-cjpe-1966_301",
+        "il-tur-cjpe-1967_252",
+        "il-tur-cjpe-1971_498",
+        "il-tur-cjpe-1978_179",
+        "il-tur-cjpe-1978_281",
+        "il-tur-cjpe-1979_23",
+        "il-tur-cjpe-1981_110",
+        "il-tur-cjpe-1981_138",
+        "il-tur-cjpe-1982_137",
+        "il-tur-cjpe-1984_118",
+        "il-tur-cjpe-1984_298",
+        "il-tur-cjpe-1985_210",
+        "il-tur-cjpe-1988_201",
+        "il-tur-cjpe-1988_451",
+        "il-tur-cjpe-1990_336",
+        "il-tur-cjpe-1991_498",
+        "il-tur-cjpe-1992_166"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.850237,
+        "p10_cosine_to_centroid": 0.819275,
+        "minimum_cosine_to_centroid": 0.764871
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "f7fc8e159b7441cbf01f95efc36e47c1e02f4144dbe4817b8f466aca231de306"
+    },
+    {
+      "batch_id": "semantic_family_012",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_012_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 30,
+      "case_ids": [
+        "il-tur-cjpe-1952_64",
+        "il-tur-cjpe-1953_34",
+        "il-tur-cjpe-1954_169",
+        "il-tur-cjpe-1956_19",
+        "il-tur-cjpe-1956_25",
+        "il-tur-cjpe-1959_102",
+        "il-tur-cjpe-1960_24",
+        "il-tur-cjpe-1960_269",
+        "il-tur-cjpe-1960_277",
+        "il-tur-cjpe-1961_60",
+        "il-tur-cjpe-1964_309",
+        "il-tur-cjpe-1965_159",
+        "il-tur-cjpe-1965_193",
+        "il-tur-cjpe-1965_23",
+        "il-tur-cjpe-1965_336",
+        "il-tur-cjpe-1965_343",
+        "il-tur-cjpe-1965_365",
+        "il-tur-cjpe-1967_162",
+        "il-tur-cjpe-1969_501",
+        "il-tur-cjpe-1971_283",
+        "il-tur-cjpe-1971_99",
+        "il-tur-cjpe-1973_85",
+        "il-tur-cjpe-1975_176",
+        "il-tur-cjpe-1975_470",
+        "il-tur-cjpe-1977_115",
+        "il-tur-cjpe-1977_338",
+        "il-tur-cjpe-1980_406",
+        "il-tur-cjpe-1984_63",
+        "il-tur-cjpe-1984_66",
+        "il-tur-cjpe-1988_450"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 30
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.884808,
+        "p10_cosine_to_centroid": 0.860757,
+        "minimum_cosine_to_centroid": 0.823759
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 30
+      },
+      "demand_focus_counts": {
+        "general_resolution": 30
+      },
+      "broad_domain_counts": {
+        "": 30
+      },
+      "authority_bucket_counts": {
+        "": 30
+      },
+      "lawsuit_type_top10": {
+        "": 30
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "b2e66200e655f90da0a2ef21d66f34e767cedbd80b2325704851a46b114611a1"
+    },
+    {
+      "batch_id": "semantic_family_013",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_013_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1953_114",
+        "il-tur-cjpe-1954_181",
+        "il-tur-cjpe-1957_88",
+        "il-tur-cjpe-1960_176",
+        "il-tur-cjpe-1960_54",
+        "il-tur-cjpe-1960_55",
+        "il-tur-cjpe-1961_369",
+        "il-tur-cjpe-1964_198",
+        "il-tur-cjpe-1965_19",
+        "il-tur-cjpe-1965_94",
+        "il-tur-cjpe-1966_239",
+        "il-tur-cjpe-1967_188",
+        "il-tur-cjpe-1968_146",
+        "il-tur-cjpe-1971_22",
+        "il-tur-cjpe-1971_340",
+        "il-tur-cjpe-1973_98",
+        "il-tur-cjpe-1974_317",
+        "il-tur-cjpe-1977_49",
+        "il-tur-cjpe-1979_277",
+        "il-tur-cjpe-1983_291",
+        "il-tur-cjpe-1985_23",
+        "il-tur-cjpe-1988_504",
+        "il-tur-cjpe-1989_88",
+        "il-tur-cjpe-1993_250"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.872825,
+        "p10_cosine_to_centroid": 0.824613,
+        "minimum_cosine_to_centroid": 0.776231
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "43007a1774668541a6dc4c3a971e9ee5271336632da9ca2f6521da183a852278"
+    },
+    {
+      "batch_id": "semantic_family_014",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_014_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1953_13",
+        "il-tur-cjpe-1954_93",
+        "il-tur-cjpe-1955_101",
+        "il-tur-cjpe-1957_32",
+        "il-tur-cjpe-1957_51",
+        "il-tur-cjpe-1957_83",
+        "il-tur-cjpe-1959_187",
+        "il-tur-cjpe-1959_205",
+        "il-tur-cjpe-1959_81",
+        "il-tur-cjpe-1959_95",
+        "il-tur-cjpe-1961_197",
+        "il-tur-cjpe-1961_383",
+        "il-tur-cjpe-1962_291",
+        "il-tur-cjpe-1963_2",
+        "il-tur-cjpe-1963_51",
+        "il-tur-cjpe-1964_317",
+        "il-tur-cjpe-1965_107",
+        "il-tur-cjpe-1965_116",
+        "il-tur-cjpe-1966_94",
+        "il-tur-cjpe-1968_287",
+        "il-tur-cjpe-1969_336",
+        "il-tur-cjpe-1972_256",
+        "il-tur-cjpe-1973_233",
+        "il-tur-cjpe-1975_133",
+        "il-tur-cjpe-1976_0",
+        "il-tur-cjpe-1976_50",
+        "il-tur-cjpe-1978_278",
+        "il-tur-cjpe-1981_289",
+        "il-tur-cjpe-1987_387",
+        "il-tur-cjpe-1988_191",
+        "il-tur-cjpe-1989_545",
+        "il-tur-cjpe-1990_340",
+        "il-tur-cjpe-1991_398",
+        "il-tur-cjpe-1993_6",
+        "il-tur-cjpe-1993_67",
+        "il-tur-cjpe-1995_1084"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.895567,
+        "p10_cosine_to_centroid": 0.877703,
+        "minimum_cosine_to_centroid": 0.862215
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "ee4ed859df6f009e429fd26324126f2ee18050afa4f966178d43940de14e5d9b"
+    },
+    {
+      "batch_id": "semantic_family_015",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_015_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 33,
+      "case_ids": [
+        "il-tur-cjpe-1954_108",
+        "il-tur-cjpe-1958_161",
+        "il-tur-cjpe-1958_49",
+        "il-tur-cjpe-1958_50",
+        "il-tur-cjpe-1959_182",
+        "il-tur-cjpe-1959_198",
+        "il-tur-cjpe-1960_197",
+        "il-tur-cjpe-1960_28",
+        "il-tur-cjpe-1961_342",
+        "il-tur-cjpe-1962_206",
+        "il-tur-cjpe-1962_320",
+        "il-tur-cjpe-1965_378",
+        "il-tur-cjpe-1966_3",
+        "il-tur-cjpe-1969_457",
+        "il-tur-cjpe-1971_249",
+        "il-tur-cjpe-1971_539",
+        "il-tur-cjpe-1975_390",
+        "il-tur-cjpe-1978_396",
+        "il-tur-cjpe-1979_326",
+        "il-tur-cjpe-1980_176",
+        "il-tur-cjpe-1980_362",
+        "il-tur-cjpe-1981_184",
+        "il-tur-cjpe-1984_312",
+        "il-tur-cjpe-1985_17",
+        "il-tur-cjpe-1985_342",
+        "il-tur-cjpe-1986_365",
+        "il-tur-cjpe-1986_74",
+        "il-tur-cjpe-1987_369",
+        "il-tur-cjpe-1989_503",
+        "il-tur-cjpe-1992_137",
+        "il-tur-cjpe-1992_528",
+        "il-tur-cjpe-1993_77",
+        "il-tur-cjpe-1993_771"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 33
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.887459,
+        "p10_cosine_to_centroid": 0.857701,
+        "minimum_cosine_to_centroid": 0.83239
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 33
+      },
+      "demand_focus_counts": {
+        "general_resolution": 33
+      },
+      "broad_domain_counts": {
+        "": 33
+      },
+      "authority_bucket_counts": {
+        "": 33
+      },
+      "lawsuit_type_top10": {
+        "": 33
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "2cc99e024394984d37caf5887ba2e6af2c21c3a6f3f6c9303198cc804c5502c8"
+    },
+    {
+      "batch_id": "semantic_family_016",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_016_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1954_165",
+        "il-tur-cjpe-1954_55",
+        "il-tur-cjpe-1958_176",
+        "il-tur-cjpe-1958_32",
+        "il-tur-cjpe-1958_89",
+        "il-tur-cjpe-1958_91",
+        "il-tur-cjpe-1959_149",
+        "il-tur-cjpe-1959_93",
+        "il-tur-cjpe-1960_207",
+        "il-tur-cjpe-1960_260",
+        "il-tur-cjpe-1961_101",
+        "il-tur-cjpe-1962_237",
+        "il-tur-cjpe-1962_71",
+        "il-tur-cjpe-1962_79",
+        "il-tur-cjpe-1963_106",
+        "il-tur-cjpe-1963_148",
+        "il-tur-cjpe-1964_110",
+        "il-tur-cjpe-1964_237",
+        "il-tur-cjpe-1964_277",
+        "il-tur-cjpe-1964_55",
+        "il-tur-cjpe-1964_67",
+        "il-tur-cjpe-1965_299",
+        "il-tur-cjpe-1965_331",
+        "il-tur-cjpe-1967_168",
+        "il-tur-cjpe-1967_261",
+        "il-tur-cjpe-1967_47",
+        "il-tur-cjpe-1969_317",
+        "il-tur-cjpe-1969_459",
+        "il-tur-cjpe-1970_346",
+        "il-tur-cjpe-1972_34",
+        "il-tur-cjpe-1972_377",
+        "il-tur-cjpe-1972_441",
+        "il-tur-cjpe-1979_448",
+        "il-tur-cjpe-1980_193",
+        "il-tur-cjpe-1985_257",
+        "il-tur-cjpe-1985_264"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.902148,
+        "p10_cosine_to_centroid": 0.877899,
+        "minimum_cosine_to_centroid": 0.854315
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "92becfbbee78589b405533ccbdb0c355fd030137457f1dc5059368d0a4ba2506"
+    },
+    {
+      "batch_id": "semantic_family_017",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_017_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1954_23",
+        "il-tur-cjpe-1958_166",
+        "il-tur-cjpe-1959_58",
+        "il-tur-cjpe-1962_145",
+        "il-tur-cjpe-1962_298",
+        "il-tur-cjpe-1962_429",
+        "il-tur-cjpe-1963_12",
+        "il-tur-cjpe-1967_92",
+        "il-tur-cjpe-1968_26",
+        "il-tur-cjpe-1970_333",
+        "il-tur-cjpe-1972_11",
+        "il-tur-cjpe-1972_132",
+        "il-tur-cjpe-1972_61",
+        "il-tur-cjpe-1974_86",
+        "il-tur-cjpe-1975_43",
+        "il-tur-cjpe-1976_40",
+        "il-tur-cjpe-1977_63",
+        "il-tur-cjpe-1978_101",
+        "il-tur-cjpe-1978_283",
+        "il-tur-cjpe-1978_291",
+        "il-tur-cjpe-1983_36",
+        "il-tur-cjpe-1983_386",
+        "il-tur-cjpe-1992_130",
+        "il-tur-cjpe-1993_202"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.872194,
+        "p10_cosine_to_centroid": 0.849551,
+        "minimum_cosine_to_centroid": 0.809001
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "9fb4011f668b9dfec0cc3847b3930d09d6bc62ac1dc300afd4cc558f2ddb9ec8"
+    },
+    {
+      "batch_id": "semantic_family_018",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_018_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 28,
+      "case_ids": [
+        "il-tur-cjpe-1954_37",
+        "il-tur-cjpe-1955_22",
+        "il-tur-cjpe-1959_200",
+        "il-tur-cjpe-1961_2",
+        "il-tur-cjpe-1961_430",
+        "il-tur-cjpe-1963_19",
+        "il-tur-cjpe-1964_164",
+        "il-tur-cjpe-1964_287",
+        "il-tur-cjpe-1970_250",
+        "il-tur-cjpe-1970_68",
+        "il-tur-cjpe-1971_508",
+        "il-tur-cjpe-1971_570",
+        "il-tur-cjpe-1972_168",
+        "il-tur-cjpe-1974_386",
+        "il-tur-cjpe-1975_57",
+        "il-tur-cjpe-1975_71",
+        "il-tur-cjpe-1976_232",
+        "il-tur-cjpe-1979_323",
+        "il-tur-cjpe-1984_185",
+        "il-tur-cjpe-1985_154",
+        "il-tur-cjpe-1985_193",
+        "il-tur-cjpe-1985_94",
+        "il-tur-cjpe-1989_249",
+        "il-tur-cjpe-1990_276",
+        "il-tur-cjpe-1992_594",
+        "il-tur-cjpe-1993_269",
+        "il-tur-cjpe-1996_1036",
+        "il-tur-cjpe-1997_1220"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 28
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.880201,
+        "p10_cosine_to_centroid": 0.853682,
+        "minimum_cosine_to_centroid": 0.707511
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 28
+      },
+      "demand_focus_counts": {
+        "general_resolution": 28
+      },
+      "broad_domain_counts": {
+        "": 28
+      },
+      "authority_bucket_counts": {
+        "": 28
+      },
+      "lawsuit_type_top10": {
+        "": 28
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "f243917f12c24dec3f35bf6090aeefd783a872bac9b0f438fd020407fdae6d65"
+    },
+    {
+      "batch_id": "semantic_family_019",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_019_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 34,
+      "case_ids": [
+        "il-tur-cjpe-1954_83",
+        "il-tur-cjpe-1959_89",
+        "il-tur-cjpe-1960_173",
+        "il-tur-cjpe-1961_166",
+        "il-tur-cjpe-1961_8",
+        "il-tur-cjpe-1961_91",
+        "il-tur-cjpe-1962_64",
+        "il-tur-cjpe-1963_256",
+        "il-tur-cjpe-1965_14",
+        "il-tur-cjpe-1965_199",
+        "il-tur-cjpe-1965_45",
+        "il-tur-cjpe-1965_9",
+        "il-tur-cjpe-1967_219",
+        "il-tur-cjpe-1974_124",
+        "il-tur-cjpe-1978_260",
+        "il-tur-cjpe-1979_223",
+        "il-tur-cjpe-1980_235",
+        "il-tur-cjpe-1982_109",
+        "il-tur-cjpe-1982_54",
+        "il-tur-cjpe-1983_259",
+        "il-tur-cjpe-1983_358",
+        "il-tur-cjpe-1984_15",
+        "il-tur-cjpe-1984_196",
+        "il-tur-cjpe-1985_207",
+        "il-tur-cjpe-1986_179",
+        "il-tur-cjpe-1987_407",
+        "il-tur-cjpe-1988_209",
+        "il-tur-cjpe-1988_251",
+        "il-tur-cjpe-1988_295",
+        "il-tur-cjpe-1989_12",
+        "il-tur-cjpe-1989_479",
+        "il-tur-cjpe-1991_258",
+        "il-tur-cjpe-1993_7",
+        "il-tur-cjpe-1995_1061"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 34
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.895755,
+        "p10_cosine_to_centroid": 0.87284,
+        "minimum_cosine_to_centroid": 0.843723
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 34
+      },
+      "demand_focus_counts": {
+        "general_resolution": 34
+      },
+      "broad_domain_counts": {
+        "": 34
+      },
+      "authority_bucket_counts": {
+        "": 34
+      },
+      "lawsuit_type_top10": {
+        "": 34
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "abea7dffc786c6df8cd020cb9bdb9db673d0f960312a2077e94713d81fbcdf07"
+    },
+    {
+      "batch_id": "semantic_family_020",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_020_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 29,
+      "case_ids": [
+        "il-tur-cjpe-1955_112",
+        "il-tur-cjpe-1958_167",
+        "il-tur-cjpe-1958_53",
+        "il-tur-cjpe-1959_14",
+        "il-tur-cjpe-1960_272",
+        "il-tur-cjpe-1961_103",
+        "il-tur-cjpe-1962_197",
+        "il-tur-cjpe-1963_191",
+        "il-tur-cjpe-1963_241",
+        "il-tur-cjpe-1964_124",
+        "il-tur-cjpe-1964_145",
+        "il-tur-cjpe-1965_12",
+        "il-tur-cjpe-1965_215",
+        "il-tur-cjpe-1965_287",
+        "il-tur-cjpe-1965_327",
+        "il-tur-cjpe-1965_98",
+        "il-tur-cjpe-1966_191",
+        "il-tur-cjpe-1967_138",
+        "il-tur-cjpe-1967_77",
+        "il-tur-cjpe-1968_267",
+        "il-tur-cjpe-1969_263",
+        "il-tur-cjpe-1969_307",
+        "il-tur-cjpe-1969_421",
+        "il-tur-cjpe-1970_241",
+        "il-tur-cjpe-1970_37",
+        "il-tur-cjpe-1970_97",
+        "il-tur-cjpe-1972_22",
+        "il-tur-cjpe-1974_355",
+        "il-tur-cjpe-1980_257"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 29
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.866741,
+        "p10_cosine_to_centroid": 0.83209,
+        "minimum_cosine_to_centroid": 0.800594
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 29
+      },
+      "demand_focus_counts": {
+        "general_resolution": 29
+      },
+      "broad_domain_counts": {
+        "": 29
+      },
+      "authority_bucket_counts": {
+        "": 29
+      },
+      "lawsuit_type_top10": {
+        "": 29
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "b5444e824f5c403503054c10a061ec07cb8ee0e511b87fe39b55f646580ad76d"
+    },
+    {
+      "batch_id": "semantic_family_021",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_021_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 35,
+      "case_ids": [
+        "il-tur-cjpe-1955_45",
+        "il-tur-cjpe-1955_8",
+        "il-tur-cjpe-1957_152",
+        "il-tur-cjpe-1958_67",
+        "il-tur-cjpe-1959_151",
+        "il-tur-cjpe-1960_225",
+        "il-tur-cjpe-1960_333",
+        "il-tur-cjpe-1960_96",
+        "il-tur-cjpe-1962_217",
+        "il-tur-cjpe-1962_241",
+        "il-tur-cjpe-1962_348",
+        "il-tur-cjpe-1962_387",
+        "il-tur-cjpe-1963_303",
+        "il-tur-cjpe-1964_258",
+        "il-tur-cjpe-1966_68",
+        "il-tur-cjpe-1968_90",
+        "il-tur-cjpe-1969_15",
+        "il-tur-cjpe-1971_333",
+        "il-tur-cjpe-1971_404",
+        "il-tur-cjpe-1971_83",
+        "il-tur-cjpe-1972_144",
+        "il-tur-cjpe-1972_145",
+        "il-tur-cjpe-1972_62",
+        "il-tur-cjpe-1975_183",
+        "il-tur-cjpe-1975_38",
+        "il-tur-cjpe-1976_465",
+        "il-tur-cjpe-1978_371",
+        "il-tur-cjpe-1980_5",
+        "il-tur-cjpe-1981_104",
+        "il-tur-cjpe-1983_293",
+        "il-tur-cjpe-1984_73",
+        "il-tur-cjpe-1985_204",
+        "il-tur-cjpe-1986_109",
+        "il-tur-cjpe-1990_269",
+        "il-tur-cjpe-1993_338"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 35
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.909636,
+        "p10_cosine_to_centroid": 0.877804,
+        "minimum_cosine_to_centroid": 0.849173
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 35
+      },
+      "demand_focus_counts": {
+        "general_resolution": 35
+      },
+      "broad_domain_counts": {
+        "": 35
+      },
+      "authority_bucket_counts": {
+        "": 35
+      },
+      "lawsuit_type_top10": {
+        "": 35
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "40fd313eb393cdcf566c4dc13fcbf807e62378a328598afa6d644f5ef1e2827d"
+    },
+    {
+      "batch_id": "semantic_family_022",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_022_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1956_66",
+        "il-tur-cjpe-1960_259",
+        "il-tur-cjpe-1960_32",
+        "il-tur-cjpe-1961_230",
+        "il-tur-cjpe-1961_318",
+        "il-tur-cjpe-1962_293",
+        "il-tur-cjpe-1962_345",
+        "il-tur-cjpe-1963_285",
+        "il-tur-cjpe-1965_167",
+        "il-tur-cjpe-1965_219",
+        "il-tur-cjpe-1965_68",
+        "il-tur-cjpe-1966_290",
+        "il-tur-cjpe-1966_299",
+        "il-tur-cjpe-1967_104",
+        "il-tur-cjpe-1967_20",
+        "il-tur-cjpe-1967_200",
+        "il-tur-cjpe-1967_352",
+        "il-tur-cjpe-1968_152",
+        "il-tur-cjpe-1968_350",
+        "il-tur-cjpe-1968_52",
+        "il-tur-cjpe-1969_167",
+        "il-tur-cjpe-1969_210",
+        "il-tur-cjpe-1970_242",
+        "il-tur-cjpe-1971_211",
+        "il-tur-cjpe-1971_338",
+        "il-tur-cjpe-1971_385",
+        "il-tur-cjpe-1975_438",
+        "il-tur-cjpe-1976_435",
+        "il-tur-cjpe-1977_167",
+        "il-tur-cjpe-1979_357",
+        "il-tur-cjpe-1984_319",
+        "il-tur-cjpe-1986_158",
+        "il-tur-cjpe-1986_162",
+        "il-tur-cjpe-1988_170",
+        "il-tur-cjpe-1989_154",
+        "il-tur-cjpe-1991_460"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.878949,
+        "p10_cosine_to_centroid": 0.849221,
+        "minimum_cosine_to_centroid": 0.831981
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "db832e34ce308242f80a5b08677459c222536cea630b3a4ee10cbc492c7e1b92"
+    },
+    {
+      "batch_id": "semantic_family_023",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_023_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1957_13",
+        "il-tur-cjpe-1957_8",
+        "il-tur-cjpe-1958_145",
+        "il-tur-cjpe-1958_173",
+        "il-tur-cjpe-1960_230",
+        "il-tur-cjpe-1961_116",
+        "il-tur-cjpe-1961_305",
+        "il-tur-cjpe-1962_35",
+        "il-tur-cjpe-1963_157",
+        "il-tur-cjpe-1963_190",
+        "il-tur-cjpe-1964_163",
+        "il-tur-cjpe-1966_113",
+        "il-tur-cjpe-1967_293",
+        "il-tur-cjpe-1969_268",
+        "il-tur-cjpe-1970_173",
+        "il-tur-cjpe-1971_221",
+        "il-tur-cjpe-1972_127",
+        "il-tur-cjpe-1972_186",
+        "il-tur-cjpe-1972_583",
+        "il-tur-cjpe-1974_162",
+        "il-tur-cjpe-1974_83",
+        "il-tur-cjpe-1975_269",
+        "il-tur-cjpe-1975_515",
+        "il-tur-cjpe-1979_320",
+        "il-tur-cjpe-1979_335",
+        "il-tur-cjpe-1979_447",
+        "il-tur-cjpe-1979_83",
+        "il-tur-cjpe-1984_34",
+        "il-tur-cjpe-1984_8",
+        "il-tur-cjpe-1987_520",
+        "il-tur-cjpe-1988_413",
+        "il-tur-cjpe-1989_233",
+        "il-tur-cjpe-1990_206",
+        "il-tur-cjpe-1991_75",
+        "il-tur-cjpe-1993_166",
+        "il-tur-cjpe-1993_830"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.896224,
+        "p10_cosine_to_centroid": 0.86839,
+        "minimum_cosine_to_centroid": 0.851973
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "48a66396cc346ea4e69a8d1466c074cff0f6be435931c38aa40e55a213e6a63e"
+    },
+    {
+      "batch_id": "semantic_family_024",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_024_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1957_142",
+        "il-tur-cjpe-1957_74",
+        "il-tur-cjpe-1958_100",
+        "il-tur-cjpe-1958_38",
+        "il-tur-cjpe-1960_114",
+        "il-tur-cjpe-1960_118",
+        "il-tur-cjpe-1960_149",
+        "il-tur-cjpe-1960_290",
+        "il-tur-cjpe-1960_9",
+        "il-tur-cjpe-1961_123",
+        "il-tur-cjpe-1961_136",
+        "il-tur-cjpe-1961_292",
+        "il-tur-cjpe-1961_294",
+        "il-tur-cjpe-1961_317",
+        "il-tur-cjpe-1961_40",
+        "il-tur-cjpe-1966_4",
+        "il-tur-cjpe-1968_176",
+        "il-tur-cjpe-1968_221",
+        "il-tur-cjpe-1969_373",
+        "il-tur-cjpe-1978_61",
+        "il-tur-cjpe-1984_124",
+        "il-tur-cjpe-1985_222",
+        "il-tur-cjpe-1986_203",
+        "il-tur-cjpe-1987_445"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.872346,
+        "p10_cosine_to_centroid": 0.830856,
+        "minimum_cosine_to_centroid": 0.810145
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "368ec09751d782ff5ac986b952ae44f68a2b7bab24d5b17ef4516433bbd2c272"
+    },
+    {
+      "batch_id": "semantic_family_025",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_025_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 34,
+      "case_ids": [
+        "il-tur-cjpe-1957_19",
+        "il-tur-cjpe-1958_16",
+        "il-tur-cjpe-1960_256",
+        "il-tur-cjpe-1960_33",
+        "il-tur-cjpe-1961_228",
+        "il-tur-cjpe-1965_293",
+        "il-tur-cjpe-1967_205",
+        "il-tur-cjpe-1969_137",
+        "il-tur-cjpe-1969_369",
+        "il-tur-cjpe-1969_491",
+        "il-tur-cjpe-1970_45",
+        "il-tur-cjpe-1971_226",
+        "il-tur-cjpe-1971_419",
+        "il-tur-cjpe-1971_439",
+        "il-tur-cjpe-1971_85",
+        "il-tur-cjpe-1973_225",
+        "il-tur-cjpe-1973_227",
+        "il-tur-cjpe-1975_511",
+        "il-tur-cjpe-1977_302",
+        "il-tur-cjpe-1978_273",
+        "il-tur-cjpe-1978_30",
+        "il-tur-cjpe-1979_318",
+        "il-tur-cjpe-1979_395",
+        "il-tur-cjpe-1981_105",
+        "il-tur-cjpe-1981_242",
+        "il-tur-cjpe-1981_63",
+        "il-tur-cjpe-1982_58",
+        "il-tur-cjpe-1983_89",
+        "il-tur-cjpe-1986_224",
+        "il-tur-cjpe-1987_260",
+        "il-tur-cjpe-1989_75",
+        "il-tur-cjpe-1991_1",
+        "il-tur-cjpe-1992_287",
+        "il-tur-cjpe-1993_4"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 34
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.896217,
+        "p10_cosine_to_centroid": 0.870696,
+        "minimum_cosine_to_centroid": 0.832608
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 34
+      },
+      "demand_focus_counts": {
+        "general_resolution": 34
+      },
+      "broad_domain_counts": {
+        "": 34
+      },
+      "authority_bucket_counts": {
+        "": 34
+      },
+      "lawsuit_type_top10": {
+        "": 34
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "6a6a946801c61f75e7efe668f18dde18a4282f9f68aa8ec768dd1b3a28e6f85c"
+    },
+    {
+      "batch_id": "semantic_family_026",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_026_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1957_6",
+        "il-tur-cjpe-1960_110",
+        "il-tur-cjpe-1960_187",
+        "il-tur-cjpe-1960_312",
+        "il-tur-cjpe-1961_385",
+        "il-tur-cjpe-1961_431",
+        "il-tur-cjpe-1963_154",
+        "il-tur-cjpe-1964_21",
+        "il-tur-cjpe-1966_269",
+        "il-tur-cjpe-1966_72",
+        "il-tur-cjpe-1967_358",
+        "il-tur-cjpe-1968_66",
+        "il-tur-cjpe-1969_80",
+        "il-tur-cjpe-1970_194",
+        "il-tur-cjpe-1971_174",
+        "il-tur-cjpe-1971_183",
+        "il-tur-cjpe-1971_314",
+        "il-tur-cjpe-1972_407",
+        "il-tur-cjpe-1974_120",
+        "il-tur-cjpe-1974_329",
+        "il-tur-cjpe-1975_187",
+        "il-tur-cjpe-1979_141",
+        "il-tur-cjpe-1979_238",
+        "il-tur-cjpe-1980_301",
+        "il-tur-cjpe-1982_197",
+        "il-tur-cjpe-1983_35",
+        "il-tur-cjpe-1984_233",
+        "il-tur-cjpe-1984_278",
+        "il-tur-cjpe-1985_212",
+        "il-tur-cjpe-1986_48",
+        "il-tur-cjpe-1986_49",
+        "il-tur-cjpe-1988_171",
+        "il-tur-cjpe-1988_187",
+        "il-tur-cjpe-1988_296",
+        "il-tur-cjpe-1990_354",
+        "il-tur-cjpe-1993_810"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.895545,
+        "p10_cosine_to_centroid": 0.864716,
+        "minimum_cosine_to_centroid": 0.839294
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "cb5b345b10a5477aee4907832a6af106674e894386ac298282acbbc37f1f5173"
+    },
+    {
+      "batch_id": "semantic_family_027",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_027_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 36,
+      "case_ids": [
+        "il-tur-cjpe-1959_107",
+        "il-tur-cjpe-1964_73",
+        "il-tur-cjpe-1965_10",
+        "il-tur-cjpe-1965_305",
+        "il-tur-cjpe-1966_110",
+        "il-tur-cjpe-1968_25",
+        "il-tur-cjpe-1974_10",
+        "il-tur-cjpe-1974_128",
+        "il-tur-cjpe-1975_127",
+        "il-tur-cjpe-1976_101",
+        "il-tur-cjpe-1976_191",
+        "il-tur-cjpe-1977_103",
+        "il-tur-cjpe-1977_342",
+        "il-tur-cjpe-1978_35",
+        "il-tur-cjpe-1981_137",
+        "il-tur-cjpe-1981_201",
+        "il-tur-cjpe-1982_70",
+        "il-tur-cjpe-1984_75",
+        "il-tur-cjpe-1985_233",
+        "il-tur-cjpe-1986_369",
+        "il-tur-cjpe-1986_79",
+        "il-tur-cjpe-1986_84",
+        "il-tur-cjpe-1987_330",
+        "il-tur-cjpe-1987_364",
+        "il-tur-cjpe-1987_457",
+        "il-tur-cjpe-1987_605",
+        "il-tur-cjpe-1988_172",
+        "il-tur-cjpe-1988_294",
+        "il-tur-cjpe-1988_316",
+        "il-tur-cjpe-1988_360",
+        "il-tur-cjpe-1989_334",
+        "il-tur-cjpe-1989_489",
+        "il-tur-cjpe-1989_67",
+        "il-tur-cjpe-1990_4",
+        "il-tur-cjpe-1991_463",
+        "il-tur-cjpe-1995_333"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 36
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.903218,
+        "p10_cosine_to_centroid": 0.866379,
+        "minimum_cosine_to_centroid": 0.852567
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 36
+      },
+      "demand_focus_counts": {
+        "general_resolution": 36
+      },
+      "broad_domain_counts": {
+        "": 36
+      },
+      "authority_bucket_counts": {
+        "": 36
+      },
+      "lawsuit_type_top10": {
+        "": 36
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "9b49369bbcc4aa689e81081eb81895a4c7259b0f6a55c94ba564a8bdb0020e1f"
+    },
+    {
+      "batch_id": "semantic_family_028",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_028_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1959_112",
+        "il-tur-cjpe-1964_150",
+        "il-tur-cjpe-1965_285",
+        "il-tur-cjpe-1966_206",
+        "il-tur-cjpe-1968_189",
+        "il-tur-cjpe-1970_214",
+        "il-tur-cjpe-1970_354",
+        "il-tur-cjpe-1972_537",
+        "il-tur-cjpe-1973_318",
+        "il-tur-cjpe-1973_73",
+        "il-tur-cjpe-1974_138",
+        "il-tur-cjpe-1974_373",
+        "il-tur-cjpe-1975_100",
+        "il-tur-cjpe-1975_190",
+        "il-tur-cjpe-1976_151",
+        "il-tur-cjpe-1976_411",
+        "il-tur-cjpe-1977_120",
+        "il-tur-cjpe-1980_316",
+        "il-tur-cjpe-1983_200",
+        "il-tur-cjpe-1985_276",
+        "il-tur-cjpe-1986_103",
+        "il-tur-cjpe-1986_408",
+        "il-tur-cjpe-1988_45",
+        "il-tur-cjpe-1992_360"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.869846,
+        "p10_cosine_to_centroid": 0.831754,
+        "minimum_cosine_to_centroid": 0.795295
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "bdda12e8a9a5debf835f056150da7e3c9840a3417275257f070fde8ec56972a2"
+    },
+    {
+      "batch_id": "semantic_family_029",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_029_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1959_163",
+        "il-tur-cjpe-1961_192",
+        "il-tur-cjpe-1962_258",
+        "il-tur-cjpe-1964_3",
+        "il-tur-cjpe-1966_15",
+        "il-tur-cjpe-1967_364",
+        "il-tur-cjpe-1968_309",
+        "il-tur-cjpe-1970_172",
+        "il-tur-cjpe-1975_287",
+        "il-tur-cjpe-1975_442",
+        "il-tur-cjpe-1975_501",
+        "il-tur-cjpe-1977_300",
+        "il-tur-cjpe-1978_306",
+        "il-tur-cjpe-1978_385",
+        "il-tur-cjpe-1978_87",
+        "il-tur-cjpe-1979_258",
+        "il-tur-cjpe-1979_371",
+        "il-tur-cjpe-1984_228",
+        "il-tur-cjpe-1984_353",
+        "il-tur-cjpe-1986_139",
+        "il-tur-cjpe-1986_422",
+        "il-tur-cjpe-1987_587",
+        "il-tur-cjpe-1988_517",
+        "il-tur-cjpe-1990_566"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.851449,
+        "p10_cosine_to_centroid": 0.816433,
+        "minimum_cosine_to_centroid": 0.802794
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "486af9cc98b5a66a4b974e3d8226c4014920aac8b82e8be2900986918317e41f"
+    },
+    {
+      "batch_id": "semantic_family_030",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_030_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1961_121",
+        "il-tur-cjpe-1965_25",
+        "il-tur-cjpe-1965_330",
+        "il-tur-cjpe-1966_153",
+        "il-tur-cjpe-1966_66",
+        "il-tur-cjpe-1967_310",
+        "il-tur-cjpe-1968_86",
+        "il-tur-cjpe-1969_269",
+        "il-tur-cjpe-1971_130",
+        "il-tur-cjpe-1971_160",
+        "il-tur-cjpe-1971_224",
+        "il-tur-cjpe-1973_216",
+        "il-tur-cjpe-1976_331",
+        "il-tur-cjpe-1978_185",
+        "il-tur-cjpe-1979_368",
+        "il-tur-cjpe-1979_76",
+        "il-tur-cjpe-1983_135",
+        "il-tur-cjpe-1984_251",
+        "il-tur-cjpe-1985_216",
+        "il-tur-cjpe-1987_555",
+        "il-tur-cjpe-1988_177",
+        "il-tur-cjpe-1990_278",
+        "il-tur-cjpe-1992_633",
+        "il-tur-cjpe-1999_209"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.875926,
+        "p10_cosine_to_centroid": 0.840409,
+        "minimum_cosine_to_centroid": 0.828353
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "08462944bf7ef05185cbcdf177828342dc5d1b4ff10299e5b9bbc73225e00b11"
+    },
+    {
+      "batch_id": "semantic_family_031",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_031_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 26,
+      "case_ids": [
+        "il-tur-cjpe-1961_33",
+        "il-tur-cjpe-1961_395",
+        "il-tur-cjpe-1963_15",
+        "il-tur-cjpe-1964_223",
+        "il-tur-cjpe-1966_234",
+        "il-tur-cjpe-1967_228",
+        "il-tur-cjpe-1968_210",
+        "il-tur-cjpe-1968_251",
+        "il-tur-cjpe-1968_383",
+        "il-tur-cjpe-1968_85",
+        "il-tur-cjpe-1968_9",
+        "il-tur-cjpe-1969_14",
+        "il-tur-cjpe-1972_207",
+        "il-tur-cjpe-1974_370",
+        "il-tur-cjpe-1975_118",
+        "il-tur-cjpe-1975_52",
+        "il-tur-cjpe-1977_156",
+        "il-tur-cjpe-1978_304",
+        "il-tur-cjpe-1978_372",
+        "il-tur-cjpe-1978_380",
+        "il-tur-cjpe-1979_446",
+        "il-tur-cjpe-1981_304",
+        "il-tur-cjpe-1981_334",
+        "il-tur-cjpe-1982_50",
+        "il-tur-cjpe-1983_249",
+        "il-tur-cjpe-1989_331"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 26
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.879059,
+        "p10_cosine_to_centroid": 0.855321,
+        "minimum_cosine_to_centroid": 0.837485
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 26
+      },
+      "demand_focus_counts": {
+        "general_resolution": 26
+      },
+      "broad_domain_counts": {
+        "": 26
+      },
+      "authority_bucket_counts": {
+        "": 26
+      },
+      "lawsuit_type_top10": {
+        "": 26
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "f194afdd823647554a88e40b093a15888846c997190e90c92bdacf22695d9869"
+    },
+    {
+      "batch_id": "semantic_family_032",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_032_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 35,
+      "case_ids": [
+        "il-tur-cjpe-1964_87",
+        "il-tur-cjpe-1966_109",
+        "il-tur-cjpe-1967_214",
+        "il-tur-cjpe-1971_101",
+        "il-tur-cjpe-1971_185",
+        "il-tur-cjpe-1971_568",
+        "il-tur-cjpe-1973_4",
+        "il-tur-cjpe-1974_1",
+        "il-tur-cjpe-1975_453",
+        "il-tur-cjpe-1976_294",
+        "il-tur-cjpe-1977_158",
+        "il-tur-cjpe-1977_30",
+        "il-tur-cjpe-1979_116",
+        "il-tur-cjpe-1980_0",
+        "il-tur-cjpe-1980_164",
+        "il-tur-cjpe-1981_323",
+        "il-tur-cjpe-1983_77",
+        "il-tur-cjpe-1984_156",
+        "il-tur-cjpe-1984_198",
+        "il-tur-cjpe-1985_146",
+        "il-tur-cjpe-1986_400",
+        "il-tur-cjpe-1986_459",
+        "il-tur-cjpe-1988_91",
+        "il-tur-cjpe-1988_99",
+        "il-tur-cjpe-1991_124",
+        "il-tur-cjpe-1991_142",
+        "il-tur-cjpe-1991_221",
+        "il-tur-cjpe-1991_296",
+        "il-tur-cjpe-1991_492",
+        "il-tur-cjpe-1992_230",
+        "il-tur-cjpe-1992_320",
+        "il-tur-cjpe-1992_520",
+        "il-tur-cjpe-1993_186",
+        "il-tur-cjpe-1993_64",
+        "il-tur-cjpe-1997_796"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 35
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.89532,
+        "p10_cosine_to_centroid": 0.865079,
+        "minimum_cosine_to_centroid": 0.838102
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 35
+      },
+      "demand_focus_counts": {
+        "general_resolution": 35
+      },
+      "broad_domain_counts": {
+        "": 35
+      },
+      "authority_bucket_counts": {
+        "": 35
+      },
+      "lawsuit_type_top10": {
+        "": 35
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "062f7fc7cfd032be1edf0dba9ccd762aee272fcabf22ecb387d0117d0a18f819"
+    },
+    {
+      "batch_id": "semantic_family_033",
+      "kind": "semantic_family",
+      "label": "other_uncertain__semantic_cluster",
+      "path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_batches\\01_semantic_family_batches\\semantic_family_033_other_uncertain__semantic_cluster.jsonl",
+      "case_count": 24,
+      "case_ids": [
+        "il-tur-cjpe-1972_140",
+        "il-tur-cjpe-1975_252",
+        "il-tur-cjpe-1977_236",
+        "il-tur-cjpe-1977_31",
+        "il-tur-cjpe-1979_365",
+        "il-tur-cjpe-1982_186",
+        "il-tur-cjpe-1983_287",
+        "il-tur-cjpe-1984_76",
+        "il-tur-cjpe-1985_121",
+        "il-tur-cjpe-1987_602",
+        "il-tur-cjpe-1988_239",
+        "il-tur-cjpe-1988_512",
+        "il-tur-cjpe-1989_496",
+        "il-tur-cjpe-1990_260",
+        "il-tur-cjpe-1990_78",
+        "il-tur-cjpe-1991_132",
+        "il-tur-cjpe-1991_175",
+        "il-tur-cjpe-1991_59",
+        "il-tur-cjpe-1992_178",
+        "il-tur-cjpe-1993_104",
+        "il-tur-cjpe-1993_767",
+        "il-tur-cjpe-1993_774",
+        "il-tur-cjpe-1993_826",
+        "il-tur-cjpe-1993_97"
+      ],
+      "coarse_legal_family": "other_uncertain",
+      "coarse_legal_family_counts": {
+        "other_uncertain": 24
+      },
+      "coarse_legal_family_purity": 1.0,
+      "semantic_coherence": {
+        "mean_cosine_to_centroid": 0.860072,
+        "p10_cosine_to_centroid": 0.8291,
+        "minimum_cosine_to_centroid": 0.805493
+      },
+      "primary_family_counts": {
+        "general_legal_reasoning": 24
+      },
+      "demand_focus_counts": {
+        "general_resolution": 24
+      },
+      "broad_domain_counts": {
+        "": 24
+      },
+      "authority_bucket_counts": {
+        "": 24
+      },
+      "lawsuit_type_top10": {
+        "": 24
+      },
+      "trajectory_prefix_count": 1,
+      "file_sha256": "e84e7271f997008a69a00059af93cd6df72c1f544154084863ce0dfb61a35a8f"
+    }
+  ],
+  "manifest_hash": "219b75cf47583792889682132962c9e340da800172785a06daa77296053b06ac"
+}

@@ -1,0 +1,92 @@
+{
+  "template_source_cases": 994,
+  "coarse_legal_family_counts": {
+    "other_uncertain": 994
+  },
+  "coarse_legal_family_batch_counts": {
+    "other_uncertain": 33
+  },
+  "primary_family_counts": {
+    "general_legal_reasoning": 994
+  },
+  "demand_focus_counts": {
+    "general_resolution": 994
+  },
+  "all_reasoning_demand_counts": {},
+  "trajectory_prefix_counts_top50": {
+    "unknown": 994
+  },
+  "batch_count": 33,
+  "batched_case_ids": 994,
+  "batch_kind_counts": {
+    "semantic_family": 33
+  },
+  "candidate_prompt_size_estimates": {
+    "per_batch_count": 33,
+    "character_stats": {
+      "min": 140869,
+      "median": 528916,
+      "mean": 684055.5454545454,
+      "max": 1674765,
+      "total": 22573833
+    },
+    "token_estimates": {
+      "chars_per_token_3_5": {
+        "min": 40249,
+        "median": 151119,
+        "mean": 195444.69696969696,
+        "max": 478505,
+        "total": 6449675
+      },
+      "chars_per_token_4": {
+        "min": 35218,
+        "median": 132229,
+        "mean": 171014.24242424243,
+        "max": 418692,
+        "total": 5643470
+      }
+    },
+    "largest_batches": [
+      {
+        "batch_id": "semantic_family_015",
+        "label": "other_uncertain__semantic_cluster",
+        "kind": "semantic_family",
+        "characters": 1674765,
+        "tokens_at_3_5_chars_per_token": 478505,
+        "tokens_at_4_chars_per_token": 418692
+      },
+      {
+        "batch_id": "semantic_family_003",
+        "label": "other_uncertain__semantic_cluster",
+        "kind": "semantic_family",
+        "characters": 1613756,
+        "tokens_at_3_5_chars_per_token": 461073,
+        "tokens_at_4_chars_per_token": 403439
+      },
+      {
+        "batch_id": "semantic_family_014",
+        "label": "other_uncertain__semantic_cluster",
+        "kind": "semantic_family",
+        "characters": 1580514,
+        "tokens_at_3_5_chars_per_token": 451576,
+        "tokens_at_4_chars_per_token": 395129
+      },
+      {
+        "batch_id": "semantic_family_019",
+        "label": "other_uncertain__semantic_cluster",
+        "kind": "semantic_family",
+        "characters": 1520802,
+        "tokens_at_3_5_chars_per_token": 434515,
+        "tokens_at_4_chars_per_token": 380201
+      },
+      {
+        "batch_id": "semantic_family_023",
+        "label": "other_uncertain__semantic_cluster",
+        "kind": "semantic_family",
+        "characters": 1190556,
+        "tokens_at_3_5_chars_per_token": 340159,
+        "tokens_at_4_chars_per_token": 297639
+      }
+    ]
+  }
+}

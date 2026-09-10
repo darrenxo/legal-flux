@@ -633,12 +633,6 @@ def _candidate_messages(
     return _messages(
         f"""{prompt}
 
-BATCH_ID:
-{batch["batch_id"]}
-
-BATCH LABEL:
-{batch.get("label", "")}
-
 SUPPLIED SOURCE CASES:
 ```jsonl
 {batch_text}
@@ -675,12 +669,6 @@ def _gap_audit_prompt_text(
     batch_text = _read_text(_batch_file_path(batch, batch_root))
     pool_text = _read_text(pool_path)
     return f"""{prompt}
-
-BATCH_ID:
-{batch["batch_id"]}
-
-BATCH LABEL:
-{batch.get("label", "")}
 
 CURRENT CONSOLIDATED TEMPLATE LIBRARY:
 ```jsonl

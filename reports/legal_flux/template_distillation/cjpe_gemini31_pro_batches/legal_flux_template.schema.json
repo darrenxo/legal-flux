@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "template_id": {
+      "title": "Template Id",
+      "type": "string"
+    },
+    "template_name": {
+      "title": "Template Name",
+      "type": "string"
+    },
+    "knowledge_tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Knowledge Tags",
+      "type": "array"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "application_scenario": {
+      "title": "Application Scenario",
+      "type": "string"
+    },
+    "reasoning_flow": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasoning Flow",
+      "type": "array"
+    },
+    "example_application": {
+      "title": "Example Application",
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_id",
+    "template_name",
+    "knowledge_tags",
+    "description",
+    "application_scenario",
+    "reasoning_flow",
+    "example_application"
+  ],
+  "title": "LegalFluxTemplate",
+  "type": "object"
+}

@@ -5,6 +5,7 @@ import json
 import math
 import os
 import random
+import warnings
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,10 +26,13 @@ def train_trajectory_dpo(
     config: dict[str, Any],
     *,
     dry_run: bool = False,
+    validate_model_load: bool = False,
     resume_from_checkpoint: str | None = None,
     model_name_or_path: str | None = None,
     output_dir: str | None = None,
 ) -> dict[str, Any]:
+    if dry_run and validate_model_load:
+        raise ValueError("dry_run and validate_model_load are mutually exclusive.")
     runtime_config = _with_dpo_training_overrides(
         config,
         model_name_or_path=model_name_or_path,
@@ -50,6 +54,9 @@ def train_trajectory_dpo(
         "task": "trajectory_dpo",
         "dry_run": dry_run,
         "model_name_or_path": settings["model_name_or_path"],
+        "policy_adapter_source": _dpo_policy_adapter_source(
+            settings["model_name_or_path"]
+        ),
         "reference_policy": (
             "TRL 0.29 copies the selected SFT `default` adapter to a frozen "
             "`ref` adapter before DPO training starts."
@@ -80,9 +87,15 @@ def train_trajectory_dpo(
         import peft
         import trl
         from datasets import Dataset
-        from peft import AutoPeftModelForCausalLM
+        from peft import (
+            PeftConfig,
+            PeftModel,
+            get_peft_model_state_dict,
+            load_peft_weights,
+        )
+        from safetensors import safe_open
         from packaging.version import Version
-        from transformers import AutoTokenizer
+        from transformers import AutoModelForCausalLM, AutoTokenizer
         from trl import DPOConfig, DPOTrainer
     except ImportError as exc:
         raise RuntimeError(
@@ -103,7 +116,6 @@ def train_trajectory_dpo(
     use_fp16 = not use_bf16
     model_dtype = torch.bfloat16 if use_bf16 else torch.float16
     model_kwargs: dict[str, Any] = {
-        "is_trainable": True,
         "dtype": model_dtype,
         "trust_remote_code": settings["trust_remote_code"],
     }
@@ -149,11 +161,62 @@ def train_trajectory_dpo(
         component="TRL DPOConfig",
     )
     training_args = DPOConfig(**dpo_config_kwargs)
-    model = AutoPeftModelForCausalLM.from_pretrained(
-        settings["model_name_or_path"],
+    adapter_source = str(preflight["policy_adapter_source"])
+    adapter_config = PeftConfig.from_pretrained(adapter_source)
+    base_model_source = str(adapter_config.base_model_name_or_path or "").strip()
+    if not base_model_source:
+        raise RuntimeError(
+            f"The policy adapter at {adapter_source} does not identify its base model."
+        )
+    with safe_open(
+        Path(adapter_source) / "adapter_model.safetensors",
+        framework="pt",
+        device="cpu",
+    ) as handle:
+        adapter_key_mapping = _dpo_adapter_key_mapping(list(handle.keys()))
+    base_model = AutoModelForCausalLM.from_pretrained(
+        base_model_source,
         **model_kwargs,
     )
+    try:
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "error",
+                message=r"Found missing adapter keys while loading the checkpoint.*",
+                category=UserWarning,
+            )
+            model = PeftModel.from_pretrained(
+                base_model,
+                adapter_source,
+                is_trainable=True,
+                config=adapter_config,
+                key_mapping=adapter_key_mapping,
+            )
+    except UserWarning as exc:
+        raise RuntimeError(
+            "The selected SFT policy adapter did not load completely. Refusing "
+            "to start DPO from newly initialized LoRA tensors."
+        ) from exc
     _validate_initial_sft_policy_adapter(model)
+    initial_policy_validation = _validate_loaded_policy_state(
+        source_state=load_peft_weights(
+            adapter_source,
+            device="cpu",
+            key_mapping=adapter_key_mapping,
+        ),
+        loaded_state=get_peft_model_state_dict(
+            model,
+            adapter_name=DPO_POLICY_ADAPTER_NAME,
+        ),
+        adapter_source=adapter_source,
+    )
+    print(
+        json.dumps(
+            {"initial_policy_validation": initial_policy_validation},
+            ensure_ascii=False,
+        ),
+        flush=True,
+    )
     trainer = DPOTrainer(
         model=model,
         ref_model=None,
@@ -163,6 +226,14 @@ def train_trajectory_dpo(
         processing_class=tokenizer,
     )
     _validate_trl_created_reference_adapter(model)
+    if validate_model_load:
+        return {
+            **preflight,
+            "dry_run": False,
+            "validate_model_load": True,
+            "initial_policy_validation": initial_policy_validation,
+            "reference_adapter_validation": "passed",
+        }
     train_result = trainer.train(
         resume_from_checkpoint=resume_from_checkpoint or None
     )
@@ -176,6 +247,7 @@ def train_trajectory_dpo(
         "dry_run": False,
         "completed_at": datetime.now(timezone.utc).isoformat(),
         "final_checkpoint": str(final_dir),
+        "initial_policy_validation": initial_policy_validation,
         "train_metrics": train_result.metrics,
         "library_versions": {
             "torch": torch.__version__,
@@ -376,6 +448,87 @@ def _trajectory_dpo_config_kwargs(
         "remove_unused_columns": True,
         "precompute_ref_log_probs": settings["precompute_ref_log_probs"],
         "sync_ref_model": False,
+    }
+
+
+def _dpo_policy_adapter_source(model_name_or_path: str) -> str:
+    """Prefer the prepared text-only SFT adapter for causal-LM DPO."""
+    checkpoint = Path(model_name_or_path).expanduser()
+    if not checkpoint.is_dir():
+        return model_name_or_path
+    text_adapter = checkpoint / "vllm_text_only"
+    required = (
+        text_adapter / "adapter_config.json",
+        text_adapter / "adapter_model.safetensors",
+    )
+    if all(path.is_file() for path in required):
+        return str(text_adapter.resolve())
+    return str(checkpoint.resolve())
+
+
+def _dpo_adapter_key_mapping(adapter_keys: list[str]) -> dict[str, str] | None:
+    """Map Qwen3.5 conditional-wrapper text keys onto its causal-LM model."""
+    if any(".language_model." in key for key in adapter_keys):
+        return {r"^(?:model\.)?language_model\.": "model."}
+    return None
+
+
+def _validate_loaded_policy_state(
+    *,
+    source_state: dict[str, Any],
+    loaded_state: dict[str, Any],
+    adapter_source: str,
+) -> dict[str, Any]:
+    """Require every source SFT tensor to load exactly before DPO starts."""
+    source_keys = set(source_state)
+    loaded_keys = set(loaded_state)
+    missing = sorted(source_keys - loaded_keys)
+    unexpected = sorted(loaded_keys - source_keys)
+    if missing or unexpected:
+        hint = (
+            " Run `flux-prepare-vllm-adapter` on the original SFT checkpoint "
+            "and use its text-only child for DPO."
+        )
+        raise RuntimeError(
+            "The loaded DPO policy does not have the same adapter tensors as "
+            f"{adapter_source}: missing={len(missing)}, "
+            f"unexpected={len(unexpected)}."
+            + hint
+        )
+
+    mismatched: list[str] = []
+    nonzero_lora_b = 0
+    lora_b_tensors = 0
+    for key in sorted(source_keys):
+        expected = source_state[key].detach().cpu()
+        actual = loaded_state[key].detach().cpu()
+        if expected.shape != actual.shape:
+            mismatched.append(key)
+            continue
+        expected = expected.to(dtype=actual.dtype)
+        if not expected.equal(actual):
+            mismatched.append(key)
+        if ".lora_B." in key:
+            lora_b_tensors += 1
+            if bool(expected.count_nonzero()):
+                nonzero_lora_b += 1
+    if mismatched:
+        raise RuntimeError(
+            "The selected SFT policy adapter was not loaded exactly before "
+            f"DPO; {len(mismatched)} tensors differ. First examples: "
+            f"{mismatched[:5]}"
+        )
+    if not lora_b_tensors or not nonzero_lora_b:
+        raise RuntimeError(
+            "The selected SFT policy has no nonzero LoRA-B tensors and is "
+            "equivalent to a newly initialized adapter. Refusing to start DPO."
+        )
+    return {
+        "adapter_source": adapter_source,
+        "tensor_count": len(source_keys),
+        "lora_b_tensor_count": lora_b_tensors,
+        "nonzero_lora_b_tensor_count": nonzero_lora_b,
+        "all_tensors_exact": True,
     }
 
 
