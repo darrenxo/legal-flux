@@ -181,7 +181,6 @@ def export_legal_flux_chatgpt_batches(
     )
     _write_prompts(
         prompts_dir,
-        coverage,
         max_candidates=max_candidates,
         minimum_support_cases=minimum_support_cases,
         source_dataset=source_dataset,
@@ -892,7 +891,6 @@ def _clear_generated_files(directory: Path, *, patterns: tuple[str, ...]) -> Non
 
 def _write_prompts(
     prompts_dir: Path,
-    coverage: dict[str, Any],
     *,
     max_candidates: int,
     minimum_support_cases: int,
@@ -911,7 +909,7 @@ def _write_prompts(
         encoding="utf-8",
     )
     (prompts_dir / "03_coverage_audit_and_gap_fill.md").write_text(
-        _coverage_audit_prompt(coverage, source_dataset=source_dataset),
+        _coverage_audit_prompt(source_dataset=source_dataset),
         encoding="utf-8",
     )
 
@@ -1018,7 +1016,6 @@ will be assigned deterministically after this consolidation call.
 
 
 def _coverage_audit_prompt(
-    coverage: dict[str, Any],
     *,
     source_dataset: str = "legalhk",
 ) -> str:
@@ -1049,12 +1046,6 @@ valid and preferable to a weak addition. Gap candidates are proposals only and
 will undergo a separate global adjudication before entering the final library.
 
 Return one JSON object matching the gap-audit output schema.
-
-Aggregate source coverage metadata:
-
-```json
-{json.dumps(coverage, ensure_ascii=False, indent=2)}
-```
 """
 
 

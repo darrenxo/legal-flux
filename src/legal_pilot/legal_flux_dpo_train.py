@@ -16,6 +16,8 @@ from .io_utils import read_jsonl, sha256_text, write_jsonl
 from .legal_flux import load_template_pool, template_pool_hash
 from .legal_flux_dpo import dpo_construction_workflow_hash
 from .models import LegalFluxAbstractPlan
+from .prompting import render_prompt
+from .runner import load_cases
 
 
 DPO_POLICY_ADAPTER_NAME = "default"
@@ -68,6 +70,7 @@ def train_trajectory_dpo(
         "train_file": data["train_file"],
         "eval_file": data["eval_file"],
         "source_file": data["source_file"],
+        "source_artifact_audit": data.get("source_artifact_audit"),
         "output_dir": str(settings["output_dir"]),
         "world_size": world_size,
         "effective_batch_size": effective_batch_size,
@@ -282,37 +285,29 @@ def prepare_trajectory_dpo_splits(config: dict[str, Any]) -> dict[str, Any]:
             f"Trajectory DPO data does not exist at {source_path}. Run "
             "`flux-export-trajectory-dpo` first."
         )
+    rows = read_jsonl(source_path)
+    source_artifact_audit: dict[str, Any] | None = None
     source_manifest_path = source_path.with_name("trajectory_dpo_manifest.json")
     if source_manifest_path.is_file():
         source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
         context_config = _config_for_recorded_collection(config, source_manifest)
-        expected = {
-            "workflow_hash": dpo_construction_workflow_hash(context_config),
-            "template_pool_hash": template_pool_hash(load_template_pool(config)),
-        }
-        mismatches = {
-            key: (source_manifest.get(key), value)
-            for key, value in expected.items()
-            if source_manifest.get(key) != value
-        }
-        if mismatches:
-            raise RuntimeError(
-                "Trajectory DPO pairs were exported from a different pipeline. "
-                f"Rebuild them before training. Mismatches: {mismatches}"
-            )
-        source_checkpoint = str(source_manifest.get("source_checkpoint") or "")
-        if source_checkpoint and not _same_model_source(
-            settings["model_name_or_path"], source_checkpoint
-        ):
-            raise RuntimeError(
-                "Trajectory preferences were collected with SFT checkpoint "
-                f"{source_checkpoint}, but DPO training was asked to update "
-                f"{settings['model_name_or_path']}. Use the same checkpoint."
-            )
-    rows = read_jsonl(source_path)
+        source_artifact_audit = _validate_dpo_source_artifact(
+            source_path=source_path,
+            rows=rows,
+            source_manifest=source_manifest,
+            current_workflow_hash=dpo_construction_workflow_hash(context_config),
+            current_template_pool_hash=template_pool_hash(load_template_pool(config)),
+            current_prompt_hashes=_current_dpo_prompt_hashes(config, rows),
+            model_name_or_path=settings["model_name_or_path"],
+        )
     validated = [_validated_dpo_row(row) for row in rows]
     if not validated:
         raise ValueError("Trajectory DPO training requires at least one preference pair.")
+    if source_artifact_audit is not None:
+        source_artifact_audit = {
+            **source_artifact_audit,
+            "canonical_pairs_verified": len(validated),
+        }
     eval_fraction = settings["eval_fraction"]
     if not 0.0 <= eval_fraction < 1.0:
         raise ValueError("training.trajectory_dpo.eval_fraction must be in [0, 1).")
@@ -343,6 +338,7 @@ def prepare_trajectory_dpo_splits(config: dict[str, Any]) -> dict[str, Any]:
         "train_file": str(train_path),
         "eval_file": str(eval_path),
         "held_out_unit": "anchor_case" if eval_rows else None,
+        "source_artifact_audit": source_artifact_audit,
     }
     manifest_path = output_dir / "trajectory_dpo_split_manifest.json"
     manifest_path.write_text(
@@ -350,6 +346,162 @@ def prepare_trajectory_dpo_splits(config: dict[str, Any]) -> dict[str, Any]:
         encoding="utf-8",
     )
     return {**manifest, "manifest_path": str(manifest_path)}
+
+
+def _validate_dpo_source_artifact(
+    *,
+    source_path: Path,
+    rows: list[dict[str, Any]],
+    source_manifest: dict[str, Any],
+    current_workflow_hash: str,
+    current_template_pool_hash: str,
+    current_prompt_hashes: dict[str, str],
+    model_name_or_path: str,
+) -> dict[str, Any]:
+    """Validate a frozen DPO export without coupling training to unrelated code."""
+    recorded_output_hash = str(source_manifest.get("output_sha256") or "").strip()
+    actual_output_hash = sha256_text(source_path.read_text(encoding="utf-8"))
+    if not recorded_output_hash or recorded_output_hash != actual_output_hash:
+        raise RuntimeError(
+            "The exported trajectory DPO pair file does not match its manifest: "
+            f"recorded output_sha256={recorded_output_hash or None!r}, "
+            f"actual={actual_output_hash!r}."
+        )
+
+    recorded_pair_count = source_manifest.get("pairs")
+    if recorded_pair_count is not None and int(recorded_pair_count) != len(rows):
+        raise RuntimeError(
+            "The exported trajectory DPO pair count does not match its manifest: "
+            f"recorded={recorded_pair_count}, actual={len(rows)}."
+        )
+
+    recorded_template_hash = str(
+        source_manifest.get("template_pool_hash") or ""
+    ).strip()
+    if recorded_template_hash != current_template_pool_hash:
+        raise RuntimeError(
+            "Trajectory DPO pairs were evaluated with a different template pool: "
+            f"recorded={recorded_template_hash or None!r}, "
+            f"current={current_template_pool_hash!r}."
+        )
+
+    source_checkpoint = str(source_manifest.get("source_checkpoint") or "").strip()
+    if not source_checkpoint:
+        raise RuntimeError(
+            "The trajectory DPO manifest has no source SFT checkpoint."
+        )
+    if not _same_model_source(model_name_or_path, source_checkpoint):
+        raise RuntimeError(
+            "Trajectory preferences were collected with SFT checkpoint "
+            f"{source_checkpoint}, but DPO training was asked to update "
+            f"{model_name_or_path}. Use the same checkpoint."
+        )
+
+    role_models = {
+        field: str(source_manifest.get(field) or "").strip()
+        for field in ("planner_model", "executor_model", "reviewer_model")
+    }
+    missing_roles = sorted(field for field, value in role_models.items() if not value)
+    if missing_roles:
+        raise RuntimeError(
+            "The trajectory DPO manifest is missing model-role provenance: "
+            f"{missing_roles}."
+        )
+
+    prompt_hash_errors = [
+        str(row.get("id") or "<missing-id>")
+        for row in rows
+        if str(row.get("prompt_hash") or "")
+        != sha256_text(str(row.get("prompt") or ""))
+    ]
+    if prompt_hash_errors:
+        raise RuntimeError(
+            "The exported trajectory DPO data contains prompt/hash mismatches; "
+            f"count={len(prompt_hash_errors)}, first={prompt_hash_errors[:5]}."
+        )
+
+    current_prompt_errors = [
+        str(row.get("id") or "<missing-id>")
+        for row in rows
+        if current_prompt_hashes.get(str(row.get("id") or ""))
+        != str(row.get("prompt_hash") or "")
+    ]
+    if current_prompt_errors:
+        raise RuntimeError(
+            "The exported trajectory DPO prompts do not match the current "
+            "planner prompt and case inputs; "
+            f"count={len(current_prompt_errors)}, first={current_prompt_errors[:5]}."
+        )
+
+    recorded_workflow_hash = str(
+        source_manifest.get("workflow_hash") or ""
+    ).strip()
+    if not recorded_workflow_hash:
+        raise RuntimeError("The trajectory DPO manifest has no workflow hash.")
+    workflow_matches = recorded_workflow_hash == current_workflow_hash
+    compatibility_mode = (
+        "exact_workflow" if workflow_matches else "verified_immutable_export"
+    )
+    if not workflow_matches:
+        warnings.warn(
+            "The current LegalFlux workflow hash differs from the workflow that "
+            "exported the DPO pairs. Proceeding with the immutable export because "
+            "its file hash, prompt hashes, template pool, source checkpoint, and "
+            "model-role provenance all passed validation. Both workflow hashes "
+            "will be preserved in the training manifest.",
+            UserWarning,
+        )
+
+    return {
+        "status": "verified",
+        "compatibility_mode": compatibility_mode,
+        "pair_count": len(rows),
+        "output_sha256": actual_output_hash,
+        "prompt_hashes_verified": len(rows),
+        "current_prompt_hashes_verified": len(rows),
+        "template_pool_hash": current_template_pool_hash,
+        "recorded_workflow_hash": recorded_workflow_hash,
+        "current_workflow_hash": current_workflow_hash,
+        "workflow_hash_matches": workflow_matches,
+        "source_checkpoint": source_checkpoint,
+        **role_models,
+    }
+
+
+def _current_dpo_prompt_hashes(
+    config: dict[str, Any], rows: list[dict[str, Any]]
+) -> dict[str, str]:
+    identifiers = [str(row.get("id") or "").strip() for row in rows]
+    if any(not identifier for identifier in identifiers):
+        raise RuntimeError("Every trajectory DPO pair must have a nonempty id.")
+    if len(set(identifiers)) != len(identifiers):
+        raise RuntimeError("Trajectory DPO pair ids must be unique.")
+
+    cases = {(case.case_id, case.variant_id): case for case in load_cases(config)}
+    hashes: dict[str, str] = {}
+    missing_cases: list[str] = []
+    max_steps = int(config["legal_flux"].get("max_steps", 4))
+    for identifier, row in zip(identifiers, rows, strict=True):
+        case_key = (
+            str(row.get("case_id") or ""),
+            str(row.get("variant_id") or "original"),
+        )
+        case = cases.get(case_key)
+        if case is None:
+            missing_cases.append(identifier)
+            continue
+        _, hashes[identifier] = render_prompt(
+            config,
+            "legal_flux/rf_plan",
+            case,
+            max_steps=max_steps,
+        )
+    if missing_cases:
+        raise RuntimeError(
+            "Could not reconstruct the current planner prompt for exported DPO "
+            f"pairs; missing cases={len(missing_cases)}, first={missing_cases[:5]}."
+        )
+    return hashes
 
 
 def trajectory_dpo_settings(config: dict[str, Any]) -> dict[str, Any]:

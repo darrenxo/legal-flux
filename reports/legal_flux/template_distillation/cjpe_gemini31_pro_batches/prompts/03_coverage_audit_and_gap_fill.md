@@ -14,32 +14,3 @@ valid and preferable to a weak addition. Gap candidates are proposals only and
 will undergo a separate global adjudication before entering the final library.
 
 Return one JSON object matching the gap-audit output schema.
-
-Aggregate source coverage metadata:
-
-```json
-{
-  "template_source_cases": 994,
-  "coarse_legal_family_counts": {
-    "other_uncertain": 994
-  },
-  "coarse_legal_family_batch_counts": {
-    "other_uncertain": 33
-  },
-  "primary_family_counts": {
-    "general_legal_reasoning": 994
-  },
-  "demand_focus_counts": {
-    "general_resolution": 994
-  },
-  "all_reasoning_demand_counts": {},
-  "trajectory_prefix_counts_top50": {
-    "unknown": 994
-  },
-  "batch_count": 33,
-  "batched_case_ids": 994,
-  "batch_kind_counts": {
-    "semantic_family": 33
-  }
-}
-```

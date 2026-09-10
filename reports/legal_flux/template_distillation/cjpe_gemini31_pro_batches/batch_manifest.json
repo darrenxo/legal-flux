@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-09-09T15:59:53.405333+00:00",
+  "created_at": "2026-09-10T16:23:10.383996+00:00",
   "template_source_dataset": "il_tur_cjpe",
   "template_source_split": "multi_dev",
   "source_record_format": "full_text",
@@ -499,7 +499,7 @@
       "semantic_coherence": {
         "mean_cosine_to_centroid": 0.825415,
         "p10_cosine_to_centroid": 0.787912,
-        "minimum_cosine_to_centroid": 0.751803
+        "minimum_cosine_to_centroid": 0.751802
       },
       "primary_family_counts": {
         "general_legal_reasoning": 24
@@ -2215,7 +2215,7 @@
       },
       "coarse_legal_family_purity": 1.0,
       "semantic_coherence": {
-        "mean_cosine_to_centroid": 0.860072,
+        "mean_cosine_to_centroid": 0.860073,
         "p10_cosine_to_centroid": 0.8291,
         "minimum_cosine_to_centroid": 0.805493
       },
@@ -2238,5 +2238,5 @@
       "file_sha256": "e84e7271f997008a69a00059af93cd6df72c1f544154084863ce0dfb61a35a8f"
     }
   ],
-  "manifest_hash": "219b75cf47583792889682132962c9e340da800172785a06daa77296053b06ac"
+  "manifest_hash": "501e0dc99e255511c5e614c5fc1982935924a5c6666431b60ba519a48e3a576d"
 }

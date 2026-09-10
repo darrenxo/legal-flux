@@ -14,7 +14,12 @@ from legal_pilot.adaptive_profiles import profile_row
 from legal_pilot.clients import ModelResponse
 from legal_pilot.config import load_config
 from legal_pilot.embeddings import FixedEmbeddingBackend
-from legal_pilot.io_utils import latest_by_run_hash, read_jsonl, write_jsonl
+from legal_pilot.io_utils import (
+    latest_by_run_hash,
+    read_jsonl,
+    sha256_text,
+    write_jsonl,
+)
 from legal_pilot.legal_flux import (
     legal_flux_workflow_components,
     load_template_pool,
@@ -35,6 +40,7 @@ from legal_pilot.legal_flux_dpo_train import (
     _dpo_policy_adapter_source,
     _dpo_trainer_rows,
     _trajectory_dpo_config_kwargs,
+    _validate_dpo_source_artifact,
     _validate_initial_sft_policy_adapter,
     _validate_loaded_policy_state,
     _validate_trl_created_reference_adapter,
@@ -1492,6 +1498,11 @@ def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):
     ).exists()
     assert (manifest.parent / "legal_flux_candidate_response.schema.json").exists()
     assert (manifest.parent / "prompts" / "02_merge_deduplicate_templates.md").exists()
+    audit_prompt = (
+        manifest.parent / "prompts" / "03_coverage_audit_and_gap_fill.md"
+    ).read_text(encoding="utf-8")
+    assert "Aggregate source coverage metadata" not in audit_prompt
+    assert "coarse_legal_family_counts" not in audit_prompt
 
 
 def test_cjpe_template_export_uses_multi_dev_full_text_without_labels(tmp_path: Path):
@@ -1578,6 +1589,8 @@ def test_cjpe_template_export_uses_multi_dev_full_text_without_labels(tmp_path: 
     assert "Hong Kong" not in merge_prompt
     assert "Indian Supreme Court" in merge_prompt
     assert "case's full_text" in audit_prompt
+    assert "Aggregate source coverage metadata" not in audit_prompt
+    assert "coarse_legal_family_counts" not in audit_prompt
     assert manifest["template_source_dataset"] == "il_tur_cjpe"
     assert manifest["template_source_split"] == "multi_dev"
     assert manifest["source_record_format"] == "full_text"
@@ -3009,7 +3022,25 @@ def test_dpo_pipeline_executes_fixed_trajectory_on_all_xsim_cases(tmp_path: Path
         "model_name_or_path": str(source_checkpoint),
         "output_dir": str(tmp_path / "dpo-output"),
     }
-    split = prepare_trajectory_dpo_splits(config)
+    source_manifest_path = (
+        processed / "planner_training" / "trajectory_dpo_manifest.json"
+    )
+    source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+    source_manifest["workflow_hash"] = "verified-legacy-workflow"
+    source_manifest_path.write_text(
+        json.dumps(source_manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.warns(UserWarning, match="immutable export"):
+        split = prepare_trajectory_dpo_splits(config)
+    assert split["source_artifact_audit"]["compatibility_mode"] == (
+        "verified_immutable_export"
+    )
+    assert split["source_artifact_audit"]["recorded_workflow_hash"] == (
+        "verified-legacy-workflow"
+    )
+    assert split["source_artifact_audit"]["workflow_hash_matches"] is False
+    assert split["source_artifact_audit"]["canonical_pairs_verified"] == 1
     assert split["train_examples"] == 1
     config["training"]["trajectory_dpo"]["model_name_or_path"] = str(
         tmp_path / "wrong-sft-checkpoint"
@@ -3112,6 +3143,73 @@ def test_trajectory_dpo_training_preflight_validates_canonical_pairs(tmp_path: P
     assert settings["max_length"] == 6144
     assert trainer_rows[0]["prompt"].endswith("<assistant>")
     assert "planning_analysis" in trainer_rows[0]["chosen"]
+
+
+def test_dpo_source_artifact_requires_hash_and_prompt_integrity(tmp_path: Path):
+    source_checkpoint = tmp_path / "checkpoint-60"
+    source_checkpoint.mkdir()
+    source_path = tmp_path / "trajectory_dpo.jsonl"
+    row = {
+        "id": "trajectory-dpo-1",
+        "prompt": "Current planner prompt",
+        "prompt_hash": sha256_text("Current planner prompt"),
+    }
+    write_jsonl(source_path, [row])
+    manifest = {
+        "pairs": 1,
+        "output_sha256": sha256_text(source_path.read_text(encoding="utf-8")),
+        "workflow_hash": "recorded-workflow",
+        "template_pool_hash": "template-pool",
+        "source_checkpoint": str(source_checkpoint),
+        "planner_model": "sft-planner",
+        "executor_model": "base-executor",
+        "reviewer_model": "sft-reviewer",
+    }
+    kwargs = {
+        "source_path": source_path,
+        "rows": [row],
+        "source_manifest": manifest,
+        "current_workflow_hash": "current-workflow",
+        "current_template_pool_hash": "template-pool",
+        "current_prompt_hashes": {row["id"]: row["prompt_hash"]},
+        "model_name_or_path": str(source_checkpoint),
+    }
+
+    with pytest.warns(UserWarning, match="immutable export"):
+        audit = _validate_dpo_source_artifact(**kwargs)
+    assert audit["status"] == "verified"
+    assert audit["compatibility_mode"] == "verified_immutable_export"
+    assert audit["output_sha256"] == manifest["output_sha256"]
+    assert audit["current_prompt_hashes_verified"] == 1
+
+    with pytest.raises(RuntimeError, match="do not match the current planner prompt"):
+        _validate_dpo_source_artifact(
+            **{
+                **kwargs,
+                "current_prompt_hashes": {row["id"]: "obsolete-prompt-hash"},
+            }
+        )
+
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8") + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="does not match its manifest"):
+        _validate_dpo_source_artifact(**kwargs)
+
+    write_jsonl(source_path, [{**row, "prompt": "Tampered planner prompt"}])
+    tampered_manifest = {
+        **manifest,
+        "output_sha256": sha256_text(source_path.read_text(encoding="utf-8")),
+    }
+    with pytest.raises(RuntimeError, match="prompt/hash mismatches"):
+        _validate_dpo_source_artifact(
+            **{
+                **kwargs,
+                "rows": [{**row, "prompt": "Tampered planner prompt"}],
+                "source_manifest": tampered_manifest,
+            }
+        )
 
 
 def test_trajectory_dpo_validates_trl_native_sft_reference_adapter():
