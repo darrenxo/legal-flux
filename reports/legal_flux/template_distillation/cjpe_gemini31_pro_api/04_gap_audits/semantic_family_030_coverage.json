@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_030",
-  "coverage_analysis": "The current consolidated library contains templates addressing administrative review, natural justice, evidence appreciation, and specific constitutional tests (like pith and substance). However, it substantially lacks templates addressing Service Law, specifically regarding superannuation, pensionary benefits, and the constitutional protection of retiral dues. The supplied batch introduces a high volume of cases dealing with the validity of 'cut-off' dates for implementing new pension schemes (engaging Article 14) and the protection of pension and gratuity as vested property rights under Article 300A against non-statutory executive deprivation. These recurring legal reasoning operations are entirely unrepresented in the current library.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_030_01",
-    "GAP_semantic_family_030_02"
-  ]
-}

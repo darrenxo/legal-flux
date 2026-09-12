@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_015",
-  "coverage_analysis": "The source batch contains 36 cases dealing with a diverse set of legal topics including execution of decrees, limitation, mortgage redemption, insolvency, property transfers, and statutory debt relief. A review of the current LegalFlux template library reveals that while it has templates covering general statutory interpretation, burden of proof in various scenarios, and specific property instrument substance tests, it lacks coverage for detailed operations regarding execution limitation and the precise post-discharge liability of a mortgagee in possession. Two recurring reasoning operations are strongly supported by at least 3 cases each in the batch and satisfy the abstraction and reuse requirements: (1) determining the enforceability trigger and applicability of the 12-year maximum limitation for execution of decrees, and (2) assessing a mortgagee's liability to pay mesne profits (as opposed to statutory accounting) for retaining possession after the complete discharge of the mortgage debt.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_015_01",
-    "GAP_semantic_family_015_02"
-  ]
-}

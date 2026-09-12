@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_081",
-  "coverage_analysis": "The supplied batch of cases primarily deals with taxation, customs valuation, and central excise, involving issues such as the rejection of customs transaction values, extended periods of limitation for excise demands, and inclusion of royalty or packing charges. The current LegalFlux library contains templates for tax exemptions (LF019), manufacture definitions (LF020), and commodity classification (LF018). However, it lacks a template governing the specific evidentiary and commercial thresholds required for the revenue to lawfully reject an importer's declared transaction value under customs law, particularly when comparing against contemporaneous imports, price lists, or related-party transactions.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_081_01"
-  ]
-}

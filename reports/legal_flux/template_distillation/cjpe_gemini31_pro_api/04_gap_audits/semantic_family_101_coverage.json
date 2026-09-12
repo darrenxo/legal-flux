@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_101",
-  "coverage_analysis": "The supplied case batch prominently features instances of procedural delay condonation, which are adequately covered by the existing library template LF024 (sufficient_cause_delay_condonation). However, the batch also contains a strong recurring pattern regarding labour and service disputes, specifically concerning the award of back wages upon an employee's reinstatement. While the current library addresses the validity of initial termination (LF014) and regularization claims (LF013), it lacks a template governing the discretionary quantification and factual justification required for awarding back wages. Multiple cases demonstrate the Supreme Court modifying, reducing, or setting aside back wage awards to emphasize that such monetary relief is not automatic. A gap candidate is proposed to capture this distinct reasoning operation.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_101_01"
-  ]
-}

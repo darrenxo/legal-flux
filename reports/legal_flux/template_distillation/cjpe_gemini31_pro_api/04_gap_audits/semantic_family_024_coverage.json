@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_024",
-  "coverage_analysis": "The source-case batch covers diverse areas including agrarian reforms, tenancy rights, land acquisition compensation, and statutory interpretation of exemption clauses. While some cases align thematically with the current library—such as statutory interpretation and ouster of civil jurisdiction (LF021)—the library lacks templates addressing the substantive operation of statutory 'deemed purchase' mechanisms under agrarian reform laws. Additionally, while LF021 addresses the complete ouster of civil jurisdiction, the library misses the distinct procedural mandate where civil courts are required to stay proceedings and refer specific exclusive issues to specialized tribunals rather than dismissing the suit entirely.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_024_01",
-    "GAP_semantic_family_024_02"
-  ]
-}

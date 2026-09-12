@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_054",
-  "coverage_analysis": "The current consolidated template library successfully covers various administrative, evidentiary, and constitutional mechanisms present in the batch, such as the substance-over-form doctrine in commercial relationships (LF016) and the limits of judicial review in administrative allocations (LF002). However, a distinct and recurring legal reasoning operation in the batch remains uncovered: the strict interpretation and enforcement of statutory electoral disqualifications. Several cases in the batch deal with challenges to the eligibility of elected representatives under statutes (like the Representation of the People Act or State Municipal Acts) aimed at preventing conflicts of interest and ensuring public probity. In these cases, the courts strictly construe the disqualifying conditions (e.g., subsisting government contracts or unauthorized constructions) and systematically reject technical or formalistic defenses, such as substantial completion, improper administrative termination, or lack of direct personal involvement. This pattern represents a clear gap in the library's coverage of Election Law and statutory disqualifications.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_054_01"
-  ]
-}

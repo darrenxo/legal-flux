@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_016",
-  "coverage_analysis": "The current consolidated template library provides strong coverage of evidentiary appreciation (e.g., circumstantial evidence, interested witnesses, ocular vs. medical evidence) and substantive administrative/constitutional law (e.g., vires, judicial review of tenders, natural justice). However, it exhibits a gap in the specific procedural mechanics of the Code of Criminal Procedure (CrPC). The library lacks templates governing the precise thresholds of magisterial power during the pre-trial stages. Specifically, the batch of supplied cases frequently requires evaluating the limits of a Magistrate's inquiry prior to issuing process (Sections 202/204 CrPC), emphasizing the strict 'prima facie' standard over a meticulous trial-like weighing of evidence. Additionally, the batch highlights the use of the extraordinary judicial power to summon additional non-charge-sheeted accused during an ongoing inquiry or trial (Section 319 CrPC). These recurring procedural reasoning operations represent valid gap candidates.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_016_01",
-    "GAP_semantic_family_016_02"
-  ]
-}

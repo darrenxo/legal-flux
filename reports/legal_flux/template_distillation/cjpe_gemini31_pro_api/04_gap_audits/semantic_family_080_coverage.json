@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_080",
-  "coverage_analysis": "The audit of the supplied batch against the current LegalFlux template library reveals a significant cluster of cases dealing with the statutory right to maintenance (primarily under Section 125 of the Code of Criminal Procedure). The current library contains LF025 (purposive construction of welfare statutes), but that template is tailored toward flexible interpretation of terms in labor or consumer laws rather than the distinct, specialized jurisprudence surrounding secular maintenance claims. The batch repeatedly exhibits a reasoning operation where courts enforce this secular statutory remedy to prevent vagrancy and destitution, systematically overriding technical, procedural, or personal-law defenses, and evaluating 'just grounds' for a wife's separate residence (such as a husband's second marriage). This recurring operation is absent from the current library and forms a strong gap candidate.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_080_01"
-  ]
-}

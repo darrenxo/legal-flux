@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_077",
-  "coverage_analysis": "The current library addresses specific public employment issues such as regularization of ad-hoc workers entering through back-door appointments (LF013) and motive versus foundation in termination (LF014). It does not, however, cover the prevalent administrative and service law doctrine restricting the power of selection committees or appointing authorities from altering, relaxing, or creating unadvertised equivalencies for essential qualifications mid-stream during a recruitment process. Several cases in the supplied batch revolve around challenges to appointments where experts or selection bodies deviated from the strict text of the advertised qualifications (e.g., substituting 'Industrial Chemistry' for 'Chemistry', or 'R&D testing' for 'Manufacture testing', or ignoring minimum percentage requirements). This establishes a clear gap regarding the 'rules of the game' and strict adherence to advertised eligibility criteria in public employment.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_077_01"
-  ]
-}

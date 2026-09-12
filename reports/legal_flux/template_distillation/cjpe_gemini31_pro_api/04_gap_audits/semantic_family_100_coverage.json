@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_100",
-  "coverage_analysis": "The current library has limited coverage of structural service law and recruitment mechanics. While LF013 addresses the regularization of ad-hoc entries, the library lacks templates for core recruitment operations recurring in this batch, specifically the legal effect of select lists regarding advertised vacancies, and the constitutional mechanics of applying reservation rosters to single-post cadres. Two strong gap candidates emerge from the batch addressing these uncovered service law domains.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_100_01",
-    "GAP_semantic_family_100_02"
-  ]
-}

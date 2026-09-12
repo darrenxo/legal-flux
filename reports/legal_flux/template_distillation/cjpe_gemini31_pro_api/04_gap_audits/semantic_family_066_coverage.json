@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_066",
-  "coverage_analysis": "The current library addresses tax exemption construction (LF019) and the definition of manufacture (LF020), but lacks a template for the precise mathematical and statutory extraction of assessable value from a cum-duty price. Specifically, the library does not cover the rule that only the effective duty actually payable (after exemptions) can be deducted from the wholesale price, and that any excess duty collected from customers forms part of the taxable base. This recurring operation is clearly demonstrated in multiple excise valuation cases within the batch.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_066_01"
-  ]
-}

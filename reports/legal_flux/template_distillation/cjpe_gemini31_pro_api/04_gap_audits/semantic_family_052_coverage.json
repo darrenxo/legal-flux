@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_052",
-  "coverage_analysis": "The current consolidated library lacks a specialized template for adjudicating disputes under agrarian land ceiling legislation, specifically regarding the computation of a 'family unit's' holding and the crystallization of ceiling liability. While the library contains templates for statutory interpretation (LF019, LF025) and property valuation (LF029), it does not cover the recurring operational pattern where courts strictly aggregate the land holdings of all statutory family members as of a specific 'appointed date'. The supplied batch contains multiple cases where landowners attempt to fragment their holdings to evade ceiling limits by invoking post-appointed-date demographic changes (e.g., a minor attaining majority), internal transfers, or by misinterpreting separate statutory allowances (e.g., stridhana land). A new template is required to capture the uniform judicial reasoning that crystallizes the family unit's composition and total holding on the statutory benchmark date, disregarding subsequent events that would artificially reduce the surplus land liable to vest in the State.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_052_01"
-  ]
-}

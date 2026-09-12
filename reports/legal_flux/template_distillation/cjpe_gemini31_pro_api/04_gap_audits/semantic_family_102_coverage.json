@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_102",
-  "coverage_analysis": "The current consolidated library contains templates for service law and public employment issues, such as irregular worker regularization (LF013), motive vs. foundation in termination (LF014), and equal pay parity (LF015). However, it entirely lacks a template to adjudicate claims for 'compassionate appointment'—a specific and highly recurring legal operation in this batch. The provided cases repeatedly apply a standardized test confirming that compassionate appointment is an exception to general recruitment rules, not a vested right, and is strictly contingent on immediate financial destitution (penury) and the need for immediate succour. Cases where applications are delayed, terminal benefits are substantial, or another family member is employed are routinely rejected under this uniform reasoning framework.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_102_01"
-  ]
-}

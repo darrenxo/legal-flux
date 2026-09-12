@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_043",
-  "coverage_analysis": "The current library adequately covers evidentiary appreciation, statutory presumptions, natural justice prejudice, administrative review, and contract interpretation. However, the provided batch introduces recurring constitutional and statutory interpretation operations not addressed in the library. Specifically, multiple cases evaluate the validity and effect of retrospective validation acts, distinguishing between naked declarations of validity and substantive curing of legislative defects. Another recurring operation involves assessing parental statutes for excessive delegation of legislative power by searching for implicit guidelines in the statutory scheme when explicit criteria are absent. Finally, there is a recurring pattern of resolving conflicts between overlapping statutes by applying the special versus general law doctrine. These three operations meet the criteria for abstraction and reuse.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_043_01",
-    "GAP_semantic_family_043_02",
-    "GAP_semantic_family_043_03"
-  ]
-}

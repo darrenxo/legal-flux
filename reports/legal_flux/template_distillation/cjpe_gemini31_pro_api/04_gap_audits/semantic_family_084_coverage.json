@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_084",
-  "coverage_analysis": "The consolidated library includes LF029, which addresses the valuation of large acquired tracts using the belting method and percentage deductions for development costs. However, the batch frequently employs two distinct operations not covered by the current library: first, a temporal adjustment mechanism that applies an annual percentage escalation to bridge the time gap between older exemplar sales and current acquisitions; second, a statutory interpretation operation determining that interest for delayed payment must be calculated on the aggregate compensation including solatium.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_084_01",
-    "GAP_semantic_family_084_02"
-  ]
-}

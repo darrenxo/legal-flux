@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_073",
-  "coverage_analysis": "The consolidated library covers various domains including evidence, constitutional law, and statutory interpretation. However, it lacks a template for modulating compensation in consumer disputes involving delayed real estate delivery by development authorities. A recurring pattern in the supplied batch involves the Supreme Court setting aside mechanical, flat-rate interest awards (e.g., 18%) granted by consumer forums in favor of fact-specific compensation (such as construction cost escalation, rent, and mental agony), particularly when the allottee receives the property at historical rates and benefits from land value appreciation. This specific reasoning operation is explicitly exhibited in four cases.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_073_01"
-  ]
-}

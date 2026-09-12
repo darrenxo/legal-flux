@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_007",
-  "coverage_analysis": "An audit of the source-case batch against the consolidated library shows that cases evaluating the termination of probationers and temporary employees (such as determining if a discharge is punitive) are already well-covered by the existing 'motive_vs_foundation_veil_piercing' (LF014) template. However, a distinct and recurring legal reasoning operation emerged concerning the suspension of an order of conviction under Section 389(1) of the Code of Criminal Procedure. Four cases in the batch consistently establish that the suspension of a conviction (as opposed to merely suspending the sentence) must be restricted to very rare and exceptional circumstances, and that the potential loss of public employment or statutory disqualification does not meet this threshold. This appellate standard is not covered by the current library and constitutes a robust gap candidate.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_007_01"
-  ]
-}

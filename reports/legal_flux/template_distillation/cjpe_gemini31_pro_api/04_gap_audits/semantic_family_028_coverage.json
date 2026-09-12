@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_028",
-  "coverage_analysis": "The current consolidated library heavily covers general principles of statutory interpretation, evidentiary evaluation, constitutional competence, and specific areas like natural justice and administrative review. However, it lacks specific templates addressing the unique and highly formalized procedural and jurisdictional mechanics of Election Law, particularly the absolute statutory bars on judicial interference, the stringent pleading thresholds required to overcome ballot secrecy for vote recounts, and the application of the 'substantial compliance' doctrine regarding technical defects in election filings. The supplied batch reveals strong patterns in these specific election-law reasoning operations that currently have no equivalent in the template library.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_028_01",
-    "GAP_semantic_family_028_02",
-    "GAP_semantic_family_028_03"
-  ]
-}

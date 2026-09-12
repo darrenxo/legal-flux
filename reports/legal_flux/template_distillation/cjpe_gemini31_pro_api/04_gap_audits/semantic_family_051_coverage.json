@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_051",
-  "coverage_analysis": "The current template library addresses evidence appreciation involving circumstantial evidence, ocular vs. medical evidence conflicts, and interested witnesses (LF004, LF005, LF006), but lacks a framework for evaluating cases where the prosecution relies exclusively on police testimony for an apprehension or seizure. The library contains a template for discovery statements leading to recovery under general evidence law (LF012), but does not cover the specialized admissibility, procedural safeguards, and defect-curing mechanisms for full confessions recorded by senior police officers under special penal statutes (like TADA or MCOCA). Furthermore, while the library covers limitation delay condonation for filings (LF024), it does not cover the reasoning used to evaluate the promptness of a First Information Report (FIR) and the use of external procedural checks to rebut claims of ante-timing or fabrication.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_051_01",
-    "GAP_semantic_family_051_02",
-    "GAP_semantic_family_051_03"
-  ]
-}

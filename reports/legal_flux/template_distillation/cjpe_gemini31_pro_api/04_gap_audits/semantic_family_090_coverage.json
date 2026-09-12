@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_090",
-  "coverage_analysis": "The current consolidated LegalFlux template library contains analytical frameworks for statutory interpretation, natural justice, burden of proof, strict construction of tax exemptions, and various other jurisprudential principles. However, it lacks specific templates addressing two recurring legal reasoning operations heavily featured in the supplied batch. First, there is no template covering the disentitlement of Small Scale Industry (SSI) excise exemptions when an assessee affixes a third-party brand name, which requires a strict application of exclusionary clauses against defenses like retrospective trademark assignment or subjective belief. Second, there is no template for evaluating the validity of invoking the extended period of limitation in tax statutes, which necessitates balancing allegations of willful suppression by the assessee against evidence of prior departmental knowledge or previously dropped proceedings. These identified gaps are supported by multiple distinct cases and represent distinct, reusable reasoning flows.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_090_01",
-    "GAP_semantic_family_090_02"
-  ]
-}

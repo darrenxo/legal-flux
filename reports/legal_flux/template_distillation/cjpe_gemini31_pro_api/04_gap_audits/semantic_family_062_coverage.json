@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_062",
-  "coverage_analysis": "The source batch heavily features cases under the Prevention of Corruption Act involving trap proceedings. While the existing library contains LF011 for evaluating the rebuttal of statutory presumptions (reverse onus) once foundational facts are established, it lacks a template for the distinct, preliminary reasoning operation required in trap cases: determining whether those foundational facts (explicit demand and conscious acceptance) have actually been proven. Courts consistently hold that mere physical recovery of tainted money from the accused is legally insufficient to establish the offence or trigger the statutory presumption unless the prosecution independently proves that the accused demanded and voluntarily accepted the bribe.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_062_01"
-  ]
-}

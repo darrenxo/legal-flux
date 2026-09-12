@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_068",
-  "coverage_analysis": "The audit of the supplied source-case batch against the consolidated LegalFlux library reveals that while general evidentiary principles (like circumstantial evidence chain completeness in LF004 and interested witness evaluation in LF006) are covered, three distinct, recurring reasoning operations are absent. First, multiple cases deal with homicidal poisoning, which necessitates a highly specific tripartite test (proof of death by poison, possession, and opportunity) not subsumed under general circumstantial rules. Second, several cases revolve around evaluating the credibility of eyewitnesses based strictly on their unnatural post-occurrence conduct (prolonged silence or delayed disclosure to authorities/relatives), which is a separate heuristic from evaluating partisan/interested witnesses. Third, the batch frequently evaluates the procedural integrity and evidentiary value of Test Identification Parades (TIP), specifically focusing on delay, prior exposure, and the Magistrate's safeguards—an operational pattern currently missing from the library.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_068_01",
-    "GAP_semantic_family_068_02",
-    "GAP_semantic_family_068_03"
-  ]
-}

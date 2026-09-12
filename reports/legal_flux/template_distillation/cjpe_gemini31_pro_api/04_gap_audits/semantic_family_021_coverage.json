@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_021",
-  "coverage_analysis": "The source batch contains several cases involving Hindu Law, specifically regarding the property rights and succession of female Hindus under the Hindu Succession Act, 1956. The current library covers administrative review, procedural fairness, evidence appreciation, and general statutory interpretation, but lacks templates for evaluating the statutory transformation of a Hindu female's limited estate into an absolute estate under Section 14(1) of the Hindu Succession Act, as well as the specific source-based devolution rules for female intestates under Section 15. The batch explicitly demonstrates these recurring operations, providing sufficient support to propose two new gap candidates addressing these specific domains.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_021_01",
-    "GAP_semantic_family_021_02"
-  ]
-}

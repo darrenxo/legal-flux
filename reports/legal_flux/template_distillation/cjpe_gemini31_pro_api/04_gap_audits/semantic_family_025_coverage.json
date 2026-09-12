@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_025",
-  "coverage_analysis": "The current consolidated LegalFlux template library covers topics such as statutory interpretation, burden of proof, administrative review, and evidentiary appraisal. However, it lacks reasoning templates for core direct tax law operations and appellate procedure limitations present in the supplied batch. Specifically, there are clear gaps regarding the characterization of assets as capital versus revenue for tax consequences, the application of Hindu personal law to determine Hindu Undivided Family (HUF) tax entity status and income attribution, and the strict jurisdictional bar on raising unagitated novel pleas in appellate or advisory reference proceedings. These recurring operations warrant new template candidates.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_025_01",
-    "GAP_semantic_family_025_02",
-    "GAP_semantic_family_025_03"
-  ]
-}

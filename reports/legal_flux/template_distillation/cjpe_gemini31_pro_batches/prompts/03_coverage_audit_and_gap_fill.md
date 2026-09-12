@@ -4,11 +4,9 @@ consolidated LegalFlux template library.
 Inspect every supplied case's full_text, including the facts, procedural history, arguments, authorities, lower-court rulings, and present-court reasoning or judgment it contains. Identify whether the library covers the recurring legal reasoning
 operations actually exhibited by this batch. An individual uncovered case is
 not a library gap. Propose a gap candidate only when the same missing operation
-is supported by at least 3 distinct cases in this supplied batch and satisfies
+is supported by the configured minimum number of supplied cases and satisfies
 the same abstraction, reuse, manifestation, and boundary requirements as the
-initial candidate stage. For every proposed gap candidate,
-supporting_case_ids must contain at least 3 distinct valid case IDs from this
-batch, and support_count must equal that number and therefore must be at least 3.
+initial candidate stage.
 
 Do not restate a legal topic, reproduce a source outcome, or propose a candidate
 already covered or subsumed by the current library. Zero gap candidates is

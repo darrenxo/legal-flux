@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_103",
-  "coverage_analysis": "The batch features several administrative and service law cases where citizens or employees assert rights against the State. Existing templates like LF002 and LF013 address specific administrative scenarios (tender decisions and irregular worker regularization), but the library lacks a framework for evaluating claims based on the doctrines of 'legitimate expectation' and 'promissory estoppel'. Cases il-tur-cjpe-2008_1464 (rejection of petrol pump relocation despite internal file notings), il-tur-cjpe-2010_1008 (denial of re-absorption claims upon closure of a joint venture), and il-tur-cjpe-2003_1286 (refusal to appoint selected candidates due to financial constraints) consistently exhibit a recurring legal reasoning operation. They evaluate whether an unequivocal, officially communicated promise exists, and ultimately restrict the doctrines by allowing the State to defeat such expectations through bona fide policy changes, financial constraints, or overriding public interest. Since this operation is absent from the current library and supported by 3 distinct cases, a gap candidate is proposed.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_103_01"
-  ]
-}

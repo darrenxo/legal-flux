@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_074",
-  "coverage_analysis": "The audit of the source-case batch against the consolidated LegalFlux template library reveals that while the library covers broad principles such as private defence application and evidence appreciation, it lacks specialized templates for several highly recurring judicial operations. Specifically, the library does not contain a template for differentiating the grades of homicidal intent (e.g., Murder vs. Culpable Homicide) strictly through the objective physical mechanics of the assault (such as the nature of the weapon, whether its blunt or sharp edge was used, and the anatomical situs of the injury). Additionally, the library lacks a structured approach for determining the evidentiary consequence of the prosecution's failure to explain injuries on the accused. Finally, there is a recurring gap in the library for applying the doctrine of proportionality in sentencing, particularly the rejection of inadequate sentences driven by undue sympathy. Three gap candidates have been proposed to address these omissions.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_074_01",
-    "GAP_semantic_family_074_02",
-    "GAP_semantic_family_074_03"
-  ]
-}

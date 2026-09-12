@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_031",
-  "coverage_analysis": "The supplied batch contains several cases involving disputes over whether specific properties belong to a Hindu joint family or are the absolute self-acquisitions of individual members. These cases consistently apply a distinct burden-shifting reasoning operation: the party asserting jointness must first prove the existence of an adequate income-yielding joint family nucleus, which then shifts the burden to the opposing party to affirmatively prove independent self-acquisition. The current consolidated library addresses criminal burdens of proof, natural justice, specific statutory interpretations, and other doctrines, but completely lacks a template for this fundamental Hindu law property assessment. Because this operation appears in at least four distinct cases and possesses strong abstraction and reuse potential, it is proposed as a gap candidate.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_031_01"
-  ]
-}

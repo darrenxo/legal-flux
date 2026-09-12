@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_034",
-  "coverage_analysis": "The current consolidated library contains templates for assessing various evidentiary and substantive issues in election and criminal law, but it lacks a template governing the mandatory procedural dismissal of an election petition for the non-joinder of a necessary party. Specifically, cases il-tur-cjpe-1964_49, il-tur-cjpe-1973_200, and il-tur-cjpe-1984_9 all adjudicate challenges to the maintainability of an election petition based on the petitioner's failure to implead another candidate against whom allegations of corrupt practice are made. The shared reasoning operation involves strictly scrutinizing the pleadings to determine if the averments against the non-joined candidate fully constitute a statutory 'corrupt practice' (e.g., establishing guilty knowledge or consent), and if so, enforcing the mandatory statutory penalty of dismissing the petition in limine. This constitutes a distinct and recurring procedural filter that warrants a new template.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_034_01"
-  ]
-}

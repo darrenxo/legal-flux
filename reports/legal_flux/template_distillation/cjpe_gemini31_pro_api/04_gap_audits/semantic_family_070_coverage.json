@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_070",
-  "coverage_analysis": "The consolidated library provides broad coverage for statutory interpretation, administrative review, and evidence appreciation. However, within the domain of tax jurisprudence, two distinct and recurring legal reasoning operations are heavily featured in the supplied batch but absent from the current library. The first missing operation involves resolving conflicts between the accounting treatment of a financial item (including regulatory disclosure norms) and its true substantive character for taxation under the Income Tax Act (the 'Real Income' theory). This is supported by four cases. The second missing operation concerns the binding effect of CBDT (Central Board of Direct Taxes) circulars and instructions on subordinate revenue authorities, serving as a strict limitation on the Assessing Officer's discretion. This is supported by three cases. Both patterns meet the abstraction, reuse, manifestation, and boundary requirements.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_070_01",
-    "GAP_semantic_family_070_02"
-  ]
-}

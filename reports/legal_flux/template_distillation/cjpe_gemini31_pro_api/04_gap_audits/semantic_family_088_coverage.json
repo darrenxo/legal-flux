@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_088",
-  "coverage_analysis": "The batch features cases across diverse domains including taxation (reassessment, limitation, search & seizure, cessation of liability), disciplinary proceedings (suspension, supply of inquiry reports), and constitutional/administrative law (contempt of court, forfeiture under SAFEMA). The current library effectively handles claims of natural justice and procedural prejudice (LF003 covers cases involving subsequent supply of reasons, substituted service, and non-supply of inquiry reports where the prejudice test applies). However, the library lacks a template for addressing the specific statutory interpretation issue of whether legislative amendments can be applied retrospectively to revive claims, reopen assessments, or alter substantive rights that had already attained finality or become time-barred prior to the amendment's enactment. This recurring operation is central to three cases in the batch.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_088_01"
-  ]
-}

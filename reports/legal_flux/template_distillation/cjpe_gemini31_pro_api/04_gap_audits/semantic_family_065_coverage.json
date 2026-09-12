@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_065",
-  "coverage_analysis": "The supplied source cases encompass a wide range of legal domains including property law, constitutional law, rent control, and civil procedure. Some cases align directly with the existing library, such as `il-tur-cjpe-1969_131` which evaluates a leave and license agreement versus a lease using the substance-over-form approach (covered by LF017). Other cases handle discrete issues like the non-applicability of contract frustration to completed leases (`il-tur-cjpe-1968_288`), the constitutional validity of building cesses (`il-tur-cjpe-1971_467`), or the operation of res judicata when appeals are not filed against all connected decrees (`il-tur-cjpe-2014_793`). However, a distinct, recurring jurisprudential operation emerges in `il-tur-cjpe-1988_353`, `il-tur-cjpe-1988_511`, and `il-tur-cjpe-2002_577`. In these cases, the courts navigate the doctrine of binding precedent (Article 141 of the Constitution) by applying the 'sub silentio' exception. They evaluate whether a prior judicial decision or order can foreclose a legal challenge, concluding that if the specific point of law was not actively debated, consciously perceived, and expressly reasoned (e.g., passing by consent, assumed without argument, or dismissed on technical grounds), it does not constitute a binding declaration of law. This fundamental procedural reasoning flow is not addressed in the current consolidated template library and warrants a new gap candidate.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_065_01"
-  ]
-}

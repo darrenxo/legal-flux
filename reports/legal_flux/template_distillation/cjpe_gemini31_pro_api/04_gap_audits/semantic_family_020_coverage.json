@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_020",
-  "coverage_analysis": "The current consolidated template library contains one template addressing preventive detention (LF027), which focuses exclusively on distinguishing 'public order' from mere 'law and order'. However, the supplied batch features numerous preventive detention cases heavily focused on strict procedural safeguards, specific jurisdictional prerequisites, and evidentiary constraints not covered by LF027. First, there is a recurring operation testing the validity of detention orders passed against individuals already in judicial custody, requiring the detaining authority to demonstrate explicit awareness of the custody and a compelling necessity (such as imminent bail). Second, a recurring operational pattern strictly enforces Article 22(5), dictating that a detenu's representation must be independently and expeditiously considered by all competent authorities; an unexplained delay vitiates continued detention but does not render the initial order void ab initio. Third, there is a prominent operation evaluating the staleness of grounds and the saving effect of statutory severability clauses. These three recurring patterns satisfy the frequency and abstraction requirements to form new gap candidates.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_020_01",
-    "GAP_semantic_family_020_02",
-    "GAP_semantic_family_020_03"
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_076",
-  "coverage_analysis": "The current library contains templates covering various aspects of constitutional law, evidence appreciation, and statutory interpretation, including reverse onus presumptions (LF011). However, it lacks specific procedural templates addressing the limits of judicial discretion in imposing bail conditions and the exercise of inherent powers to quash criminal proceedings. The supplied batch exhibits two recurring legal reasoning operations not covered by the library: (1) striking down excessively onerous financial deposit conditions imposed as prerequisites for bail, and (2) evaluating whether criminal proceedings (typically for cheating or breach of trust) should be quashed because they artificially cloak a purely civil or commercial dispute.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_076_01",
-    "GAP_semantic_family_076_02"
-  ]
-}

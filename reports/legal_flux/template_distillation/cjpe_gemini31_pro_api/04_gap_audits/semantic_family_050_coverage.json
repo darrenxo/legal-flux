@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_050",
-  "coverage_analysis": "The current library contains robust templates for administrative review, constitutional vires, and general equitable relief (e.g., LF030 for property/contracts). However, the supplied batch contains three distinct recurring operations currently unaddressed. First, cases deal with the equitable protection of students who have completed substantial portions of academic courses under interim orders or belated policy changes, requiring a specific modulation of relief to preserve educational attainments. Second, cases demonstrate a strict judicial deference to expert statutory bodies (like the Medical Council of India) regarding academic standards, prohibiting lower forums from relaxing objective criteria based on equity. Third, cases exhibit a strict restraint on issuing a writ of mandamus to compel the State to extend financial benefit schemes or adopt non-binding committee recommendations, grounded in the separation of powers regarding executive policy.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_050_01",
-    "GAP_semantic_family_050_02",
-    "GAP_semantic_family_050_03"
-  ]
-}

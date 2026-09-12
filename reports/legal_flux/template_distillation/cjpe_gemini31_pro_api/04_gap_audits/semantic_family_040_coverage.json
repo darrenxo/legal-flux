@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_040",
-  "coverage_analysis": "The audit reveals that while the current library extensively covers substantive evidentiary evaluations (e.g., circumstantial chains, witness credibility) and constitutional limits, it lacks procedural templates governing appellate sentencing discretion. A highly recurring pattern in the supplied batch involves appellate courts upholding convictions but reducing the substantive term of imprisonment to the 'period already undergone' due to mitigating factors, provided no mandatory minimum applies. Additionally, there is a recurring operation where the court utilizes its sentencing powers to direct monetary compensation to the victims. Both candidates meet the threshold for abstraction and reuse.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_040_01",
-    "GAP_semantic_family_040_02"
-  ]
-}

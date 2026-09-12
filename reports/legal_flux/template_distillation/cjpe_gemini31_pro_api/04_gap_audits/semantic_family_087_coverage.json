@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_087",
-  "coverage_analysis": "The current consolidated library includes templates for several service law operations, such as identifying the true nature of a termination order (motive vs. foundation, LF014), evaluating regularization claims of ad-hoc workers (LF013), and assessing pay parity (LF015). However, the audit of the supplied batch reveals two distinct and recurring legal reasoning operations that remain uncovered. First, the library lacks a mechanism for evaluating the validity of compulsory/premature retirement orders, specifically the doctrine that such retirement is a non-punitive public interest measure requiring holistic appraisal of the entire service record (including uncommunicated or post-promotion remarks). Second, there is no template governing the fundamental administrative law distinction between an employee's enforceable right to be fairly considered for promotion/appointment according to rules, versus the absence of any vested right to the actual selection itself.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_087_01",
-    "GAP_semantic_family_087_02"
-  ]
-}

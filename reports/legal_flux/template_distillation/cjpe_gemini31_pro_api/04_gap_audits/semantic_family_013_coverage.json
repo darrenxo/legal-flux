@@ -1,7 +1,0 @@
-{
-  "batch_id": "semantic_family_013",
-  "coverage_analysis": "The current template library focuses heavily on evidentiary standards (LF004, LF005, LF006, LF009, LF010, LF012), statutory interpretation (LF018, LF019, LF025), and substantive administrative or constitutional law (LF001, LF002, LF026). It does not contain a template addressing the standard of review for the threshold quashing of criminal proceedings under Section 482 of the CrPC or Article 226 of the Constitution. The batch contains multiple cases dealing explicitly with the scope of the High Court's inherent power to quash complaints by testing whether the uncontroverted allegations prima facie constitute an offence without embarking on factual inquiries. This forms a clear gap.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_013_01"
-  ]
-}

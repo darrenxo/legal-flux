@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_079",
-  "coverage_analysis": "The consolidated library successfully covers several recurring operations observed in the batch. LF008 (constructive_liability_shared_intent_inference) adequately maps to cases like il-tur-cjpe-2010_251, il-tur-cjpe-2012_369, and il-tur-cjpe-2002_65, where courts differentiated vicarious liability based on the shared common object and weapons carried. LF007 (appellate_review_of_acquittal_plausibility) subsumes the appellate reversals of perverse acquittals seen in il-tur-cjpe-1993_689 and il-tur-cjpe-2002_324. However, the batch reveals two significant, unmapped operational clusters. First, courts frequently engage in severing credible testimony from falsehoods or relying on hostile witnesses by actively rejecting the 'falsus in uno, falsus in omnibus' maxim. Second, multiple cases evaluate downgrading murder to culpable homicide by applying Exception 4 to Section 300 IPC, focusing on sudden fights, heat of passion, and lack of premeditation. These represent clear gaps in the current library.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_079_01",
-    "GAP_semantic_family_079_02"
-  ]
-}

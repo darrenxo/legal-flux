@@ -1,9 +1,0 @@
-{
-  "batch_id": "semantic_family_045",
-  "coverage_analysis": "The source cases demonstrate several recurring legal reasoning operations that fall outside the current consolidated library. While the library effectively covers topics like common parlance commodity classification (LF018) and the substantial transformation test (LF020), it lacks templates for constitutional taxation doctrines and jurisprudential principles heavily featured in this batch. Specifically, the batch repeatedly deals with three uncovered patterns: (1) The application of legal fictions to split indivisible composite contracts (like works contracts or restaurant services) into separate goods and services components for taxation; (2) The factual 'nexus' test to determine if a sale directly occasions the movement of goods across state or national borders, thereby barring State taxation; and (3) The strict jurisprudential rules surrounding the extraction of 'ratio decidendi' and the prohibition against blindly applying judicial precedents out of their specific factual context.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_045_01",
-    "GAP_semantic_family_045_02",
-    "GAP_semantic_family_045_03"
-  ]
-}

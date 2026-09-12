@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_082",
-  "coverage_analysis": "The supplied batch of source cases predominantly involves Central Excise and Customs Law, focusing on the threshold requirements for excisability, classification under tariff headings, computation of assessable value, and the availability of MODVAT/CENVAT credit and exemptions. While the current library contains templates for interpreting statutory exemptions (LF019) and testing for 'manufacture' via substantial transformation (LF020), it lacks coverage for two recurring reasoning operations present in this batch. First, there is no template for applying the 'marketability test' to determine if intermediate, captively consumed, or site-embedded goods qualify as excisable goods. Second, there is no template for computing the 'assessable value' under Section 4 of the Central Excises and Salt Act by adjusting the wholesale transaction price for free buyer-supplied inputs and treating gross realizations as cum-duty prices. Two gap candidates are proposed to cover these operations.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_082_01",
-    "GAP_semantic_family_082_02"
-  ]
-}

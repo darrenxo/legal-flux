@@ -11,12 +11,6 @@ Remove candidates that are overly broad, overly specific, directionally tied to
 an outcome, weakly supported, wholly subsumed by another template, or primarily
 summaries of substantive law rather than executable reasoning procedures.
 
-Treat consolidation as selective preservation rather than wholesale rewriting.
-When retaining one candidate without merging it, copy all of its executable
-template fields verbatim. Rewrite executable fields only when merging multiple
-candidates; then change only what is necessary to produce one coherent template.
-Do not paraphrase a retained candidate merely for style.
-
 For each retained template:
 
 - use a concise retrieval-friendly name and normalized tags;

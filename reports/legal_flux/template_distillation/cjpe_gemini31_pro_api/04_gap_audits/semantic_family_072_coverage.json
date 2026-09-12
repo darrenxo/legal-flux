@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_072",
-  "coverage_analysis": "An audit of the supplied case batch reveals that while certain administrative tender cancellations are adequately covered by the existing library (such as LF002: judicial_review_administrative_tender_decisions), there are two significant recurring legal reasoning operations that remain uncovered. The first gap relates to the enforcement of unconditional bank guarantees, specifically the principle that they constitute independent contracts immune from underlying disputes, subject only to the narrow exceptions of egregious fraud or irretrievable injustice (supported by il-tur-cjpe-1991_233, il-tur-cjpe-2007_565, and il-tur-cjpe-2019_809). The second gap pertains to the inherent jurisdiction of an arbitrator to award pre-reference and pendente lite interest when the underlying contract is silent and lacks a specific prohibitory clause (supported by il-tur-cjpe-1999_79, il-tur-cjpe-2008_1321, and il-tur-cjpe-2009_935). Both operations satisfy the requirements for abstraction, reuse, and manifestation, warranting the proposal of two gap candidates.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_072_01",
-    "GAP_semantic_family_072_02"
-  ]
-}

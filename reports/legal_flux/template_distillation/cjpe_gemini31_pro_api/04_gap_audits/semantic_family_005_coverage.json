@@ -1,8 +1,0 @@
-{
-  "batch_id": "semantic_family_005",
-  "coverage_analysis": "The current library focuses on substantive areas like constitutional law, statutory interpretation, criminal evidence, and administrative law, but lacks coverage of procedural mechanisms in civil litigation, specifically regarding the curing of court fee deficits and the locus standi to challenge court fee valuations. The supplied batch contains multiple cases relying on Section 149 of the CPC to retrospectively cure court fee deficits, as well as cases establishing that court fee adequacy is a matter between the State and the plaintiff, restricting the defendant's standing to challenge it as a delay tactic.",
-  "gap_candidate_ids": [
-    "GAP_semantic_family_005_01",
-    "GAP_semantic_family_005_02"
-  ]
-}
