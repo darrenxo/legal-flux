@@ -1,0 +1,111 @@
+{
+  "candidates": [
+    {
+      "template_name": "statutory_presumption_rebuttal_analysis",
+      "knowledge_tags": [
+        "burden_of_proof",
+        "statutory_presumption",
+        "reverse_onus",
+        "evidence_appreciation"
+      ],
+      "description": "Evaluates whether an accused has successfully discharged a reverse burden of proof or statutory presumption by meeting the specific standard of rebuttal required by the statute, moving beyond mere plausible but unverified explanations.",
+      "application_scenario": "Use when a special statute presumes guilt, culpable mental state, or unlawful possession based on the establishment of foundational facts, shifting the burden to the accused to account for or explain the circumstances.",
+      "reasoning_flow": [
+        "Verify that the prosecution has conclusively established the foundational facts required by the statute to trigger the legal presumption.",
+        "Identify the specific standard of proof cast upon the accused to rebut the presumption (e.g., 'satisfactorily account', 'prove lack of knowledge').",
+        "Evaluate the accused's explanation or evidence to determine if it meets the required threshold, discarding mere untested or hypothetical assertions.",
+        "Conclude whether the statutory presumption remains operational and justifies liability, or if it has been legally rebutted by the accused."
+      ],
+      "example_application": "An official is found with unexplained wealth. The prosecution proves the existence of the assets and the official's known income. The official claims the wealth came from informal family loans but provides no receipts or witnesses. The presumption of corruption holds because the explanation does not amount to 'satisfactorily accounting' for the assets.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1959_167",
+        "il-tur-cjpe-1960_336",
+        "il-tur-cjpe-1969_325",
+        "il-tur-cjpe-1980_55",
+        "il-tur-cjpe-2007_934"
+      ],
+      "shared_pattern": "In each case, the court required the prosecution to prove initial facts (disproportionate assets, possession of adulterated goods, foreign gold, or ownership of a vehicle), after which the burden shifted strictly to the accused. The accused's failure to provide concrete, satisfying proof led to conviction or confiscation.",
+      "scope_exclusions": "Do not use for standard criminal offenses governed purely by the Indian Penal Code where the burden of proof remains entirely on the prosecution to prove guilt beyond a reasonable doubt without statutory presumptions.",
+      "support_count": 5
+    },
+    {
+      "template_name": "special_officer_confession_admissibility",
+      "knowledge_tags": [
+        "confession",
+        "evidence_act",
+        "special_statutes",
+        "admissibility"
+      ],
+      "description": "Determines whether a statement or confession made to an officer operating under a special statute (e.g., Customs, Revenue) is admissible, based on whether the officer possesses the power to submit a charge-sheet under Section 173 of the CrPC.",
+      "application_scenario": "Use when a defendant challenges the admissibility of a confession made to an investigative officer of a specialized agency, claiming the officer is equivalent to a 'police officer' under Section 25 of the Evidence Act.",
+      "reasoning_flow": [
+        "Identify the statutory authority under which the recording officer operates.",
+        "Examine whether the governing special statute grants the officer the specific power to file a formal charge-sheet under Section 173 of the CrPC.",
+        "If such power is absent, classify the officer as a non-police officer, rendering the bar under Section 25 of the Evidence Act and Section 164 CrPC safeguards inapplicable.",
+        "Assess the statement independently for voluntariness under Section 24 of the Evidence Act before admitting it as substantive evidence."
+      ],
+      "example_application": "A smuggler confesses to a Customs officer under Section 108 of the Customs Act. Because the officer cannot file a CrPC Section 173 charge-sheet, the confession is not hit by the evidentiary bar on police confessions and is admissible if proven to be voluntary.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1968_224",
+        "il-tur-cjpe-1997_1086",
+        "il-tur-cjpe-2001_658"
+      ],
+      "shared_pattern": "The courts consistently distinguish Customs and Revenue officers from regular police officers based on the absence of CrPC s. 173 powers, thereby allowing inculpatory statements recorded by them to be admitted into evidence without Magisterial intervention.",
+      "scope_exclusions": "Do not use if the officer explicitly holds the power to file a charge-sheet under s. 173 CrPC by virtue of a deeming fiction in the special statute (e.g., certain state Excise Acts).",
+      "support_count": 3
+    },
+    {
+      "template_name": "mandatory_vs_directory_procedure_classification",
+      "knowledge_tags": [
+        "procedural_law",
+        "statutory_interpretation",
+        "mandatory_compliance",
+        "directory_rules"
+      ],
+      "description": "Differentiates between strict mandatory statutory safeguards (which vitiate proceedings if breached) and directory procedural rules (where substantial compliance suffices unless actual prejudice is shown).",
+      "application_scenario": "Use when an accused seeks acquittal or quashing of proceedings based on the prosecuting/investigating agency's failure to perfectly execute a procedural step (e.g., sample quantity, notice timing, search protocols).",
+      "reasoning_flow": [
+        "Analyze the procedural rule breached by the authority to determine its legislative intent and core purpose.",
+        "Classify the rule as mandatory if it protects a fundamental right or core statutory safeguard, or directory if it is an administrative mechanism for evidential processing.",
+        "If directory, assess whether the deviation caused any demonstrable prejudice to the accused's defense or compromised the integrity of the evidence.",
+        "Validate the proceeding if substantial compliance was achieved without prejudice, or nullify it if a mandatory safeguard was undeniably breached."
+      ],
+      "example_application": "A food inspector sends a specimen seal to the lab but fails to adduce the postal receipt in evidence. Since the lab confirms the seal matched, the lack of the receipt is a minor directory breach causing no prejudice, and the trial is not vitiated.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1981_358",
+        "il-tur-cjpe-1995_22",
+        "il-tur-cjpe-1999_554",
+        "il-tur-cjpe-2019_407"
+      ],
+      "shared_pattern": "The courts distinguish between substantive rights (like the right to a Gazetted officer search under NDPS) which require strict compliance, and administrative logistics (like exact sample volumes or simultaneous delivery of documents) which allow for substantial compliance.",
+      "scope_exclusions": "Do not use to excuse the complete absence of a mandatory pre-requisite, such as a missing statutory sanction for prosecution or complete denial of a statutory right.",
+      "support_count": 4
+    },
+    {
+      "template_name": "parallel_statutory_proceedings_independence",
+      "knowledge_tags": [
+        "parallel_proceedings",
+        "double_jeopardy",
+        "statutory_adjudication",
+        "jurisdictional_bar"
+      ],
+      "description": "Evaluates whether distinct legal proceedings (e.g., departmental adjudication, tax assessment, criminal prosecution) arising from the same factual matrix can operate simultaneously or sequentially without violating double jeopardy or jurisdictional bars.",
+      "application_scenario": "Use when a party claims that a pending departmental proceeding, or an exoneration in a related non-criminal adjudication, legally bars the initiation or continuation of a criminal prosecution.",
+      "reasoning_flow": [
+        "Identify the multiple proceedings or statutory consequences triggered by the single factual event.",
+        "Compare the nature, purpose, and required standard of proof for each proceeding (e.g., revenue recovery vs. penal prosecution).",
+        "Determine if the statute expressly bars one proceeding while the other is pending, or if the prior proceeding qualifies as a 'prosecution' before a 'court' under Article 20(2) of the Constitution.",
+        "Permit the proceedings to continue independently if they serve distinct statutory purposes and do not trigger constitutional double jeopardy protections."
+      ],
+      "example_application": "A taxpayer faces a penalty proceeding for concealed income and a simultaneous criminal trial for tax evasion. The criminal trial is not barred because the penalty proceeding is a departmental action, not a criminal prosecution.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1968_79",
+        "il-tur-cjpe-1979_142",
+        "il-tur-cjpe-1984_186"
+      ],
+      "shared_pattern": "The Supreme Court consistently allows parallel tracks (customs confiscation vs. criminal trial; tax reassessment vs. criminal trial; confiscation of vehicle vs. conviction of driver) because they serve different statutory objectives and do not legally preempt one another.",
+      "scope_exclusions": "Do not use if the statute contains an explicit bar (e.g., prohibition of prosecution until assessment completes) or if the exact same criminal charge was already tried by a competent judicial magistrate.",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_014",
+  "coverage_analysis": "The audit of the supplied source cases against the consolidated LegalFlux template library reveals that while templates such as LF019 (strict construction of tax exemptions) and LF010 (special knowledge burden shift) address some aspects of the tax and evidentiary disputes in the batch, several recurring reasoning operations are entirely absent. Specifically, the library lacks templates for (1) bounding the scope of statutory legal fictions (the East End Dwellings principle) against competing statutory prohibitions or textual limits, (2) strictly construing primary tax charging provisions while expressly rejecting equitable or hardship-based arguments, and (3) recharacterizing purported findings of fact as reviewable questions of law in appellate/reference jurisdictions due to perversity or the necessity of legal inference. These missing operations appear in at least three distinct cases each, satisfying the criteria for gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_014_01",
+    "GAP_semantic_family_014_02",
+    "GAP_semantic_family_014_03"
+  ]
+}

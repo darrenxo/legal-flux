@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_029",
+  "coverage_analysis": "The audit of the source cases against the current consolidated library reveals that while general circumstantial evidence principles (LF004), special knowledge burden shifts (LF010), and discovery statements (LF012) are adequately covered, there are distinct missing operations regarding specific evidentiary doctrines. The library lacks templates for evaluating the reliability of extra-judicial confessions, assessing the substantive versus corroborative weight of in-court identifications and Test Identification Parades (TIP), and filtering the admissibility and evidentiary value of a co-accused's confession against another co-accused under Section 30 of the Evidence Act.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_029_01",
+    "GAP_semantic_family_029_02",
+    "GAP_semantic_family_029_03"
+  ]
+}

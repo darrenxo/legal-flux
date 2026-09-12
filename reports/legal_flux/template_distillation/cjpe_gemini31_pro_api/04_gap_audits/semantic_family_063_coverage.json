@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_063",
+  "coverage_analysis": "The consolidated template library successfully covers several recurring evidentiary and substantive law patterns observed in the source batch. Claims revolving around dying declarations are comprehensively addressed by LF009 (dying_declaration_reliability_test). Evidentiary evaluations dealing with circumstantial evidence chains and the exclusive knowledge burden shift are covered by LF004 and LF010 respectively. Recoveries under Section 27 of the Evidence Act fall under LF012. However, the library lacks templates for two major recurring judicial operations in the batch: (1) the highly specific substantive evaluation of 'dowry deaths' under Section 304-B IPC, particularly the 'proximity test' applied to the 'soon before death' requirement to trigger the statutory presumption under Section 113-B of the Evidence Act; and (2) the sentencing phase operation of drawing a 'balance sheet' of aggravating and mitigating factors to determine if a capital offense warrants the death penalty under the 'rarest of rare' doctrine.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_063_01",
+    "GAP_semantic_family_063_02"
+  ]
+}

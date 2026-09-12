@@ -1,0 +1,91 @@
+{
+  "coverage_analysis": "The current template library addresses evidence appreciation involving circumstantial evidence, ocular vs. medical evidence conflicts, and interested witnesses (LF004, LF005, LF006), but lacks a framework for evaluating cases where the prosecution relies exclusively on police testimony for an apprehension or seizure. The library contains a template for discovery statements leading to recovery under general evidence law (LF012), but does not cover the specialized admissibility, procedural safeguards, and defect-curing mechanisms for full confessions recorded by senior police officers under special penal statutes (like TADA or MCOCA). Furthermore, while the library covers limitation delay condonation for filings (LF024), it does not cover the reasoning used to evaluate the promptness of a First Information Report (FIR) and the use of external procedural checks to rebut claims of ante-timing or fabrication.",
+  "gap_candidates": [
+    {
+      "template_name": "police_testimony_sole_reliance_evaluation",
+      "knowledge_tags": [
+        "Evidence Appreciation",
+        "Police Testimony",
+        "Independent Witnesses",
+        "Search and Seizure",
+        "Corroboration"
+      ],
+      "description": "Evaluates the reliability of a prosecution case that is based exclusively on police testimony, balancing the presumption of official regularity against the need for independent corroboration when testimony is discrepant or public witnesses were deliberately excluded.",
+      "application_scenario": "Use when the prosecution relies entirely or primarily on police officials to establish an arrest, recovery, or seizure, and the defense argues the evidence should be discarded due to the absence of independent public witnesses.",
+      "reasoning_flow": [
+        "Confirm that the prosecution relies exclusively or primarily on the testimony of police officials to establish a seizure, recovery, or apprehension.",
+        "Assess whether independent public witnesses were reasonably available at the time and place of the incident (e.g., a busy public area) and whether the police made a genuine effort to join them.",
+        "Scrutinize the police testimony for inherent consistency, checking for material contradictions regarding the mechanics of recovery, location, or the handling of sealed items.",
+        "If the police testimony is coherent, trustworthy, and unshaken, accept it as substantive proof, ruling that the mere absence of independent corroboration does not legally vitiate the evidence.",
+        "Conversely, if public witnesses were available but deliberately bypassed without plausible explanation, and the police testimony suffers from material discrepancies, grant the benefit of doubt and reject the evidence."
+      ],
+      "example_application": "Police claim to have seized an unlicensed weapon from the accused at a busy railway station but only examine themselves as witnesses. Their testimonies contradict each other regarding which pocket the weapon was in. The court rejects the recovery due to the material discrepancies combined with the unexplained failure to join independent public witnesses.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_394",
+        "il-tur-cjpe-1999_980",
+        "il-tur-cjpe-1995_1030",
+        "il-tur-cjpe-1995_128",
+        "il-tur-cjpe-1992_500"
+      ],
+      "shared_pattern": "In cases where the prosecution relies exclusively on police testimony, the courts balance the presumption that police act in their regular official capacity against the necessity for independent corroboration if public witnesses were deliberately avoided or if the police testimony contains material discrepancies.",
+      "scope_exclusions": "Do not use when independent public witnesses fully support the prosecution's case, or when the police officer is testifying solely as an investigating officer outlining the procedural history rather than as an eyewitness to the actual recovery or apprehension.",
+      "support_count": 5
+    },
+    {
+      "template_name": "special_statute_confession_admissibility_and_cure",
+      "knowledge_tags": [
+        "Special Statutes",
+        "Confessional Statement",
+        "Procedural Safeguards",
+        "Voluntariness",
+        "Corroboration"
+      ],
+      "description": "Evaluates the admissibility and reliability of confessional statements recorded by senior police officers under special penal statutes, determining if procedural documentation defects can be cured by oral testimony.",
+      "application_scenario": "Use when the prosecution relies on a confession made to a police officer under special laws (like TADA or MCOCA) as substantive evidence, and the defense challenges it based on procedural lapses (e.g., missing certificates) or lack of voluntariness.",
+      "reasoning_flow": [
+        "Identify the confessional statement recorded by a competent senior police officer under the provisions of a special statute that overrides the general bar of the Evidence Act.",
+        "Verify whether the core statutory safeguards were observed, namely that the accused was warned they were not bound to confess, that the statement could be used against them, and that it was made voluntarily.",
+        "Check for any procedural defects in the documentation, such as the absence of a required written memorandum or certificate appended to the statement by the recording officer.",
+        "Determine if the recording officer testified during the trial to adequately explain the procedure followed and confirm voluntariness, thereby legally curing the documentary defect.",
+        "If the confession is proven voluntary and procedurally sound (or validly cured), admit it as substantive evidence against the maker, and evaluate it against co-accused utilizing independent corroboration as a rule of prudence."
+      ],
+      "example_application": "A confession recorded under a special anti-terror statute lacks the mandatory handwritten certificate by the recording officer. However, the officer testifies in court detailing the warnings given and the voluntary nature of the confession. The court cures the defect, admits the confession as substantive evidence, and relies on it for conviction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_259",
+        "il-tur-cjpe-2009_770",
+        "il-tur-cjpe-2016_168"
+      ],
+      "shared_pattern": "Courts evaluate confessions recorded under special statutes by strictly checking adherence to statutory safeguards protecting voluntariness, but allow procedural and documentary defects to be cured by the oral testimony of the recording officer before admitting the confession as substantive evidence.",
+      "scope_exclusions": "Do not use for confessions made to police officers under general criminal law (Section 25 Evidence Act) which remain strictly inadmissible, or for discovery statements falling exclusively under Section 27 of the Evidence Act.",
+      "support_count": 3
+    },
+    {
+      "template_name": "fir_promptness_and_external_verification",
+      "knowledge_tags": [
+        "Criminal Procedure",
+        "First Information Report",
+        "Ante-timing",
+        "Delay Justification",
+        "External Checks"
+      ],
+      "description": "Assesses challenges to the authenticity of a First Information Report (FIR) by analyzing the timeline of registration, justifying valid delays, and utilizing external procedural checks to rule out ante-timing or deliberation.",
+      "application_scenario": "Use when the defense alleges that the FIR was delayed, ante-timed, or drafted after consultation and deliberation to falsely implicate the accused.",
+      "reasoning_flow": [
+        "Determine the exact time gap between the occurrence of the crime and the formal registration of the FIR at the police station.",
+        "Evaluate any explanation for the delay, prioritizing human and practical realities such as the immediate need to provide medical aid to victims over procedural reporting formalities.",
+        "Look for contemporaneous external checks that corroborate the time of registration, such as the inclusion of the assigned crime number on prompt investigative documents like site maps or inquest reports.",
+        "Verify whether a copy of the FIR was dispatched to the jurisdictional Magistrate without unexplained or inordinate delay.",
+        "Reject the defense's claim of ante-timing if the delay is adequately explained by exigent circumstances or if external documentary checks confirm that the FIR was recorded promptly, ensuring it is free from deliberate embellishment."
+      ],
+      "example_application": "The defense claims a murder FIR was ante-timed to falsely implicate the accused. The court notes the FIR was registered within hours and the site map prepared immediately thereafter bore the assigned crime number. Combined with the complainant's focus on securing medical help first, the court concludes the FIR was prompt and authentic.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_412",
+        "il-tur-cjpe-1999_802",
+        "il-tur-cjpe-2012_587"
+      ],
+      "shared_pattern": "Courts counter claims of delayed or ante-timed FIRs by examining practical justifications (like medical emergencies) and looking for contemporaneous external checks, such as the inclusion of the crime number on prompt investigative documents, to validate the FIR's spontaneity.",
+      "scope_exclusions": "Do not use for condoning delays in filing appeals or civil suits under the Limitation Act. Do not use when evaluating the substantive credibility of the informant's testimony in court, distinct from the procedural registration of the FIR.",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_017",
+  "coverage_analysis": "The source batch involves a wide range of criminal and administrative issues, including habeas corpus against final convictions, revisions against acquittals, Section 164 confessions, court-martials, TADA confessions, NDPS sentencing, and the compounding of offences. Some existing templates apply, such as LF028 (private defence) to il-tur-cjpe-1952_18, and LF009 (dying declarations) touching upon il-tur-cjpe-1985_4. However, two distinct recurring operational gaps emerge. First, three cases evaluate the procedural and evidentiary prerequisites for constructive liability under Section 149 IPC, ruling that formal charges of rioting, explicit overt acts, or a strict minimum of five convicted persons are not rigid necessities if the collective shared intent and physical presence are established. Second, three cases deal with the High Court's inherent power to quash criminal proceedings at the threshold under Section 482 CrPC, establishing a strict boundary that precludes evidentiary mini-trials and allows quashing only when uncontroverted allegations fail to disclose a prima facie offence.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_017_01",
+    "GAP_semantic_family_017_02"
+  ]
+}

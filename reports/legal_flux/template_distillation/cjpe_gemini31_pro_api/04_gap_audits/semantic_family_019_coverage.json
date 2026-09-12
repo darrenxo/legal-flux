@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_019",
+  "coverage_analysis": "An audit of the provided source cases against the current LegalFlux template library reveals that while the library covers specific public law, evidence, and administrative law templates, it lacks foundational constitutional reasoning frameworks that are repeatedly utilized in this batch. Three major recurring legal operations were identified as gaps. First, multiple cases apply the 'reasonable classification test' under Article 14 to determine the constitutional validity of statutory classifications across taxation, service law, and administrative appointments. Second, several cases employ the 'doctrine of severability' (or partial invalidity) to decide whether an unconstitutional portion of a statute can be severed to save the valid remainder. Third, a distinct line of cases progressively expands the interpretation of 'life and personal liberty' under Article 21 to incorporate unenumerated rights (e.g., right to travel, right to education, prisoners' rights, and right to legal aid) guided by the Directive Principles. These three operations satisfy the abstraction and reuse requirements and are each supported by at least 3 cases, qualifying them as valid gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_019_01",
+    "GAP_semantic_family_019_02",
+    "GAP_semantic_family_019_03"
+  ]
+}

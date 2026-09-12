@@ -1,0 +1,115 @@
+{
+  "candidates": [
+    {
+      "template_name": "subsequent_events_impact_assessment",
+      "knowledge_tags": [
+        "subsequent_events",
+        "civil_procedure",
+        "pendente_lite",
+        "statutory_relief"
+      ],
+      "description": "Evaluates whether factual developments occurring during the pendency of litigation fundamentally destroy the original cause of action or are merely circumstantial changes that do not override the claimant's right to relief.",
+      "application_scenario": "Use when a defending party argues that events occurring after the suit's institution (e.g., passage of time, structural changes, partial acquisitions) invalidate the plaintiff's original claim.",
+      "reasoning_flow": [
+        "Identify the specific subsequent event or development raised by the defending party.",
+        "Ascertain the core cause of action and the statutory framework governing the relief as of the date of the application.",
+        "Evaluate whether the subsequent event fundamentally stultifies, fully satisfies, or legally extinguishes the original claim (e.g., total destruction of need), rather than merely altering circumstantial details.",
+        "Check for statutory bars against reviewing finalized permissions or re-evaluating grounds (e.g., clauses finalizing administrative permission).",
+        "Conclude whether the relief should be moulded/denied due to the subsequent event, or if the original claim survives intact."
+      ],
+      "example_application": "A landlord sues for eviction to start a business. Ten years pass in litigation. The tenant argues the landlord is now too old and his son has taken a job elsewhere. The court applies the operation, finds the core need for business space is not fundamentally extinguished by the delay or interim survival jobs, and preserves the eviction decree.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1987_367",
+        "il-tur-cjpe-2001_708",
+        "il-tur-cjpe-2007_418",
+        "il-tur-cjpe-2010_1055"
+      ],
+      "shared_pattern": "In these cases, tenants attempted to use pendente lite events (sale of part of property, franchise withdrawal, 25-year delay, corporate amalgamation) to defeat an eviction order. The Court systematically assessed if the core requirement survived the subsequent event rather than summarily dismissing the claim.",
+      "scope_exclusions": "Do not use when the subsequent event is a change in substantive law (legislative amendment), as statutory retroactivity rules apply instead of factual impact assessment.",
+      "support_count": 4
+    },
+    {
+      "template_name": "statutory_forum_exclusivity_enforcement",
+      "knowledge_tags": [
+        "jurisdiction",
+        "statutory_override",
+        "forum_selection",
+        "rent_control"
+      ],
+      "description": "Resolves conflicts between general legal mechanisms (like arbitration or summary receivership) and special statutory protections by enforcing the exclusive jurisdiction of the forum designated by the special statute.",
+      "application_scenario": "Use when a party attempts to bypass a specialized statutory forum (e.g., Rent Control Court) by invoking general contractual dispute resolution clauses or general civil/equitable procedures.",
+      "reasoning_flow": [
+        "Identify the relief sought and the general mechanism being invoked (e.g., arbitration agreement, summary receiver application).",
+        "Identify if a special welfare or regulatory statute governs the subject matter and the relationship between the parties.",
+        "Determine whether the special statute contains a non-obstante clause or exclusively vests jurisdiction in a specific authority to protect a vulnerable class.",
+        "Hold that the general mechanism or contractual clause is overridden by the statutory mandate.",
+        "Redirect the parties to the exclusive statutory forum for adjudication of the substantive dispute."
+      ],
+      "example_application": "A commercial lease contains an arbitration clause. The landlord terminates the lease and initiates arbitration for eviction. The tenant objects. The court identifies that the state Rent Act applies, notes its exclusive jurisdiction over evictions notwithstanding any contract, and dismisses the arbitration proceeding.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_2038",
+        "il-tur-cjpe-2009_317",
+        "il-tur-cjpe-2014_757"
+      ],
+      "shared_pattern": "These cases involve attempts to bypass special rent control jurisdictions using alternative legal avenues (Arbitration Act, Court Receiver summary powers, regular civil suit), which the Court rejected by enforcing strict statutory exclusivity.",
+      "scope_exclusions": "Do not use if the special statute explicitly permits alternate dispute resolution or if the dispute falls entirely outside the protected subject matter (e.g., a pure contractual debt unrelated to eviction protections).",
+      "support_count": 3
+    },
+    {
+      "template_name": "bona_fide_requirement_assessment",
+      "knowledge_tags": [
+        "eviction",
+        "bona_fide_need",
+        "landlord_prerogative",
+        "comparative_hardship"
+      ],
+      "description": "Evaluates a landlord's claim of genuine need for premises by balancing the landlord's statutory prerogative to choose suitable premises against the requirement to prove honest intent, without demanding absolute preparatory perfection.",
+      "application_scenario": "Use when a tenant challenges an eviction petition by asserting the landlord has alternative properties, lacks immediate financial capacity, or lacks technical readiness.",
+      "reasoning_flow": [
+        "Identify the landlord's stated purpose for requiring the premises.",
+        "Evaluate objections regarding alternative accommodations, assessing whether the landlord's preference for the suit premises is objectively reasonable and statutorily protected.",
+        "Assess objections regarding the landlord's preparatory steps, requiring only a genuine, honest intent rather than exhaustive proof of immediate capability or cash-in-hand.",
+        "Weigh comparative hardship if mandated, comparing the landlord's pressing need against the tenant's actual circumstances.",
+        "Conclude whether the requirement is bona fide (honest and not a mere ruse) based on a pragmatic standard."
+      ],
+      "example_application": "A landlord seeks eviction to open a clinic for his daughter. The tenant argues the daughter lacks funds. The court applies this operation, finds the landlord can raise funds through loans, upholds the landlord's preference for the ground-floor suit premises over a vacant basement, and validates the bona fide need.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1990_176",
+        "il-tur-cjpe-1998_891",
+        "il-tur-cjpe-2001_708",
+        "il-tur-cjpe-2002_1264"
+      ],
+      "shared_pattern": "Tenants attacked the landlord's bona fide need by pointing to other properties, lack of funds, or lack of franchise. The Court protected the landlord's reasonable preference and practical intent over stringent, hyper-technical tenant demands.",
+      "scope_exclusions": "Do not use when the eviction is based on tenant fault (e.g., arrears of rent, subletting, or property damage) rather than the landlord's personal necessity.",
+      "support_count": 4
+    },
+    {
+      "template_name": "wilful_default_culpability_test",
+      "knowledge_tags": [
+        "arrears_of_rent",
+        "wilful_default",
+        "mens_rea",
+        "possessory_default"
+      ],
+      "description": "Determines whether a party's failure to perform a possessory or financial obligation (like paying rent) constitutes a 'wilful' default, by distinguishing deliberate evasion or supine indifference from excusable legal circumstances.",
+      "application_scenario": "Use when a tenant admits to non-payment or continued occupation but raises a legal excuse, pending application, or court order as a defense against claims of wilful default, trespass, or mesne profits.",
+      "reasoning_flow": [
+        "Establish the period and extent of the possessory or financial default.",
+        "Identify the party's justification for the default (e.g., pendency of an interim application, reliance on a stay order).",
+        "Analyze the conduct for 'wilful' elements: does it show intentional violation, supine indifference, or recalcitrant behavior?",
+        "Assess whether the conduct stems from a genuine accident, legal compulsion, or valid court permission.",
+        "Classify the default as wilful/penal (if based on unwarranted assumptions) or permissive/excusable (if shielded by a legitimate legal umbrella), and apply the corresponding legal consequence."
+      ],
+      "example_application": "A tenant stops paying rent for 8 months, claiming they filed an application for rent fixation and mistakenly thought they didn't have to pay until it was decided. The court assesses the conduct, finds no legal stay on payment existed, categorizes the behavior as supine indifference, and orders eviction for wilful default.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2001_965",
+        "il-tur-cjpe-2002_152",
+        "il-tur-cjpe-2004_267",
+        "il-tur-cjpe-2014_551"
+      ],
+      "shared_pattern": "These cases revolve around characterizing a default. In some, the defaults were held to be wilful/indifferent despite pending applications or false pleas. In another, occupation was permissive due to a court order, negating trespass claims.",
+      "scope_exclusions": "Do not use in strict liability statutory regimes where the mere fact of non-payment automatically triggers eviction regardless of the tenant's intent or state of mind.",
+      "support_count": 4
+    }
+  ]
+}

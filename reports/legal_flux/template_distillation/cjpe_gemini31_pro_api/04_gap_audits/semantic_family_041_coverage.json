@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_041",
+  "coverage_analysis": "The batch contains several cases involving industrial and service law disputes that are not adequately covered by the current template library. While LF014 covers the classification of terminations (motive vs. foundation) and LF003 covers the prejudice test for natural justice violations, the library lacks templates for three prominent recurring operations: (1) evaluating the proportionality of a disciplinary punishment under Section 11A of the Industrial Disputes Act; (2) the procedural right of an employer to adduce fresh evidence before a Labour Court when a domestic inquiry is defective or absent; and (3) the modulation of back wages and alternative relief upon a finding of illegal termination, including the burden of proof regarding gainful employment.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_041_01",
+    "GAP_semantic_family_041_02",
+    "GAP_semantic_family_041_03"
+  ]
+}

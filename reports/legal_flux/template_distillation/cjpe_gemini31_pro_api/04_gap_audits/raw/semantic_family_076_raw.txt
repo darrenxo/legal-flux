@@ -1,0 +1,58 @@
+{
+  "coverage_analysis": "The current library contains templates covering various aspects of constitutional law, evidence appreciation, and statutory interpretation, including reverse onus presumptions (LF011). However, it lacks specific procedural templates addressing the limits of judicial discretion in imposing bail conditions and the exercise of inherent powers to quash criminal proceedings. The supplied batch exhibits two recurring legal reasoning operations not covered by the library: (1) striking down excessively onerous financial deposit conditions imposed as prerequisites for bail, and (2) evaluating whether criminal proceedings (typically for cheating or breach of trust) should be quashed because they artificially cloak a purely civil or commercial dispute.",
+  "gap_candidates": [
+    {
+      "template_name": "prohibition_of_onerous_financial_bail_conditions",
+      "knowledge_tags": [
+        "Criminal Procedure",
+        "Bail Jurisprudence",
+        "Onerous Conditions",
+        "Pre-trial Liberty"
+      ],
+      "description": "Invalidates bail or anticipatory bail orders that impose excessively onerous financial deposit conditions, treating them as an arbitrary denial of pre-trial liberty.",
+      "application_scenario": "Use when reviewing a lower court's bail or anticipatory bail order that conditions the release of the accused upon the deposit of a massive cash sum or security.",
+      "reasoning_flow": [
+        "Examine the specific conditions imposed by the court for granting bail or anticipatory bail to the accused.",
+        "Evaluate whether the requirement to deposit a substantial financial sum or security is excessively onerous, unreasonable, or functionally impossible for the accused to meet.",
+        "Determine if the imposition of such a condition undermines the purpose of bail, effectively acting as a punitive recovery mechanism and an unjustified deprivation of pre-trial liberty.",
+        "Strike down or modify the onerous condition, substituting it with standard, reasonable surety bonds that adequately secure the accused's presence for trial without amounting to a denial of bail."
+      ],
+      "example_application": "An accused charged with cheating is granted anticipatory bail on the condition that he deposits Rs. 15 lakhs in a fixed deposit with the trial court. The appellate court strikes down this condition as unreasonable and arbitrary, replacing it with a standard personal bond and solvent sureties.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2000_22",
+        "il-tur-cjpe-2002_910",
+        "il-tur-cjpe-2017_186"
+      ],
+      "shared_pattern": "The courts consistently hold that while conditions can be imposed for bail, directing the accused to deposit huge sums of money as a prerequisite is unreasonable and practically amounts to a denial of bail.",
+      "scope_exclusions": "Do not use for standard surety amounts or when the accused voluntarily offers to deposit a sum to show bona fides without judicial coercion.",
+      "support_count": 3
+    },
+    {
+      "template_name": "quashing_criminal_cloak_over_civil_dispute",
+      "knowledge_tags": [
+        "Criminal Procedure",
+        "Section 482 CrPC",
+        "Quashing of FIR",
+        "Civil Dispute",
+        "Abuse of Process"
+      ],
+      "description": "Evaluates petitions to quash criminal proceedings by determining whether a fundamentally civil or commercial dispute has been artificially cloaked as a criminal offence to bypass civil remedies.",
+      "application_scenario": "Use when an accused seeks quashing of a criminal complaint on the grounds that the allegations merely describe a breach of contract or an unpaid debt.",
+      "reasoning_flow": [
+        "Scrutinize the core allegations and averments in the criminal complaint, taking them at their face value without embarking on an evidentiary trial.",
+        "Ascertain whether the fundamental ingredients of the alleged criminal offence, such as fraudulent or dishonest intention at the inception of the transaction, are present.",
+        "Assess whether the dispute is essentially civil or commercial in nature (e.g., simple breach of contract, unpaid commercial dues) that is being leveraged with a criminal cloak to exert pressure.",
+        "Quash the proceedings if they constitute an abuse of the judicial process to settle a purely civil dispute, or permit them to continue if the allegations disclose distinct criminal acts despite the commercial backdrop."
+      ],
+      "example_application": "A complainant files a cheating case against a contractor for failing to pay the balance amount under an agreement. The High Court quashes the complaint under Section 482 CrPC, observing that the failure to pay is a purely civil dispute and lacks any allegation of deceptive intent at the time of forming the contract.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1999_1040",
+        "il-tur-cjpe-2007_776",
+        "il-tur-cjpe-2018_675"
+      ],
+      "shared_pattern": "All three cases evaluate whether the allegations in a criminal complaint essentially represent a civil dispute that is being prosecuted criminally, necessitating an analysis to prevent the abuse of the criminal process.",
+      "scope_exclusions": "Do not use when the complaint clearly establishes independent criminal acts like forgery or physical assault alongside a civil dispute.",
+      "support_count": 3
+    }
+  ]
+}

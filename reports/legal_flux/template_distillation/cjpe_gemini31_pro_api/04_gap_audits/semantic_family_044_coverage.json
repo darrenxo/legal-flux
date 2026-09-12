@@ -1,0 +1,10 @@
+{
+  "batch_id": "semantic_family_044",
+  "coverage_analysis": "The consolidated library provides broad coverage of administrative law, evidence appreciation, burden of proof, and natural justice (e.g., LF002, LF003, LF014). However, the supplied batch contains several recurring administrative and service law patterns that are unrepresented. The library lacks templates addressing the strict bounds of judicial review over merit assessments conducted by expert selection committees. It also misses the established doctrine validating executive and administrative actions in the absence of formally enacted statutory rules. Furthermore, there are gaps regarding the qualitative standards required for 'mandatory statutory consultation' between high-level constitutional functionaries, and the requirement that 'subjective satisfaction' for premature retirement or displacement must be grounded in objective, proximate service records.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_044_01",
+    "GAP_semantic_family_044_02",
+    "GAP_semantic_family_044_03",
+    "GAP_semantic_family_044_04"
+  ]
+}

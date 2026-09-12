@@ -1,0 +1,10 @@
+{
+  "batch_id": "semantic_family_064",
+  "coverage_analysis": "The current consolidated library focuses on administrative, constitutional, and evidentiary standards, but it lacks dedicated templates addressing specific service law and employment jurisprudence deeply prevalent in this batch. Specifically, while LF013 deals with irregular worker regularization and LF014 deals with termination veils, the library entirely misses recurring operational tests concerning civil servants' promotional rights versus mere chances, the reckoning of continuous ad-hoc/officiating service for seniority, the nuanced application of past service weightage (distinguishing eligibility from retrospective seniority), and the constitutional framework for legislative validation curing a prior judicial defect.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_064_01",
+    "GAP_semantic_family_064_02",
+    "GAP_semantic_family_064_03",
+    "GAP_semantic_family_064_04"
+  ]
+}

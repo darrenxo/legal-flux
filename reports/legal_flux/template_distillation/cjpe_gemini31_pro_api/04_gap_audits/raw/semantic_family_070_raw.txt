@@ -1,0 +1,62 @@
+{
+  "coverage_analysis": "The consolidated library provides broad coverage for statutory interpretation, administrative review, and evidence appreciation. However, within the domain of tax jurisprudence, two distinct and recurring legal reasoning operations are heavily featured in the supplied batch but absent from the current library. The first missing operation involves resolving conflicts between the accounting treatment of a financial item (including regulatory disclosure norms) and its true substantive character for taxation under the Income Tax Act (the 'Real Income' theory). This is supported by four cases. The second missing operation concerns the binding effect of CBDT (Central Board of Direct Taxes) circulars and instructions on subordinate revenue authorities, serving as a strict limitation on the Assessing Officer's discretion. This is supported by three cases. Both patterns meet the abstraction, reuse, manifestation, and boundary requirements.",
+  "gap_candidates": [
+    {
+      "template_name": "real_income_and_accounting_substance_test",
+      "knowledge_tags": [
+        "Income Tax",
+        "Real Income Theory",
+        "Accounting Entries",
+        "Substance Over Form",
+        "Taxable Income"
+      ],
+      "description": "Evaluates the taxability or deductibility of a receipt, expenditure, or provision by determining its true commercial and legal substance under the taxing statute, overriding mere accounting nomenclature, ledger entries, or separate regulatory disclosure norms.",
+      "application_scenario": "Use when an assessee or revenue authority claims a specific tax treatment for a financial item based solely on how it is labeled in the books of accounts, or when external accounting standards (like RBI norms or ICAI guidelines) diverge from the specific computation provisions of the Income Tax Act.",
+      "reasoning_flow": [
+        "Identify the specific financial item (receipt, provision, or expenditure) and note its corresponding treatment in the assessee's books of account or under relevant accounting/regulatory guidelines.",
+        "Acknowledge that while accounting entries, nomenclature, or regulatory disclosure norms are relevant, they are not strictly determinative or conclusive for computing taxable income under the taxing statute.",
+        "Examine the underlying transaction to ascertain its true commercial and legal substance, applying the 'Real Income' theory to see if an actual income accrued or an actual expenditure/loss was incurred.",
+        "Test this substantive character against the specific charging, exemption, or deduction provisions of the Income Tax Act.",
+        "Conclude the item's taxability or deductibility strictly based on statutory requirements, overriding the accounting presentation or regulatory disclosure norms if they conflict with the statute."
+      ],
+      "example_application": "An NBFC creates a mandatory provision for non-performing assets (NPA) as per RBI disclosure directions and debits it to the P&L account. The court holds that this regulatory accounting presentation does not determine taxability; under the IT Act, it is a notional expense rather than a written-off bad debt, and must be added back to compute real taxable income.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1985_271",
+        "il-tur-cjpe-2004_549",
+        "il-tur-cjpe-2010_6",
+        "il-tur-cjpe-2018_194"
+      ],
+      "shared_pattern": "The courts consistently hold that the true legal and commercial nature of a transaction, coupled with specific statutory provisions, determines its taxability, rendering accounting entries, nomenclature, and regulatory presentation norms relevant but ultimately not conclusive.",
+      "scope_exclusions": "Do not use when the taxing statute explicitly incorporates or mandates a specific accounting standard as the sole basis for computation without exception.",
+      "support_count": 4
+    },
+    {
+      "template_name": "binding_nature_of_cbdt_circulars_on_revenue",
+      "knowledge_tags": [
+        "Income Tax",
+        "CBDT Circulars",
+        "Administrative Instructions",
+        "Binding Precedent",
+        "Tax Administration"
+      ],
+      "description": "Evaluates the legal effect of circulars, guidelines, or instructions issued by the Central Board of Direct Taxes (CBDT), establishing that such administrative directions are strictly binding on subordinate revenue authorities, especially when they confer a benefit or prescribe a mandatory procedure.",
+      "application_scenario": "Use when a revenue authority (like an Assessing Officer) deviates from, ignores, or acts contrary to a specific CBDT circular, instruction, or guideline, and the assessee challenges this deviation.",
+      "reasoning_flow": [
+        "Identify the specific CBDT circular, instruction, guideline, or approval relevant to the tax dispute.",
+        "Determine whether the directive lays down a mandatory procedure, confers a benefit on the assessee, or clarifies a statutory provision.",
+        "Assess the actions of the subordinate revenue officer to check if they diverged from or ignored the mandate of the CBDT directive.",
+        "Apply the principle under Section 119 of the Income Tax Act that CBDT instructions are statutorily binding on all departmental officers.",
+        "Vitiate the revenue officer's action or order if it contradicts the CBDT directive, thereby upholding the procedural or substantive benefit intended for the assessee."
+      ],
+      "example_application": "An Assessing Officer makes a transfer pricing adjustment without referring the matter to the Transfer Pricing Officer (TPO). Since a CBDT instruction mandates a reference to the TPO for transactions above a certain value, the court vitiates the AO's adjustment as bad in law for breaching the binding instruction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1992_0",
+        "il-tur-cjpe-2000_232",
+        "il-tur-cjpe-2019_523"
+      ],
+      "shared_pattern": "The reasoning consistently relies on the statutory hierarchy where the CBDT's administrative instructions and guidelines are strictly binding on all subordinate tax authorities, preventing them from taking contrary positions.",
+      "scope_exclusions": "Do not use when the CBDT circular is contrary to the express provisions of the Income Tax Act itself or when the assessee challenges the circular, as circulars do not bind the assessee or the courts.",
+      "support_count": 3
+    }
+  ]
+}

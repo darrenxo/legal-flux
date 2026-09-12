@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_038",
+  "coverage_analysis": "The consolidated library covers various constitutional, procedural, and evidentiary doctrines, including natural justice, burden of proof, res judicata, and specific statutory interpretations. However, the audit reveals distinct recurring gaps in the library. First, the library lacks a template for adjudicating civil contempt, specifically evaluating whether non-compliance with a judicial order constitutes willful disobedience as opposed to a bona fide deviation or exercise of an independent right. Second, there is no template for piercing the veil of sham, collusive, or fraudulent transactions designed to bypass statutory rules or defeat execution. Third, the library lacks a formalized framework for adjudicating third-party obstructions in execution proceedings, where the court must comprehensively determine substantive title or interest within the execution itself rather than relegating parties to a separate suit.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_038_01",
+    "GAP_semantic_family_038_02",
+    "GAP_semantic_family_038_03"
+  ]
+}

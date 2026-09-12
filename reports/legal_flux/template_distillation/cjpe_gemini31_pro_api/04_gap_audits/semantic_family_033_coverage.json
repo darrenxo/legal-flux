@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_033",
+  "coverage_analysis": "The current library contains templates on administrative judicial review of tenders (LF002), interpretation of statutes, evidence, and property deeds. However, it lacks operational templates addressing (1) the survival of pre-existing private contractual rights following statutory nationalization or vesting of estates, and (2) the strict statutory and constitutional compliance required when the State distributes public resources or largesse, which is distinct from general commercial tender cancellations. The supplied batch contains multiple cases manifesting these specific legal reasoning patterns.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_033_01",
+    "GAP_semantic_family_033_02"
+  ]
+}

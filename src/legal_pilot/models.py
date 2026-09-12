@@ -8,8 +8,15 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 Burden = Literal["plaintiff", "defendant", "unclear"]
 ElementStatus = Literal["unresolved", "satisfied", "not_satisfied", "defeated"]
 IssueConclusionValue = Literal["satisfied", "not_satisfied", "defeated", "unresolved"]
-FinalDecisionValue = Literal["support", "reject", "mixed", "unresolved"]
-BinaryFinalDecisionValue = Literal["support", "reject"]
+FinalDecisionValue = Literal[
+    "support",
+    "reject",
+    "accepted",
+    "rejected",
+    "mixed",
+    "unresolved",
+]
+BinaryFinalDecisionValue = Literal["support", "reject", "accepted", "rejected"]
 FluxRfReviewDecision = Literal["continue", "revise", "final_answer"]
 
 
@@ -106,6 +113,15 @@ class LegalFluxConsolidationResponse(StrictModel):
     templates: list[LegalFluxConsolidatedTemplateDraft]
 
 
+class LegalFluxGapMergeDraft(LegalFluxConsolidatedTemplateDraft):
+    source_candidate_ids: list[str] = Field(min_length=2)
+
+
+class LegalFluxGapAdjudicationResponse(StrictModel):
+    accepted_gap_candidate_ids: list[str]
+    merged_templates: list[LegalFluxGapMergeDraft]
+
+
 class LegalFluxGapAuditResponse(StrictModel):
     coverage_analysis: str
     gap_candidates: list[LegalFluxCandidateDraft] = Field(max_length=5)
@@ -171,7 +187,7 @@ class LegalFluxRfReview(StrictModel):
 
 
 class NormalizedCase(StrictModel):
-    dataset: Literal["legalhk"]
+    dataset: Literal["legalhk", "realistic_ljp_facts"]
     case_id: str
     variant_id: str = "original"
     pair_id: str | None = None

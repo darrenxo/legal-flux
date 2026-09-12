@@ -22,6 +22,7 @@ from sklearn.metrics import (
 
 from .clients import GenerationClient, GenerationResponseError, build_generation_client
 from .config import resolve_path
+from .embeddings import SimilarityBackend
 from .io_utils import (
     atomic_write_json,
     canonical_json,
@@ -36,9 +37,17 @@ from .legal_benchmark_data import (
     benchmark_path,
     select_benchmark_cases,
 )
+from .legal_flux import legal_flux_workflow_hash, load_template_pool, template_pool_hash
+from .legal_flux_runner import (
+    _build_rf_similarity_backend,
+    _condition_prompt_hash,
+    _execute_rf_style_case,
+)
+from .models import LegalFluxTemplate, NormalizedCase
 
 
 BENCHMARK_CONDITIONS = ("direct", "structured")
+SUPPORTED_BENCHMARK_CONDITIONS = (*BENCHMARK_CONDITIONS, "flux_rf_style")
 
 
 def generate_legal_benchmarks(
@@ -66,6 +75,15 @@ def generate_legal_benchmarks(
         subset=subset,
         case_limit=case_limit,
     )
+    if "flux_rf_style" in selected_conditions:
+        unsupported = sorted(
+            {case.dataset for case in cases if case.dataset != "realistic_ljp_facts"}
+        )
+        if unsupported:
+            raise ValueError(
+                "flux_rf_style benchmark evaluation currently supports only "
+                f"realistic_ljp_facts, not {unsupported}."
+            )
     jobs = [
         {"case": case, "condition": condition}
         for case in sorted(cases, key=lambda value: (value.dataset, value.case_id))
@@ -95,6 +113,16 @@ def generate_legal_benchmarks(
             "dry_run": True,
         }
 
+    templates: list[LegalFluxTemplate] = []
+    flux_workflow_hash: str | None = None
+    flux_template_hash: str | None = None
+    similarity_backend: SimilarityBackend | None = None
+    if "flux_rf_style" in selected_conditions:
+        templates = load_template_pool(config)
+        flux_workflow_hash = legal_flux_workflow_hash(config)
+        flux_template_hash = template_pool_hash(templates)
+        similarity_backend = _build_rf_similarity_backend(config)
+
     client = build_generation_client(config)
     model_name = str(config["model"]["name"])
     try:
@@ -113,6 +141,9 @@ def generate_legal_benchmarks(
                 condition=job["condition"],
                 subset=subset,
                 model_digest=model_digest,
+                templates=templates,
+                workflow_hash=flux_workflow_hash,
+                template_hash=flux_template_hash,
             )
             for job in jobs
         ]
@@ -126,6 +157,8 @@ def generate_legal_benchmarks(
                 "model_name": model_name,
                 "model_digest": model_digest,
                 "model_runtime": _model_runtime_metadata(config, model_info),
+                "legal_flux_workflow_hash": flux_workflow_hash,
+                "template_pool_hash": flux_template_hash,
                 "num_shards": num_shards,
                 "shard_index": shard_index,
                 "job_count": len(planned),
@@ -145,6 +178,10 @@ def generate_legal_benchmarks(
                     subset=subset,
                     model_digest=model_digest,
                     ledger=ledger,
+                    templates=templates,
+                    workflow_hash=flux_workflow_hash,
+                    template_hash=flux_template_hash,
+                    similarity_backend=similarity_backend,
                 )
                 for job in jobs
             )
@@ -168,6 +205,10 @@ def generate_legal_benchmarks(
                         subset=subset,
                         model_digest=model_digest,
                         ledger=ledger,
+                        templates=templates,
+                        workflow_hash=flux_workflow_hash,
+                        template_hash=flux_template_hash,
+                        similarity_backend=similarity_backend,
                     )
                     for job in jobs
                 ]
@@ -181,6 +222,8 @@ def generate_legal_benchmarks(
                     _print_progress(completed, skipped, errors, len(jobs))
     finally:
         client.close()
+        if hasattr(similarity_backend, "close"):
+            similarity_backend.close()
 
     result = {
         "subset": subset,
@@ -192,6 +235,8 @@ def generate_legal_benchmarks(
         "model_name": model_name,
         "model_digest": model_digest,
         "model_runtime": _model_runtime_metadata(config, model_info),
+        "legal_flux_workflow_hash": flux_workflow_hash,
+        "template_pool_hash": flux_template_hash,
         "num_shards": num_shards,
         "shard_index": shard_index,
         "concurrency": concurrency,
@@ -308,9 +353,18 @@ def _planned_job(
     condition: str,
     subset: str,
     model_digest: str,
+    templates: list[LegalFluxTemplate],
+    workflow_hash: str | None,
+    template_hash: str | None,
 ) -> dict[str, Any]:
-    prompt, prompt_metadata = render_benchmark_prompt(config, case, condition)
-    del prompt
+    if condition == "flux_rf_style":
+        flux_case, prompt_metadata = _benchmark_flux_case(config, case)
+        prompt_metadata["prompt_sha256"] = _condition_prompt_hash(
+            config, flux_case, condition, templates
+        )
+    else:
+        prompt, prompt_metadata = render_benchmark_prompt(config, case, condition)
+        del prompt
     return {
         "run_hash": _benchmark_run_hash(
             config,
@@ -319,12 +373,16 @@ def _planned_job(
             subset=subset,
             model_digest=model_digest,
             prompt_sha256=prompt_metadata["prompt_sha256"],
+            workflow_hash=workflow_hash,
+            template_hash=template_hash,
         ),
         "dataset": case.dataset,
         "case_id": case.case_id,
         "condition": condition,
         "source_split": case.source_split,
         "prompt_sha256": prompt_metadata["prompt_sha256"],
+        "legal_flux_workflow_hash": workflow_hash,
+        "template_pool_hash": template_hash,
     }
 
 
@@ -337,8 +395,20 @@ def _run_job(
     subset: str,
     model_digest: str,
     ledger: JsonlLedger,
+    templates: list[LegalFluxTemplate],
+    workflow_hash: str | None,
+    template_hash: str | None,
+    similarity_backend: SimilarityBackend | None,
 ) -> dict[str, Any] | None:
-    prompt, prompt_metadata = render_benchmark_prompt(config, case, condition)
+    flux_case: NormalizedCase | None = None
+    prompt: str | None = None
+    if condition == "flux_rf_style":
+        flux_case, prompt_metadata = _benchmark_flux_case(config, case)
+        prompt_metadata["prompt_sha256"] = _condition_prompt_hash(
+            config, flux_case, condition, templates
+        )
+    else:
+        prompt, prompt_metadata = render_benchmark_prompt(config, case, condition)
     run_hash = _benchmark_run_hash(
         config,
         case,
@@ -346,6 +416,8 @@ def _run_job(
         subset=subset,
         model_digest=model_digest,
         prompt_sha256=prompt_metadata["prompt_sha256"],
+        workflow_hash=workflow_hash,
+        template_hash=template_hash,
     )
     if ledger.contains(run_hash):
         return None
@@ -365,39 +437,80 @@ def _run_job(
         "temperature": float(config["model"].get("temperature", 0.0)),
         "seed": int(config["model"].get("seed", config["project"]["seed"])),
         "prompt_sha256": prompt_metadata["prompt_sha256"],
+        "legal_flux_workflow_hash": workflow_hash,
+        "template_pool_hash": template_hash,
         "input": prompt_metadata,
         "metadata": case.metadata,
     }
     try:
-        schema = _response_schema(case.labels, condition)
-        max_tokens_key = (
-            "direct_max_tokens" if condition == "direct" else "structured_max_tokens"
-        )
-        response = client.generate(
-            model=str(config["model"]["name"]),
-            prompt=prompt,
-            schema=schema,
-            temperature=float(config["model"].get("temperature", 0.0)),
-            seed=int(config["model"].get("seed", config["project"]["seed"])),
-            context_length=int(config["model"]["context_length"]),
-            max_tokens=int(config["benchmarks"].get(max_tokens_key, 800)),
-            think=False,
-        )
-        parsed = _validate_response(response.parsed, case.labels, condition)
-        record = {
-            **base,
-            "status": "ok",
-            "raw_response": response.raw_text,
-            "parsed_json": parsed,
-            "elapsed_seconds": response.elapsed_seconds,
-            "prompt_tokens": response.prompt_tokens,
-            "output_tokens": response.output_tokens,
-            "finish_reason": response.metadata.get("finish_reason")
-            or response.metadata.get("done_reason"),
-            "json_repair_applied": bool(
-                response.metadata.get("json_repair_applied")
-            ),
-        }
+        if condition == "flux_rf_style":
+            if flux_case is None:
+                raise RuntimeError("LegalFlux benchmark case was not initialized.")
+            analysis, trace = _execute_rf_style_case(
+                client,
+                config,
+                flux_case,
+                templates=templates,
+                similarity_backend=similarity_backend,
+            )
+            flux_decision = str(analysis.final_decision)
+            parsed = analysis.model_dump(mode="json", exclude_defaults=True)
+            parsed["legal_flux_final_decision"] = flux_decision
+            parsed["final_decision"] = _benchmark_label_from_flux_decision(
+                flux_decision
+            )
+            record = {
+                **base,
+                "status": "ok",
+                "raw_response": trace["raw_response"],
+                "parsed_json": parsed,
+                "trajectory_plan": trace.get("trajectory_plan"),
+                "executed_steps": trace.get("executed_steps"),
+                "trajectory_reviews": trace.get("trajectory_reviews"),
+                "retrieved_template_ids": trace.get("retrieved_template_ids"),
+                "selected_templates": trace.get("selected_templates"),
+                "prompt_hashes": trace.get("prompt_hashes", {}),
+                "elapsed_seconds": trace["elapsed_seconds"],
+                "prompt_tokens": trace["prompt_tokens"],
+                "output_tokens": trace["output_tokens"],
+                "schema_errors": trace.get("schema_errors", []),
+                "repair_actions": trace.get("repair_actions", []),
+                "calls": trace.get("calls", 1),
+                "finish_reason": None,
+                "json_repair_applied": bool(trace.get("repair_actions")),
+            }
+        else:
+            if prompt is None:
+                raise RuntimeError("Benchmark prompt was not initialized.")
+            schema = _response_schema(case.labels, condition)
+            max_tokens_key = (
+                "direct_max_tokens" if condition == "direct" else "structured_max_tokens"
+            )
+            response = client.generate(
+                model=str(config["model"]["name"]),
+                prompt=prompt,
+                schema=schema,
+                temperature=float(config["model"].get("temperature", 0.0)),
+                seed=int(config["model"].get("seed", config["project"]["seed"])),
+                context_length=int(config["model"]["context_length"]),
+                max_tokens=int(config["benchmarks"].get(max_tokens_key, 800)),
+                think=False,
+            )
+            parsed = _validate_response(response.parsed, case.labels, condition)
+            record = {
+                **base,
+                "status": "ok",
+                "raw_response": response.raw_text,
+                "parsed_json": parsed,
+                "elapsed_seconds": response.elapsed_seconds,
+                "prompt_tokens": response.prompt_tokens,
+                "output_tokens": response.output_tokens,
+                "finish_reason": response.metadata.get("finish_reason")
+                or response.metadata.get("done_reason"),
+                "json_repair_applied": bool(
+                    response.metadata.get("json_repair_applied")
+                ),
+            }
     except Exception as exc:
         record = {
             **base,
@@ -466,9 +579,15 @@ def _benchmark_run_hash(
     subset: str,
     model_digest: str,
     prompt_sha256: str,
+    workflow_hash: str | None = None,
+    template_hash: str | None = None,
 ) -> str:
     return make_run_hash(
-        workflow="legal_benchmark_direct_structured_v1",
+        workflow=(
+            "legal_benchmark_flux_rf_style_v1"
+            if condition == "flux_rf_style"
+            else "legal_benchmark_direct_structured_v1"
+        ),
         dataset=case.dataset,
         case_id=case.case_id,
         source_split=case.source_split,
@@ -477,6 +596,8 @@ def _benchmark_run_hash(
         gold_label=case.gold_label,
         input_sha256=sha256_text(case.input_text),
         prompt_sha256=prompt_sha256,
+        legal_flux_workflow_hash=workflow_hash,
+        template_pool_hash=template_hash,
         model_name=config["model"]["name"],
         model_digest=model_digest,
         runtime_variant=config["model"].get("runtime_variant"),
@@ -484,6 +605,64 @@ def _benchmark_run_hash(
         temperature=config["model"].get("temperature", 0.0),
         seed=config["model"].get("seed", config["project"]["seed"]),
     )
+
+
+def _benchmark_flux_case(
+    config: dict[str, Any],
+    case: BenchmarkCase,
+) -> tuple[NormalizedCase, dict[str, Any]]:
+    if case.dataset != "realistic_ljp_facts":
+        raise ValueError(
+            "flux_rf_style benchmark evaluation currently supports only "
+            "realistic_ljp_facts."
+        )
+    if case.labels != ["rejected", "accepted"]:
+        raise ValueError(
+            "Realistic_LJP_Facts LegalFlux evaluation expects labels "
+            "['rejected', 'accepted']."
+        )
+    max_characters = int(config["benchmarks"].get("max_input_characters", 48000))
+    strategy = str(config["benchmarks"].get("input_truncation", "head"))
+    case_text, truncation = _truncate_input(
+        case.input_text,
+        max_characters=max_characters,
+        strategy=strategy,
+    )
+    normalized = NormalizedCase(
+        dataset="realistic_ljp_facts",
+        case_id=case.case_id,
+        variant_id="facts_only",
+        claim=(
+            "The appellant or petitioner should prevail before the Supreme "
+            "Court of India."
+        ),
+        requested_remedy="Allow the appeal or petition.",
+        parties=[],
+        facts={"case_text": case_text},
+        authorities=None,
+        gold_answer=case.gold_label,
+        metadata={
+            **case.metadata,
+            "benchmark_dataset": case.dataset,
+            "source_split": case.source_split,
+            "task_instruction": case.task_instruction,
+            "label_descriptions": case.label_descriptions,
+        },
+    )
+    return normalized, {**truncation, "input_format": "whole_fact_text"}
+
+
+def _benchmark_label_from_flux_decision(decision: str) -> str:
+    mapping = {
+        "support": "accepted",
+        "reject": "rejected",
+        "accepted": "accepted",
+        "rejected": "rejected",
+    }
+    try:
+        return mapping[decision]
+    except KeyError as exc:
+        raise ValueError(f"Unsupported LegalFlux benchmark decision: {decision!r}") from exc
 
 
 def _truncate_input(
@@ -677,7 +856,7 @@ def _model_runtime_metadata(
 
 def _validated_conditions(conditions: list[str] | None) -> list[str]:
     selected = list(conditions or BENCHMARK_CONDITIONS)
-    unknown = sorted(set(selected) - set(BENCHMARK_CONDITIONS))
+    unknown = sorted(set(selected) - set(SUPPORTED_BENCHMARK_CONDITIONS))
     if unknown:
         raise ValueError(f"Unsupported benchmark conditions: {unknown}")
     if not selected:

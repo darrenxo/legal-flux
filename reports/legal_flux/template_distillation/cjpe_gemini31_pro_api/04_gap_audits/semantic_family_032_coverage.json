@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_032",
+  "coverage_analysis": "The supplied source-case batch heavily features civil disputes revolving around property, tenancy, and revenue matters. While the current library contains templates for interpreting statutory ousters of civil jurisdiction (LF021) and the preclusive effect of prior adjudications (LF022), it lacks a template for managing the stringent jurisdictional boundaries of a Second Appeal. Multiple cases in this batch specifically address the threshold under Section 100 of the Code of Civil Procedure, evaluating whether a High Court can interfere with concurrent findings of fact recorded by lower courts. The library needs a template that defines 'substantial question of law' as the sole gateway for factual interference, restricting it strictly to instances of perversity or gross misreading of evidence.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_032_01"
+  ]
+}

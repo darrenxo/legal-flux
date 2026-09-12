@@ -1,0 +1,14 @@
+extends: legal_benchmarks.cluster.yaml
+
+legal_flux:
+  template_pool_file: templates/legal_flux_templates_cjpe_raw_unmasked.jsonl
+  rf_prompt_namespace: legal_flux_ljp
+  rf_retrieval_backend: sentence_transformer
+  rf_sentence_transformer_model: BAAI/bge-m3
+  include_authority_input: false
+  max_steps: 4
+
+xsim:
+  device: cpu
+  max_length: 8192
+  dense_batch_size: 8

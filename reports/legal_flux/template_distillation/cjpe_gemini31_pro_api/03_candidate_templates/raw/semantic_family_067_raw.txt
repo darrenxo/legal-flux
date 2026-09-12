@@ -1,0 +1,114 @@
+{
+  "candidates": [
+    {
+      "template_name": "Instrument_Characterization_Substance_Over_Form",
+      "knowledge_tags": [
+        "Deed Construction",
+        "Substance Over Form",
+        "Intention of Parties",
+        "Ostensible Transactions"
+      ],
+      "description": "Determines the true legal character of an instrument by examining the predominant intention of the parties, recitals, and surrounding circumstances rather than relying solely on its title or nomenclature.",
+      "application_scenario": "Use when parties dispute the legal nature of a written instrument (e.g., whether it constitutes a lease, a mortgage, or an absolute sale agreement). Do not use if statutory evidentiary rules strictly prohibit looking beyond the document itself without triggering specific exceptions.",
+      "reasoning_flow": [
+        "Identify the disputed instrument and the competing legal characterizations asserted by the parties.",
+        "Examine the plain text, specific recitals, and obligations created within the four corners of the document, deliberately discounting its mere title.",
+        "Analyze surrounding circumstances, contemporary conduct of the parties, and contextual evidence (such as possession handover, payment structures, or pre-existing debt relationships) to ascertain the predominant underlying intention.",
+        "Conclude on the true legal nature of the transaction based on the synthesis of textual and contextual evidence."
+      ],
+      "example_application": "A document is titled 'Leave and License', but the terms grant exclusive possession for 99 years, permit structural alterations, and involve a massive upfront premium with nominal rent. By analyzing the recitals and the surrounding commercial conduct, the court concludes the instrument is in substance a lease, overriding its nomenclature.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1976_276",
+        "il-tur-cjpe-1997_483",
+        "il-tur-cjpe-2019_490",
+        "il-tur-cjpe-2006_103"
+      ],
+      "shared_pattern": "In each case, the court refused to be bound by the superficial title of the document (e.g., 'Agreement of Sale', 'Sale Deed', 'Otti') and evaluated the substantive rights created along with the parties' actual intent to determine if it was a lease, a security/loan transaction, or a genuine sale.",
+      "scope_exclusions": "Exclude when a statute requires strict compliance with specific formalities to create a legal relationship (e.g., requiring the condition of repurchase to be embodied in the exact same document for a mortgage by conditional sale), overriding general intent.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Assessment_Of_Readiness_And_Willingness",
+      "knowledge_tags": [
+        "Specific Performance",
+        "Equitable Relief",
+        "Contract Enforcement",
+        "Statutory Thresholds"
+      ],
+      "description": "Evaluates whether a party seeking specific performance has adequately pleaded and demonstrated continuous readiness and willingness to perform their essential contractual obligations.",
+      "application_scenario": "Use when a plaintiff seeks to enforce a real estate or commercial contract and the defendant challenges their capacity, intent, or promptness to perform. Do not use for ordinary suits seeking liquidated damages where the strict continuous readiness standard of specific performance does not apply.",
+      "reasoning_flow": [
+        "Verify whether the plaintiff has explicitly pleaded continuous readiness and willingness to perform their part of the contract as a threshold requirement.",
+        "Assess the plaintiff's 'readiness' by examining objective evidence of their financial capacity and means to fulfill monetary obligations at the relevant times.",
+        "Assess the plaintiff's 'willingness' by analyzing their conduct, such as timely tenders of payment, issuance of performance notices, or compliance with prerequisites.",
+        "Determine if any conditions imposed by the plaintiff for their performance are extraneous to the contract terms, indicating a lack of true willingness.",
+        "Conclude whether the plaintiff satisfies the statutory threshold to claim equitable relief."
+      ],
+      "example_application": "In a suit for specific performance of a commercial property sale, the plaintiff claims readiness but admits in cross-examination they did not possess the funds on the closing date and demanded the seller clear a tax lien not mentioned in the agreement. The court finds a lack of continuous readiness and willingness, denying specific performance.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2019_111",
+        "il-tur-cjpe-2012_200",
+        "il-tur-cjpe-2013_791",
+        "il-tur-cjpe-1992_551",
+        "il-tur-cjpe-2019_490"
+      ],
+      "shared_pattern": "Each case turns on the factual and procedural verification of the plaintiff's capacity to pay and their compliant conduct over the timeline of the contract to satisfy the mandatory requirements for decreeing specific performance.",
+      "scope_exclusions": "Exclude from pure breach of contract claims seeking damages, or cases where the defendant completely waived the requirement of the plaintiff's performance.",
+      "support_count": 5
+    },
+    {
+      "template_name": "Preclusion_Of_Collateral_Jurisdictional_Forums",
+      "knowledge_tags": [
+        "Jurisdictional Boundaries",
+        "Collateral Attack",
+        "Abuse of Process",
+        "Alternative Remedy"
+      ],
+      "description": "Rejects the invocation of specialized, extraordinary, or collateral jurisdictions to resolve substantive civil rights or execute decrees when ordinary civil remedies are pending, appropriate, or were previously bypassed.",
+      "application_scenario": "Use when a party attempts to utilize contempt proceedings, specialized statutory references, or separate collateral suits to achieve what should be adjudicated or executed in a standard civil court or through the designated appellate process.",
+      "reasoning_flow": [
+        "Identify the nature of the primary dispute (e.g., breach of contract, money recovery, execution of decree) and the specific collateral forum currently being invoked.",
+        "Determine whether a competent ordinary civil forum is already seized of the matter, or if a designated statutory/appellate remedy was available but intentionally bypassed.",
+        "Evaluate whether the invoked collateral forum lacks the statutory scope to adjudicate complex disputed facts, or if its use serves merely to bypass the correct execution or appellate procedure.",
+        "Dismiss or redirect the claim to the appropriate primary civil or appellate forum to prevent parallel litigation and abuse of process."
+      ],
+      "example_application": "A party files a contempt petition claiming the state failed to pay a contractor under a court-approved settlement. The state disputes the completion of the work. The court dismisses the contempt petition, ruling that disputed contractual compliance must be resolved through a civil execution petition, not the extraordinary contempt jurisdiction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2017_156",
+        "il-tur-cjpe-2000_352",
+        "il-tur-cjpe-2001_397",
+        "il-tur-cjpe-1996_1011"
+      ],
+      "shared_pattern": "The court consistently limits the expansion of specialized jurisdictions (such as contempt, land acquisition references, review petitions, or collateral suits) to enforce rights or execute decrees that properly belong in ordinary civil or appellate courts.",
+      "scope_exclusions": "Exclude cases where a statute explicitly grants overlapping or concurrent jurisdiction, or where the collateral proceeding strictly addresses an independent wrong (e.g., willful disobedience entirely independent of the underlying civil dispute).",
+      "support_count": 4
+    },
+    {
+      "template_name": "Moulding_Equitable_Relief_In_Specific_Performance",
+      "knowledge_tags": [
+        "Equitable Discretion",
+        "Alternative Remedy",
+        "Compensation in Lieu",
+        "Balancing Equities"
+      ],
+      "description": "Guides the exercise of judicial discretion to award alternative monetary compensation, refunds, or damages in lieu of specific performance when enforcing the original contract is rendered inequitable or impractical.",
+      "application_scenario": "Use when a contract is valid and breach is established, but decreeing strict specific performance would cause undue hardship, or is impossible due to extreme delay, ambiguity, or intervening third-party equities.",
+      "reasoning_flow": [
+        "Confirm the existence of a valid agreement and identify the defendant's breach or failure to perform.",
+        "Evaluate equitable factors such as severe delay, drastic escalation in property value, impossibility of performance, ambiguity in material terms, or the creation of settled third-party rights over a long period.",
+        "Determine if decreeing strict specific performance would result in an unfair advantage to the plaintiff or disproportionate hardship to the defendant/third parties.",
+        "Mould the relief by substituting specific performance with an order for refund of earnest money or enhanced monetary compensation to balance the equities between the parties."
+      ],
+      "example_application": "In a 30-year-old property dispute where the original buyer paid only a 5% advance and the seller has since built a family home on the land, the court declines specific performance to avoid immense hardship and instead orders the seller to refund the advance with 18% compound interest.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2019_490",
+        "il-tur-cjpe-1996_1011",
+        "il-tur-cjpe-1990_135",
+        "il-tur-cjpe-2003_859"
+      ],
+      "shared_pattern": "In these cases, the courts recognized that specific performance is a discretionary equitable remedy and actively utilized alternative monetary decrees (such as refunds, enhanced compensation, or enforcing statutory charges) when actual conveyance of the property was unfeasible or inequitable.",
+      "scope_exclusions": "Exclude situations where specific performance is an absolute statutory right without equitable discretion, or where the plaintiff is entirely at fault and has forfeited the right to any restitution.",
+      "support_count": 4
+    }
+  ]
+}

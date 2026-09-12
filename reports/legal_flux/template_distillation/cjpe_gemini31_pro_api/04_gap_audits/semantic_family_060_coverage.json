@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_060",
+  "coverage_analysis": "The consolidated template library covers many substantive principles including statutory interpretation, evidentiary burdens, and general appellate review (e.g., LF007, LF011, LF021). However, the batch reveals recurring procedural reasoning operations unique to specialized statutory regimes (like Rent Control Acts) that are currently uncovered. First, the library lacks a template for determining the threshold to grant a tenant 'leave to defend' in summary eviction proceedings, where courts consistently apply a 'triable issue' or 'prima facie' test rather than demanding conclusive proof. Second, it lacks a framework defining the exact scope of special statutory revisional jurisdiction, which courts repeatedly define as occupying an intermediate space—wider than the narrow jurisdictional review of Section 115 of the CPC, but falling short of full appellate power to re-appreciate evidence. These missing operations are supported by multiple distinct cases and are proposed as gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_060_01",
+    "GAP_semantic_family_060_02"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_004",
+  "coverage_analysis": "The current library contains LF031, which provides the macro-framework for valuing motor vehicle accident claims (baseline income, future prospects, multiplier, and personal expense deductions). However, the source batch exhibits three distinct, recurring sub-operations that are essential prerequisites or parallel steps to LF031 and are currently uncovered: 1) Translating a medical physical disability percentage into an economic functional disability percentage based on occupational impact; 2) Adjusting gross salaried income to establish the baseline multiplicand by selectively including family-benefiting perks and strictly deducting statutory taxes; 3) Standardizing the award of non-pecuniary conventional heads (Loss of Estate, Consortium, Funeral) using fixed benchmarks rather than discretionary quantification.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_004_01",
+    "GAP_semantic_family_004_02",
+    "GAP_semantic_family_004_03"
+  ]
+}

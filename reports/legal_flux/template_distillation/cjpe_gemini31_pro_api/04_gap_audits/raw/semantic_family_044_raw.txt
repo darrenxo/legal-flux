@@ -1,0 +1,113 @@
+{
+  "coverage_analysis": "The consolidated library provides broad coverage of administrative law, evidence appreciation, burden of proof, and natural justice (e.g., LF002, LF003, LF014). However, the supplied batch contains several recurring administrative and service law patterns that are unrepresented. The library lacks templates addressing the strict bounds of judicial review over merit assessments conducted by expert selection committees. It also misses the established doctrine validating executive and administrative actions in the absence of formally enacted statutory rules. Furthermore, there are gaps regarding the qualitative standards required for 'mandatory statutory consultation' between high-level constitutional functionaries, and the requirement that 'subjective satisfaction' for premature retirement or displacement must be grounded in objective, proximate service records.",
+  "gap_candidates": [
+    {
+      "template_name": "expert_selection_committee_appellate_restraint",
+      "knowledge_tags": [
+        "Service Law",
+        "Judicial Review",
+        "Selection Committee",
+        "Merit Assessment",
+        "Appellate Restraint"
+      ],
+      "description": "Restricts judicial interference in the substantive merit assessments, grading, or evaluation methodology adopted by a duly constituted expert selection committee, unless vitiated by proven mala fides or clear statutory violation.",
+      "application_scenario": "Use when an unsuccessful candidate challenges a promotion or recruitment process, asking the court to re-evaluate comparative merits, alter the weightage of interview marks, or substitute its own judgment for that of an expert committee.",
+      "reasoning_flow": [
+        "Identify the selection process, the composition of the expert committee (e.g., Public Service Commission, Departmental Promotion Committee), and the specific grievance regarding merit assessment (e.g., interview weightage, ACR grading, or suitability).",
+        "Ascertain whether the committee acted within its jurisdiction and followed the broad statutory framework without any manifest procedural illegality.",
+        "Check for any specific, proven allegations of mala fides, bias, or oblique motive against the committee members.",
+        "Decline to sit as an appellate authority to re-evaluate the comparative merits of candidates, reappreciate the grading of service records, or micromanage the allocation of marks.",
+        "Uphold the committee's selection, affirming that the evaluation of suitability and merit is the exclusive domain of the expert body."
+      ],
+      "example_application": "An unsuccessful candidate challenges a Public Service Commission's recommendation, claiming their service record was superior and the interview marks were allocated unfairly. The court dismisses the challenge, holding it cannot act as an appellate body to reassess the expert committee's merit evaluation in the absence of proven mala fides.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2019_748",
+        "il-tur-cjpe-1981_229",
+        "il-tur-cjpe-1993_755",
+        "il-tur-cjpe-1977_264",
+        "il-tur-cjpe-1993_163"
+      ],
+      "shared_pattern": "In all these cases, the courts were asked to overturn a selection or promotion decision made by an expert body based on claims of better merit, flawed composition, or unfair grading. The courts consistently refused to substitute their own assessment for that of the selection committee.",
+      "scope_exclusions": "Do not use when the selection committee's action violates explicit statutory recruitment rules, bypasses mandatory eligibility criteria, or when there is incontrovertible proof of malice in fact.",
+      "support_count": 5
+    },
+    {
+      "template_name": "executive_power_statutory_vacuum",
+      "knowledge_tags": [
+        "Administrative Law",
+        "Service Law",
+        "Executive Instructions",
+        "Statutory Vacuum"
+      ],
+      "description": "Validates administrative actions, appointments, or policy decisions taken by the executive or a statutory body in the absence of formally enacted statutory rules, provided they do not conflict with existing laws.",
+      "application_scenario": "Use when a party challenges an administrative appointment, qualification standard, or promotional policy on the sole ground that the Government or statutory body has not framed formal rules to govern the field.",
+      "reasoning_flow": [
+        "Acknowledge that the relevant statute permits the framing of rules for the specific matter, but such formal rules have not yet been enacted.",
+        "Determine whether the executive or administrative authority possesses the general power to manage the affairs, services, or appointments in question.",
+        "Examine the executive instruction, resolution, or administrative decision to ensure it does not violate any existing statutory provision or fundamental right.",
+        "Uphold the administrative action, applying the principle that the executive can fill the statutory vacuum through administrative orders and is not paralyzed by the mere absence of formal rules."
+      ],
+      "example_application": "A statutory trust promotes employees via a board resolution because the State Government has not framed recruitment rules under the parent Act. The court upholds the promotions, ruling that in the absence of statutory rules, the board's administrative instructions validly occupy the field.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1999_1020",
+        "il-tur-cjpe-1977_264",
+        "il-tur-cjpe-1995_613"
+      ],
+      "shared_pattern": "These cases uphold executive orders, board resolutions, or administrative postings defining eligibility, promotions, or job assignments when formal statutory rules on the subject have not been framed.",
+      "scope_exclusions": "Do not use if the executive instruction directly contradicts an already existing, valid statutory rule or constitutional mandate.",
+      "support_count": 3
+    },
+    {
+      "template_name": "mandatory_effective_consultation_standard",
+      "knowledge_tags": [
+        "Constitutional Law",
+        "Administrative Law",
+        "Statutory Consultation",
+        "High-level Appointments"
+      ],
+      "description": "Defines the standard for mandatory statutory or constitutional consultation in high-level appointments, requiring an effective, meaningful exchange of views and complete disclosure of materials, rather than superficial intimation.",
+      "application_scenario": "Use when an appointment to a statutory or constitutional office (e.g., Vice-Chancellor, Commission President, Lokayukta) is challenged on the ground that the mandatory consultation between the appointing authority and the consultees was nominal, bypassed, or based on incomplete information.",
+      "reasoning_flow": [
+        "Identify the statutory or constitutional provision mandating consultation between specified high-level functionaries for making an appointment.",
+        "Examine the process adopted to ascertain if all relevant materials, antecedents, and facts were unreservedly placed before all consulting parties.",
+        "Evaluate whether there was a genuine, deliberative meeting of minds and an opportunity for each party to express and consider comparative views, rather than a unilateral decision merely intimated to the others.",
+        "Vitiate the appointment if the consultation was superficial, bypassed through hasty action, or lacked the sharing of substantive material, affirming that consultation must be effective and meaningful."
+      ],
+      "example_application": "A Chancellor appoints University Vice-Chancellors by sending a bare list of names to the State Government and immediately issuing appointment orders without waiting for the Government's input on the candidates' antecedents. The court quashes the appointments for lack of effective consultation.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2013_438",
+        "il-tur-cjpe-2005_706",
+        "il-tur-cjpe-2016_32"
+      ],
+      "shared_pattern": "In each case, high-level appointments mandated statutory/constitutional consultation between multiple authorities. The courts scrutinized the consultation process to ensure it was meaningful, deliberative, and involved full disclosure of relevant materials, rather than being a mere formality.",
+      "scope_exclusions": "Do not use for routine administrative consultations that do not hold a statutory or constitutional mandate requiring a high degree of procedural depth.",
+      "support_count": 3
+    },
+    {
+      "template_name": "premature_displacement_objective_evaluation",
+      "knowledge_tags": [
+        "Service Law",
+        "Premature Retirement",
+        "Subjective Satisfaction",
+        "Objective Material"
+      ],
+      "description": "Evaluates the validity of an order for premature retirement or transfer from a tenure post by requiring that the executive's 'subjective satisfaction' be anchored in objective, relevant, and proximate material from the service record.",
+      "application_scenario": "Use when a government servant is prematurely retired or removed from a tenure post based on a clause allowing displacement in 'public interest' or for 'public dissatisfaction', and the employee claims the action is arbitrary or relies on stale/non-existent material.",
+      "reasoning_flow": [
+        "Identify the statutory rule authorizing premature retirement or displacement before the end of the normal tenure based on public interest or subjective satisfaction.",
+        "Examine the specific reasons and the service record relied upon by the authority at the time of passing the order, ignoring any post-facto justifications added via affidavits.",
+        "Assess whether the material relied upon is objective, proximate (from recent years), and relevant, or if the order is based on stale entries, uncommunicated remarks, or mere unverified perceptions.",
+        "Strike down the order if the satisfaction is based on non-existent, stale, or irrelevant material; alternatively, uphold it if a holistic review of the recent record reasonably justifies the displacement in public interest."
+      ],
+      "example_application": "An officer is prematurely retired in 'public interest'. The court reviews the record and finds the decision relied solely on uncommunicated adverse entries from over ten years ago, while recent entries were 'Very Good'. The court strikes down the retirement as arbitrary because the subjective satisfaction lacked proximate, objective material.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1987_507",
+        "il-tur-cjpe-1988_478",
+        "il-tur-cjpe-2017_135"
+      ],
+      "shared_pattern": "Each case tests an executive order terminating or interrupting an officer's tenure (premature retirement or transfer). The judicial test consistently applied is whether the authority's 'subjective satisfaction' was supported by objective, proximate, and verifiable material in the service record.",
+      "scope_exclusions": "Do not use for ordinary, non-punitive transfers governed by routine administrative exigencies that do not involve curtailing a statutorily guaranteed tenure or imposing premature retirement.",
+      "support_count": 3
+    }
+  ]
+}

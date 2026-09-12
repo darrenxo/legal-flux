@@ -1,0 +1,134 @@
+{
+  "candidates": [
+    {
+      "template_name": "curing_procedural_revenue_defects",
+      "knowledge_tags": [
+        "Court Fees",
+        "Procedural Defect",
+        "Section 149 CPC",
+        "Opportunity to Rectify",
+        "Relation Back"
+      ],
+      "description": "A reasoning operation to determine whether a litigant should be permitted to cure a deficit in court fees or stamp duty before facing the ultimate penalty of dismissal or rejection of the plaint.",
+      "application_scenario": "Use when a suit, appeal, or application is challenged on the ground of insufficient initial payment of court fees or stamp duty. Do not use if the party has already defied a peremptory order to pay without any valid justification.",
+      "reasoning_flow": [
+        "Identify the procedural defect related to revenue (e.g., deficit court fee) and determine if it was caused by a bona fide mistake or circumstances beyond the litigant's control.",
+        "Mandate that the court provide a clear opportunity and a specified timeframe for the litigant to make good the deficiency before taking adverse action like dismissing the appeal or rejecting the plaint.",
+        "Upon payment within the extended or permitted time, apply the legal fiction that the payment relates back to the original date of filing, thereby neutralizing any limitation or maintainability objections based on the initial deficit."
+      ],
+      "example_application": "In an appeal where the appellant inadvertently attached lower denomination fee stamps, the appellate court must first issue a notice granting two weeks to pay the balance before rejecting the memorandum of appeal. Once paid, the appeal is treated as validly filed on day one.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1961_104",
+        "il-tur-cjpe-1991_304",
+        "il-tur-cjpe-2009_931"
+      ],
+      "shared_pattern": "In all three cases, the courts emphasized that procedural deficits in court fees are curable defects. The courts rejected the outright dismissal of cases, mandating an opportunity to rectify the deficit and applying the relation-back doctrine to preserve the substantive rights of the litigants.",
+      "scope_exclusions": "Do not use for substantive jurisdictional defects, non-curable statutory bars, or when a litigant has deliberately ignored specific, repeated court orders to pay the fee.",
+      "support_count": 3
+    },
+    {
+      "template_name": "defendant_standing_revenue_matters",
+      "knowledge_tags": [
+        "Locus Standi",
+        "Court Fees",
+        "State Revenue",
+        "Pecuniary Jurisdiction",
+        "Obstructive Litigation"
+      ],
+      "description": "A reasoning operation to restrict a defending party from weaponizing the plaintiff's payment of court fees or state revenue to obstruct the trial, unless it directly impacts the court's jurisdiction.",
+      "application_scenario": "Use when a defendant raises preliminary objections or files revision petitions solely challenging the adequacy of the court fee paid by the plaintiff. Do not use if the alleged undervaluation demonstrably places the suit outside the pecuniary jurisdiction of the forum.",
+      "reasoning_flow": [
+        "Recognize that the payment of court fees is primarily a revenue matter between the plaintiff (suitor) and the State.",
+        "Evaluate the defendant's objection to determine if it raises a genuine issue of the court lacking pecuniary jurisdiction due to undervaluation.",
+        "Dismiss the defendant's objection if it is merely a technical weapon to delay proceedings without affecting the court's jurisdiction to hear the matter."
+      ],
+      "example_application": "A defendant applies to dismiss a property suit midway through the trial, claiming the plaintiff paid fixed court fees instead of ad valorem. The court rejects the application, noting that the fee dispute is between the plaintiff and the state, and the alleged deficit does not alter the court's pecuniary authority to try the case.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1952_51",
+        "il-tur-cjpe-1961_182",
+        "il-tur-cjpe-2009_931"
+      ],
+      "shared_pattern": "All three cases articulate that the adequacy of court fees is a matter between the State and the plaintiff. The courts consistently rejected the defendants' attempts to use court fee deficiencies as a procedural weapon in appeals, revisions, or late-stage applications to non-suit the plaintiff.",
+      "scope_exclusions": "Do not use if the statute explicitly grants the defendant the right to contest valuation for jurisdictional purposes, or if the court initiates an inquiry suo motu under the relevant Court Fees Act.",
+      "support_count": 3
+    },
+    {
+      "template_name": "substantive_characterization_of_relief",
+      "knowledge_tags": [
+        "Court Fee Valuation",
+        "Substance over Form",
+        "Declaratory Relief",
+        "Consequential Relief",
+        "Statutory Interpretation"
+      ],
+      "description": "A reasoning operation to determine the correct court fee or jurisdiction by piercing the semantic drafting of the plaint to identify the true substantive legal effect of the requested reliefs.",
+      "application_scenario": "Use when evaluating whether a suit is properly valued, especially when a plaintiff frames a claim as a simple declaration but implicitly seeks to cancel a binding document or decree. Do not use when a statute explicitly prescribes a fixed fee regardless of the substantive outcome.",
+      "reasoning_flow": [
+        "Scrutinize the plaint as a whole to look past the formal wording and identify the core substantive relief being sought by the plaintiff.",
+        "Determine if the requested relief implicitly requires a consequential action, such as the cancellation of an existing decree or alienation that currently binds the plaintiff.",
+        "Apply the statutory valuation metric corresponding to the substantive legal effect (e.g., ad valorem fee for cancellation), ignoring the plaintiff's attempt to artificially lower the valuation through clever drafting."
+      ],
+      "example_application": "A plaintiff frames a suit merely asking for a 'declaration' that a mortgage executed by their legal guardian is invalid. The court assesses that the substance of the relief is the cancellation of a binding mortgage deed, and thus requires the plaintiff to pay ad valorem court fees based on the deed's value.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1947_153",
+        "il-tur-cjpe-1952_51",
+        "il-tur-cjpe-1973_184"
+      ],
+      "shared_pattern": "These cases demonstrate the court's method of looking beyond the plaintiff's formal framing of the relief (whether identifying specific acts overriding general ones, piercing a declaratory veil to find a consequential cancellation, or analyzing the substantive effect of dropping a relief) to determine the true statutory court fee.",
+      "scope_exclusions": "Do not use to rewrite the plaintiff's substantive cause of action or to force the plaintiff to claim a relief they have explicitly disavowed.",
+      "support_count": 3
+    },
+    {
+      "template_name": "structured_assessment_sufficient_cause",
+      "knowledge_tags": [
+        "Limitation",
+        "Condonation of Delay",
+        "Sufficient Cause",
+        "Bona Fide Pursuit",
+        "Dilatory Tactics"
+      ],
+      "description": "A reasoning operation to evaluate applications for condonation of delay by weighing the bona fides of the applicant and the institutional context against the length and nature of the delay.",
+      "application_scenario": "Use when a party (private or State) files an appeal or application beyond the statutory limitation period and requests condonation. Do not use if the statute absolutely bars condonation.",
+      "reasoning_flow": [
+        "Identify the length of the delay and the specific explanation provided by the applicant, such as pursuing a parallel remedy or institutional bureaucratic delays.",
+        "Evaluate the explanation for hallmarks of 'sufficient cause,' distinguishing between bona fide errors or genuine institutional bottlenecks (warranting a liberal approach) and gross negligence, deliberate inaction, or false statements (warranting strict rejection).",
+        "Grant or deny the condonation based on whether preserving the substantive right to a hearing advances justice, ensuring that the delay was not a deliberate dilatory tactic."
+      ],
+      "example_application": "An appellant files an appeal two years late, explaining they were diligently pursuing a review petition in the interim. The court finds the pursuit of the review petition was bona fide and not a dilatory tactic, thus constituting sufficient cause to condone the delay.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2010_112",
+        "il-tur-cjpe-2013_524",
+        "il-tur-cjpe-2019_355"
+      ],
+      "shared_pattern": "In these cases, the court analyzes the specific conduct of the delaying party. It condones delay when the party was bona fide pursuing alternative remedies, but rejects it when the State relies on vague bureaucratic excuses mixed with false dates or unexplained gaps.",
+      "scope_exclusions": "Do not use for statutes that contain express provisions capping the maximum extendable period of limitation.",
+      "support_count": 3
+    },
+    {
+      "template_name": "writ_bar_commercial_disputes",
+      "knowledge_tags": [
+        "Writ Jurisdiction",
+        "Article 226",
+        "Commercial Dispute",
+        "Contractual Obligations",
+        "Alternative Remedy"
+      ],
+      "description": "A reasoning operation to decline exercising extraordinary writ jurisdiction over purely commercial, contractual, or debt-recovery disputes involving state financial entities.",
+      "application_scenario": "Use when a borrower or contractor petitions the High Court to intervene in a financial corporation's loan disbursement, asset auction, or recovery process. Do not use if the state entity has flagrantly violated statutory procedures or acted with established malice/arbitrariness.",
+      "reasoning_flow": [
+        "Examine the nature of the petitioner's claim to determine if it is fundamentally rooted in a private contractual breach, unliquidated damages, or debt recovery evasion.",
+        "Ascertain whether the respondent state financial entity is exercising its legitimate commercial discretion or statutory recovery powers without apparent arbitrariness or statutory violation.",
+        "Decline to entertain the writ petition on the ground that extraordinary constitutional remedies are inappropriate for resolving disputed contractual facts or interfering with legitimate commercial decisions."
+      ],
+      "example_application": "A borrower files a writ petition seeking a mandate to force a state bank to disburse the second tranche of a loan and asking for damages for the delay. The court dismisses the writ, stating that the enforcement of contractual loan commitments and assessment of damages require evidence and must be pursued in a civil court, not via a writ.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2006_489",
+        "il-tur-cjpe-2007_438",
+        "il-tur-cjpe-2009_1308"
+      ],
+      "shared_pattern": "These cases illustrate the Supreme Court's reluctance to allow borrowers to use writ petitions to stall statutory recovery actions, force commercial loan disbursements, or litigate contractual damages, emphasizing that such commercial/contractual disputes belong in civil courts or specialized tribunals.",
+      "scope_exclusions": "Do not use when the state entity's action is ex facie unconstitutional, violates principles of natural justice mandated by statute, or involves public law duties distinct from private contracts.",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_086",
+  "coverage_analysis": "The source batch contains numerous cases on Rent Control disputes. While the library contains a template for statutory ouster of jurisdiction (LF021) which covers cases addressing the exclusive jurisdiction of Rent Controllers over civil courts or arbitration (e.g., il-tur-cjpe-1996_2038, il-tur-cjpe-2009_317, il-tur-cjpe-2014_757), it lacks templates for the substantive grounds of eviction. Specifically, the library has a gap regarding the evaluation of a landlord's 'bona fide requirement' for eviction and the landlord's prerogative to choose suitable premises. Furthermore, there is a gap in procedural jurisprudence regarding when appellate courts should take cognizance of 'subsequent events' (events occurring during the pendency of the litigation) to mould relief or determine if the original cause of action survives. Both of these operations are clearly manifested and supported by at least 3 distinct cases.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_086_01",
+    "GAP_semantic_family_086_02"
+  ]
+}

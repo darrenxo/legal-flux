@@ -369,7 +369,7 @@ def _run_final_review_replay_job(
             max_steps=int(config["legal_flux"].get("max_steps", 4)),
             force_final_answer=True,
         )
-        analysis = _analysis_from_rf_review(review)
+        analysis = _analysis_from_rf_review(review, case)
         record = {
             **base,
             "status": "ok",

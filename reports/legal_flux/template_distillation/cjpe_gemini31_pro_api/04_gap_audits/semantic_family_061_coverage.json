@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_061",
+  "coverage_analysis": "The audit reveals that while the current library adequately addresses evidentiary assessments like the evaluation of interested witnesses (LF006), it lacks templates for specific recurring operations in family and procedural law found in this batch. Uncovered patterns include the prohibition of collateral attacks on formal civil statuses (such as divorce, marriage, or adoption) during summary or criminal proceedings, the strict pleading and evidentiary requirements for proving customary derogations from general family law, and the strict requirement for the continuous subsistence of free consent throughout mutual-consent divorce proceedings.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_061_01",
+    "GAP_semantic_family_061_02",
+    "GAP_semantic_family_061_03"
+  ]
+}

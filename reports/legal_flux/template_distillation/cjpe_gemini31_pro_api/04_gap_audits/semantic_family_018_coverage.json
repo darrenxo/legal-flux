@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_018",
+  "coverage_analysis": "The supplied batch of cases primarily revolves around civil procedure, property rights, and succession. A recurring reasoning operation involves evaluating the validity of a Will against allegations of suspicious circumstances, balancing statutory formalities with the propounder's burden to satisfy the court's conscience. While the current library contains a template for dying declarations (LF009), it lacks a template for testing the validity of testamentary dispositions under suspicious circumstances. Another prominent pattern is the strict jurisdictional boundary applied to second appeals under Section 100 of the Code of Civil Procedure, which prevents High Courts from reappreciating evidence or overturning factual findings unless a 'substantial question of law' is explicitly formulated and the lower court's finding is perverse. The library currently handles appellate review of acquittals (LF007), but lacks a framework for the civil second appellate threshold. Both identified operations appear in at least three distinct cases, satisfying the gap candidate criteria.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_018_01",
+    "GAP_semantic_family_018_02"
+  ]
+}

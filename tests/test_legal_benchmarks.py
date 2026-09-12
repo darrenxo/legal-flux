@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from legal_pilot.config import load_config
 from legal_pilot.io_utils import write_jsonl
 from legal_pilot.legal_benchmark_data import (
     BenchmarkCase,
@@ -15,11 +16,18 @@ from legal_pilot.legal_benchmark_data import (
 )
 from legal_pilot.legal_benchmark_runner import (
     _aggregate_scores,
+    _benchmark_flux_case,
+    _benchmark_label_from_flux_decision,
     _paired_comparisons,
     _response_schema,
     _truncate_input,
     render_benchmark_prompt,
 )
+from legal_pilot.legal_flux_runner import (
+    _rf_decision_label_instruction,
+    _rf_review_output_requirement,
+)
+from legal_pilot.prompting import render_prompt
 
 
 def _case(case_id: str, label: str, *, split: str = "dev") -> BenchmarkCase:
@@ -183,6 +191,99 @@ def test_head_tail_truncation_is_explicit() -> None:
     assert text.endswith("56789")
     assert "middle omitted" in text
     assert metadata["truncated"] is True
+
+
+def test_realistic_ljp_case_adapts_to_legal_flux_without_exposing_gold() -> None:
+    config = _config(Path("."))
+    config["benchmarks"]["max_input_characters"] = 100
+    case = _case("test-case", "accepted", split="test").model_copy(
+        update={"input_text": "First fact.\nSecond fact."}
+    )
+
+    normalized, metadata = _benchmark_flux_case(config, case)
+
+    assert normalized.dataset == "realistic_ljp_facts"
+    assert normalized.facts == {"case_text": "First fact.\nSecond fact."}
+    assert normalized.gold_answer == "accepted"
+    assert "accepted" not in normalized.claim.lower()
+    assert metadata["input_format"] == "whole_fact_text"
+    assert _benchmark_label_from_flux_decision("support") == "accepted"
+    assert _benchmark_label_from_flux_decision("reject") == "rejected"
+    assert _benchmark_label_from_flux_decision("accepted") == "accepted"
+    assert _benchmark_label_from_flux_decision("rejected") == "rejected"
+
+
+def test_realistic_ljp_rf_prompts_receive_only_whole_fact_text() -> None:
+    config = load_config(
+        Path(__file__).parents[1]
+        / "configs"
+        / "legal_benchmarks_cjpe_flux.cluster.yaml"
+    )
+    case, _ = _benchmark_flux_case(
+        config,
+        _case("ljp-prompt", "accepted", split="test").model_copy(
+            update={"input_text": "First fact.\nSecond fact."}
+        ),
+    )
+    planner, _ = render_prompt(config, "legal_flux/rf_plan", case, max_steps=4)
+    executor, _ = render_prompt(
+        config,
+        "legal_flux/instantiate",
+        case,
+        prior_artifacts=[],
+        trajectory_step={"step_id": "S1"},
+        selected_template={"template_id": "LF001"},
+    )
+    reviewer, _ = render_prompt(
+        config,
+        "legal_flux/rf_review",
+        case,
+        review_output_requirement="Return the final outcome.",
+        executed_trajectory=[],
+        remaining_steps=[],
+    )
+
+    for prompt in (planner, executor, reviewer):
+        assert "First fact.\nSecond fact." in prompt
+        assert "PLAINTIFF'S CLAIM:" not in prompt
+        assert "PARTIES:" not in prompt
+        assert "F1:" not in prompt
+    assert "Indian Supreme Court case" in planner
+    assert "F-numbered facts" not in executor
+    assert "F-numbered facts" not in reviewer
+    assert "do not decide the overall outcome" in executor
+    label_instruction = _rf_decision_label_instruction(case)
+    assert "what the appeal or petition" in " ".join(planner.split())
+    assert "predicted Supreme Court disposition" in label_instruction
+    assert "that requested relief" in label_instruction
+    assert "plaintiff's claim" not in label_instruction
+    assert "accepted means" in label_instruction
+    assert "rejected means" in label_instruction
+    assert "support means" not in label_instruction
+
+    review_requirement = _rf_review_output_requirement(
+        case,
+        remaining_step_limit=3,
+        max_steps=4,
+        force_final_answer=False,
+    )
+    assert 'final_decision must be exactly "accepted" or "rejected"' in (
+        review_requirement
+    )
+    assert "accepted means" in review_requirement
+    assert "rejected means" in review_requirement
+    assert '"support" or "reject"' not in review_requirement
+
+    forced_requirement = _rf_review_output_requirement(
+        case,
+        remaining_step_limit=0,
+        max_steps=4,
+        force_final_answer=True,
+    )
+    assert forced_requirement.startswith("No remaining abstract steps are available.")
+    assert 'final_decision must be exactly "accepted" or "rejected"' in (
+        forced_requirement
+    )
 
 
 def test_aggregate_and_paired_metrics() -> None:

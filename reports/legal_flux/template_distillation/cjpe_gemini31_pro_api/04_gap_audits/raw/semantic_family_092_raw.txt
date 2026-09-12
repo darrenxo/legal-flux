@@ -1,0 +1,32 @@
+{
+  "coverage_analysis": "The audit reveals that the provided source-case batch covers a wide array of discrete legal issues. Several cases align with existing templates, such as dying declaration evaluation (LF009) and appellate review of acquittals (LF007). Many other cases present singular, fact-specific procedural scenarios—like invoking Section 319 CrPC, transferring parallel FIRs, or granting interim bail—that lack the required minimum frequency of 3 to constitute a library gap. However, a distinct, recurring jurisprudential operation was identified: the appellate vitiation and remand of lower court decisions that suffer from a failure to record reasons (non-speaking orders) or mechanically apply precedents without factual correlation.",
+  "gap_candidates": [
+    {
+      "template_name": "vitiation_of_unreasoned_judicial_orders",
+      "knowledge_tags": [
+        "Appellate Review",
+        "Non-Speaking Order",
+        "Duty to Give Reasons",
+        "Remand",
+        "Natural Justice"
+      ],
+      "description": "Mandates the setting aside and remand of judicial or quasi-judicial orders that fail to record explicit reasons, apply precedent mechanically, or dispose of matters non-substantively, ensuring the appellate court can effectively review the underlying rationale.",
+      "application_scenario": "Use when an appellate court reviews an order from a lower forum that dismisses a substantive claim in limine, uses a one-line 'non-speaking' rejection, or broadly cites guidelines/precedents without mapping them to the specific facts of the case.",
+      "reasoning_flow": [
+        "Review the impugned order to ascertain if it discloses the lower forum's application of mind and the specific factual or legal reasons for its conclusion.",
+        "Identify whether the order is 'non-speaking' (lacking reasons), mechanically reproduces precedent without applying it to the current facts, or ignores critical evidence.",
+        "Conclude that the failure to record reasons or apply facts vitiates the order, as it violates principles of fair play and prevents meaningful appellate scrutiny.",
+        "Set aside the deficient order and remand the matter to the lower forum with a direction to hear the parties and pass a fresh, reasoned speaking order on the merits."
+      ],
+      "example_application": "A High Court dismisses a civil writ petition or refuses leave to appeal against an acquittal by merely stating 'Dismissed' without discussing the evidence or legal contentions. The Supreme Court sets aside the non-speaking order and remands the matter, noting that the absence of recorded reasons deprives the appellate court of the ability to evaluate the lower court's rationale.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2000_501",
+        "il-tur-cjpe-2008_273",
+        "il-tur-cjpe-2013_262"
+      ],
+      "shared_pattern": "The Supreme Court consistently identifies lower court judgments that lack specific reasoning or mechanically apply generic guidelines without factual correlation, setting them aside and remanding them to ensure a transparent judicial process.",
+      "scope_exclusions": "Do not use when the lower court's order, although brief, sufficiently indicates the core rationale and addresses the primary legal issue, or when the appellate court opts to decide the matter on merits itself rather than remanding.",
+      "support_count": 3
+    }
+  ]
+}

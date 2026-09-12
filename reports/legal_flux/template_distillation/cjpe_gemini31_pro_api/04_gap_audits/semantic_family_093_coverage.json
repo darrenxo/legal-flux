@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_093",
+  "coverage_analysis": "The current consolidated LegalFlux template library covers a wide range of legal reasoning operations, including administrative reviews, evidence appreciation, burden of proof, constitutional competence, and equitable modulation of relief. However, it lacks a specialized reasoning template addressing the strict statutory procedures mandated for environmental governance, specifically the Environmental Impact Assessment (EIA) and Environmental Clearance (EC) regimes. The supplied batch contains multiple cases where the courts scrutinize the grant, extension, or post-facto regularization of ECs. These cases enforce a strict adherence to the sequential EIA process (prior clearance, full disclosure, public consultation, and reasoned expert appraisal), prohibiting administrative circumvention, material concealments by project proponents, and the mechanical abdication of duties by expert bodies. This recurring operation is unsupported by the current library and forms a valid gap candidate.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_093_01"
+  ]
+}

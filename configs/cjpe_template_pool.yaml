@@ -1,9 +1,19 @@
 extends: legal_benchmarks.yaml
 
 legal_flux:
-  # Use CJPE's development cases as reasoning-rich template supervision. Keep
-  # CJPE test out of the pool because its case IDs overlap the LJP test set.
+  # Use a frozen 10% sample of cases aligned between CJPE multi_train and the
+  # Realistic LJP facts-only training split. Keep dev and test fully untouched.
   template_source_dataset: il_tur_cjpe
-  template_source_split: multi_dev
+  template_source_split: aligned_multi_train_10pct
+  template_source_file: data/processed/legal_benchmarks/il_tur_cjpe/template_source_aligned_train_10pct.jsonl
+  template_source_selection_manifest: data/processed/legal_benchmarks/il_tur_cjpe/template_source_aligned_train_10pct_manifest.json
+  template_source_fraction: 0.10
+  template_source_family_clusters: 48
+  template_source_tfidf_max_features: 40000
+  template_source_svd_components: 128
+  template_source_max_case_characters: 300000
+  template_batch_embedding_max_length: 2048
+  template_batch_context_fraction: 0.80
+  template_batch_chars_per_token_floor: 2.5
   gemini_batch_dir: reports/legal_flux/template_distillation/cjpe_gemini31_pro_batches
   gemini_template_dir: reports/legal_flux/template_distillation/cjpe_gemini31_pro_api

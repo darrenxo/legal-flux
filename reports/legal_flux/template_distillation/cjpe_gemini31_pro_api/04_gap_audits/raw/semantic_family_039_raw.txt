@@ -1,0 +1,60 @@
+{
+  "coverage_analysis": "The audit reveals that while the current library addresses specific statutory interpretation principles (like LF019 for strict construction of tax exemptions and LF025 for purposive construction of welfare statutes) and substance-over-form tests (LF016, LF017), it lacks templates for two recurring high-level reasoning operations present in the batch. First, there is no template for the operationalization of statutory legal fictions ('deeming' provisions), where courts must carry the hypothetical scenario to its logical conclusion and enforce its inevitable corollaries (manifested in cases involving deemed ownership, deemed open market sales, and deemed income/procedural adjudication). Second, the library lacks a template for the purification of composite financial bases, where non-target components (like government-supplied materials, service elements in works contracts, or independent domestic receipts) are systematically carved out to align the taxable base strictly with the statute's intended economic object.",
+  "gap_candidates": [
+    {
+      "template_name": "legal_fiction_logical_corollary_enforcement",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Legal Fiction",
+        "Deeming Provision",
+        "Logical Corollaries"
+      ],
+      "description": "Gives full effect to a statutory legal fiction by treating the mandated hypothetical state of affairs as real and enforcing all inevitable consequences and incidents that would naturally flow from it, without allowing judicial imagination to boggle.",
+      "application_scenario": "Use when a statute employs a 'deeming' provision to artificially create a status, event, or value (e.g., deemed ownership, deemed open market sale, deemed income), and the court must determine the substantive legal or procedural consequences of that fictional state.",
+      "reasoning_flow": [
+        "Identify the specific statutory provision that creates the legal fiction via a 'deeming' clause.",
+        "Ascertain the exact hypothetical state of affairs the legislature commands to be treated as real (e.g., a completed sale, transfer of ownership, realization of profit).",
+        "Treat the fictional event as having actually occurred for the purposes of the statute's operation.",
+        "Determine the inevitable logical corollaries that would naturally accompany that state of affairs if it existed in reality (e.g., extinction of prior rights, price reduction due to encumbrances, jurisdictional enablement).",
+        "Enforce these corollaries to fully operationalize the legislative intent, rejecting arguments that attempt to limit the fiction by pointing to the actual factual reality."
+      ],
+      "example_application": "A statute declares that an asset's value shall be 'deemed' to be the price it would fetch if sold in the open market. The court takes this fiction to its logical conclusion, ruling that because a real sale would be subject to existing statutory encumbrances, the hypothetical buyer would discount the price accordingly, thereby reducing the asset's taxable valuation.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_229",
+        "il-tur-cjpe-2003_1020",
+        "il-tur-cjpe-1996_189",
+        "il-tur-cjpe-1961_321"
+      ],
+      "shared_pattern": "In each case, the court encounters a statutory 'deeming' provision and enforces the logical, inevitable consequences of the fictional state (extinguishing landlord rights, reducing valuation due to encumbrances, validating tax machinery, enabling procedural jurisdiction) rather than restricting the fiction to actual facts.",
+      "scope_exclusions": "Do not use when the statute explicitly limits the scope of the legal fiction to a specific narrow purpose, expressly forbidding the extension of its corollaries to other domains.",
+      "support_count": 4
+    },
+    {
+      "template_name": "composite_tax_base_purification",
+      "knowledge_tags": [
+        "Taxation",
+        "Base Calculation",
+        "Apportionment",
+        "Statutory Scope"
+      ],
+      "description": "Purifies a composite gross financial base by systematically carving out and excluding specific non-target components to ensure the tax or incentive strictly aligns with the statute's intended economic object.",
+      "application_scenario": "Use when a tax levy, exemption, or incentive applies to a specific economic activity (like export profits, sale of goods, or contractor's net profit), but the starting gross financial metric contains bundled elements outside that intended scope.",
+      "reasoning_flow": [
+        "Identify the composite gross value from which the tax liability or statutory incentive is to be computed (e.g., gross contract receipts, total turnover, gross business profits).",
+        "Determine the strict statutory object of the fiscal measure (e.g., taxing only the sale of goods, assessing only a contractor's true profit margin, incentivizing only export-derived profits).",
+        "Isolate specific components within the gross value that legally or factually lack the targeted attribute (e.g., government-supplied materials carrying zero profit, labor/service elements in a works contract, independent processing charges with no export nexus).",
+        "Exclude, deduct, or proportionally apportion these non-target components from the gross base to prevent fiscal distortion.",
+        "Apply the tax rate or incentive formula exclusively to the purified net base, ensuring the fiscal measure does not exceed its authorized statutory scope."
+      ],
+      "example_application": "A taxing authority seeks to apply a flat profit rate to a contractor's gross receipts. The court identifies that a portion of the receipts represents materials supplied by the government at fixed rates, which carry no embedded profit. The court purifies the tax base by excluding the cost of these materials before applying the profit rate.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1978_250",
+        "il-tur-cjpe-2007_450",
+        "il-tur-cjpe-2007_858"
+      ],
+      "shared_pattern": "Each case involves a composite financial metric (gross receipts, works contract value, gross business profits) from which a specific non-target element (government materials, labor charges, independent processing receipts) must be carved out or apportioned to isolate the true statutory tax base (contractor profit, sale of goods, export profit).",
+      "scope_exclusions": "Do not use when the taxing statute explicitly defines the gross composite value as the final, irreducible base for the levy, overriding any judicial apportionment.",
+      "support_count": 3
+    }
+  ]
+}

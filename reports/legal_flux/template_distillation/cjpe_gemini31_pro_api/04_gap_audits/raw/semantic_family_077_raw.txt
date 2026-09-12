@@ -1,0 +1,33 @@
+{
+  "coverage_analysis": "The current library addresses specific public employment issues such as regularization of ad-hoc workers entering through back-door appointments (LF013) and motive versus foundation in termination (LF014). It does not, however, cover the prevalent administrative and service law doctrine restricting the power of selection committees or appointing authorities from altering, relaxing, or creating unadvertised equivalencies for essential qualifications mid-stream during a recruitment process. Several cases in the supplied batch revolve around challenges to appointments where experts or selection bodies deviated from the strict text of the advertised qualifications (e.g., substituting 'Industrial Chemistry' for 'Chemistry', or 'R&D testing' for 'Manufacture testing', or ignoring minimum percentage requirements). This establishes a clear gap regarding the 'rules of the game' and strict adherence to advertised eligibility criteria in public employment.",
+  "gap_candidates": [
+    {
+      "template_name": "strict_adherence_advertised_qualifications",
+      "knowledge_tags": [
+        "Service Law",
+        "Recruitment Process",
+        "Essential Qualifications",
+        "Selection Committee Powers",
+        "Rules of the Game"
+      ],
+      "description": "Invalidates the selection or appointment of candidates who do not possess the exact essential qualifications explicitly laid out in the recruitment advertisement, prohibiting selection committees from relaxing criteria, determining unadvertised equivalencies, or altering the rules mid-stream without explicit statutory authorization.",
+      "application_scenario": "Use when an unsuccessful candidate challenges a selection process alleging that the selected candidate possessed a variant, 'equivalent', or lesser qualification than what was strictly published in the advertisement, and the selection committee unilaterally relaxed the requirements.",
+      "reasoning_flow": [
+        "Identify the essential academic qualifications and specific experience criteria explicitly mandated in the official recruitment advertisement.",
+        "Analyze the selected candidate's credentials to determine if they strictly match the advertised requirements or if they represent a variant, purportedly equivalent, or lesser qualification.",
+        "Examine the governing statutory recruitment rules to verify if the Selection Committee or appointing authority is expressly vested with the power to relax qualifications or determine equivalence.",
+        "Conclude that in the absence of explicit statutory empowerment, the Selection Committee lacks the inherent jurisdiction to alter criteria, equate distinct subjects, or relax qualifications mid-stream, thereby rendering the selection of the non-conforming candidate invalid."
+      ],
+      "example_application": "An advertisement for a 'Lecturer in Chemistry' requires a Master's degree in pure Chemistry. The Selection Committee appoints a candidate with a Master's in 'Industrial Chemistry', reasoning it is better suited. The court sets aside the appointment, ruling that the committee cannot unilaterally alter the advertised essential qualifications mid-stream or assume the power to determine equivalency without explicit rule-based authority.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2009_144",
+        "il-tur-cjpe-2019_955",
+        "il-tur-cjpe-2006_702",
+        "il-tur-cjpe-1997_258"
+      ],
+      "shared_pattern": "The courts strictly enforce the textual requirements of recruitment advertisements and statutory rules regarding essential qualifications. They consistently prohibit Selection Committees, expert bodies, or appointing authorities from unilaterally relaxing criteria, determining unadvertised academic equivalencies, or altering the rules of the game after the selection process has commenced, unless a specific statutory rule explicitly grants them such power.",
+      "scope_exclusions": "Do not use when the governing statutory rules expressly vest the appointing authority or the Selection Committee with discretionary power to relax qualifications or determine equivalency, and such power was lawfully exercised and formally notified. Do not use for evaluating minor procedural irregularities in the application process that do not affect substantive eligibility.",
+      "support_count": 4
+    }
+  ]
+}

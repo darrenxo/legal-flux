@@ -1,0 +1,62 @@
+{
+  "coverage_analysis": "The current consolidated template library contains generic principles of statutory interpretation, equitable relief modulation, and circumstantial evidence. However, it lacks specific templates addressing two recurring legal operations heavily represented in this batch of land acquisition cases: (1) the doctrine of irrevocable vesting of land in the State upon taking possession, which acts as an absolute bar against subsequent statutory lapsing or administrative denotification, and (2) the application of laches to bar belated challenges to acquisition proceedings when third-party rights have crystallized or substantial development has occurred.",
+  "gap_candidates": [
+    {
+      "template_name": "irrevocable_vesting_barring_divestment",
+      "knowledge_tags": [
+        "Land Acquisition",
+        "Vesting of Title",
+        "Statutory Lapsing",
+        "Denotification",
+        "Section 17 Urgency"
+      ],
+      "description": "Prevents the divestment of State title over acquired land—whether through statutory lapsing provisions or voluntary administrative denotification—once physical possession has been lawfully taken and the land has vested free from all encumbrances.",
+      "application_scenario": "Use when a landowner or the State seeks to nullify a land acquisition (either via statutory lapse for a delayed award or an explicit withdrawal/denotification order) after the State has already taken possession of the subject land.",
+      "reasoning_flow": [
+        "Ascertain whether physical possession of the land has been lawfully taken by the State under the relevant acquisition statute (e.g., through general provisions or urgency clauses).",
+        "Establish that upon the taking of possession, the statutory framework triggers the absolute vesting of the land in the State, free from all encumbrances.",
+        "Determine the basis of the claim for return of the land—either automatic lapsing due to a delayed award or a formal withdrawal/denotification order by the Government.",
+        "Conclude that once the land has irrevocably vested in the State, it cannot be divested or reverted to the original owner by any mechanism, rendering lapsing provisions inapplicable and denotification orders invalid."
+      ],
+      "example_application": "A landowner argues that an acquisition lapsed because the final award was passed years after the statutory deadline. However, because the State had already taken advance possession under urgency provisions, the court holds that the land had absolutely vested in the State, making the lapsing provision inapplicable and barring the return of the land.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_1102",
+        "il-tur-cjpe-1996_224",
+        "il-tur-cjpe-2011_275",
+        "il-tur-cjpe-2013_886",
+        "il-tur-cjpe-2015_341"
+      ],
+      "shared_pattern": "The courts consistently establish that the absolute vesting of land in the State upon taking possession operates as an irreversible legal threshold, precluding any subsequent divestment through statutory lapsing (e.g., Section 11A) or administrative withdrawal (e.g., Section 48).",
+      "scope_exclusions": "Do not use for assessing whether possession was actually and factually taken, or if the governing statute explicitly provides a mechanism for divestment even post-vesting.",
+      "support_count": 5
+    },
+    {
+      "template_name": "laches_barring_acquisition_nullification",
+      "knowledge_tags": [
+        "Writ Jurisdiction",
+        "Delay and Laches",
+        "Land Acquisition",
+        "Third Party Rights",
+        "Public Interest"
+      ],
+      "description": "Bars challenges to land acquisition proceedings under extraordinary writ jurisdiction when there is inordinate, unexplained delay, especially if the award has been passed, possession taken, or third-party rights have crystallized.",
+      "application_scenario": "Use when a landowner challenges the validity of land acquisition notifications after a significant lapse of time, particularly post-award, post-dispossession, or after the acquiring authority has deployed resources to alter the land or allotted it to third parties.",
+      "reasoning_flow": [
+        "Calculate the time elapsed between the culmination of key acquisition milestones (e.g., declarations, awards, dispossession) and the initiation of the judicial challenge.",
+        "Assess whether the petitioner has provided a cogent, legally acceptable justification for the delay in seeking equitable relief.",
+        "Examine intervening events on the ground, such as the deployment of public funds for infrastructure, substantial physical development, or the crystallization of third-party rights.",
+        "Refuse discretionary equitable relief and uphold the acquisition—even if procedural irregularities exist—when an unexplained delay is coupled with irreversible subsequent developments that would make restitution highly prejudicial to the public interest."
+      ],
+      "example_application": "A landowner challenges a land acquisition notification five years after the final award, citing procedural flaws. The court notes the delay is unexplained and that the development authority has already constructed infrastructure and allotted plots to third parties. The court dismisses the challenge on the grounds of laches.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_598",
+        "il-tur-cjpe-2011_275",
+        "il-tur-cjpe-2011_688",
+        "il-tur-cjpe-2015_236"
+      ],
+      "shared_pattern": "The courts consistently deny discretionary writ relief to landowners who sleep over their rights, emphasizing that post-acquisition developments and third-party rights create superseding equities that cannot be unsettled by delayed challenges.",
+      "scope_exclusions": "Do not use if the challenge is brought within the statutory limitation period for a civil suit, or if the delay is thoroughly justified and no intervening public or third-party rights have crystallized.",
+      "support_count": 4
+    }
+  ]
+}

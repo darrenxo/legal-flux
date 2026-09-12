@@ -1,0 +1,148 @@
+{
+  "candidates": [
+    {
+      "template_name": "ocular_medical_evidence_reconciliation",
+      "knowledge_tags": [
+        "Evidence Evaluation",
+        "Medical Evidence",
+        "Ocular Testimony",
+        "Physical Impossibility"
+      ],
+      "description": "Evaluates the credibility of eyewitness testimony by cross-referencing the claimed mechanism of injury with objective medical and post-mortem findings.",
+      "application_scenario": "Use when the defense contends that the eyewitness account of how an assault occurred is fundamentally contradicted by the physical injuries documented in the medical or post-mortem report.",
+      "reasoning_flow": [
+        "Ascertain the precise mechanism of injury described by the eyewitnesses, including the type of weapon and the manner of its use.",
+        "Examine the medical or post-mortem report alongside the expert testimony to determine the nature, dimensions, and type of injuries sustained.",
+        "Evaluate whether the medical findings present an absolute physical impossibility against the ocular account, or if they merely highlight alternative possibilities and minor variations.",
+        "If a fundamental irreconcilable contradiction exists (e.g., absence of expected structural damage from a claimed heavy blunt impact), assess whether this completely discredits the eyewitness's presence or truthfulness.",
+        "If the discrepancies are minor, explainable, or based on hypothetical medical opinions, accord primacy to the credible ocular testimony over the medical variables."
+      ],
+      "example_application": "Eyewitnesses claim the victim was repeatedly struck on the head with a massive concrete block. The court reviews the post-mortem report which reveals only shallow incised wounds and no depressed skull fractures. The court concludes the medical evidence represents a physical impossibility relative to the ocular account, rendering the eyewitness testimony untrustworthy and leading to the rejection of the prosecution's narrative.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2006_1148",
+        "il-tur-cjpe-2013_896",
+        "il-tur-cjpe-2002_857",
+        "il-tur-cjpe-2012_451",
+        "il-tur-cjpe-1970_321"
+      ],
+      "shared_pattern": "In all these cases, the court structured its reasoning by directly juxtaposing the specific weapon or method of attack alleged by the eyewitnesses against the objective physiological damage recorded by the medical examiner, using the presence or absence of a fundamental contradiction as the threshold for accepting the eyewitness.",
+      "scope_exclusions": "Do not use in cases where the cause of death or nature of injuries is undisputed and the sole issue is the identity of the perpetrator.",
+      "support_count": 5
+    },
+    {
+      "template_name": "interested_witness_testimony_evaluation",
+      "knowledge_tags": [
+        "Witness Credibility",
+        "Interested Witness",
+        "Related Witness",
+        "Corroboration"
+      ],
+      "description": "A structured assessment for evaluating the testimony of an eyewitness who is a close relative of the victim or holds previous animosity toward the accused.",
+      "application_scenario": "Use when the defense attempts to discard an eyewitness's testimony purely on the grounds of their biological, social, or factional relationship to the victim.",
+      "reasoning_flow": [
+        "Identify whether the witness has a close relationship with the victim or a pre-existing animosity towards the accused.",
+        "Determine if the witness's presence at the scene was natural and probable given the time, location, and surrounding circumstances.",
+        "Scrutinize the testimony for inherent consistency, checking for the absence of major embellishments over time.",
+        "Ascertain if the witness's account is corroborated by objective evidence, such as medical reports, prompt lodging of the first information report, or circumstantial recoveries.",
+        "Accept the testimony if it possesses a 'ring of truth' and intrinsic credibility, refusing to discard it solely on the basis of relationship or technical 'interested' status."
+      ],
+      "example_application": "The sole eyewitness to a fatal assault is the victim's sibling. The defense argues the testimony is inherently biased. The court notes that the assault occurred inside their shared residence at night, making the sibling's presence natural. After finding the sibling's account consistent and strongly corroborated by the forensic report, the court accepts the testimony, ruling that being related is not synonymous with being unreliable.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1947_288",
+        "il-tur-cjpe-1978_11",
+        "il-tur-cjpe-1990_61",
+        "il-tur-cjpe-2008_2115",
+        "il-tur-cjpe-2013_896"
+      ],
+      "shared_pattern": "These cases share the reasoning that biological relationship or factional alignment does not automatically invalidate a witness's testimony; instead, it triggers a heightened level of scrutiny requiring the court to verify the naturalness of their presence and the intrinsic consistency of their account.",
+      "scope_exclusions": "Do not use when evaluating the testimony of fully independent, unrelated bystanders or expert witnesses.",
+      "support_count": 5
+    },
+    {
+      "template_name": "constructive_liability_shared_intent_inference",
+      "knowledge_tags": [
+        "Constructive Liability",
+        "Common Intention",
+        "Unlawful Assembly",
+        "Group Assault"
+      ],
+      "description": "Infers the common intention or common object of a group from their collective actions, weapons, and the resulting injuries to determine appropriate constructive liability.",
+      "application_scenario": "Use in group assault cases to determine whether all members of an unlawful assembly share liability for the ultimate offence (e.g., murder) or only for a lesser offence (e.g., grievous hurt).",
+      "reasoning_flow": [
+        "Identify the membership of the accused within the group and confirm their presence at the scene of the offence.",
+        "Examine the nature of the weapons carried by the group members and the severity and location of the injuries actually inflicted.",
+        "Analyze the collective conduct of the assembly, including prior convergence, coordination of the attack, exhortations, and simultaneous retreat.",
+        "Determine if the overt acts and the overall context demonstrate a shared intent to cause death, or if the minimal use of force and non-vital injuries imply an intent limited to causing grievous hurt.",
+        "Attribute constructive liability for the substantive offence that matches the established common object or intention to all participating members."
+      ],
+      "example_application": "A group converges on a victim, carrying swords and heavy clubs. However, they only strike the victim's legs with the blunt edges of the weapons, causing fractures but no fatal organ damage. The victim dies days later from complications. The court infers from the choice not to use the sharp edges or strike vital parts that the common object was limited to causing grievous hurt, holding the group constructively liable for a lesser offence rather than murder.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1993_473",
+        "il-tur-cjpe-1993_564",
+        "il-tur-cjpe-1977_168",
+        "il-tur-cjpe-2008_1805",
+        "il-tur-cjpe-2012_263"
+      ],
+      "shared_pattern": "In each case, the court determined the degree of constructive liability not merely by the fact of group participation, but by meticulously correlating the group's collective behavior, weapon selection, and resulting injury patterns to deduce the specific tier of shared intent.",
+      "scope_exclusions": "Do not use in crimes committed by a lone perpetrator or cases where vicarious/constructive liability statutes are not invoked.",
+      "support_count": 5
+    },
+    {
+      "template_name": "appellate_reversal_of_acquittal_standard",
+      "knowledge_tags": [
+        "Appellate Review",
+        "Acquittal Reversal",
+        "Standard of Review",
+        "Perversity"
+      ],
+      "description": "Defines the strict threshold and procedural logic an appellate court must employ before overturning a trial court's order of acquittal.",
+      "application_scenario": "Use when an appellate court is reviewing a state's or informant's appeal against a lower court's judgment acquitting the accused.",
+      "reasoning_flow": [
+        "Review the trial court's judgment to identify the specific evidentiary grounds and logical premises upon which the acquittal was based.",
+        "Re-appraise the entire evidence on record to test the validity and rationality of the trial court's findings.",
+        "Determine whether the trial court's view constitutes a reasonably possible interpretation of the evidence, acknowledging that the presumption of innocence is strengthened by the acquittal.",
+        "Ascertain if the trial court committed manifest errors of law, ignored material evidence, or relied on baseless conjectures, rendering the judgment legally perverse.",
+        "Reverse the acquittal only if the trial court's findings are found to be clearly unreasonable and perverse, substituting them with findings of guilt established beyond reasonable doubt."
+      ],
+      "example_application": "The trial court acquits an accused because the eyewitness could not accurately state the exact time of the assault. The appellate court reviews the record, notes that the witness is illiterate and rural, making exact timekeeping unlikely, and finds the trial court's reasoning completely divorced from reality. The appellate court deems the acquittal perverse, overturns it, and convicts the accused based on the otherwise robust evidence.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1947_288",
+        "il-tur-cjpe-1970_321",
+        "il-tur-cjpe-2009_644",
+        "il-tur-cjpe-2008_1886"
+      ],
+      "shared_pattern": "The appellate courts applied a uniform restraint: they refused to substitute their own plausible view for the trial court's plausible view, restricting reversals strictly to situations where the trial court's logic was structurally flawed, legally perverse, or ignored compelling material evidence.",
+      "scope_exclusions": "Do not use for appeals against convictions or in trial-level proceedings.",
+      "support_count": 4
+    },
+    {
+      "template_name": "specific_overt_act_verification_in_factional_crimes",
+      "knowledge_tags": [
+        "Overt Act",
+        "Factional Rivalry",
+        "Over-implication",
+        "Evidence Filtering"
+      ],
+      "description": "A filtering mechanism used in mass or factional violence cases to separate actual participants from falsely implicated bystanders by requiring proof of consistent, specific overt acts.",
+      "application_scenario": "Use when dealing with a large number of accused persons named in a group assault arising out of deep-seated factional or political rivalry, where the risk of the complainant over-implicating enemies is high.",
+      "reasoning_flow": [
+        "Identify the context of the crime as involving mass participation driven by existing factional, political, or familial animosity.",
+        "Examine the earliest reports (such as the first information report) and compare them with courtroom testimonies to check for the consistent attribution of specific roles.",
+        "Corroborate the specific overt acts attributed to individual accused with independent objective material, such as corresponding medical injuries or specific weapon recoveries.",
+        "Filter out accused persons against whom only sweeping, omnibus allegations are made without specific acts, or where witness accounts regarding their roles fundamentally conflict.",
+        "Confirm convictions only for those accused whose active participation is established beyond reasonable doubt by specific, corroborated, and consistently stated overt acts."
+      ],
+      "example_application": "Following a village riot, 30 individuals from a rival political faction are charged with murder. The court applies the overt act verification filter. It convicts 5 accused who were consistently named from the FIR through trial as having dealt specific blows matching the autopsy report. It acquits the remaining 25 against whom witnesses only made omnibus statements like 'they also came and beat', citing the probability of over-implication due to political enmity.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_76",
+        "il-tur-cjpe-2007_726",
+        "il-tur-cjpe-1997_1080",
+        "il-tur-cjpe-2008_2115",
+        "il-tur-cjpe-1993_653"
+      ],
+      "shared_pattern": "In instances of factional mass violence, the courts consistently mitigated the danger of false implication by shifting the evidentiary burden away from general group presence towards requiring consistent, corroborated proof of individual 'overt acts'.",
+      "scope_exclusions": "Do not use in isolated, non-factional crimes involving a small, defined number of participants without a background of broad group enmity.",
+      "support_count": 5
+    }
+  ]
+}

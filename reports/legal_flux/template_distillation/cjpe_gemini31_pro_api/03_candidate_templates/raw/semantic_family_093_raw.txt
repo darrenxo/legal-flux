@@ -1,0 +1,112 @@
+{
+  "candidates": [
+    {
+      "template_name": "Strict_Scrutiny_Environmental_Clearance",
+      "knowledge_tags": [
+        "Environmental Law",
+        "Statutory Compliance",
+        "Expert Appraisal",
+        "Prior Clearance",
+        "Disclosure Requirements"
+      ],
+      "description": "An operational framework for reviewing the validity of environmental clearances by demanding strict adherence to mandatory statutory procedures, full disclosure of material facts by project proponents, and reasoned application of mind by expert appraisal bodies.",
+      "application_scenario": "Use when assessing the validity of an environmental clearance, exemption, or procedural modification, particularly where procedural lapses, information suppression, or post-facto approvals are alleged. Do not use for generic administrative approvals unrelated to environmental impact assessments.",
+      "reasoning_flow": [
+        "Verify whether the statutory framework mandates 'prior' clearance and complete disclosure for the specific project category.",
+        "Examine the project proponent's submissions for full and candid disclosure of all material environmental features, placing the burden of establishing environmental compliance squarely on the proponent.",
+        "Assess whether the expert appraisal authority strictly followed prescribed procedural steps (including public consultation) and provided cogent, scientifically grounded reasons for its recommendations without being swayed by extraneous considerations.",
+        "Invalidate approvals or exemptions that rely on ex post facto regularizations, suppression of material facts, or perfunctory appraisals that bypass mandatory environmental safeguards."
+      ],
+      "example_application": "A corporation seeks to validate an expanded mining operation using a post-facto environmental approval, despite failing to disclose a nearby sensitive wetland in its initial application. The reviewing authority applies this template to strike down the approval, noting that environmental laws require prior clearance and full disclosure, and that expert bodies cannot cure initial suppression of material facts with subsequent generic approvals.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2016_271",
+        "il-tur-cjpe-2019_177",
+        "il-tur-cjpe-2020_235"
+      ],
+      "shared_pattern": "In each case, the Court demanded rigid adherence to environmental notification procedures, rejecting post-facto modifications, penalizing the concealment of ecological data, and mandating that expert appraisal committees apply their minds actively rather than rubber-stamping proposals.",
+      "scope_exclusions": "Excludes challenges to environmental policies where the project proponent has strictly followed all statutory procedures and the challenge is merely a difference of opinion with the expert committee's substantive scientific conclusions.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Judicial_Restraint_Economic_Policy",
+      "knowledge_tags": [
+        "Administrative Law",
+        "Policy Decisions",
+        "Resource Allocation",
+        "Article 14",
+        "Price Fixation"
+      ],
+      "description": "A framework defining the limits of judicial interference in executive policy decisions, price fixation, and the allocation of state resources, emphasizing the presumption of validity absent manifest arbitrariness.",
+      "application_scenario": "Use when challenging administrative policies, eligibility criteria for state benefits, pricing/royalty mechanisms, or the method of disposing of state property. Do not use for quasi-judicial or statutory adjudicatory functions.",
+      "reasoning_flow": [
+        "Identify the nature of the challenged executive action, characterizing it as price fixation, formulation of eligibility criteria, or a resource allocation method.",
+        "Apply a presumption of validity to the executive action, recognizing the government's authority to make pragmatic policy choices and economic adjustments based on prevailing circumstances.",
+        "Evaluate whether the action serves a legitimate public interest or statutory objective without being patently discriminatory, irrational, or actuated by malice.",
+        "Uphold the executive policy or allocation decision unless the challenger discharges the heavy burden of proving that it violates constitutional mandates against arbitrariness or lacks any rational nexus to its intended purpose."
+      ],
+      "example_application": "A state government introduces a new policy for leasing commercial plots, requiring applicants to demonstrate a specific minimum annual turnover and preferring negotiation over public auction for certain industrial zones. Disgruntled applicants challenge the policy as arbitrary. The court applies this template to uphold the policy, reasoning that the state has leeway in economic resource allocation and the criteria rationally ensure only viable businesses receive the leases.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2000_736",
+        "il-tur-cjpe-2002_696",
+        "il-tur-cjpe-2019_259"
+      ],
+      "shared_pattern": "The Court consistently deferred to the executive's domain in setting market eligibility conditions, fixing royalty rates, and choosing negotiation over auction for land leases, so long as a public purpose was served and manifest arbitrariness was absent.",
+      "scope_exclusions": "Excludes administrative actions that involve statutory adjudications, disciplinary proceedings, or where the statute explicitly mandates a singular method (e.g., mandatory public auction) that the executive bypassed.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Strict_Construction_Exemptions",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Saving Clauses",
+        "Tax Concessions",
+        "Exemptions",
+        "Burden of Proof"
+      ],
+      "description": "A methodology for interpreting statutory saving clauses, exemptions, and tax concessions, requiring exact compliance with the stated conditions before benefits are conferred.",
+      "application_scenario": "Use when a party claims the benefit of a grandfather clause, a tax concession, or a statutory exemption from a general regulatory regime. Do not use for interpreting remedial or beneficial welfare legislation meant for broad public application.",
+      "reasoning_flow": [
+        "Identify the specific statutory provision, notification, or saving clause under which the exemption or concession is claimed.",
+        "Construe the terms of the exemption strictly against the claimant, avoiding implied inclusions or expansive interpretations of the saving clause.",
+        "Place the burden of proof squarely on the claimant to demonstrate full, literal compliance with all preconditions specified in the text.",
+        "Deny the exemption or concession if the claimant relies on substantial compliance, implied recognition by authorities, or deviations from the strict textual requirements of the provision."
+      ],
+      "example_application": "A manufacturing company claims a tax exemption meant for units that process raw materials and 'sell' the finished goods locally. The company instead transfers the goods to its own branches in another state. Using this template, the tribunal denies the exemption because the strict condition of a local 'sale' was not literally fulfilled, and substantial compliance arguments cannot override the strict text of an exemption.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1981_392",
+        "il-tur-cjpe-2007_745",
+        "il-tur-cjpe-2020_235"
+      ],
+      "shared_pattern": "Whether evaluating the survival of pre-annexation mining rights, compliance with sales tax concession conditions, or exemptions from environmental impact assessments, the Court uniformly demanded exact, literal compliance with the saving or exempting provision.",
+      "scope_exclusions": "Excludes the interpretation of general penal statutes, constitutional fundamental rights provisions, or welfare legislation where purposive, liberal construction is legally mandated.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Proportionality_Equitable_Restitution",
+      "knowledge_tags": [
+        "Equity",
+        "Proportionality",
+        "Restitution",
+        "Compensatory Relief",
+        "Unjust Enrichment"
+      ],
+      "description": "An equitable reasoning framework that balances strict legal compliance against irreversible ground realities by applying the doctrines of proportionality, unjust enrichment, and compensatory restitution.",
+      "application_scenario": "Use when fashioning a remedy where strict enforcement of a rule would cause disproportionate harm, or when evaluating claims for restitution based on delays caused by judicial proceedings.",
+      "reasoning_flow": [
+        "Identify whether a party is claiming restitution for lost time/benefits, or if the court is tasked with penalizing a strict statutory violation.",
+        "If restitution is claimed, evaluate whether the opposing party unjustly enriched themselves at the claimant's expense; deny restitution if no unjust enrichment occurred.",
+        "If a statutory violation is found, assess intervening irreversible realities (e.g., long passage of time, substantial infrastructure completed, or operational necessity).",
+        "Mold the final relief using proportionality, substituting strict punitive consequences (like facility closure or forced reinstatement) with heavy compensatory or restorative monetary penalties to ensure accountability without disproportionate disruption."
+      ],
+      "example_application": "An enterprise built a factory without a required prior approval. Years later, the omission is challenged. The court finds the enterprise violated the law. However, applying this template, the court notes the factory has been operating for a decade with subsequent safety upgrades. Instead of ordering demolition, the court imposes a massive financial penalty for environmental restoration, balancing statutory accountability with proportionality.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2012_584",
+        "il-tur-cjpe-2019_963",
+        "il-tur-cjpe-2020_235"
+      ],
+      "shared_pattern": "In each case, the Court balanced strict legal outcomes (like closure of industries, denying discharge from service, or granting restitution for lost time) against practical realities (massive investments, passage of years, lack of unjust enrichment), ultimately molding relief via monetary compensation or denying restitution where equities didn't align.",
+      "scope_exclusions": "Excludes cases involving fundamental rights violations or criminal acts where statutory penalties are mandatory and cannot be substituted by compensatory equitable relief.",
+      "support_count": 3
+    }
+  ]
+}

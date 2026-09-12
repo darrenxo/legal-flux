@@ -1,0 +1,649 @@
+{
+  "created_at": "2026-09-11T15:24:32.999760+00:00",
+  "stage": "audit",
+  "status": "ok",
+  "batch_count": 103,
+  "records": [
+    {
+      "batch_id": "semantic_family_001",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_001_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_002",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_002_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_003",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_003_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_004",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_004_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_005",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_005_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_006",
+      "status": "skipped_existing",
+      "gap_count": 4,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_006_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_007",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_007_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_008",
+      "status": "skipped_existing",
+      "gap_count": 4,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_008_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_009",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_009_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_010",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_010_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_011",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_011_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_012",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_012_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_013",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_013_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_014",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_014_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_015",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_015_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_016",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_016_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_017",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_017_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_018",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_018_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_019",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_019_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_020",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_020_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_021",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_021_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_022",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_022_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_023",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_023_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_024",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_024_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_025",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_025_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_026",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_026_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_027",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_027_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_028",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_028_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_029",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_029_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_030",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_030_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_031",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_031_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_032",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_032_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_033",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_033_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_034",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_034_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_035",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_035_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_036",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_036_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_037",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_037_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_038",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_038_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_039",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_039_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_040",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_040_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_041",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_041_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_042",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_042_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_043",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_043_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_044",
+      "status": "skipped_existing",
+      "gap_count": 4,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_044_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_045",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_045_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_046",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_046_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_047",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_047_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_048",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_048_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_049",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_049_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_050",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_050_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_051",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_051_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_052",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_052_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_053",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_053_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_054",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_054_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_055",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_055_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_056",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_056_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_057",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_057_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_058",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_058_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_059",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_059_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_060",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_060_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_061",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_061_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_062",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_062_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_063",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_063_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_064",
+      "status": "skipped_existing",
+      "gap_count": 4,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_064_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_065",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_065_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_066",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_066_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_067",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_067_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_068",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_068_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_069",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_069_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_070",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_070_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_071",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_071_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_072",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_072_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_073",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_073_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_074",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_074_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_075",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_075_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_076",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_076_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_077",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_077_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_078",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_078_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_079",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_079_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_080",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_080_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_081",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_081_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_082",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_082_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_083",
+      "status": "skipped_existing",
+      "gap_count": 0,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_083_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_084",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_084_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_085",
+      "status": "skipped_existing",
+      "gap_count": 3,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_085_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_086",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_086_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_087",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_087_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_088",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_088_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_089",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_089_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_090",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_090_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_091",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_091_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_092",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_092_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_093",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_093_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_094",
+      "status": "skipped_existing",
+      "gap_count": 4,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_094_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_095",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_095_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_096",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_096_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_097",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_097_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_098",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_098_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_099",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_099_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_100",
+      "status": "skipped_existing",
+      "gap_count": 2,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_100_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_101",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_101_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_102",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_102_gap_candidates.jsonl"
+    },
+    {
+      "batch_id": "semantic_family_103",
+      "status": "skipped_existing",
+      "gap_count": 1,
+      "gap_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\04_gap_audits\\semantic_family_103_gap_candidates.jsonl"
+    }
+  ],
+  "gap_fill_count": 209,
+  "final_pool_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\legal_flux_templates_gemini_final.jsonl",
+  "adjudication": {
+    "status": "ok",
+    "gap_candidate_count": 209,
+    "template_count": 196,
+    "accepted_singleton_gap_count": 134,
+    "merged_template_count": 31,
+    "replaced_existing_template_count": 0,
+    "rejected_gap_count": 0,
+    "raw_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\legal_flux_gap_adjudication_raw.txt",
+    "lineage_path": "C:\\Users\\Darrenxo\\OneDrive\\桌面\\RA\\Legal_agri\\legal_flux\\reports\\legal_flux\\template_distillation\\cjpe_gemini31_pro_api\\legal_flux_templates_gemini_final_lineage.json",
+    "preflight_prompt_tokens": 125254,
+    "metadata": {
+      "model": "gemini-3.1-pro-preview",
+      "seed": 20260619,
+      "elapsed_seconds": 204.03891029999977,
+      "prompt_tokens": 125621,
+      "completion_tokens": 17519,
+      "total_tokens": 151837,
+      "thought_tokens": 8697
+    }
+  }
+}

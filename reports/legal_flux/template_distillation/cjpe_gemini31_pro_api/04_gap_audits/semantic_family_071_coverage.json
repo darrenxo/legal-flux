@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_071",
+  "coverage_analysis": "The source-case batch extensively covers issues under the Arbitration Act (both 1940 and 1996 regimes), addressing the appointment of arbitrators, the doctrine of implied exclusion of Part I in foreign-seated arbitrations, procedural delays, and the intersection of arbitration with other statutes (like the Stamp Act). The current consolidated template library contains only one arbitration-specific template (`LF023`: appellate restraint arbitral award review). It significantly lacks frameworks for resolving the conflict of laws in pre-BALCO international commercial arbitrations and for judicial intervention when an agreed arbitral appointment mechanism fails. Therefore, significant library gaps exist concerning the implied exclusion of Part I of the 1996 Act and the court's statutory power to substitute arbitrators upon the breakdown of agreed procedures.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_071_01",
+    "GAP_semantic_family_071_02"
+  ]
+}

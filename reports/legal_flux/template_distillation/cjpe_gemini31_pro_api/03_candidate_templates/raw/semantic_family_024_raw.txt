@@ -1,0 +1,139 @@
+{
+  "candidates": [
+    {
+      "template_name": "allocation_of_adjudicatory_competence",
+      "knowledge_tags": [
+        "civil_procedure",
+        "statutory_tribunal",
+        "jurisdictional_ouster",
+        "summary_proceedings",
+        "threshold_eligibility"
+      ],
+      "description": "Allocates adjudicatory competence between regular civil courts and specialized statutory tribunals, ensuring that civil courts retain jurisdiction over threshold eligibility and complex title disputes, while referring specific statutory questions to the designated tribunal.",
+      "application_scenario": "Use when a party challenges the jurisdiction of a civil court or a summary tribunal based on a statute that vests exclusive jurisdiction over certain issues in a specialized forum. Do not use if the statute explicitly ousts civil jurisdiction for all purposes including threshold determinations.",
+      "reasoning_flow": [
+        "Analyze the statute to identify the specific issues reserved for the exclusive jurisdiction of the specialized tribunal or summary proceeding.",
+        "Assess the nature of the dispute to determine if it involves a threshold eligibility condition, a complex question of title, or a specific issue designated to the tribunal.",
+        "If the issue is a threshold condition or complex title dispute unsuitable for summary resolution, rule that the regular civil court retains jurisdiction.",
+        "If the issue falls squarely within the tribunal's designated statutory competence, direct the civil court to stay the proceedings and refer that specific issue to the specialized tribunal."
+      ],
+      "example_application": "A party faces summary eviction under a public premises act but raises a bona fide, complex dispute regarding long-standing title. The authority must halt the summary eviction and require the matter to be adjudicated by a regular civil court, as the specialized summary forum lacks competence to decide complex title disputes.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1965_200",
+        "il-tur-cjpe-1970_229",
+        "il-tur-cjpe-1995_1055"
+      ],
+      "shared_pattern": "In all three cases, the court delineated the boundaries of specialized or summary tribunals, maintaining the civil court's jurisdiction over complex title or threshold eligibility issues while respecting the specialized forum's mandate for specific statutory determinations.",
+      "scope_exclusions": "Do not use when the specialized statute explicitly grants the tribunal absolute jurisdiction to decide even complex title questions or threshold eligibility conditions.",
+      "support_count": 3
+    },
+    {
+      "template_name": "crystallization_of_statutory_vesting",
+      "knowledge_tags": [
+        "statutory_vesting",
+        "retroactivity",
+        "divestment",
+        "deemed_rights",
+        "operation_of_law"
+      ],
+      "description": "Protects substantive rights that have vested by operation of law from being divested by subsequent executive actions, unexecuted prior orders, or prospective legislative amendments.",
+      "application_scenario": "Use when a party claims that a right acquired automatically on a specific statutory date (e.g., deemed ownership or tenancy) has been defeated by a subsequent notification, amendment, or earlier unexecuted order. Do not use if the subsequent legislation has explicit and overriding retroactive effect.",
+      "reasoning_flow": [
+        "Identify the specific statutory date or event that triggered the automatic vesting or 'deeming' of a substantive right in a party.",
+        "Examine the subsequent legislative amendment, executive notification, or unexecuted prior order relied upon by the opposing party to defeat this vested right.",
+        "Determine whether the subsequent action contains explicit, unambiguous retroactive language intended to divest already crystallized rights.",
+        "Conclude that in the absence of such explicit retroactivity, the statutorily vested right remains crystallized and supersedes the subsequent or unexecuted intervening actions."
+      ],
+      "example_application": "A statute automatically confers ownership on tenants occupying land on a specific date. Two years later, the government issues a notification exempting that area from the statute. The tenant's ownership right, having vested on the statutory date, cannot be divested by the subsequent notification.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1975_437",
+        "il-tur-cjpe-1991_176",
+        "il-tur-cjpe-2000_539"
+      ],
+      "shared_pattern": "In all three cases, the court held that a right which vested by operation of law on a specific statutory date could not be divested by a later prospective amendment, a subsequent government notification, or a prior unexecuted order.",
+      "scope_exclusions": "Do not use when the subsequent legislative amendment expressly states that it operates retroactively to divest previously acquired rights.",
+      "support_count": 3
+    },
+    {
+      "template_name": "invalidation_of_arbitrary_expropriatory_valuation",
+      "knowledge_tags": [
+        "expropriation",
+        "valuation",
+        "article_14",
+        "arbitrariness",
+        "just_equivalent"
+      ],
+      "description": "Evaluates the validity of valuation mechanisms used for taxation or compulsory acquisition, striking down those that rely on arbitrary metrics, fixed anterior dates, or discriminatory denial of standard compensation components.",
+      "application_scenario": "Use when assessing the legality of a specific statutory or administrative formula for determining property value, compensation, or tax base. Do not use when the valuation method reflects a rational classification tailored to a distinct, legitimate state objective.",
+      "reasoning_flow": [
+        "Identify the statutory or administrative mechanism prescribed to assess the value of the property for expropriation or taxation.",
+        "Compare this mechanism against standard, recognized valuation methods (e.g., market value at the time of acquisition, actual rental yield, inclusion of statutory solatium).",
+        "Evaluate whether any deviation from standard methods, such as using a fixed anterior date, ignoring actual letting value in favor of arbitrary floor area, or denying solatium, is supported by an intelligible differentia and a rational nexus to the object of the law.",
+        "If the deviation lacks a rational justification and fails to provide a 'just equivalent', declare the valuation mechanism arbitrary and unconstitutional."
+      ],
+      "example_application": "A new town planning act allows the state to acquire land but fixes compensation at the market value prevailing ten years prior to the acquisition, without any rational basis for the freeze. The mechanism is struck down as arbitrary and violative of the right to equal protection.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1961_416",
+        "il-tur-cjpe-1964_238",
+        "il-tur-cjpe-1968_250"
+      ],
+      "shared_pattern": "In all three cases, the court invalidated valuation or compensation mechanisms (taxing by floor area instead of rent, fixing an anterior date for market value, denying 15% solatium) because they were arbitrary and lacked a rational nexus to a legitimate object.",
+      "scope_exclusions": "Do not use when the differential valuation method is backed by a valid constitutional protection (e.g., Article 31A for agrarian reform) or a clear, rational classification.",
+      "support_count": 3
+    },
+    {
+      "template_name": "revisional_interference_with_perverse_factual_findings",
+      "knowledge_tags": [
+        "appellate_review",
+        "revisional_jurisdiction",
+        "perverse_findings",
+        "standard_of_proof",
+        "evidence_appreciation"
+      ],
+      "description": "Establishes the criteria under which a revisional or superior appellate authority must override the general rule against factual interference, specifically when the lower forum's findings are legally perverse.",
+      "application_scenario": "Use when a higher court or tribunal is asked to overturn a lower authority's finding of fact, and it is demonstrated that the lower authority ignored material evidence, applied the wrong evidentiary standard, or decided outside the pleadings. Do not use for mere reappreciation of evidence where two views are possible.",
+      "reasoning_flow": [
+        "Review the factual finding recorded by the lower authority in conjunction with the pleadings, the material evidence on record, and the applicable legal standard of proof.",
+        "Identify if the lower authority committed a distinct legal perversity, such as applying a 'beyond reasonable doubt' standard in a civil proceeding, ignoring physical evidence in favor of rebutted presumptions, or resting its decision on facts neither pleaded nor proved.",
+        "Conclude that while a revisional court generally does not interfere with facts, such established perversity constitutes a jurisdictional or legal error mandating intervention.",
+        "Set aside or modify the perverse finding of fact to align with the correct legal standard and the material evidence."
+      ],
+      "example_application": "An appellate authority reverses a tribunal's finding of a tenant's possession by relying solely on outdated revenue records while ignoring admitted physical evidence of a structure built by the tenant. The revisional court interferes, holding that relying on a rebutted presumption while ignoring physical facts is a perverse finding.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1979_467",
+        "il-tur-cjpe-1999_28",
+        "il-tur-cjpe-2013_422"
+      ],
+      "shared_pattern": "In all three cases, the higher/revisional court interfered with a lower authority's finding of fact because the lower authority acted perversely by going beyond pleadings, ignoring direct physical evidence, or applying an incorrect standard of proof.",
+      "scope_exclusions": "Do not use when the lower court's factual finding is based on a plausible interpretation of the evidence and merely involves a different perspective on the same facts.",
+      "support_count": 3
+    },
+    {
+      "template_name": "strict_construction_of_statutory_exemptions",
+      "knowledge_tags": [
+        "statutory_interpretation",
+        "exemptions",
+        "strict_construction",
+        "legal_disability",
+        "legislative_intent"
+      ],
+      "description": "Mandates that statutory exemptions, exceptions, or special disabilities designed to bypass general remedial legislation must be strictly construed according to their temporal, categorical, and original parameters.",
+      "application_scenario": "Use when a party claims an exemption from a general statute (like a land reform or tenancy act) based on a specific disability, property classification, or status. Do not use when dealing with broad, remedial provisions meant to be interpreted liberally in favor of the vulnerable party.",
+      "reasoning_flow": [
+        "Identify the general remedial rule of the statute and the specific statutory exemption or disability invoked by the party seeking to avoid the general rule.",
+        "Analyze the strict statutory parameters for the exemption, focusing on temporal limits (e.g., status at the commencement date), categorical limits (e.g., natural vs. juristic persons), or objective limits (e.g., original purpose of a lease).",
+        "Evaluate whether the party's claim fits perfectly within these strict parameters.",
+        "Reject the claim for exemption if it relies on subsequent unilateral actions, post-commencement status changes, or an expansive reading that includes entities (like juristic persons) not originally contemplated by the legislature."
+      ],
+      "example_application": "A corporate entity claims a 'personal cultivation' exemption designed for disabled landlords (like minors or those with physical disabilities). The court strictly construes the exemption, holding that a juristic person cannot suffer physical disability or personally cultivate, thereby rejecting the exemption.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1966_305",
+        "il-tur-cjpe-1969_82",
+        "il-tur-cjpe-2015_301"
+      ],
+      "shared_pattern": "In all three cases, the court strictly interpreted statutory exemptions (disabled landlord exception, personal cultivation exception for idols, and plantation exemption) by confining them to the exact statutory date, natural persons, and original lease purpose, preventing an unwarranted expansion of the exception.",
+      "scope_exclusions": "Do not use when the statute explicitly directs a liberal construction of the exemption, or when assessing the main remedial provisions of a socio-economic statute which require broad interpretation.",
+      "support_count": 3
+    }
+  ]
+}

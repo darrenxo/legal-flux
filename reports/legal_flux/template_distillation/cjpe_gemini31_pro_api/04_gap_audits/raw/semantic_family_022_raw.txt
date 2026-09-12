@@ -1,0 +1,60 @@
+{
+  "coverage_analysis": "The current library extensively covers evidentiary rules (circumstantial chains, dying declarations, ocular vs. medical conflicts, interested witnesses) and vicarious liability doctrines (Section 149/34 IPC). The provided batch displays heavy use of these existing templates, specifically regarding interested witnesses (LF006), appellate review of acquittals (LF007), and constructive liability (LF008). However, the batch reveals two significant gaps in substantive criminal law and sentencing jurisprudence that recur across multiple cases but are entirely absent from the library. First, the library lacks a template for differentiating Murder (Section 302 IPC) from Culpable Homicide not amounting to murder (Section 304 IPC) based on the absence of intent or the application of statutory exceptions (like sudden fight or provocation). Second, the library contains no framework for the final stage of capital punishment sentencing, specifically the mandatory 'rarest of rare' balancing of aggravating and mitigating circumstances.",
+  "gap_candidates": [
+    {
+      "template_name": "culpable_homicide_downgrade_assessment",
+      "knowledge_tags": [
+        "Criminal Law",
+        "Murder vs. Culpable Homicide",
+        "Exception 4 to Section 300",
+        "Intention vs. Knowledge",
+        "Sudden Fight"
+      ],
+      "description": "Evaluates whether a homicidal act should be classified as murder or downgraded to culpable homicide not amounting to murder by analyzing the offender's specific intent, the weapon used, and the presence of statutory exceptions such as a sudden fight without premeditation.",
+      "application_scenario": "Use when an accused is convicted of murder and the appellate court must determine if the facts (e.g., lack of premeditation, use of bare hands instead of available weapons, or sudden provocation) warrant downgrading the conviction to a lesser degree of culpable homicide.",
+      "reasoning_flow": [
+        "Verify that the accused committed a homicidal act resulting in the victim's death.",
+        "Determine the exact intention or knowledge of the accused by analyzing the weapon used, the force applied, and the specific injuries inflicted against the ordinary course of nature.",
+        "Assess whether the incident falls under a statutory exception, such as a sudden fight without premeditation upon a sudden quarrel, where the offender did not take undue advantage or act in a cruel manner.",
+        "If the intent to kill is absent but knowledge of likelihood of death is present, or if a statutory exception is proven, downgrade the conviction from murder to culpable homicide not amounting to murder (Part I or II)."
+      ],
+      "example_application": "An accused, despite carrying a firearm, only uses fists and kicks during an unprovoked attack on a lone victim, resulting in fatal internal injuries. The court concludes there was no intention to cause death, only the knowledge that such acts were likely to cause death, and downgrades the conviction from Section 302 to Section 304 Part II.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1976_367",
+        "il-tur-cjpe-1993_454",
+        "il-tur-cjpe-2008_21",
+        "il-tur-cjpe-2009_659"
+      ],
+      "shared_pattern": "In each case, the court analyzes the specific intent of the accused, the nature of the weapons/force used, and the immediate context (sudden fight/provocation) to determine whether the strict threshold for murder under Section 300 is met, or if it must be downgraded to Section 304 Part I or II.",
+      "scope_exclusions": "Do not use for determining constructive liability or shared intent among multiple accused (covered by LF008). Do not use for evaluating the right of private defence (covered by LF028).",
+      "support_count": 4
+    },
+    {
+      "template_name": "death_penalty_rarest_of_rare_balancing",
+      "knowledge_tags": [
+        "Sentencing",
+        "Capital Punishment",
+        "Rarest of Rare",
+        "Aggravating Circumstances",
+        "Mitigating Circumstances"
+      ],
+      "description": "Determines the imposition of the death penalty by weighing aggravating circumstances of the crime against mitigating circumstances relating to the criminal to ascertain if the case qualifies as the 'rarest of rare' where life imprisonment is unquestionably foreclosed.",
+      "application_scenario": "Use during the sentencing phase of a capital offense after guilt has been established, when the court must choose between the normal sentence of life imprisonment and the extreme penalty of death.",
+      "reasoning_flow": [
+        "Confirm that the accused has been convicted of a capital offense where life imprisonment is the rule and the death penalty is the exception.",
+        "Identify and list all aggravating circumstances relating to the commission of the crime, such as extreme brutality, diabolical planning, or the helpless state of the victims.",
+        "Identify and list all mitigating circumstances relating to the criminal, such as young age, prior clean record, provocation, or prolonged incarceration.",
+        "Weigh the aggravating factors against the mitigating ones; confirm the death sentence only if the aggravating factors overwhelmingly outweigh the mitigating ones, rendering the alternative of life imprisonment completely inadequate."
+      ],
+      "example_application": "An accused commits a premeditated murder of multiple victims. The defense argues the accused's young age (18 years) as a mitigating factor. The court weighs the extreme brutality and cold-blooded nature of the multiple murders against the age factor, finding the aggravating circumstances completely outweigh the mitigating ones, and upholds the death penalty.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_661",
+        "il-tur-cjpe-1999_1125",
+        "il-tur-cjpe-2003_1098"
+      ],
+      "shared_pattern": "In each case, after upholding the conviction, the court explicitly conducts a balancing exercise between aggravating factors (brutality, number of victims, severed head) and mitigating factors (young age, unmarried sisters, provocation, time spent in jail) to determine if the death sentence should be confirmed or commuted.",
+      "scope_exclusions": "Do not use for evaluating the substantive guilt or innocence of the accused. Do not use for non-capital sentencing or routine calculation of fines and imprisonment terms.",
+      "support_count": 3
+    }
+  ]
+}

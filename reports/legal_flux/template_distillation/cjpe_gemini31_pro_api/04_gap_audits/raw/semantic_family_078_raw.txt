@@ -1,0 +1,61 @@
+{
+  "coverage_analysis": "The batch heavily features service and administrative law disputes. While the current library contains templates for irregular worker regularization (LF013) and equal pay parity (LF015), it lacks templates for two recurring operations observed in this batch: (1) The computation of inter-se seniority from the date of substantive appointment, strictly barring retrospective seniority from the historical date a vacancy arose; and (2) The strict enforcement of essential qualifications in public employment, invalidating appointments where candidates lack minimum criteria and rejecting any implied administrative power to relax such rules.",
+  "gap_candidates": [
+    {
+      "template_name": "seniority_from_substantive_appointment_barring_retrospectivity",
+      "knowledge_tags": [
+        "Service Law",
+        "Inter-se Seniority",
+        "Substantive Appointment",
+        "Date of Vacancy",
+        "Retrospective Seniority"
+      ],
+      "description": "Establishes that seniority in a cadre must be computed from the date of valid, substantive appointment (when the employee is born in the cadre) rather than retrospectively from the historical date a vacancy arose, rendering ad-hoc or fortuitous service out of quota invalid for seniority purposes.",
+      "application_scenario": "Use when an employee (often a promotee) claims retrospective seniority from the date a vacancy occurred to gain an advantage over others (such as direct recruits) who were substantively appointed to the cadre earlier.",
+      "reasoning_flow": [
+        "Identify the competing employees and the exact dates they were validly and substantively appointed to the cadre under the governing rules.",
+        "Assess the claimant's argument seeking retrospective seniority based on the historical date a vacancy arose or based on ad-hoc, fortuitous, or stop-gap service rendered prior to regular appointment.",
+        "Apply the principle that seniority is governed strictly by the rules in force at the time of actual appointment, and an employee cannot be granted seniority from a date prior to being 'born' in the cadre.",
+        "Exclude any fortuitous, ad-hoc, or out-of-quota service from the computation of regular seniority.",
+        "Conclude that seniority runs exclusively from the date of substantive appointment, rejecting claims based merely on the prior occurrence of vacancies."
+      ],
+      "example_application": "Promotees claim seniority from 1987 when vacancies arose, though they were substantively promoted in 1991. Direct recruits were substantively appointed in 1990. The court denies the promotees' claim, holding that seniority counts only from the 1991 substantive appointment, thereby making the direct recruits senior.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2006_576",
+        "il-tur-cjpe-2013_461",
+        "il-tur-cjpe-1995_18"
+      ],
+      "shared_pattern": "The courts systematically reject claims for retrospective seniority based on the historical availability of vacancies or early invalid ad-hoc appointments, anchoring seniority strictly to the date of valid substantive appointment in the cadre.",
+      "scope_exclusions": "Do not use when a statutory rule explicitly mandates retrospective seniority or when adjusting seniority strictly to correct a proven administrative delay in executing an already finalized selection panel where rules explicitly permit relation back.",
+      "support_count": 3
+    },
+    {
+      "template_name": "strict_adherence_to_essential_qualifications_and_relaxation_limits",
+      "knowledge_tags": [
+        "Service Law",
+        "Essential Qualifications",
+        "Power to Relax",
+        "Void Ab Initio",
+        "Statutory Rules"
+      ],
+      "description": "Invalidates public employment appointments made where candidates lack the mandatory minimum educational or technical qualifications, establishing that any power to relax such qualifications must be explicitly conferred by statute and cannot be implied.",
+      "application_scenario": "Use when an appointed candidate's eligibility is challenged for failing to meet the prescribed educational or technical criteria at the time of appointment, and the employer claims an implied or administrative power to condone the deficiency.",
+      "reasoning_flow": [
+        "Identify the essential educational, technical, or experience qualifications prescribed by the statutory rules or recruitment advertisement for the specific post.",
+        "Examine the credentials of the appointed candidate at the time of their initial appointment to determine if they strictly met the mandatory requirements.",
+        "If the candidate falls short, verify whether the governing statutory rules contain an explicit, unequivocal provision granting the employer or selection body the power to relax those specific qualifications.",
+        "Reject any claim of an implied, incidental, or inherent power to administratively relax essential qualifications in the absence of a clear statutory enabling provision.",
+        "Declare the appointment void ab initio, noting that unauthorized administrative condonation or subsequent acquisition of the qualification cannot cure the initial statutory violation."
+      ],
+      "example_application": "A university appoints a lecturer holding 53% marks in their Master's degree, while the rule strictly requires 54%. The university administratively condones the deficiency. The court strikes down the appointment as void, holding that essential qualifications cannot be relaxed without an explicit statutory enabling provision.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1995_914",
+        "il-tur-cjpe-2011_99",
+        "il-tur-cjpe-2001_1013"
+      ],
+      "shared_pattern": "The courts consistently rule that essential qualifications are mandatory, and any administrative relaxation or condonation of deficiencies is ultra vires and voids the appointment unless explicitly authorized by the governing rules.",
+      "scope_exclusions": "Do not use when evaluating the relaxation of non-essential procedural criteria or age limits (where rules explicitly allow), or when the dispute concerns the regularization of procedurally flawed but substantively qualified daily wagers, which is covered by LF013.",
+      "support_count": 3
+    }
+  ]
+}

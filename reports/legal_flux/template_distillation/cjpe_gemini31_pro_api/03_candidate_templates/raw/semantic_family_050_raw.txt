@@ -1,0 +1,135 @@
+{
+  "candidates": [
+    {
+      "template_name": "statutory_precondition_strict_compliance",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Conditions Precedent",
+        "Eligibility Criteria",
+        "Deemed Approval"
+      ],
+      "description": "Evaluates whether a party is entitled to a statutory benefit, inclusion in a scheme, or a 'deemed approval' by requiring strict satisfaction of all expressly enumerated pre-conditions before the right or legal fiction vests.",
+      "application_scenario": "Use when a party claims automatic/deemed approval, membership in a beneficial scheme, or statutory eligibility, but the governing statute or rule dictates specific mandatory prerequisite conditions. Do not use for directory procedural rules or equitable discretions.",
+      "reasoning_flow": [
+        "Identify the statutory benefit, scheme, or 'deemed approval' provision invoked by the claimant.",
+        "Isolate the explicit statutory pre-conditions or eligibility criteria required to trigger the provision.",
+        "Assess the claimant's application or status at the relevant time against these explicit, mandatory requirements.",
+        "Conclude that failure to strictly fulfill the preconditions renders the application invalid or the scheme inapplicable, thereby precluding the vesting of the benefit or deemed approval."
+      ],
+      "example_application": "A corporation claims 'deemed environmental clearance' under a statute because the regulatory agency failed to respond within 60 days. However, the corporation failed to submit the mandatory soil contamination report required with the initial application. The court rules that because the strict pre-condition of a complete application was not met, the timeline for deemed approval was never triggered.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_971",
+        "il-tur-cjpe-1996_1407",
+        "il-tur-cjpe-2012_117",
+        "il-tur-cjpe-1997_505"
+      ],
+      "shared_pattern": "In each case, the court denied a claimed benefit (deemed medical college approval, inclusion in a pension scheme, eligibility for a screening test, or selection for a post) because the applicant failed to satisfy a strict, objectively defined precondition set by the governing statute or rule.",
+      "scope_exclusions": "Do not use when the missing condition is a mere procedural irregularity that the statute permits to be cured retrospectively, or when assessing equitable remedies outside statutory frameworks.",
+      "support_count": 4
+    },
+    {
+      "template_name": "mandamus_legal_right_enforceability",
+      "knowledge_tags": [
+        "Writ Jurisdiction",
+        "Mandamus",
+        "Locus Standi",
+        "Legal Right"
+      ],
+      "description": "Assesses the maintainability of a writ petition by requiring the petitioner to demonstrate a vested, legally enforceable right, rejecting claims based merely on discontinued past practices, unadopted committee recommendations, or challenges where the petitioner has no personal stake.",
+      "application_scenario": "Use when a petitioner seeks a writ of mandamus directing an authority to act, but the claim relies on customary practices, internal draft reports, or the petitioner lacks direct eligibility for the underlying relief.",
+      "reasoning_flow": [
+        "Identify the specific administrative action or relief the petitioner seeks to compel via a writ of mandamus.",
+        "Determine the source of the claimed right (e.g., past practice, unaccepted committee report, or a challenge to seats reserved for a different category).",
+        "Evaluate whether this source constitutes a binding, legally enforceable statutory or constitutional duty on the respondent vis-a-vis the petitioner.",
+        "If the source is non-binding or the petitioner lacks direct eligibility to benefit from the relief (lacking locus standi), dismiss the claim for lack of a justiciable legal right."
+      ],
+      "example_application": "A citizen files a writ petition seeking to compel a municipality to construct a public library based on an internal draft recommendation by a city planning committee. The court dismisses the petition, holding that an unadopted draft recommendation does not create a legally enforceable right for the citizen nor a binding duty on the municipality.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1981_410",
+        "il-tur-cjpe-1997_1147",
+        "il-tur-cjpe-1972_254"
+      ],
+      "shared_pattern": "The court dismissed writ petitions because the petitioners could not show a vested legal right, either relying on a mere discontinued past practice (medical admissions), an unaccepted legislative committee report (university promotion scheme), or challenging seats they were ineligible to occupy (university reservations).",
+      "scope_exclusions": "Do not use in public interest litigation (PIL) where strict locus standi is relaxed to protect fundamental rights of marginalized groups.",
+      "support_count": 3
+    },
+    {
+      "template_name": "equitable_protection_academic_progress",
+      "knowledge_tags": [
+        "Equitable Relief",
+        "Educational Law",
+        "Mootness",
+        "Interim Orders"
+      ],
+      "description": "Shapes final relief in educational disputes by weighing the irreversible hardship caused to a student who has legitimately progressed in or completed a course due to the passage of time or interim court orders, protecting their academic attainments despite underlying procedural flaws.",
+      "application_scenario": "Use in academic or admission disputes where a student has substantially completed a course or examination during the pendency of litigation. Do not use if the student secured admission through deliberate fraud or active misrepresentation.",
+      "reasoning_flow": [
+        "Determine the legal validity of the student's initial admission or course allocation.",
+        "Identify the extent of academic progress made by the student during the pendency of the litigation (e.g., completed semesters, passed final exams).",
+        "Assess whether the progress was made under the protection of valid interim orders and without fraudulent conduct by the student.",
+        "Mold the final relief to protect the student's completed academic attainments on equitable grounds, avoiding futile or disproportionately unjust punitive consequences that would waste years of study."
+      ],
+      "example_application": "A nursing student's admission is challenged due to a calculation error by the university in her entrance score. By the time the appeal reaches the apex court, she has completed 3 years of the 4-year degree under valid interim stay orders. The court allows her to complete the degree to prevent a disproportionate waste of academic years, while clarifying the correct admission rule for future cases.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1972_254",
+        "il-tur-cjpe-1981_410",
+        "il-tur-cjpe-2002_646"
+      ],
+      "shared_pattern": "In each case, despite finding flaws in the underlying admission or allocation process, the court invoked equity to protect the academic progress (completed trimesters or diplomas) made by students during the lengthy pendency of the litigation.",
+      "scope_exclusions": "Do not apply if the student is guilty of fabricating documents, impersonation, or explicit collusion in securing the initial admission.",
+      "support_count": 3
+    },
+    {
+      "template_name": "judicial_deference_expert_policy",
+      "knowledge_tags": [
+        "Judicial Review",
+        "Expert Bodies",
+        "Academic Standards",
+        "Executive Policy"
+      ],
+      "description": "Limits the scope of judicial review over the substantive decisions, grading, and regulatory interpretations of specialized academic councils, high-level selection committees, and executive policy-makers, deferring to their expertise absent explicit statutory violation or clear mala fides.",
+      "application_scenario": "Use when a petitioner challenges the grading of a selection board, the interpretation of an academic syllabus by an educational council, or the financial extension of an executive policy. Do not use if there is proven bias or a violation of mandatory statutory procedure.",
+      "reasoning_flow": [
+        "Identify the contested decision (e.g., interview grading, interpretation of a study period, policy extension) made by an expert body, university, or executive entity.",
+        "Ascertain if the body followed its established procedures and acted within its authorized administrative or academic domain.",
+        "Evaluate the record for any substantiated allegations of mala fides, bias, or explicit statutory contravention.",
+        "Conclude that, absent such fatal flaws, the court must defer to the expert body's evaluation or policy interpretation rather than substituting its own judgment."
+      ],
+      "example_application": "A candidate challenges a Public Service Commission's decision to allocate 70% weight to a written test and 30% to an interview, arguing a 50/50 split would be fairer. The court dismisses the challenge, holding that the allocation of marks is a matter of expert policy and cannot be interfered with absent mala fides.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2001_935",
+        "il-tur-cjpe-2004_1104",
+        "il-tur-cjpe-1997_512"
+      ],
+      "shared_pattern": "The court refused to substitute its own judgment for that of an expert/executive body, whether it involved interpreting an 18-month academic rule (MCI), evaluating interview marks (Selection Board), or extending a pension scheme (Executive Policy).",
+      "scope_exclusions": "Do not apply if the expert body acts entirely outside its jurisdiction, violates fundamental rights, or breaches a mandatory statutory procedure.",
+      "support_count": 3
+    },
+    {
+      "template_name": "statutory_supremacy_over_administrative_errors",
+      "knowledge_tags": [
+        "Precedent",
+        "Doctrine of Merger",
+        "Summary Dismissal",
+        "Hierarchy of Norms"
+      ],
+      "description": "Prevents reliance on non-binding institutional actions\u2014such as an erroneous administrative press release, an inaccurate concession in pleadings, or a summary dismissal of an SLP\u2014to override or estop the enforcement of explicit statutory provisions or formal executive resolutions.",
+      "application_scenario": "Use when a party argues that an earlier summary dismissal of an appeal, an inaccurate legal concession by state counsel, or a flawed administrative circular establishes a binding precedent or estops a regulatory body from enforcing its clear statutory policies.",
+      "reasoning_flow": [
+        "Identify the explicit statutory provision, formal policy, or legislative scheme that governs the substantive issue.",
+        "Identify the non-binding institutional action relied upon by the claimant (e.g., an erroneous administrative press release, an inaccurate concession in pleadings, or a summary dismissal of an appeal without merits analysis).",
+        "Evaluate whether this non-binding action can estop the enforcement of or override the explicit statutory text.",
+        "Conclude that statutory mandates and formal policy resolutions are supreme; they cannot be overridden by administrative misstatements, erroneous legal concessions, or summary judicial dismissals lacking substantive legal reasoning."
+      ],
+      "example_application": "A taxpayer claims an exemption based on a prior erroneous press release by a revenue official and notes that an SLP against an interim order in a similar case was summarily dismissed. The court holds that the clear text of the tax statute overrides both the informal press release and the summary SLP dismissal, requiring the taxpayer to pay the due amount.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_1407",
+        "il-tur-cjpe-2009_2179",
+        "il-tur-cjpe-2017_541"
+      ],
+      "shared_pattern": "The court held that clear statutory rules and formal policies (Triple Benefit Scheme applicability, MCI screening test rules, AMC DACP policy) could not be bypassed by relying on summary SLP dismissals, erroneous administrative press releases, or inaccurate concessions made in prior litigation.",
+      "scope_exclusions": "Do not use when the prior judicial order being relied upon is a detailed, reasoned judgment by a coordinate or higher bench that explicitly adjudicates the legal issue on the merits (where res judicata or binding precedent properly applies).",
+      "support_count": 3
+    }
+  ]
+}

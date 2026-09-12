@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_056",
+  "coverage_analysis": "The source-case batch covers several areas including electricity tariff disputes, contractual interpretations, and statutory conflicts involving the Electricity Acts and the Arbitration Act. While the existing LegalFlux library contains templates for interpreting welfare statutes purposively (LF025), lifting the corporate veil in specific relationships (LF014, LF016, LF017), and strict construction of tax exemptions (LF019), it lacks generalized reasoning models for (1) resolving conflicts between overlapping statutes through the 'special law overrides general law' (lex specialis) principle, (2) applying purposive construction to avoid statutory absurdity or futility (ut res magis valeat quam pereat), and (3) interpreting ambiguous terms or implying terms in commercial contracts based on business efficacy and surrounding circumstances. These recurrent operations are distinct from the current library and are strongly supported by the supplied cases.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_056_01",
+    "GAP_semantic_family_056_02",
+    "GAP_semantic_family_056_03"
+  ]
+}

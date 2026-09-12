@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_058",
+  "coverage_analysis": "The audit of the source-case batch against the consolidated LegalFlux template library reveals that while cases involving general procedural limitations, res judicata, and substantive rights (such as the right of private defence in il-tur-cjpe-2008_54, which is covered by LF028) are adequately addressed, two recurring reasoning operations lack coverage. First, multiple civil cases (il-tur-cjpe-1964_5, il-tur-cjpe-1995_1108, il-tur-cjpe-1997_424, il-tur-cjpe-2003_748) apply a strict evidentiary exclusion rule where substantive claims or defenses—such as adverse possession, fraud, or implied sub-tenancy—are rejected entirely because they were not explicitly pleaded in the foundational pleadings (plaint or written statement). Second, several cases (il-tur-cjpe-1996_652, il-tur-cjpe-1996_871, il-tur-cjpe-2000_1220) involve the temporal interpretation of the Benami Transactions (Prohibition) Act, 1988, consistently establishing that its statutory bar on recovering benami property operates prospectively and does not extinguish pending claims. Both operations meet the abstraction and reuse criteria and are supported by at least 3 distinct cases, justifying their proposal as gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_058_01",
+    "GAP_semantic_family_058_02"
+  ]
+}

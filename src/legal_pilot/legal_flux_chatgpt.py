@@ -12,8 +12,8 @@ import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 
-from .config import resolve_path
-from .io_utils import canonical_json, sha256_text, write_jsonl
+from .config import resolve_path, resolve_project_path
+from .io_utils import canonical_json, read_jsonl, sha256_text, write_jsonl
 from .legal_benchmark_data import BenchmarkCase, load_benchmark_cases
 from .legal_flux import resolve_project_file
 from .legalhk_data import LEGALHK_PARQUET_URL, download_file, legalhk_index
@@ -68,6 +68,18 @@ class TemplateBatchEncoder(Protocol):
         ...
 
 
+def _response_schema_with_support_minimum(
+    schema: dict[str, Any],
+    *,
+    minimum_support_cases: int,
+) -> dict[str, Any]:
+    """Keep Gemini's response schema aligned with the configured support rule."""
+    candidate_properties = schema["$defs"]["LegalFluxCandidateDraft"]["properties"]
+    candidate_properties["supporting_case_ids"]["minItems"] = minimum_support_cases
+    candidate_properties["support_count"]["minimum"] = minimum_support_cases
+    return schema
+
+
 def export_legal_flux_chatgpt_batches(
     config: dict[str, Any],
     *,
@@ -110,6 +122,47 @@ def export_legal_flux_chatgpt_batches(
         raise ValueError(
             "Template batch sizes must satisfy 1 <= min <= target <= max."
         )
+    max_candidates = int(flux_config.get("template_batch_max_candidates", 5))
+    minimum_support_cases = int(
+        flux_config.get("template_batch_minimum_support_cases", 3)
+    )
+    candidate_prompt_text = _candidate_generation_prompt(
+        max_candidates=max_candidates,
+        minimum_support_cases=minimum_support_cases,
+        source_dataset=source_dataset,
+    )
+    candidate_response_schema = _response_schema_with_support_minimum(
+        LegalFluxCandidateResponse.model_json_schema(),
+        minimum_support_cases=minimum_support_cases,
+    )
+    gap_response_schema = _response_schema_with_support_minimum(
+        LegalFluxGapAuditResponse.model_json_schema(),
+        minimum_support_cases=minimum_support_cases,
+    )
+    candidate_schema_text = json.dumps(
+        candidate_response_schema,
+        ensure_ascii=False,
+        indent=2,
+    )
+    context_fraction = float(
+        flux_config.get("template_batch_context_fraction", 0.80)
+    )
+    chars_per_token_floor = float(
+        flux_config.get("template_batch_chars_per_token_floor", 2.5)
+    )
+    if not 0.0 < context_fraction < 1.0:
+        raise ValueError("template_batch_context_fraction must be between 0 and 1.")
+    if chars_per_token_floor <= 0.0:
+        raise ValueError("template_batch_chars_per_token_floor must be positive.")
+    max_input_tokens = int(config.get("gemini", {}).get("max_input_tokens", 900000))
+    max_prompt_characters = int(
+        max_input_tokens * context_fraction * chars_per_token_floor
+    )
+    max_batch_characters = max_prompt_characters - (
+        len(candidate_prompt_text) + len(candidate_schema_text) + 8192
+    )
+    if max_batch_characters < 1:
+        raise ValueError("Configured Gemini prompt budget leaves no room for cases.")
     if dense_encoder is None:
         dense_encoder = SentenceTransformerDenseEncoder(
             str(flux_config.get("template_batch_embedding_model", "BAAI/bge-m3")),
@@ -126,6 +179,8 @@ def export_legal_flux_chatgpt_batches(
         encoder=dense_encoder,
         batch_size=int(flux_config.get("template_batch_embedding_batch_size", 8)),
         cache_dir=output_dir / "00_semantic_clustering",
+        max_batch_characters=max_batch_characters,
+        minimum_support_cases=minimum_support_cases,
     )
     manifest_batches = []
     for index, batch in enumerate(semantic_batches, start=1):
@@ -147,7 +202,7 @@ def export_legal_flux_chatgpt_batches(
     candidate_schema_path = output_dir / "legal_flux_candidate_response.schema.json"
     candidate_schema_path.write_text(
         json.dumps(
-            LegalFluxCandidateResponse.model_json_schema(),
+            candidate_response_schema,
             ensure_ascii=False,
             indent=2,
         )
@@ -167,7 +222,7 @@ def export_legal_flux_chatgpt_batches(
     gap_schema_path = output_dir / "legal_flux_gap_audit_response.schema.json"
     gap_schema_path.write_text(
         json.dumps(
-            LegalFluxGapAuditResponse.model_json_schema(),
+            gap_response_schema,
             ensure_ascii=False,
             indent=2,
         )
@@ -175,10 +230,6 @@ def export_legal_flux_chatgpt_batches(
         encoding="utf-8",
     )
     coverage = _coverage_summary(cases, manifest_batches)
-    max_candidates = int(flux_config.get("template_batch_max_candidates", 5))
-    minimum_support_cases = int(
-        flux_config.get("template_batch_minimum_support_cases", 3)
-    )
     _write_prompts(
         prompts_dir,
         max_candidates=max_candidates,
@@ -190,6 +241,14 @@ def export_legal_flux_chatgpt_batches(
         schema_path=candidate_schema_path,
         candidate_prompt_path=prompts_dir / "01_generate_candidate_templates.md",
     )
+    largest_prompt = coverage["candidate_prompt_size_estimates"]["character_stats"][
+        "max"
+    ]
+    if largest_prompt > max_prompt_characters:
+        raise ValueError(
+            f"Largest candidate prompt has {largest_prompt} characters, above "
+            f"the configured safety budget of {max_prompt_characters}."
+        )
     (output_dir / "coverage_summary.json").write_text(
         json.dumps(coverage, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -234,6 +293,13 @@ def export_legal_flux_chatgpt_batches(
             "minimum": min_cases,
             "target": target_cases,
             "maximum": max_cases,
+        },
+        "gemini_prompt_budget": {
+            "max_input_tokens": max_input_tokens,
+            "context_fraction": context_fraction,
+            "chars_per_token_floor": chars_per_token_floor,
+            "max_prompt_characters": max_prompt_characters,
+            "max_batch_characters": max_batch_characters,
         },
         "max_candidates_per_batch": max_candidates,
         "minimum_support_cases": minimum_support_cases,
@@ -315,6 +381,26 @@ def _load_template_source_cases(
         source_split = str(
             flux_config.get("template_source_split", "multi_dev")
         ).strip()
+        source_file = flux_config.get("template_source_file")
+        if source_file:
+            path = resolve_project_path(config, source_file)
+            if not path.exists():
+                raise FileNotFoundError(
+                    f"CJPE template-source file not found: {path}. Run "
+                    "flux-prepare-cjpe-template-source first."
+                )
+            cases = [
+                BenchmarkCase.model_validate(row)
+                for row in read_jsonl(path)
+            ]
+            unexpected = sorted(
+                {case.source_split for case in cases} - {source_split}
+            )
+            if unexpected:
+                raise ValueError(
+                    f"CJPE template-source file contains unexpected splits: {unexpected}"
+                )
+            return source_dataset, source_split, cases
         cases = [
             case
             for case in load_benchmark_cases(config, source_dataset)
@@ -399,6 +485,8 @@ def _build_semantic_batches(
     encoder: TemplateBatchEncoder,
     batch_size: int,
     cache_dir: Path,
+    max_batch_characters: int,
+    minimum_support_cases: int,
 ) -> list[dict[str, Any]]:
     cases = sorted(cases, key=lambda case: case.case_id)
     case_view_texts = [
@@ -452,8 +540,90 @@ def _build_semantic_batches(
                 seed=seed,
             )
         )
+    embeddings_by_case_id = {
+        case.case_id: embeddings[index] for index, case in enumerate(cases)
+    }
+    batches = _split_batches_to_prompt_budget(
+        batches,
+        embeddings_by_case_id=embeddings_by_case_id,
+        human_outputs=human_outputs,
+        max_batch_characters=max_batch_characters,
+        minimum_support_cases=minimum_support_cases,
+    )
     batches.sort(key=lambda batch: (batch["coarse_legal_family"], batch["cases"][0].case_id))
     return batches
+
+
+def _split_batches_to_prompt_budget(
+    batches: list[dict[str, Any]],
+    *,
+    embeddings_by_case_id: dict[str, np.ndarray],
+    human_outputs: dict[str, dict[str, str]],
+    max_batch_characters: int,
+    minimum_support_cases: int,
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for batch in batches:
+        cases = list(batch["cases"])
+        sizes = {
+            case.case_id: len(
+                json.dumps(
+                    _case_record(case, human_outputs),
+                    ensure_ascii=False,
+                )
+            )
+            + 1
+            for case in cases
+        }
+        oversized = [case_id for case_id, size in sizes.items() if size > max_batch_characters]
+        if oversized:
+            raise ValueError(
+                "Individual template-source cases exceed the safe Gemini batch "
+                f"budget: {oversized[:5]}"
+            )
+        if sum(sizes.values()) <= max_batch_characters:
+            batch["batch_content_characters"] = sum(sizes.values())
+            batch["token_budget_split"] = False
+            result.append(batch)
+            continue
+        part_count = math.ceil(sum(sizes.values()) / max_batch_characters)
+        bins: list[list[TemplateSourceCase]] = [[] for _ in range(part_count)]
+        bin_sizes = [0] * part_count
+        for case in sorted(cases, key=lambda item: (-sizes[item.case_id], item.case_id)):
+            destinations = [
+                index
+                for index in range(len(bins))
+                if bin_sizes[index] + sizes[case.case_id] <= max_batch_characters
+            ]
+            if not destinations:
+                bins.append([])
+                bin_sizes.append(0)
+                destinations = [len(bins) - 1]
+            destination = min(destinations, key=lambda index: (bin_sizes[index], index))
+            bins[destination].append(case)
+            bin_sizes[destination] += sizes[case.case_id]
+        if any(len(part) < minimum_support_cases for part in bins):
+            raise ValueError(
+                "Token-safe splitting produced a batch below the configured "
+                "minimum template support. Reduce source-case length or batch size."
+            )
+        for part_index, (part, character_count) in enumerate(
+            zip(bins, bin_sizes, strict=True), start=1
+        ):
+            embeddings = np.asarray(
+                [embeddings_by_case_id[case.case_id] for case in part],
+                dtype=np.float32,
+            )
+            split_batch = _semantic_family_batch(
+                part,
+                embeddings=embeddings,
+                family=str(batch["coarse_legal_family"]),
+            )
+            split_batch["label"] = f"{batch['label']}__token_part_{part_index}"
+            split_batch["batch_content_characters"] = character_count
+            split_batch["token_budget_split"] = True
+            result.append(split_batch)
+    return result
 
 
 def _cluster_legal_family(
@@ -542,6 +712,11 @@ def _load_or_encode_template_embeddings(
         "case_ids": [case.case_id for case in cases],
         "corpus_hash": sha256_text(canonical_json(texts)),
         "model": encoder.model_name,
+        "max_seq_length": getattr(
+            getattr(encoder, "model", None),
+            "max_seq_length",
+            None,
+        ),
     }
     if embedding_path.exists() and manifest_path.exists():
         existing = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -683,6 +858,8 @@ def _batch_manifest_row(
         "path": str(path),
         "case_count": len(cases),
         "case_ids": [case.case_id for case in cases],
+        "batch_content_characters": int(batch.get("batch_content_characters", 0)),
+        "token_budget_split": bool(batch.get("token_budget_split", False)),
         "coarse_legal_family": batch["coarse_legal_family"],
         "coarse_legal_family_counts": dict(coarse_family_counts.most_common()),
         "coarse_legal_family_purity": (
@@ -909,7 +1086,10 @@ def _write_prompts(
         encoding="utf-8",
     )
     (prompts_dir / "03_coverage_audit_and_gap_fill.md").write_text(
-        _coverage_audit_prompt(source_dataset=source_dataset),
+        _coverage_audit_prompt(
+            minimum_support_cases=minimum_support_cases,
+            source_dataset=source_dataset,
+        ),
         encoding="utf-8",
     )
 
@@ -1000,6 +1180,12 @@ Remove candidates that are overly broad, overly specific, directionally tied to
 an outcome, weakly supported, wholly subsumed by another template, or primarily
 summaries of substantive law rather than executable reasoning procedures.
 
+Treat consolidation as selective preservation rather than wholesale rewriting.
+When retaining one candidate without merging it, copy all of its executable
+template fields verbatim. Rewrite executable fields only when merging multiple
+candidates; then change only what is necessary to produce one coherent template.
+Do not paraphrase a retained candidate merely for style.
+
 For each retained template:
 
 - use a concise retrieval-friendly name and normalized tags;
@@ -1017,6 +1203,7 @@ will be assigned deterministically after this consolidation call.
 
 def _coverage_audit_prompt(
     *,
+    minimum_support_cases: int = 3,
     source_dataset: str = "legalhk",
 ) -> str:
     if source_dataset == "il_tur_cjpe":
@@ -1036,9 +1223,12 @@ consolidated LegalFlux template library.
 {inspection_guidance} Identify whether the library covers the recurring legal reasoning
 operations actually exhibited by this batch. An individual uncovered case is
 not a library gap. Propose a gap candidate only when the same missing operation
-is supported by the configured minimum number of supplied cases and satisfies
-the same abstraction, reuse, manifestation, and boundary requirements as the
-initial candidate stage.
+is supported by at least {minimum_support_cases} distinct cases in this supplied
+batch and satisfies the same abstraction, reuse, manifestation, and boundary
+requirements as the initial candidate stage. For every proposed gap candidate,
+supporting_case_ids must contain at least {minimum_support_cases} distinct valid
+case IDs from this batch, and support_count must equal that number and therefore
+must be at least {minimum_support_cases}.
 
 Do not restate a legal topic, reproduce a source outcome, or propose a candidate
 already covered or subsumed by the current library. Zero gap candidates is

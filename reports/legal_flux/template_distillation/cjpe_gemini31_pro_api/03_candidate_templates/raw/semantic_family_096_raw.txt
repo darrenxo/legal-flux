@@ -1,0 +1,138 @@
+{
+  "candidates": [
+    {
+      "template_name": "Statutory_Vesting_Extinguishment_Analysis",
+      "knowledge_tags": [
+        "property law",
+        "statutory vesting",
+        "eminent domain",
+        "lapsing of proceedings",
+        "withdrawal of administrative action"
+      ],
+      "description": "Analyzes whether property has statutorily vested in the State (typically upon taking physical possession), which legally extinguishes the operation of other statutory provisions that would otherwise allow the proceedings to lapse due to time limits or be unilaterally withdrawn.",
+      "application_scenario": "Use when a party claims that an expropriatory proceeding has lapsed due to the expiration of statutory time limits or when the State attempts to unilaterally withdraw from the acquisition, but possession has already been legally taken.",
+      "reasoning_flow": [
+        "Identify the statutory event that triggers absolute vesting of the property in the State.",
+        "Verify whether this vesting event has factually occurred and is legally valid under the relevant statute.",
+        "Identify the statutory provision being invoked by a party to claim a lapse of proceedings or to withdraw from the action.",
+        "Determine that the absolute vesting strips the original owner of title and prevents the land from reverting, thereby rendering the lapsing or withdrawal provisions legally inapplicable."
+      ],
+      "example_application": "In a challenge claiming a compulsory acquisition lapsed because the final compensation award was not issued within the mandatory 3-year period, the court finds that the State had invoked urgency provisions and lawfully taken possession prior to the deadline. The court reasons that upon taking possession, the land vested absolutely in the State free from encumbrances, making the 3-year lapsing provision inapplicable as title cannot statutorily revert to the former owner.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1996_1102",
+        "il-tur-cjpe-1996_224",
+        "il-tur-cjpe-2011_275",
+        "il-tur-cjpe-2013_886"
+      ],
+      "shared_pattern": "In all these cases, the courts held that once possession of the acquired land is taken and it vests in the government free from encumbrances, provisions that would normally cause the proceedings to lapse (like failure to pass an award in time) or allow withdrawal no longer apply.",
+      "scope_exclusions": "Do not use when possession was taken illegally, symbolically without statutory authorization, or by mere paper manipulation, meaning valid legal vesting never actually occurred.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Equitable_Moulding_Irreversible_Public_Works",
+      "knowledge_tags": [
+        "equitable relief",
+        "moulding of relief",
+        "public interest",
+        "statutory non-compliance",
+        "irreversible development"
+      ],
+      "description": "Substitutes the standard remedy of quashing a legally defective administrative act with an alternative equitable remedy (like enhanced compensation or date-shifting) when public infrastructure has already been built or third-party rights have irreversibly crystallized.",
+      "application_scenario": "Use when an administrative or expropriatory action is found to be procedurally or substantively defective, but restoring the status quo ante is practically impossible or highly detrimental to the public interest due to completed public works.",
+      "reasoning_flow": [
+        "Establish that the underlying administrative action suffers from a fatal legal defect.",
+        "Assess the current physical and legal status of the subject property, noting completed public infrastructure, substantial public investment, or the crystallization of innocent third-party rights.",
+        "Conclude that quashing the action and ordering restitution of the property is pragmatically impossible or contrary to the larger public interest.",
+        "Mould the relief by preserving the administrative act but compensating the aggrieved party alternatively, such as by awarding enhanced financial compensation, adjusting valuation dates, or granting developed allotments."
+      ],
+      "example_application": "A municipality acquires land for a water treatment plant but fails to conduct the mandatory public hearing. Years later, the plant is fully operational. The court holds the acquisition procedurally invalid but refuses to quash it to avoid a public health crisis. Instead, it moulds the relief by ordering the municipality to pay the landowners compensation calculated at the current market rate rather than the historical rate.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2005_540",
+        "il-tur-cjpe-2015_236",
+        "il-tur-cjpe-2017_172"
+      ],
+      "shared_pattern": "The courts found statutory defects in the acquisition process (vague description, illegal urgency invocation, late declaration) but refused to quash the acquisitions because infrastructure was already built, opting instead to shift compensation dates or grant extra compensation/land.",
+      "scope_exclusions": "Do not use if the public project has not commenced, the land lies vacant, or reversing the action would not cause severe public detriment or third-party harm.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Laches_Bar_Expropriatory_Challenges",
+      "knowledge_tags": [
+        "laches",
+        "delay",
+        "writ jurisdiction",
+        "acquiescence",
+        "third-party rights"
+      ],
+      "description": "Evaluates whether a legal challenge to a compulsory acquisition or administrative taking should be dismissed at the threshold due to the petitioner's unreasonable delay in seeking judicial review, especially when subsequent steps have already occurred.",
+      "application_scenario": "Use when a petitioner challenges a preliminary or final administrative notification several years after its publication, and the State argues that the writ petition is barred by delay and laches.",
+      "reasoning_flow": [
+        "Identify the date of the impugned administrative action and the date the judicial challenge was initiated.",
+        "Calculate the period of delay and evaluate whether the petitioner has provided a cogent, legally acceptable explanation for this inaction.",
+        "Examine the intervening events during the period of delay, specifically whether the State has passed an award, taken physical possession, invested public funds, or created third-party rights.",
+        "Conclude that the unexplained delay, coupled with the crystallization of subsequent administrative steps and third-party rights, renders it inequitable to exercise discretionary writ jurisdiction to quash the proceedings."
+      ],
+      "example_application": "A landowner challenges a zoning acquisition notification many years after the fact, claiming procedural defects. The court notes the delay is unexplained. Furthermore, during this time, compensation was deposited, possession was taken, and a public hospital was constructed. The court dismisses the petition at the threshold due to laches, holding that equity favors protecting the completed public works over entertaining a stale claim.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_598",
+        "il-tur-cjpe-2011_275",
+        "il-tur-cjpe-2011_688"
+      ],
+      "shared_pattern": "In all these cases, the Supreme Court refused to entertain or upheld the refusal to entertain writ petitions challenging land acquisitions because the landowners approached the court years after the declarations, awards, or possession, and physical developments had taken place.",
+      "scope_exclusions": "Do not use if the petitioner's delay is fully justified by fraud, lack of notice attributable to the State, or if the State itself has taken no subsequent steps to finalize the administrative action.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Strict_Construction_Statutory_Fictions_And_Triggers",
+      "knowledge_tags": [
+        "statutory interpretation",
+        "strict construction",
+        "legal fictions",
+        "trigger events"
+      ],
+      "description": "Confines the application of statutory benefits, limitation triggers, or legal fictions strictly to their explicit textual boundaries, refusing to expand their scope through equitable doctrines, common law principles, or subjective knowledge.",
+      "application_scenario": "Use when a party seeks to expansively interpret a statutory trigger (like the start of a limitation period), a condition for financial benefit, or a judicially/statutorily created legal fiction beyond its explicit wording or original purpose.",
+      "reasoning_flow": [
+        "Identify the specific statutory provision, trigger event, or legal fiction in question.",
+        "Note the expansive or equitable interpretation proposed by the party (e.g., starting limitation from 'knowledge', applying interest to unlawful possession, expanding a legal fiction to new procedures).",
+        "Analyze the text and purpose of the statute or fiction, determining it is a self-contained code or a specific exception.",
+        "Hold that such provisions must be strictly construed; equitable principles cannot override plain statutory text, and legal fictions cannot be extended beyond the specific purpose for which they were created."
+      ],
+      "example_application": "A statute provides a tax rebate for manufacturing facilities established after a specific year. A company argues their older facility should qualify because it only became fully operational later. The court strictly interprets the trigger 'established', refusing to equitably expand it to 'operational', stating that statutory fiscal benefits must be strictly confined to their explicit textual parameters.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_1215",
+        "il-tur-cjpe-2004_173",
+        "il-tur-cjpe-2013_447"
+      ],
+      "shared_pattern": "The courts employed strict textual interpretation to limit the scope of statutory benefits, fictions, or triggers (limitation running from the award date, interest running from lawful possession, deemed dates for compensation only), refusing to expand them via equitable principles.",
+      "scope_exclusions": "Do not use for remedial or welfare provisions explicitly drafted with broad, inclusive language intended to be interpreted purposively to cover unforeseen equitable circumstances.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Retrospective_Validation_Procedural_Defects",
+      "knowledge_tags": [
+        "retrospective validation",
+        "state amendments",
+        "curing defects",
+        "procedural compliance"
+      ],
+      "description": "Validates administrative actions that originally suffered from procedural defects (like delayed publications or missing notices) by applying subsequent retrospective validation acts or specific local statutory amendments that dispense with or cure those requirements.",
+      "application_scenario": "Use when an administrative act is challenged for failing to comply with a procedural timeline or publication requirement, but the legislature has subsequently passed a validation act or an amendment specifically targeting and curing that class of defects.",
+      "reasoning_flow": [
+        "Identify the procedural defect in the administrative action.",
+        "Identify the subsequent legislative action (validation act or state amendment) designed to cure this defect retrospectively or prospectively for pending matters.",
+        "Verify that the validation act successfully alters the underlying legal requirements and explicitly applies to the time period of the impugned action.",
+        "Conclude that the procedural defect is legally cured by the retrospective legislation, rendering the administrative action valid."
+      ],
+      "example_application": "A municipality issues a zoning order but fails to publish it in two local newspapers as required by the central act. The state legislature later passes a Retrospective Validation Act stating that any zoning orders issued before that year are valid even if only published in one newspaper. The court applies the validation act, holding the original zoning order legally cured and valid.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1985_253",
+        "il-tur-cjpe-1996_1777",
+        "il-tur-cjpe-1996_224"
+      ],
+      "shared_pattern": "The courts upheld land acquisition notifications that had procedural flaws (gaps between gazette and local publication, or lack of local publication entirely) by applying state-specific Validation Acts or Amendments that retrospectively cured these defects or dispensed with the requirements entirely.",
+      "scope_exclusions": "Do not use if the validation act merely overrules a court judgment without changing the underlying statutory basis, which would violate the separation of powers.",
+      "support_count": 3
+    }
+  ]
+}

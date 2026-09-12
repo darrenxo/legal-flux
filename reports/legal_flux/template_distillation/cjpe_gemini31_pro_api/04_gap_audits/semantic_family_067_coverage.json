@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_067",
+  "coverage_analysis": "The current consolidated template library contains templates for interpreting commercial and property contracts (e.g., LF016, LF017) and moulding equitable relief (LF030), but it completely lacks templates for adjudicating the statutory prerequisites of specific performance claims under the Specific Relief Act. The supplied batch exhibits a high frequency of disputes over specific performance where the courts consistently apply two distinct legal reasoning operations: (1) scrutinizing the plaintiff's continuous 'readiness and willingness' to perform essential contractual obligations as a mandatory statutory bar, and (2) determining whether the specific performance decree can be enforced against a subsequent third-party purchaser based on the tests of good faith, constructive notice, and the doctrine of lis pendens.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_067_01",
+    "GAP_semantic_family_067_02"
+  ]
+}

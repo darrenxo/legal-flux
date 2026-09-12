@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_002",
+  "coverage_analysis": "The batch was audited against the current LegalFlux template library. Several cases aligned with existing templates: Case il-tur-cjpe-1947_106 matches LF001 (subordinate legislation vires) and Case il-tur-cjpe-1947_170 matches LF024 (sufficient cause delay condonation). However, the audit revealed two distinct recurring legal operations not covered by the library. First, multiple cases address the scope of judicial review over complex economic policies and commercial decisions, establishing a principle of judicial restraint unless manifest arbitrariness is proven. Second, several cases evaluate procedural frameworks governing executive or legislative bodies (such as Rules of Business, laying requirements, or Speaker's procedural rules), establishing that these are directory in nature and that substantial compliance is sufficient to uphold the substantive action. These two operations satisfy the threshold of appearing in at least 3 distinct cases and present viable gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_002_01",
+    "GAP_semantic_family_002_02"
+  ]
+}

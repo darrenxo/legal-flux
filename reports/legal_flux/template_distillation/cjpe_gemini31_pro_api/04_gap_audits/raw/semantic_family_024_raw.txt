@@ -1,0 +1,61 @@
+{
+  "coverage_analysis": "The source-case batch covers diverse areas including agrarian reforms, tenancy rights, land acquisition compensation, and statutory interpretation of exemption clauses. While some cases align thematically with the current library—such as statutory interpretation and ouster of civil jurisdiction (LF021)—the library lacks templates addressing the substantive operation of statutory 'deemed purchase' mechanisms under agrarian reform laws. Additionally, while LF021 addresses the complete ouster of civil jurisdiction, the library misses the distinct procedural mandate where civil courts are required to stay proceedings and refer specific exclusive issues to specialized tribunals rather than dismissing the suit entirely.",
+  "gap_candidates": [
+    {
+      "template_name": "statutory_deemed_purchase_vesting",
+      "knowledge_tags": [
+        "Agrarian Reforms",
+        "Tenancy Law",
+        "Deemed Purchase",
+        "Tiller's Day",
+        "Statutory Vesting",
+        "Extinguishment of Title"
+      ],
+      "description": "Determines the crystallization of a tenant's ownership rights under agrarian reform legislation through a statutory 'deeming' provision, which automatically extinguishes the landlord's title and vests it in the tenant via a statutory sale.",
+      "application_scenario": "Use when evaluating disputes over land ownership where a tenant claims to have automatically acquired title by operation of agrarian reform laws on a specified statutory date (e.g., Tiller's Day), and the landlord or a subsequent purchaser contests the vesting due to procedural lapses, statutory exemptions, or disabilities.",
+      "reasoning_flow": [
+        "Identify the specific agrarian reform provision that mandates the deemed purchase or statutory vesting of land in the tenant on a specified date.",
+        "Verify whether the tenant was in lawful possession and cultivation of the land on the requisite statutory date.",
+        "Assess if any statutory exceptions apply that would postpone, nullify, or condition the deemed purchase, such as the landlord's minority/disability, the tenant's express unwillingness to purchase, or a valid exemption notification.",
+        "Conclude that in the absence of valid statutory exceptions, the landlord's title is automatically extinguished and substituted by the tenant's ownership via a statutory sale, severing the traditional landlord-tenant relationship."
+      ],
+      "example_application": "A tenant claims ownership under a Tenancy Act declaring that tenants are deemed purchasers on 'Tiller's Day'. The landlord argues the tenant failed to issue a purchase notice. The court finds the landlord was not under any statutory disability (like minority) that would postpone the automatic vesting; thus, the landlord's title was extinguished immediately by statutory sale on Tiller's Day without needing further action by the tenant.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1971_177",
+        "il-tur-cjpe-1975_437",
+        "il-tur-cjpe-1991_176",
+        "il-tur-cjpe-2019_1115"
+      ],
+      "shared_pattern": "In each case, the court evaluates the mechanics of a statutory provision that automatically transfers land ownership from a landlord to a tenant on a specific date, analyzing whether statutory exceptions (disability, refusal, or notification of exemption) affect this automatic statutory sale.",
+      "scope_exclusions": "Do not use for ordinary property disputes governed by traditional transfer of property laws or contracts, nor for regular acquisition of land by the State for public infrastructure purposes outside the context of agrarian tenant-reform.",
+      "support_count": 4
+    },
+    {
+      "template_name": "mandatory_reference_of_exclusive_issues",
+      "knowledge_tags": [
+        "Civil Procedure",
+        "Jurisdiction",
+        "Statutory Reference",
+        "Specialized Tribunals",
+        "Stay of Suit"
+      ],
+      "description": "Determines the obligation of a general civil court to stay proceedings and refer specific statutory issues (such as protected tenancy status) to an exclusive specialized tribunal, incorporating the tribunal's finding into the final civil decree rather than dismissing the suit entirely.",
+      "application_scenario": "Use when a defendant in a civil suit (e.g., for eviction or injunction) raises a defense that triggers the exclusive jurisdiction of a special tribunal (e.g., claiming protected tenant status), requiring the civil court to pause and refer or transfer that specific issue.",
+      "reasoning_flow": [
+        "Identify the core relief sought in the civil suit and the specific statutory defense raised by the defendant.",
+        "Examine the governing special statute to determine if it vests exclusive jurisdiction over that specific defense/issue in a specialized tribunal while mandating the civil court to refer the issue.",
+        "Ascertain whether the defendant has established the foundational prerequisites to claim the protection of the special statute, triggering the mandatory reference.",
+        "Conclude that the civil court must stay its hands and refer the exclusive issue to the specialized tribunal, and upon receiving the tribunal's finding (or transferring the matter as statutorily required), dispose of the suit in accordance with that specialized finding."
+      ],
+      "example_application": "In a civil eviction suit, the defendant claims to be a protected agricultural tenant. The governing Tenancy Act grants exclusive jurisdiction to the Revenue Officer to determine tenancy status. The civil court must frame the issue of tenancy, stay the civil suit, refer the issue to the Revenue Officer, and apply the Officer's finding to ultimately decree or dismiss the civil suit.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1965_200",
+        "il-tur-cjpe-1969_82",
+        "il-tur-cjpe-1970_229"
+      ],
+      "shared_pattern": "In all three cases, the court analyzes a statutory provision that compels a civil court to halt its proceedings and refer the determination of a specific protected status (like tenancy) to an exclusive revenue or special tribunal, ensuring the civil court does not usurp the tribunal's jurisdiction while managing the main suit.",
+      "scope_exclusions": "Do not use when the special statute completely ousts the civil court's jurisdiction over the entire subject matter and remedies sought from the inception, warranting a complete dismissal of the civil suit (which is covered by the statutory_ouster_civil_jurisdiction template).",
+      "support_count": 3
+    }
+  ]
+}

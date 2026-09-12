@@ -41,6 +41,7 @@ RUN_TAG="${LEGAL_BENCHMARK_RUN_TAG:-delta-bf16-pilot-v1}"
 CASE_LIMIT="${LEGAL_BENCHMARK_CASE_LIMIT:-}"
 DATASETS="${LEGAL_BENCHMARK_DATASETS:-annocaselaw realistic_ljp_facts}"
 CONDITIONS="${LEGAL_BENCHMARK_CONDITIONS:-direct structured}"
+CONFIG="${LEGAL_BENCHMARK_CONFIG:-configs/legal_benchmarks.cluster.yaml}"
 
 if [[ ! "$NUM_SHARDS" =~ ^[1-9][0-9]*$ ]]; then
   echo "LEGAL_BENCHMARK_NUM_SHARDS must be a positive integer." >&2
@@ -56,6 +57,10 @@ if [[ "$SUBSET" != "pilot" && "$SUBSET" != "full" ]]; then
 fi
 if [[ ! "$RUN_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
   echo "Invalid LEGAL_BENCHMARK_RUN_TAG: ${RUN_TAG}" >&2
+  exit 1
+fi
+if [[ ! -f "$CONFIG" ]]; then
+  echo "Benchmark config does not exist: ${CONFIG}" >&2
   exit 1
 fi
 
@@ -96,7 +101,7 @@ SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"
 
-python -m legal_pilot --config configs/legal_benchmarks.cluster.yaml \
+python -m legal_pilot --config "$CONFIG" \
   benchmark-generate \
   --datasets "${DATASET_ARGS[@]}" \
   --subset "$SUBSET" \

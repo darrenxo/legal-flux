@@ -1,0 +1,9 @@
+{
+  "variant": "cjpe_gemini31_pro_raw_unmasked",
+  "template_count": 196,
+  "source_final_pool": "reports/legal_flux/template_distillation/cjpe_gemini31_pro_api/legal_flux_templates_gemini_final.jsonl",
+  "source_final_lineage": "reports/legal_flux/template_distillation/cjpe_gemini31_pro_api/legal_flux_templates_gemini_final_lineage.json",
+  "output_path": "templates/legal_flux_templates_cjpe_raw_unmasked.jsonl",
+  "output_sha256": "20400a2352c53bca49ab1368f7cee8c452b2054ab99ccee5dc897ff802c8e285",
+  "template_pool_hash": "ee6e66f1f01ed519fbfbe678710caaa8c279bb6e24bd1f0b1457cb08ba5c6e6a"
+}

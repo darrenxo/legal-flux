@@ -1,0 +1,132 @@
+{
+  "candidates": [
+    {
+      "template_name": "Evidence_Based_Quantification_of_Restitution",
+      "knowledge_tags": [
+        "Damages Assessment",
+        "Consumer Protection",
+        "Restitution",
+        "Appellate Review"
+      ],
+      "description": "Replaces a generic, flat-rate punitive interest award with a specifically calculated compensatory award that directly correlates with the proven actual loss, mental agony, or service deficiency suffered by the claimant.",
+      "application_scenario": "Applicable when a reviewing court encounters a lower forum's mechanical award of a high, flat interest rate for a service deficiency without a factual correlation to the actual injury. Not to be used when a statute explicitly prescribes a fixed punitive rate for the default.",
+      "reasoning_flow": [
+        "Review the lower forum's award to determine if a uniform or flat punitive interest rate was applied irrespective of the specific facts of the case.",
+        "Identify and quantify the actual loss, cost escalation, or mental agony genuinely suffered by the claimant due to the specific deficiency or misfeasance.",
+        "Recalculate and modify the compensation so that it provides equitable restitution directly correlated to the proven injury, rejecting the arbitrary punitive rate."
+      ],
+      "example_application": "In an appeal against a consumer tribunal that awarded a flat 18% interest against a builder for delayed delivery, the reviewing court sets aside the flat rate, assesses the actual rent paid by the buyer during the delay, and awards a specific lump sum compensating for that exact financial loss and associated mental agony.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2004_1117",
+        "il-tur-cjpe-2004_508",
+        "il-tur-cjpe-2004_592",
+        "il-tur-cjpe-2004_965"
+      ],
+      "shared_pattern": "In all these cases, the Supreme Court struck down a mechanical award of 18% interest by consumer forums, ruling that compensation must be individually assessed based on actual loss, escalation of costs, and mental agony.",
+      "scope_exclusions": "Do not apply in domains where a specific statute strictly mandates a fixed punitive rate for defaults, such as certain tax defaults or explicit penal clauses in commercial contracts.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Preclusion_of_Equitable_Relief_by_Statutory_Exhaustiveness",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Complete Code",
+        "Equitable Discretion",
+        "Financial Relief"
+      ],
+      "description": "Bars the grant of equitable or discretionary financial add-ons (such as interest, solatium, or tax rounding) when the governing statute operates as a complete code or is strictly silent on granting such specific relief.",
+      "application_scenario": "Applicable when a party seeks to expand financial rights based on equity, administrative convenience, or general practice in a domain strictly governed by a comprehensive statutory scheme. Not to be used when the statute explicitly preserves the court's inherent equitable powers.",
+      "reasoning_flow": [
+        "Identify the specific financial relief or exaction claimed, such as an altered rate of interest, an award of solatium, or a mathematically rounded tax collection.",
+        "Examine the governing statute to determine if it acts as a complete code containing precise boundaries, fixed rates, or deliberate omissions regarding that relief.",
+        "Reject any modification, addition, or equitable expansion of the financial relief that exceeds the explicit authorization of the exhaustive statutory scheme."
+      ],
+      "example_application": "A landowner claims solatium on acquired property based on equitable principles. The court reviews the specific state acquisition act, notes it operates as a complete code without providing for solatium, and rejects the claim, holding that equity cannot supplement an exhaustive statutory scheme.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1995_1163",
+        "il-tur-cjpe-1995_573",
+        "il-tur-cjpe-2003_572",
+        "il-tur-cjpe-2004_262"
+      ],
+      "shared_pattern": "These cases share the core reasoning that where a statute exhaustively dictates financial terms (e.g., Land Acquisition Act interest rates, Requisition Act solatium, Interest Tax Act calculations), courts and authorities cannot alter or augment these terms using equitable or convenience-based justifications.",
+      "scope_exclusions": "Do not apply to common law contracts or torts where statutory exhaustiveness is absent and equitable principles traditionally govern damages.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Jurisdictional_Applicability_of_General_Procedural_Rules",
+      "knowledge_tags": [
+        "Jurisdiction",
+        "Civil Procedure",
+        "Statutory Tribunals",
+        "Execution Proceedings"
+      ],
+      "description": "Assesses whether general civil procedure rules regarding relief (like pendente lite or future interest) can be applied by a specific forum based on its legal character as a civil court and the stage of the proceeding.",
+      "application_scenario": "Applicable when evaluating if a specialized statutory tribunal, an executive authority, or an execution court possesses the jurisdictional competence to grant general procedural relief normally reserved for civil courts passing original decrees.",
+      "reasoning_flow": [
+        "Characterize the legal nature of the forum (e.g., non-judicial statutory authority, execution court, or decree-passing court) and the current stage of the proceeding.",
+        "Determine if the invoked general procedural statute requires a specific jurisdictional trigger, such as a 'civil court' passing a 'decree', to be applicable.",
+        "Deny or allow the procedural relief strictly based on whether the forum's character and the procedural stage match the explicit statutory prerequisites of the general rule."
+      ],
+      "example_application": "A claimant seeks pendente lite interest from a specialized rent controller under a general civil procedure code rule. The reviewing court determines that the rent controller is not a 'civil court' passing a 'decree' within the meaning of the civil procedure code, thereby denying the application of the general procedural rule.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1987_257",
+        "il-tur-cjpe-1988_267",
+        "il-tur-cjpe-1990_264",
+        "il-tur-cjpe-1999_188"
+      ],
+      "shared_pattern": "These cases hinge on defining the forum or stage (SFC Act akin to execution, Gratuity authority not a court, Execution court vs. Sub-Judge passing an arbitration decree) to determine if general civil procedural provisions regarding interest apply.",
+      "scope_exclusions": "Do not apply when a specialized statute explicitly incorporates the general civil procedure code by reference for all purposes.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Crystallization_of_Accumulated_Interest_into_Principal",
+      "knowledge_tags": [
+        "Commercial Law",
+        "Debt Assessment",
+        "Capitalization",
+        "Winding Up"
+      ],
+      "description": "Treats accumulated contractual interest or capitalized past-due charges as merged into the 'principal sum' or 'debt', enabling further legal operations without violating prohibitions against charging interest on interest.",
+      "application_scenario": "Applicable when calculating future interest or establishing a threshold statutory debt where the base amount already incorporates accrued contractual or compensatory interest. Not applicable if the contract expressly forbids capitalization.",
+      "reasoning_flow": [
+        "Identify an underlying monetary claim that includes accumulated interest, capitalized banking charges, or contractual delayed-payment damages.",
+        "Assess whether commercial practice, contractual agreement, or a prior adjudication has legally merged this accumulated amount into the core liability.",
+        "Treat the merged sum as the crystallized 'principal sum' or 'debt', thereby permitting legal actions such as the award of future interest or the initiation of statutory insolvency proceedings based on that total sum."
+      ],
+      "example_application": "In a dispute over a commercial invoice containing an agreed 2% monthly late fee, the creditor files for statutory insolvency based on the total accumulated amount. The court treats the accumulated late fees as a crystallized 'debt' under the insolvency statute rather than viewing it as a mere secondary interest claim, allowing the petition to proceed.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_1053",
+        "il-tur-cjpe-1999_970",
+        "il-tur-cjpe-2008_1742"
+      ],
+      "shared_pattern": "These cases establish that once interest is capitalized by banking practice, awarded as damages for delay in arbitration, or agreed upon in commercial invoices, it becomes part of the adjudged principal or definite 'debt' for subsequent legal actions.",
+      "scope_exclusions": "Do not apply to penal interest claims in standard civil suits where no prior agreement or commercial capitalization practice exists.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Equitable_Modulation_of_Strict_Financial_Rights",
+      "knowledge_tags": [
+        "Equity",
+        "Hardship",
+        "Contractual Penalties",
+        "Unjust Enrichment"
+      ],
+      "description": "Modulates strict contractual or statutory rights to financial recovery when rigid enforcement would result in unjust enrichment, or penalize a party for systemic delays or legal uncertainties.",
+      "application_scenario": "Applicable when a party attempts to rigidly enforce a financial right (such as a full penalty deduction or maximum interest) but external factors like public authority fault, systemic delay, or legal ambiguity demand equitable balancing.",
+      "reasoning_flow": [
+        "Acknowledge the existence of a strict contractual or statutory claim for financial recovery asserted by a party.",
+        "Evaluate mitigating external circumstances, such as prevailing legal uncertainty, systemic delays caused by a public authority, or mutual hardship.",
+        "Exercise equitable jurisdiction to modulate the financial demand by reducing the interest rate, waiving penalty deductions, or granting staggered installments, ensuring a fair balance over rigid enforcement."
+      ],
+      "example_application": "A state authority seeks to enforce a strict contractual clause deducting 20% of a deposit upon a contractor's withdrawal. The court finds the authority itself delayed the project for years, making the withdrawal justified. The court uses equity to strike down the deduction, preventing the authority from profiting from its own delay.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1997_1378",
+        "il-tur-cjpe-2006_836",
+        "il-tur-cjpe-2008_2022"
+      ],
+      "shared_pattern": "In each case, the Court used equitable principles to soften a strict financial claim (reducing customs interest due to legal uncertainty, stopping a Housing Board's strict 20% deduction due to its own delay, and reducing decree interest while granting installments).",
+      "scope_exclusions": "Do not apply in tax or penal proceedings where the court is expressly stripped of equitable jurisdiction to waive statutory penalties.",
+      "support_count": 3
+    }
+  ]
+}

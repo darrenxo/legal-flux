@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_091",
+  "coverage_analysis": "The batch contains multiple instances where the Supreme Court intervened in civil second appeals because the High Court failed to formulate a 'substantial question of law' as mandated by Section 100 of the Code of Civil Procedure (CPC). While the current library contains templates for appellate review standards in criminal acquittals (LF007) and arbitral awards (LF023), it lacks a template covering the strict statutory and jurisdictional prerequisite for civil second appeals under Section 100 CPC. Four cases in this batch cleanly demonstrate this exact recurring procedural vitiation and subsequent remand, making it a strong gap candidate.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_091_01"
+  ]
+}

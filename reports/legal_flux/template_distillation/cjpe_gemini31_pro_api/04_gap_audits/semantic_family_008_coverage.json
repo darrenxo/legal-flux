@@ -1,0 +1,10 @@
+{
+  "batch_id": "semantic_family_008",
+  "coverage_analysis": "The current LegalFlux template library contains reasoning templates for evaluating circumstantial evidence chains (LF004), resolving ocular vs. medical evidence conflicts (LF005), and assessing interested/partisan witness testimony (LF006). However, the supplied batch of source cases heavily relies on several distinct evidentiary appreciation operations not covered by the current library. These include evaluating the impact of delays in lodging or dispatching the First Information Report (FIR), filtering out material embellishments introduced during trial that were absent in initial police statements, separating the credible 'grain' of a witness's testimony from the false 'chaff' (rejecting the 'falsus in uno' maxim), and assessing the post-occurrence conduct of eyewitnesses against natural human probabilities. These recurring operations satisfy the requirements for abstraction and reuse, constituting valid gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_008_01",
+    "GAP_semantic_family_008_02",
+    "GAP_semantic_family_008_03",
+    "GAP_semantic_family_008_04"
+  ]
+}

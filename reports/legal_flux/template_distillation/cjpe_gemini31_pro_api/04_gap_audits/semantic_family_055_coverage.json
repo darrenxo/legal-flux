@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_055",
+  "coverage_analysis": "The provided batch contains numerous cases involving property rights, statutory vesting, and administrative allotments. While the existing LegalFlux library covers the review of administrative tender decisions (LF002) and flexible application of natural justice (LF003), it lacks a specific template addressing the cancellation of public property allotments on the grounds of fraud, misrepresentation, or false declarations by the beneficiary. This distinct legal reasoning operation—where the court assesses whether the beneficiary suppressed material facts to secure a grant and whether the administrative authority discharged its burden of proving such fraud—is exhibited in three distinct cases in this batch.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_055_01"
+  ]
+}

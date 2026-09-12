@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_089",
+  "coverage_analysis": "The current library extensively covers principles of equal pay parity (LF015) and the regularization of irregular or ad-hoc workers (LF013). However, it lacks templates for two recurring labour law operations present in this batch. First, there is a recurring pattern where courts must determine whether a master-servant relationship exists when workers are engaged through intermediaries (contractors, committees, or societies) or work in non-statutory facilities like canteens and clubs. This requires applying a specific statutory obligation and direct control test, which is not covered by the commercial substance-over-form template (LF016). Second, the library lacks a template addressing the modulation of relief following an illegal termination, specifically the modern jurisprudential shift that rejects automatic reinstatement with full back wages and instead requires balancing the burden of proof regarding gainful employment, length of service, and the substitution of reinstatement with monetary compensation for daily wagers.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_089_01",
+    "GAP_semantic_family_089_02"
+  ]
+}

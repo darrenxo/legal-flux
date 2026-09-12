@@ -38,7 +38,7 @@
           "items": {
             "type": "string"
           },
-          "minItems": 1,
+          "minItems": 3,
           "title": "Supporting Case Ids",
           "type": "array"
         },
@@ -51,7 +51,7 @@
           "type": "string"
         },
         "support_count": {
-          "minimum": 1,
+          "minimum": 3,
           "title": "Support Count",
           "type": "integer"
         }

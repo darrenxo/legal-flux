@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_009",
+  "coverage_analysis": "The batch reveals three distinct and recurring legal reasoning operations not covered by the current LegalFlux library. The first involves the exercise of inherent powers under Section 482 Cr.P.C. to quash criminal proceedings when a purely civil or commercial dispute is given the cloak of a criminal offence without initial fraudulent intent. The second addresses whether criminal proceedings can be quashed under Section 482 Cr.P.C. based on a compromise or settlement, distinguishing between purely private civil disputes and heinous crimes or crimes against society. The third governs the threshold for framing a charge versus discharging an accused under Sections 227/228 Cr.P.C., emphasizing the 'grave suspicion' and 'prima facie' test over a roving evidentiary inquiry. All three patterns satisfy abstraction, reuse, and manifestation requirements and are supported by at least three distinct cases in the batch.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_009_01",
+    "GAP_semantic_family_009_02",
+    "GAP_semantic_family_009_03"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_035",
+  "coverage_analysis": "The supplied batch includes a wide array of criminal cases, many involving appeals against acquittal and the evaluation of eyewitness testimony, circumstantial evidence, and procedural integrity. While the existing library covers the evaluation of interested witnesses (LF006), the reconciliation of medical and ocular evidence (LF005), and appellate review standards (LF007), it lacks specific templates for certain recurring evidentiary and procedural reasoning operations. First, the batch frequently involves the evaluation of witnesses whose immediate physical and emotional conduct during and after a violent incident is inexplicably passive or bizarre, leading courts to invalidate their claim of being present (e.g., il-tur-cjpe-1994_244, il-tur-cjpe-2010_342). Second, the courts repeatedly address the procedural safeguard of dispatching the FIR to the jurisdictional Magistrate under Section 157 CrPC; unexplained delays in this process are used to infer that the FIR was anti-timed and fabricated (e.g., il-tur-cjpe-2003_1308, il-tur-cjpe-2011_478). Third, the batch demonstrates the consistent rejection of the 'falsus in uno, falsus in omnibus' maxim, as courts systematically separate the truth (grain) from falsehoods (chaff) rather than mechanically discarding a witness's entire testimony due to partial exaggerations or the acquittal of co-accused (e.g., il-tur-cjpe-1992_417, il-tur-cjpe-2003_1073). These three distinct operations satisfy the criteria for new gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_035_01",
+    "GAP_semantic_family_035_02",
+    "GAP_semantic_family_035_03"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_001",
+  "coverage_analysis": "The current library provides robust coverage of administrative law, constitutional limits, and evidence appreciation (e.g., LF002, LF003, LF014). However, the audit of the supplied batch reveals two distinct, recurring legal reasoning operations that are not subsumed by the existing templates. First, multiple cases (il-tur-cjpe-2008_70, il-tur-cjpe-2003_317, il-tur-cjpe-1996_692) articulate a strict limitation on judicial review regarding subjective service evaluations (like ACRs and comparative merit for promotion or selection grade), establishing that courts may review the procedural legality of the evaluation but must refrain from substituting their own assessment of merit. Second, another subset of cases (il-tur-cjpe-1995_1140, il-tur-cjpe-2005_366, il-tur-cjpe-2003_317) demonstrates the exercise of the court's inherent jurisdiction to actively expunge unwarranted, disparaging remarks from judgments or pleadings in order to maintain institutional decorum. Both patterns satisfy the requirements for abstraction, reuse, and manifestation across at least three distinct cases.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_001_01",
+    "GAP_semantic_family_001_02"
+  ]
+}

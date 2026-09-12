@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_096",
+  "coverage_analysis": "The current consolidated template library contains generic principles of statutory interpretation, equitable relief modulation, and circumstantial evidence. However, it lacks specific templates addressing two recurring legal operations heavily represented in this batch of land acquisition cases: (1) the doctrine of irrevocable vesting of land in the State upon taking possession, which acts as an absolute bar against subsequent statutory lapsing or administrative denotification, and (2) the application of laches to bar belated challenges to acquisition proceedings when third-party rights have crystallized or substantial development has occurred.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_096_01",
+    "GAP_semantic_family_096_02"
+  ]
+}

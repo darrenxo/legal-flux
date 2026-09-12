@@ -1,0 +1,116 @@
+{
+  "candidates": [
+    {
+      "template_name": "Equal_Pay_Parity_Assessment",
+      "knowledge_tags": [
+        "Equal Pay for Equal Work",
+        "Article 14",
+        "Article 39(d)",
+        "Pay Parity",
+        "Equation of Posts"
+      ],
+      "description": "Evaluates claims by employees seeking parity in pay scales with another group by analyzing the wholesale identity of the posts, including duties, qualifications, and recruitment methods, against the employer's operational classifications.",
+      "application_scenario": "Use when employees in one cadre, unit, or status claim entitlement to the higher pay scale of another group performing allegedly similar work. Do not use for routine pay increments or pay protection upon voluntary transfer.",
+      "reasoning_flow": [
+        "Identify the claimant group and the comparator group whose pay scale is being sought.",
+        "Examine the educational/technical qualifications, method of recruitment, and specific nature of duties and responsibilities for both groups.",
+        "Assess whether the employer has demonstrated a valid functional, structural, or historical rationale for maintaining distinct pay scales (e.g., distinct units, different hierarchies, absence of sanctioned posts).",
+        "Grant parity if there is a wholesale and complete identity between the posts without valid differentiation, or deny parity if the employer's classification is based on intelligible criteria."
+      ],
+      "example_application": "A group of laboratory assistants in a state hospital claims parity with laboratory technicians in a central government institute. The tribunal evaluates their respective recruitment rules, finds the state assistants require only a diploma while central technicians require a specialized degree, and denies parity due to the lack of wholesale identity.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1989_357",
+        "il-tur-cjpe-1990_39",
+        "il-tur-cjpe-1994_466",
+        "il-tur-cjpe-2010_754",
+        "il-tur-cjpe-2013_861"
+      ],
+      "shared_pattern": "In each case, the court evaluates a claim for equal pay by analyzing whether the claimants possess the same qualifications, perform the same duties, and operate under the same organizational framework as the comparators, emphasizing that mere similarity in designation is insufficient.",
+      "scope_exclusions": "Not applicable to claims involving statutory minimum wages or penalty wages under specific labor legislations distinct from constitutional parity.",
+      "support_count": 5
+    },
+    {
+      "template_name": "Master_Servant_Relationship_Test",
+      "knowledge_tags": [
+        "Employer-Employee Relationship",
+        "Control and Supervision Test",
+        "Statutory Obligation",
+        "Industrial Disputes Act"
+      ],
+      "description": "Determines whether an employer-employee relationship exists between a principal entity and workers hired through intermediaries, committees, or distinct authorities, by assessing statutory obligations, financial control, and direct supervision.",
+      "application_scenario": "Use when workers deployed at a principal entity's premises (e.g., canteens, clubs, deputations) claim to be direct employees of that entity. Do not use when the employment contract and direct control are undisputed.",
+      "reasoning_flow": [
+        "Identify the worker, the intermediary/immediate engaging authority, and the principal entity against whom regular employee status is claimed.",
+        "Determine if the principal entity is under any statutory mandate to provide the specific facility or service where the worker is engaged.",
+        "Evaluate the degree of direct supervision, disciplinary control, and power to hire/fire exercised by the principal entity.",
+        "Analyze the financial arrangements to see if the principal entity pays wages directly or merely provides subsidies/grants to the intermediary.",
+        "Conclude that a direct relationship exists only if the principal entity exercises effective control over the work's execution and bears a direct or statutory obligation for the employment."
+      ],
+      "example_application": "Workers in a factory's recreation club claim to be factory employees. The court notes the club is run by an independent managing committee, the factory has no statutory duty to run the club, and only provides a fixed annual grant. The court rules there is no master-servant relationship with the factory.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1990_65",
+        "il-tur-cjpe-1996_1787",
+        "il-tur-cjpe-2000_1285",
+        "il-tur-cjpe-2007_851"
+      ],
+      "shared_pattern": "The court consistently applies the 'control and supervision' test alongside the 'statutory obligation' test to lift the veil and ascertain if the alleged principal employer holds actual disciplinary and operational control.",
+      "scope_exclusions": "Not applicable to disputes strictly between a worker and an admitted employer regarding terms of service or disciplinary action.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Irregular_Worker_Regularization_Assessment",
+      "knowledge_tags": [
+        "Regularization",
+        "Casual Labour",
+        "Sanctioned Post",
+        "Uma Devi Principles",
+        "Daily Wagers"
+      ],
+      "description": "Evaluates claims by temporary, casual, or daily-wage workers for permanent absorption or regularization by checking against the availability of sanctioned posts, qualifications, and the existence of regularization schemes.",
+      "application_scenario": "Use when a worker engaged on a non-permanent basis for an extended period seeks an order mandating their permanent absorption into the regular workforce. Do not use for disputes involving regular employees seeking promotions.",
+      "reasoning_flow": [
+        "Ascertain the exact nature of the claimant's initial engagement (e.g., daily wage, casual, part-time) and the total duration of uninterrupted service.",
+        "Determine if the engagement was made against a duly sanctioned, vacant post and whether the claimant possessed the requisite qualifications at the time of entry.",
+        "Check for the existence of any statutory regularization scheme, government policy, or one-time absorption measure applicable to the claimant's category.",
+        "If a valid scheme exists and the criteria (including the existence of sanctioned posts) are met, direct regularization; if not, deny regularization, though alternative relief like minimum pay or welfare schemes may be considered for long-serving workers."
+      ],
+      "example_application": "A part-time sweeper working for 12 years demands regular status. The tribunal finds that no sanctioned post of sweeper exists in the department and the initial entry was back-door. Applying the constitutional mandate, the tribunal denies regularization but orders payment of statutory minimum wages.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1990_39",
+        "il-tur-cjpe-2007_141",
+        "il-tur-cjpe-2010_835",
+        "il-tur-cjpe-2017_727"
+      ],
+      "shared_pattern": "The court strictly scrutinizes the legal availability of sanctioned posts and the adherence to constitutional recruitment schemes, refusing automatic regularization merely based on long periods of casual service, while occasionally directing scheme formulation to prevent exploitation.",
+      "scope_exclusions": "Not applicable to regular employees claiming confirmation of probation or statutory deeming of permanence under certified standing orders.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Wrongful_Termination_Remedy_Selection",
+      "knowledge_tags": [
+        "Back Wages",
+        "Reinstatement",
+        "Lump-sum Compensation",
+        "Gainful Employment",
+        "Wrongful Termination"
+      ],
+      "description": "Determines the appropriate relief (full/partial back wages, reinstatement, or lump-sum compensation) following a finding of wrongful termination, based on the worker's employment status, mitigation efforts, and elapsed time.",
+      "application_scenario": "Use after it has been established that a worker's termination was illegal (e.g., procedural violation), to decide the specific financial and employment remedy to be awarded.",
+      "reasoning_flow": [
+        "Establish that the termination has been validly declared illegal or procedurally defective by the adjudicatory body.",
+        "Evaluate whether the worker has affirmatively pleaded and proved that they were not gainfully employed during the period of enforced idleness.",
+        "Assess equitable factors, including the worker's length of prior service, nature of employment (e.g., daily wage vs. permanent), time elapsed since termination, and the employer's conduct.",
+        "Select the remedy: award back wages (full or partial) and reinstatement for permanent employees who mitigated losses, or award a lump-sum compensation in lieu of reinstatement/back wages for daily wagers or cases involving extreme delay/superannuation."
+      ],
+      "example_application": "A daily-wage clerk's termination is found illegal for lack of notice pay. The dispute is decided 15 years later. The tribunal notes the worker was not permanent and immense time has passed. Instead of reinstatement with back wages, the tribunal awards a lump-sum compensation of Rs. 2 Lakhs.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2006_854",
+        "il-tur-cjpe-2008_2765",
+        "il-tur-cjpe-2019_1203"
+      ],
+      "shared_pattern": "The court moves away from the automatic grant of full back wages upon finding an illegal termination, instead employing a multi-factor balancing test (burden of proof of unemployment, nature of service, delay) to craft a pragmatic remedy, often substituting compensation for reinstatement for daily wagers.",
+      "scope_exclusions": "Not applicable to determining the primary legality of the termination or retrenchment itself, only the subsequent remedy selection.",
+      "support_count": 3
+    }
+  ]
+}

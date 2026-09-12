@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_069",
+  "coverage_analysis": "The audit reveals that while the current library adequately addresses general delay condonation (LF024) and flexible natural justice (LF003), it lacks specialized operational templates for recurring procedural and jurisdictional frameworks present in the source batch. Specifically, it does not cover the statutory compliance matrix for mandatory pre-acquisition hearings (Section 5A), the fundamental structural duty of courts to record explicit speaking orders rather than cryptic or presumptive disposals, and the precise boundaries of a High Court's restricted jurisdiction (Writ, Revision, Second Appeal) concerning factual interference. These gaps form cohesive, recurring patterns supported by multiple cases.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_069_01",
+    "GAP_semantic_family_069_02",
+    "GAP_semantic_family_069_03"
+  ]
+}

@@ -48,7 +48,11 @@ from legal_pilot.legal_flux_dpo_train import (
     train_trajectory_dpo,
     trajectory_dpo_settings,
 )
-from legal_pilot.legal_flux_gemini import GeminiTemplateClient, run_gemini_template_workflow
+from legal_pilot.legal_flux_gemini import (
+    GeminiTemplateClient,
+    _materialize_gap_adjudication,
+    run_gemini_template_workflow,
+)
 from legal_pilot.legal_flux_evaluation import _aggregate_frame, score_legal_flux_run
 from legal_pilot.legal_flux_rereview import run_legal_flux_final_review_replay
 from legal_pilot.legal_flux_runner import (
@@ -82,6 +86,7 @@ from legal_pilot.models import (
     LegalFluxAbstractStep,
     LegalFluxCandidateResponse,
     LegalFluxConsolidationResponse,
+    LegalFluxGapAdjudicationResponse,
     LegalFluxGapAuditResponse,
     LegalFluxPlanStep,
     LegalFluxStepArtifact,
@@ -721,6 +726,10 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
         "final_rationale",
         "final_decision",
     ]
+    assert branches["final_answer"]["properties"]["final_decision"]["enum"] == [
+        "support",
+        "reject",
+    ]
     assert "configured limit of 4 executed steps" in client.prompts[-1]
     assert "at most 3 revised_remaining_steps" in client.prompts[-1]
     reviewer_prompt = client.prompts[-1]
@@ -751,6 +760,110 @@ def test_rf_style_flux_plans_retrieves_executes_and_answers_from_review():
     assert "PLAINTIFF'S CLAIM:" in reviewer_prompt
     assert "AUTHORITY CONTEXT" in planner_prompt
     assert "HEURISTIC_FAMILY_SHOULD_NOT_LEAK" not in planner_prompt
+
+
+def test_ljp_rf_style_uses_accepted_rejected_output_vocabulary():
+    templates = [
+        _template(
+            "LF001",
+            "Appellate evidence corroboration check",
+            "appeal",
+            "evidence",
+        )
+    ]
+    client = SequenceClient(
+        [
+            _response(
+                {
+                    "planning_analysis": (
+                        "The appeal turns on whether the incriminating evidence is "
+                        "adequately corroborated."
+                    ),
+                    "planned_steps": [
+                        {
+                            "step_id": "S1",
+                            "step_name": "Appellate evidence corroboration check",
+                            "step_description": (
+                                "Assess whether the decisive evidence is corroborated."
+                            ),
+                            "template_tags": ["appeal", "evidence"],
+                        },
+                        {
+                            "step_id": "S2",
+                            "step_name": "Appellate disposition check",
+                            "step_description": (
+                                "Determine the disposition of the requested relief."
+                            ),
+                            "template_tags": ["appeal", "disposition"],
+                        }
+                    ],
+                }
+            ),
+            _response(
+                {
+                    "instantiated_result": (
+                        "The supplied facts leave the decisive accusation "
+                        "uncorroborated."
+                    )
+                }
+            ),
+            _response(
+                {
+                    "review_analysis": (
+                        "The corroboration finding is already dispositive."
+                    ),
+                    "decision": "final_answer",
+                    "final_rationale": (
+                        "The Supreme Court should allow the appeal because the "
+                        "decisive accusation lacks corroboration."
+                    ),
+                    "final_decision": "accepted",
+                }
+            ),
+        ]
+    )
+    config = load_config(
+        Path(__file__).parents[1]
+        / "configs"
+        / "legal_benchmarks_cjpe_flux.cluster.yaml"
+    )
+    case = NormalizedCase(
+        dataset="realistic_ljp_facts",
+        case_id="2013_30",
+        variant_id="facts_only",
+        claim="The appellant or petitioner should prevail before the Supreme Court of India.",
+        requested_remedy="Allow the appeal or petition.",
+        parties=[],
+        facts={"case_text": "The appellant challenges a conviction based on disputed evidence."},
+        authorities=None,
+        gold_answer="accepted",
+        metadata={"source_split": "test"},
+    )
+
+    analysis, trace = _execute_rf_style_case(
+        client,
+        config,
+        case,
+        templates=templates,
+    )
+
+    assert analysis.final_decision == "accepted"
+    assert trace["trajectory_reviews"][-1]["final_decision"] == "accepted"
+    review_schema = client.calls[-1]["schema"]
+    final_branch = next(
+        branch
+        for branch in review_schema["oneOf"]
+        if branch["properties"]["decision"].get("const") == "final_answer"
+    )
+    assert final_branch["properties"]["final_decision"]["enum"] == [
+        "accepted",
+        "rejected",
+    ]
+    review_prompt = client.prompts[-1]
+    assert 'final_decision must be exactly "accepted" or "rejected"' in review_prompt
+    assert "accepted means" in review_prompt
+    assert "rejected means" in review_prompt
+    assert '"support" or "reject"' not in review_prompt
 
 
 def test_rf_review_schema_enforces_decision_specific_fields():
@@ -1503,6 +1616,17 @@ def test_chatgpt_batch_export_writes_clustered_workflow(tmp_path: Path):
     ).read_text(encoding="utf-8")
     assert "Aggregate source coverage metadata" not in audit_prompt
     assert "coarse_legal_family_counts" not in audit_prompt
+    assert "at least 3 distinct cases" in audit_prompt
+    gap_schema = json.loads(
+        (manifest.parent / "legal_flux_gap_audit_response.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    candidate_properties = gap_schema["$defs"]["LegalFluxCandidateDraft"][
+        "properties"
+    ]
+    assert candidate_properties["supporting_case_ids"]["minItems"] == 3
+    assert candidate_properties["support_count"]["minimum"] == 3
 
 
 def test_cjpe_template_export_uses_multi_dev_full_text_without_labels(tmp_path: Path):
@@ -1591,6 +1715,17 @@ def test_cjpe_template_export_uses_multi_dev_full_text_without_labels(tmp_path: 
     assert "case's full_text" in audit_prompt
     assert "Aggregate source coverage metadata" not in audit_prompt
     assert "coarse_legal_family_counts" not in audit_prompt
+    assert "at least 3 distinct cases" in audit_prompt
+    gap_schema = json.loads(
+        (output_dir / "legal_flux_gap_audit_response.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    candidate_properties = gap_schema["$defs"]["LegalFluxCandidateDraft"][
+        "properties"
+    ]
+    assert candidate_properties["supporting_case_ids"]["minItems"] == 3
+    assert candidate_properties["support_count"]["minimum"] == 3
     assert manifest["template_source_dataset"] == "il_tur_cjpe"
     assert manifest["template_source_split"] == "multi_dev"
     assert manifest["source_record_format"] == "full_text"
@@ -1783,9 +1918,9 @@ def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path:
     merged = {
         "templates": [
             {
-                "template_name": "Agreement Entitlement Check",
+                "template_name": "Stylistically Reworded Agreement Check",
                 "knowledge_tags": ["contract", "entitlement"],
-                "description": "Evaluate entitlement under a disputed agreement.",
+                "description": "A needless stylistic paraphrase from consolidation.",
                 "application_scenario": "Use for disputed contractual entitlement.",
                 "reasoning_flow": ["Identify the obligation.", "Apply facts to it."],
                 "example_application": "Apply the operation to a synthetic agreement.",
@@ -1810,21 +1945,8 @@ def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path:
         "gap_candidates": [gap_draft],
     }
     adjudicated = {
-        "templates": [
-            {
-                **merged["templates"][0],
-                "source_candidate_ids": ["LF001"],
-            },
-            {
-                "template_name": gap_draft["template_name"],
-                "knowledge_tags": gap_draft["knowledge_tags"],
-                "description": gap_draft["description"],
-                "application_scenario": gap_draft["application_scenario"],
-                "reasoning_flow": gap_draft["reasoning_flow"],
-                "example_application": gap_draft["example_application"],
-                "source_candidate_ids": ["GAP_homogeneous_001_01"],
-            },
-        ]
+        "accepted_gap_candidate_ids": ["GAP_homogeneous_001_01"],
+        "merged_templates": [],
     }
     client = FakeTemplateApiClient(
         [
@@ -1859,8 +1981,10 @@ def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path:
     assert (output_root / "legal_flux_templates_gemini_final.jsonl").exists()
     assert "BATCH_ID:" not in client.messages[0][-1]["content"]
     assert "BATCH LABEL:" not in client.messages[0][-1]["content"]
+    assert "SOURCE COVERAGE SUMMARY:" not in client.messages[1][-1]["content"]
     assert "BATCH_ID:" not in client.messages[2][-1]["content"]
     assert "BATCH LABEL:" not in client.messages[2][-1]["content"]
+    assert "accepted_gap_candidate_ids" in client.messages[3][-1]["content"]
     candidate_row = read_jsonl(
         output_root
         / "03_candidate_templates"
@@ -1880,10 +2004,77 @@ def test_gemini_template_workflow_generates_candidates_merge_and_audit(tmp_path:
         "example_application",
     }
     assert final_row["template_id"] == "LF001"
+    assert final_row["template_name"] == candidate["candidates"][0]["template_name"]
+    assert final_row["description"] == candidate["candidates"][0]["description"]
     assert all(schema is not None for schema in client.response_schemas)
     candidate_schema = client.response_schemas[0]
     assert "candidate_id" not in json.dumps(candidate_schema)
     assert "template_id" not in json.dumps(candidate_schema)
+
+
+def test_compact_gap_adjudication_materializes_singletons_and_merges():
+    current_rows = [
+        _template("LF001", "Existing operation A", "procedure").model_dump(
+            mode="json"
+        ),
+        _template("LF002", "Existing operation B", "evidence").model_dump(
+            mode="json"
+        ),
+    ]
+    gap_rows = []
+    for candidate_id, name, tag in (
+        ("GAP_batch_001_01", "Gap operation A", "appeal"),
+        ("GAP_batch_002_01", "Standalone gap B", "remedy"),
+        ("GAP_batch_003_01", "Rejected gap C", "contract"),
+    ):
+        row = _template("unused", name, tag).model_dump(mode="json")
+        row.pop("template_id")
+        row["candidate_id"] = candidate_id
+        gap_rows.append(row)
+    adjudication = LegalFluxGapAdjudicationResponse.model_validate(
+        {
+            "accepted_gap_candidate_ids": ["GAP_batch_002_01"],
+            "merged_templates": [
+                {
+                    "template_name": "Merged operation A",
+                    "knowledge_tags": ["procedure", "appeal"],
+                    "description": "Apply the existing operation with the missing appellate check.",
+                    "application_scenario": "Use when both procedural and appellate gates apply.",
+                    "reasoning_flow": [
+                        "Evaluate the procedural gate.",
+                        "Apply the appellate check.",
+                    ],
+                    "example_application": "Combine both operations in a synthetic appeal.",
+                    "source_candidate_ids": ["LF001", "GAP_batch_001_01"],
+                }
+            ],
+        }
+    )
+
+    templates, lineage, summary = _materialize_gap_adjudication(
+        current_rows=current_rows,
+        gap_rows=gap_rows,
+        adjudication=adjudication,
+    )
+
+    assert [template.template_name for template in templates] == [
+        "Merged operation A",
+        "Existing operation B",
+        "Standalone gap B",
+    ]
+    assert lineage == {
+        "LF001": ["LF001", "GAP_batch_001_01"],
+        "LF002": ["LF002"],
+        "LF003": ["GAP_batch_002_01"],
+    }
+    assert templates[1].description == current_rows[1]["description"]
+    assert templates[2].description == gap_rows[1]["description"]
+    assert summary == {
+        "accepted_singleton_gap_count": 1,
+        "merged_template_count": 1,
+        "replaced_existing_template_count": 1,
+        "rejected_gap_count": 1,
+    }
 
 
 def test_gemini_client_passes_project_seed(monkeypatch: pytest.MonkeyPatch):

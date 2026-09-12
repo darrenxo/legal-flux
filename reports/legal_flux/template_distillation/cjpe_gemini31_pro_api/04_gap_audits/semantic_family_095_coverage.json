@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_095",
+  "coverage_analysis": "The batch contains several procedural and substantive issues. While general delay condonation is covered by LF024, the specific legal mechanics surrounding the automatic abatement of a proceeding upon a party's death, the implied prayer for setting aside abatement within a substitution application, and the interplay between Order 22 Rule 9 CPC and the Limitation Act are distinct and uncovered. At least 5 cases in the batch deal directly with the automatic abatement of civil proceedings upon death, the necessity of setting aside the abatement, and the rigorous evaluation of sufficient cause for delays in substituting legal representatives.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_095_01"
+  ]
+}

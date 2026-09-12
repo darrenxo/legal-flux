@@ -703,8 +703,8 @@ def _execute_rf_style_case(
         repairs.extend(review_trace["repair_actions"])
         schema_errors.extend(review_trace["schema_errors"])
         if review.decision == "final_answer":
-            if review.final_decision in {"support", "reject"}:
-                analysis = _analysis_from_rf_review(review)
+            if review.final_decision in _rf_final_decision_values(case):
+                analysis = _analysis_from_rf_review(review, case)
             else:
                 repairs.append("rf_final_answer_missing_label_forced_retry")
             break
@@ -736,7 +736,7 @@ def _execute_rf_style_case(
         repairs.extend(review_trace["repair_actions"])
         schema_errors.extend(review_trace["schema_errors"])
         if review.decision == "final_answer":
-            analysis = _analysis_from_rf_review(review)
+            analysis = _analysis_from_rf_review(review, case)
 
     if analysis is None:
         raise RuntimeError("RF-style trajectory ended without a final_answer review.")
@@ -813,41 +813,11 @@ def _review_rf_trajectory(
         ),
         remaining_steps=[step.model_dump(mode="json") for step in remaining],
         max_steps=max_steps,
-        review_output_requirement=(
-            "No remaining abstract steps are available. Return only "
-            "final_rationale, followed by final_decision. final_decision must "
-            'be exactly "support" or "reject". Interpret the label relative '
-            "to the supplied plaintiff's claim. support means that the court "
-            "grants or allows the claim. reject means that the court dismisses, "
-            "refuses, or denies it. Make sure that final_decision agrees with "
-            "final_rationale."
-            if force_final_answer
-            else (
-                "Use the executed trajectory and supplied facts to decide whether "
-                "to continue with the existing plan, revise the remaining abstract "
-                "steps, or return the final decision.\n\n"
-                "First provide a concise review_analysis, then set decision to "
-                'exactly "continue", "revise", or "final_answer".\n\n'
-                "continue means that the remaining abstract steps are still "
-                "appropriate and the trajectory should simply proceed to the next "
-                "planned step. If decision is continue, output only review_analysis "
-                "and decision.\n\n"
-                "revise means that the remaining abstract steps need revision. If "
-                "decision is revise, also output revised_remaining_steps with the "
-                "revised steps in order. Each revised step must contain step_name, "
-                "step_description, and template_tags for template retrieval. Return "
-                "at least 1 and at most "
-                f"{remaining_step_limit} revised_remaining_steps.\n\n"
-                "final_answer means that the executed trajectory so far is already "
-                "sufficient to reach a decision, or that the configured limit of "
-                f"{max_steps} executed steps has been reached. If decision is "
-                "final_answer, also output final_rationale and final_decision. "
-                'final_decision must be exactly "support" or "reject". Interpret '
-                "the label relative to the supplied plaintiff's claim. support "
-                "means that the court grants or allows the claim. reject means "
-                "that the court dismisses, refuses, or denies it. Make sure that "
-                "final_decision agrees with final_rationale."
-            )
+        review_output_requirement=_rf_review_output_requirement(
+            case,
+            remaining_step_limit=remaining_step_limit,
+            max_steps=max_steps,
+            force_final_answer=force_final_answer,
         ),
     )
     schema_name = (
@@ -856,6 +826,18 @@ def _review_rf_trajectory(
         else "legal_flux_rf_review.json"
     )
     schema = _load_schema(resolve_path(config, "schemas_dir") / schema_name)
+    final_decision_values = list(_rf_final_decision_values(case))
+    if force_final_answer:
+        schema["properties"]["final_decision"]["enum"] = final_decision_values
+    else:
+        final_branch = next(
+            branch
+            for branch in schema["oneOf"]
+            if branch["properties"]["decision"].get("const") == "final_answer"
+        )
+        final_branch["properties"]["final_decision"]["enum"] = (
+            final_decision_values
+        )
     if not force_final_answer:
         revise_branch = next(
             branch
@@ -873,7 +855,10 @@ def _review_rf_trajectory(
         max_tokens=config["model"]["flux_review_max_tokens"],
         **common,
     )
-    normalized_review, repairs = _normalize_rf_review_payload(response.parsed)
+    normalized_review, repairs = _normalize_rf_review_payload(
+        response.parsed,
+        valid_final_decisions=set(final_decision_values),
+    )
     review = LegalFluxRfReview.model_validate(normalized_review)
     if review.decision == "revise":
         review = review.model_copy(
@@ -949,9 +934,16 @@ def _abstract_step_to_plan_step(
     )
 
 
-def _analysis_from_rf_review(review: LegalFluxRfReview) -> FinalAnalysis:
-    if review.final_decision not in {"support", "reject"}:
-        raise ValueError("RF-style final_answer review did not include support/reject.")
+def _analysis_from_rf_review(
+    review: LegalFluxRfReview,
+    case: NormalizedCase,
+) -> FinalAnalysis:
+    valid_decisions = _rf_final_decision_values(case)
+    if review.final_decision not in valid_decisions:
+        raise ValueError(
+            "RF-style final_answer review did not include one of "
+            f"{valid_decisions}."
+        )
     return FinalAnalysis(
         final_decision=review.final_decision,
         final_rationale=review.final_rationale or review.review_analysis,
@@ -969,12 +961,22 @@ def _condition_prompt_hash(
         return prompt_hash
     if condition != "flux_rf_style":
         raise ValueError(f"Unsupported LegalFlux condition: {condition}")
+    rf_prompt_namespace = str(
+        config["legal_flux"].get("rf_prompt_namespace") or "legal_flux"
+    ).strip("/")
+    native_case_input = (
+        {"case_text": "\n".join(case.facts.values())}
+        if rf_prompt_namespace == "legal_flux_ljp"
+        else _native_case_input_payload(
+            case,
+            include_authority=bool(
+                config["legal_flux"].get("include_authority_input", False)
+            ),
+        )
+    )
     payload = {
         "condition": condition,
-        "native_case_input": _native_case_input_payload(
-            case,
-            include_authority=bool(config["legal_flux"].get("include_authority_input", False)),
-        ),
+        "native_case_input": native_case_input,
         "template_pool_hash": template_pool_hash(templates),
         "max_steps": config["legal_flux"].get("max_steps", 4),
         "include_authority_input": config["legal_flux"].get("include_authority_input", False),
@@ -984,8 +986,75 @@ def _condition_prompt_hash(
         "rf_embedding_model": config["legal_flux"].get(
             "rf_embedding_model", "bge-m3:latest"
         ),
+        "rf_prompt_namespace": rf_prompt_namespace,
     }
     return sha256_text(canonical_json(payload))
+
+
+def _rf_decision_label_instruction(case: NormalizedCase) -> str:
+    if case.dataset == "realistic_ljp_facts":
+        return (
+            "First identify from the case fact text what the appeal or petition "
+            "before the Supreme Court asks the Court to decide or grant. "
+            "Interpret the label relative to the predicted Supreme Court "
+            "disposition of that requested relief. accepted means that the Court "
+            "accepts or allows the appeal or petition. rejected means that the "
+            "Court rejects or dismisses it."
+        )
+    return (
+        "Interpret the label relative to the supplied plaintiff's claim. "
+        "support means that the court grants or allows the claim. reject "
+        "means that the court dismisses, refuses, or denies it."
+    )
+
+
+def _rf_final_decision_values(case: NormalizedCase) -> tuple[str, str]:
+    if case.dataset == "realistic_ljp_facts":
+        return ("accepted", "rejected")
+    return ("support", "reject")
+
+
+def _rf_review_output_requirement(
+    case: NormalizedCase,
+    *,
+    remaining_step_limit: int,
+    max_steps: int,
+    force_final_answer: bool,
+) -> str:
+    positive, negative = _rf_final_decision_values(case)
+    label_requirement = (
+        f'final_decision must be exactly "{positive}" or "{negative}". '
+        f"{_rf_decision_label_instruction(case)} Make sure that final_decision "
+        "agrees with final_rationale."
+    )
+    if force_final_answer:
+        return (
+            "No remaining abstract steps are available. Return only "
+            "final_rationale, followed by final_decision. "
+            f"{label_requirement}"
+        )
+    return (
+        "Use the executed trajectory and supplied facts to decide whether "
+        "to continue with the existing plan, revise the remaining abstract "
+        "steps, or return the final decision.\n\n"
+        "First provide a concise review_analysis, then set decision to "
+        'exactly "continue", "revise", or "final_answer".\n\n'
+        "continue means that the remaining abstract steps are still "
+        "appropriate and the trajectory should simply proceed to the next "
+        "planned step. If decision is continue, output only review_analysis "
+        "and decision.\n\n"
+        "revise means that the remaining abstract steps need revision. If "
+        "decision is revise, also output revised_remaining_steps with the "
+        "revised steps in order. Each revised step must contain step_name, "
+        "step_description, and template_tags for template retrieval. Return "
+        "at least 1 and at most "
+        f"{remaining_step_limit} revised_remaining_steps.\n\n"
+        "final_answer means that the executed trajectory so far is already "
+        "sufficient to reach a decision, or that the configured limit of "
+        f"{max_steps} executed steps has been reached. If decision is "
+        "final_answer, also output final_rationale and final_decision. "
+        f"{label_requirement}"
+    )
 
 
 def _native_case_input_payload(
@@ -1135,6 +1204,8 @@ def _normalize_abstract_plan_payload(
 
 def _normalize_rf_review_payload(
     payload: dict[str, Any] | None,
+    *,
+    valid_final_decisions: set[str] | None = None,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     if not isinstance(payload, dict):
         return payload, []
@@ -1159,9 +1230,10 @@ def _normalize_rf_review_payload(
         repaired["review_analysis"] = str(repaired["review_analysis"])
         repairs.append("rf_review_analysis_coerced_to_string")
     if repaired.get("final_decision") is not None:
+        valid_final_decisions = valid_final_decisions or {"support", "reject"}
         final_decision = str(repaired["final_decision"]).strip().lower()
         repaired["final_decision"] = (
-            final_decision if final_decision in {"support", "reject"} else None
+            final_decision if final_decision in valid_final_decisions else None
         )
         if repaired["final_decision"] is None:
             repairs.append("rf_review_invalid_final_decision_null_filled")

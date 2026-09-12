@@ -1,0 +1,32 @@
+{
+  "coverage_analysis": "The batch contains cases covering various distinct procedural and substantive areas. Cases involving the condonation of delay (e.g., il-tur-cjpe-2000_1178, il-tur-cjpe-2009_102) are subsumed by LF024. Cases involving res judicata (il-tur-cjpe-1996_352) are covered by LF022. However, there is a recurring pattern in criminal jurisprudence where the Supreme Court deprecates and sets aside High Court orders granting bail solely because they are 'non-speaking' or fail to assign any reasons. Cases il-tur-cjpe-2002_1170, il-tur-cjpe-2005_422, and il-tur-cjpe-2008_1573 all demonstrate the Supreme Court's intervention to invalidate unreasoned bail orders, establishing that while elaborate reasons are not required, a brief indication of the application of mind to relevant factors is a mandatory legal requirement. This specific appellate review mechanism for procedural irregularities in bail orders is not covered by the current library.",
+  "gap_candidates": [
+    {
+      "template_name": "mandatory_reasoning_bail_orders",
+      "knowledge_tags": [
+        "Bail",
+        "Speaking Order",
+        "Appellate Review",
+        "Application of Mind",
+        "Criminal Procedure"
+      ],
+      "description": "Invalidates bail orders that fail to assign reasons or demonstrate an application of mind to relevant factors, establishing that a brief indication of reasoning is a mandatory legal requirement for appealable bail decisions.",
+      "application_scenario": "Use when an appellate court reviews a lower court's decision granting or refusing bail, and the primary challenge is that the impugned order is a casual, non-speaking, or completely unreasoned order.",
+      "reasoning_flow": [
+        "Identify the impugned judicial order granting or rejecting bail and the surrounding context of the criminal charges.",
+        "Examine the text of the order to ascertain whether the court recorded any reasons, however brief, indicating an application of mind to relevant factors such as the severity of the offense, evidence, or the accused's antecedents.",
+        "Assert the legal principle that while exhaustive details that might prejudice the trial are not required, an absolute lack of reasoning or a 'non-speaking' format renders the order legally unsustainable.",
+        "Set aside the unreasoned bail order and remit the matter for fresh adjudication, or take corrective action, due to the failure to satisfy the mandatory requirement of a reasoned judicial decision."
+      ],
+      "example_application": "A High Court grants bail to an accused in a serious felony case with a one-line order stating 'bail granted on facts'. The Supreme Court sets aside the order, ruling that the failure to assign any reasons or consider the accused's antecedents makes it a non-speaking order, and remits the matter back to the High Court for a reasoned decision.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_1170",
+        "il-tur-cjpe-2005_422",
+        "il-tur-cjpe-2008_1573"
+      ],
+      "shared_pattern": "The Supreme Court reviews a High Court order granting bail, observes that the High Court failed to assign any reasons or consider relevant statutory/factual factors, explicitly holds that providing reasons is a mandatory requirement for appealable orders, and consequently sets aside or disapproves the non-speaking order.",
+      "scope_exclusions": "Do not use for evaluating the substantive merits of a fully reasoned bail order, or for cancelling bail based strictly on post-bail misconduct by the accused.",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_039",
+  "coverage_analysis": "The audit reveals that while the current library addresses specific statutory interpretation principles (like LF019 for strict construction of tax exemptions and LF025 for purposive construction of welfare statutes) and substance-over-form tests (LF016, LF017), it lacks templates for two recurring high-level reasoning operations present in the batch. First, there is no template for the operationalization of statutory legal fictions ('deeming' provisions), where courts must carry the hypothetical scenario to its logical conclusion and enforce its inevitable corollaries (manifested in cases involving deemed ownership, deemed open market sales, and deemed income/procedural adjudication). Second, the library lacks a template for the purification of composite financial bases, where non-target components (like government-supplied materials, service elements in works contracts, or independent domestic receipts) are systematically carved out to align the taxable base strictly with the statute's intended economic object.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_039_01",
+    "GAP_semantic_family_039_02"
+  ]
+}

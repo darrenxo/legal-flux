@@ -1,0 +1,84 @@
+{
+  "candidates": [
+    {
+      "template_name": "Subordinate_Legislation_Vires_And_Arbitrariness_Test",
+      "knowledge_tags": [
+        "Delegated Legislation",
+        "Ultra Vires",
+        "Article 14",
+        "Manifest Arbitrariness",
+        "Statutory Interpretation"
+      ],
+      "description": "A structured reasoning operation to determine the validity of subordinate legislation or statutory rules by testing them against the boundaries of the parent statute and constitutional guarantees against manifest arbitrariness.",
+      "application_scenario": "Use when evaluating a challenge to rules, regulations, or standardized statutory service conditions on the grounds that they exceed the delegating statute's scope or impose arbitrary, unconscionable, or strict liabilities without fault. Do not use for testing primary parliamentary legislation.",
+      "reasoning_flow": [
+        "Identify the specific rule or regulation under challenge and the enabling provision within the parent statute that confers the rule-making power.",
+        "Analyze whether the rule conflicts with the express provisions, overarching scheme, or legislative purpose of the parent act.",
+        "Evaluate the rule against constitutional guarantees for manifest arbitrariness by checking if it lacks intelligent deliberation, imposes disproportionate penalties without establishing fault, or creates unconscionable terms between unequal parties.",
+        "Conclude whether the subordinate legislation is intra vires and valid, or ultra vires and liable to be struck down for exceeding statutory boundaries or constitutional limits."
+      ],
+      "example_application": "A regulatory body issues a regulation fining airlines for all flight delays, regardless of weather conditions. The court applies this template, finding the rule ultra vires the parent Aviation Act (which only permits fines for operational negligence) and manifestly arbitrary for imposing no-fault penal liability, thereby striking it down.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2016_169",
+        "il-tur-cjpe-1986_70",
+        "il-tur-cjpe-1947_106"
+      ],
+      "shared_pattern": "The courts assess the validity of delegated rules and statutory service conditions by explicitly measuring them against the parent statute's objectives and the constitutional threshold of manifest arbitrariness and unconscionability.",
+      "scope_exclusions": "Not applicable to judicial review of primary legislation (Acts of Parliament or State Legislatures) which enjoy a higher presumption of constitutionality and cannot be struck down merely for being unreasonable outside of direct fundamental rights violations.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Directory_Vs_Mandatory_Procedural_Classification",
+      "knowledge_tags": [
+        "Statutory Construction",
+        "Procedural Irregularity",
+        "Directory vs Mandatory",
+        "Substantial Compliance"
+      ],
+      "description": "An interpretive framework to classify a statutory or constitutional procedural requirement as either directory or mandatory to determine the legal consequence of its non-compliance.",
+      "application_scenario": "Use when an administrative, legislative, or quasi-judicial action is challenged solely because a prescribed procedural step was technically breached or delayed, rather than a substantive defect.",
+      "reasoning_flow": [
+        "Identify the procedural requirement allegedly violated and the governing statute or constitutional provision.",
+        "Examine the text and context to determine if the law prescribes a specific penalty, consequence, or nullification for failing to adhere strictly to the procedure.",
+        "Assess whether the requirement relates to the core jurisdictional competence of the authority or is merely a supplementary mechanism for administrative convenience or legislative oversight.",
+        "Classify the requirement as directory if strict compliance is not fatal and substantial compliance exists, thereby saving the substantive action from being invalidated on pure technicalities."
+      ],
+      "example_application": "A State Government issues an environmental notification without strictly following the internal routing prescribed in the Rules of Business. Applying this template, the court determines that the Rules of Business are directory, and since the decision was substantively approved by the competent authority, the notification is not nullified.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2007_819",
+        "il-tur-cjpe-2011_1196",
+        "il-tur-cjpe-1994_92"
+      ],
+      "shared_pattern": "The courts preserve substantive actions despite technical procedural breaches by classifying the procedural mandates (such as laying rules before the legislature or internal business routing) as directory rather than mandatory.",
+      "scope_exclusions": "Do not use when the statute explicitly states that non-compliance renders the action void, or when the procedural requirement is a fundamental substantive safeguard such as obtaining mandatory statutory prior approval.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Flexible_Application_Of_Natural_Justice",
+      "knowledge_tags": [
+        "Natural Justice",
+        "Audi Alteram Partem",
+        "Procedural Fairness",
+        "Prejudice Test"
+      ],
+      "description": "A reasoning operation to evaluate claims of natural justice violations by balancing the flexibility of procedural fairness against actual prejudice suffered by the aggrieved party.",
+      "application_scenario": "Use when a party challenges an adverse order claiming they were denied a specific facet of natural justice, such as an oral hearing, adequate notice, or an opportunity to cross-examine.",
+      "reasoning_flow": [
+        "Identify the nature of the proceeding and the specific element of natural justice allegedly denied.",
+        "Determine whether the governing statute or the nature of the right at stake mandates that specific procedural safeguard, or if the statute impliedly excludes it.",
+        "Apply the prejudice test to ascertain if the procedural deviation actually deprived the party of a meaningful opportunity to defend themselves or if it was a mere technical infringement.",
+        "Vitiate the order if an essential safeguard was bypassed causing real prejudice, or uphold it if the procedure followed was sufficient in the context of the case."
+      ],
+      "example_application": "A regulatory board suspends a license after giving the licensee only 3 days' notice instead of the usual 7. The licensee challenges the order. The court applies this template, notes that the licensee submitted a comprehensive written reply and did not demonstrate what additional evidence they would have provided with more time, and upholds the suspension because no actual prejudice occurred.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1990_103",
+        "il-tur-cjpe-1994_92",
+        "il-tur-cjpe-2015_297",
+        "il-tur-cjpe-1947_106"
+      ],
+      "shared_pattern": "The courts assess natural justice contextually, striking down actions where lack of notice caused severe prejudice, but upholding actions where the procedure followed was statutorily permissible and caused no actual prejudice.",
+      "scope_exclusions": "Not applicable when a statute prescribes a strict, mandatory hearing procedure that explicitly prohibits deviation, or in cases of institutional bias where the prejudice test is irrelevant.",
+      "support_count": 4
+    }
+  ]
+}

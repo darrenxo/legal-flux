@@ -1,0 +1,34 @@
+{
+  "coverage_analysis": "The supplied batch encompasses a variety of statutory offenses under special enactments, including the Customs Act, Prevention of Food Adulteration Act, Excise Act, and Essential Commodities Act. While the existing library addresses statutory reverse-onus presumptions (LF011) and the admissibility of discovery statements leading to physical facts (LF012), it lacks a template governing the admissibility of full inculpatory statements or confessions made to special statutory officers. Three cases in the batch (il-tur-cjpe-1968_224, il-tur-cjpe-1997_1086, and il-tur-cjpe-2001_658) repeatedly demonstrate a distinct legal operation: determining that Customs and Excise officers are not 'police officers' under Section 25 of the Evidence Act because they lack the power to file a formal charge-sheet under Section 173 of the CrPC. Consequently, these cases establish that statements recorded by such officers (e.g., under Section 108 of the Customs Act) do not require the magisterial safeguards of Section 164 CrPC and are admissible as substantive evidence, provided they pass the voluntariness test under Section 24 of the Evidence Act. This constitutes a solid gap candidate.",
+  "gap_candidates": [
+    {
+      "template_name": "special_statute_officer_confession_admissibility",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Customs Act",
+        "Confession Admissibility",
+        "Police Officer Test",
+        "Voluntariness"
+      ],
+      "description": "Determines the admissibility of inculpatory statements made to officers under special revenue statutes by establishing that such officers are not 'police officers' under the Evidence Act, thereby allowing the statements to be admitted if proven voluntary.",
+      "application_scenario": "Use when the prosecution relies on a confession or statement recorded by an officer empowered under a special revenue statute (like the Customs Act), and the defense challenges its admissibility citing the absolute bar on police confessions or the lack of magisterial safeguards.",
+      "reasoning_flow": [
+        "Identify that the prosecution seeks to rely on an inculpatory statement or confession recorded by an officer acting under a special revenue or regulatory statute.",
+        "Ascertain whether the specific officer possesses the core police power to submit a formal charge-sheet under Section 173 of the Code of Criminal Procedure.",
+        "Conclude that since the officer lacks this specific investigatory power, they are not a 'police officer' for the purposes of Section 25 of the Evidence Act.",
+        "Establish that the magisterial safeguards under Section 164 of the CrPC do not apply to such statutory inquiries, as the officer is acting under distinct statutory summons powers.",
+        "Scrutinize the statement strictly under Section 24 of the Evidence Act to ensure it was made voluntarily and was not obtained by threat, inducement, or coercion.",
+        "Admit the voluntary statement as substantive evidence against the maker, which may also be utilized against a co-accused."
+      ],
+      "example_application": "An accused smuggler makes a signed confession to a Customs Inspector under Section 108 of the Customs Act. At trial, the accused argues the confession is inadmissible under Section 25 of the Evidence Act and lacks Section 164 CrPC safeguards. The court rules the Customs Inspector is not a police officer, finds the statement voluntary, and admits it as substantive evidence to secure a conviction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1968_224",
+        "il-tur-cjpe-1997_1086",
+        "il-tur-cjpe-2001_658"
+      ],
+      "shared_pattern": "In all three cases, the court admits inculpatory statements made to Customs officers by ruling that these officers do not hold the status of 'police officers', thereby distinguishing the absolute bar under Section 25 of the Evidence Act and admitting the statements subject solely to a voluntariness check.",
+      "scope_exclusions": "Do not use if the statement was made to a regular police officer, or if the officer operating under the special statute has been explicitly vested with the power to file a police report under Section 173 CrPC by the enabling legislation.",
+      "support_count": 3
+    }
+  ]
+}

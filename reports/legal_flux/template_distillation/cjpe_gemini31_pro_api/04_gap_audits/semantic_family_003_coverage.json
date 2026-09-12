@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_003",
+  "coverage_analysis": "The batch heavily features cases dealing with professional education regulation, particularly medical admissions, counseling, and institutional approvals. While the existing library includes templates for general administrative review (LF002) and condonation of procedural delays under general law (LF024), it lacks a template addressing the non-negotiable nature of academic and regulatory time schedules. A prominent recurring operation in this batch involves courts strictly enforcing cut-off dates established by expert regulatory bodies or court mandates, categorically refusing to extend deadlines or permit belated/mid-stream actions despite equitable pleas regarding vacant seats or institutional financial loss. This gap candidate is supported by 5 distinct cases and fulfills all requirements for abstraction and reuse.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_003_01"
+  ]
+}

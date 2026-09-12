@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_078",
+  "coverage_analysis": "The batch heavily features service and administrative law disputes. While the current library contains templates for irregular worker regularization (LF013) and equal pay parity (LF015), it lacks templates for two recurring operations observed in this batch: (1) The computation of inter-se seniority from the date of substantive appointment, strictly barring retrospective seniority from the historical date a vacancy arose; and (2) The strict enforcement of essential qualifications in public employment, invalidating appointments where candidates lack minimum criteria and rejecting any implied administrative power to relax such rules.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_078_01",
+    "GAP_semantic_family_078_02"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_092",
+  "coverage_analysis": "The audit reveals that the provided source-case batch covers a wide array of discrete legal issues. Several cases align with existing templates, such as dying declaration evaluation (LF009) and appellate review of acquittals (LF007). Many other cases present singular, fact-specific procedural scenarios—like invoking Section 319 CrPC, transferring parallel FIRs, or granting interim bail—that lack the required minimum frequency of 3 to constitute a library gap. However, a distinct, recurring jurisprudential operation was identified: the appellate vitiation and remand of lower court decisions that suffer from a failure to record reasons (non-speaking orders) or mechanically apply precedents without factual correlation.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_092_01"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "candidates": [
+    {
+      "template_name": "Appellate Restraint in Arbitral Award Review",
+      "knowledge_tags": [
+        "Arbitration",
+        "Standard of Review",
+        "Arbitral Misconduct",
+        "Appellate Jurisdiction"
+      ],
+      "description": "A framework for evaluating challenges to an arbitral award by strictly confining the review to explicit statutory grounds and prohibiting the re-appreciation of evidence or interference with discretionary procedural rulings.",
+      "application_scenario": "Use when a party challenges an arbitral award in court seeking to set it aside based on allegations of erroneous contractual interpretation, lack of evidence, or procedural grievances like refused adjournments.",
+      "reasoning_flow": [
+        "Identify the specific statutory grounds invoked by the challenging party to set aside the arbitral award.",
+        "Examine whether the arbitrator's decision or procedural order falls strictly within the boundaries of those jurisdictional or statutory exceptions (e.g., clear error apparent on the face of the record, or explicit misconduct).",
+        "Exclude any challenges that inherently require a substantive re-appreciation of the evidentiary record or a re-interpretation of the contract's commercial merits.",
+        "Uphold the arbitral award as long as the arbitrator's interpretation is a plausible one based on the contract and evidence, refusing to substitute the court's view for that of the chosen domestic tribunal."
+      ],
+      "example_application": "A contractor challenges an arbitral award, arguing the arbitrator wrongfully denied a counterclaim and refused a final hearing adjournment. The reviewing court applies this template to determine that the refusal to adjourn was a discretionary procedural act, and the denial of the counterclaim was based on a plausible reading of the contract, thereby dismissing the challenge without reweighing the underlying evidence.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1971_9",
+        "il-tur-cjpe-2004_764",
+        "il-tur-cjpe-2005_195"
+      ],
+      "shared_pattern": "In each case, a party sought to overturn an arbitral award based on alleged misinterpretations of the contract, lack of evidence, or procedural decisions (like refusing an adjournment). The court consistently held that unless the error is explicit on the face of the award or constitutes statutory misconduct, the court cannot re-appreciate the merits or interfere with the arbitrator's discretion.",
+      "scope_exclusions": "Do not use when the arbitrator has explicitly tied their award to an erroneous legal proposition incorporated in the award itself, or when the arbitrator has demonstrably acted beyond the scope of the arbitration agreement.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Implied Exclusion of Domestic Arbitration Law by Foreign Seat",
+      "knowledge_tags": [
+        "Arbitration",
+        "Jurisdiction",
+        "Foreign Seat",
+        "Conflict of Laws"
+      ],
+      "description": "A method to determine whether domestic arbitration law is excluded in an international commercial arbitration based on the parties' contractual choice of a foreign juridical seat and foreign governing law.",
+      "application_scenario": "Use when a party to an international commercial agreement seeks to invoke domestic court jurisdiction (for interim relief or setting aside an award) despite the contract specifying a foreign seat and foreign law for the arbitration.",
+      "reasoning_flow": [
+        "Determine the execution date of the arbitration agreement to ascertain the applicable jurisprudential regime regarding the applicability of domestic arbitration statutes to foreign-seated arbitrations.",
+        "Analyze the arbitration clause to identify the agreed juridical seat of arbitration and the governing law of the arbitration proceedings.",
+        "Assess whether the selection of a foreign seat and a foreign procedural law manifests an intention by the parties to displace domestic arbitral jurisdiction.",
+        "Conclude that domestic courts lack jurisdiction to entertain challenges or grant interim measures due to the implied exclusion of domestic arbitration statutes."
+      ],
+      "example_application": "An entity files for interim measures in a domestic court under the national arbitration statute. The court examines the contract, notes that the parties designated an overseas capital as the seat of arbitration and selected the foreign country's law to govern the proceedings, and dismisses the application on the ground that the domestic statute's applicability was impliedly excluded by the agreement.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2015_134",
+        "il-tur-cjpe-2015_385",
+        "il-tur-cjpe-2016_15",
+        "il-tur-cjpe-2016_174"
+      ],
+      "shared_pattern": "In all these cases, the contracts specified a foreign seat and/or foreign governing law for the arbitration. The court applied the principle that such contractual stipulations amount to an implied exclusion of the domestic arbitration statute, thus stripping domestic courts of jurisdiction to interfere with or set aside the resulting awards.",
+      "scope_exclusions": "Do not use for purely domestic arbitrations, or for agreements executed under a statutory regime that explicitly prohibits the application of domestic law to foreign-seated arbitrations without requiring an 'implied exclusion' analysis.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Waiver of Jurisdictional and Compositional Objections through Participation",
+      "knowledge_tags": [
+        "Arbitration",
+        "Waiver",
+        "Acquiescence",
+        "Procedural Fairness"
+      ],
+      "description": "A procedural test to determine whether a party has forfeited its right to challenge the jurisdiction or composition of an arbitral tribunal by actively participating in the proceedings without raising timely objections.",
+      "application_scenario": "Use when a party seeks to invalidate an arbitral award by pointing out a defect in the tribunal's composition or jurisdiction, but that party actively engaged in the arbitration process without raising the issue promptly.",
+      "reasoning_flow": [
+        "Identify the specific defect alleged by the challenging party regarding the tribunal's composition or the arbitrator's jurisdiction.",
+        "Review the procedural history to establish the extent of the objecting party's participation in the arbitral hearings, pleadings, and evidentiary stages.",
+        "Determine whether the party failed to raise the objection at the earliest possible opportunity, or whether they explicitly or implicitly withdrew an initial objection.",
+        "Conclude that the party's continued participation without strict demur constitutes acquiescence, legally barring them from challenging the award on those specific grounds later."
+      ],
+      "example_application": "After an unfavorable award, a party challenges the tribunal's jurisdiction because the arbitrator was appointed by their title but subsequently retired from that post. The court notes the party participated in numerous hearings after the retirement and even withdrew an initial objection, holding that the party waived its right to challenge the jurisdiction on this basis.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1997_1198",
+        "il-tur-cjpe-2003_61",
+        "il-tur-cjpe-2008_294"
+      ],
+      "shared_pattern": "In each case, a party attempted to void an arbitration based on a compositional or jurisdictional flaw (e.g., an even number of arbitrators, an arbitrator demitting office, or a court-appointed arbitrator). Because the challenging party had participated extensively in the proceedings without maintaining a formal objection, the court held the objection was waived.",
+      "scope_exclusions": "Do not use when the alleged defect involves non-derogable, mandatory statutory prohibitions that cannot be cured by consent, or when the party formally maintained its protest against jurisdiction throughout the proceedings.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Judicial Substitution of Failed Arbitral Appointment Mechanisms",
+      "knowledge_tags": [
+        "Arbitration",
+        "Arbitrator Appointment",
+        "Judicial Intervention",
+        "Contractual Mechanisms"
+      ],
+      "description": "A framework for a court to exercise its statutory power to appoint an independent arbitrator when the appointment mechanism designated in the contract is paralyzed by refusal, undue delay, or institutional failure.",
+      "application_scenario": "Use when the parties' agreed-upon procedure for appointing an arbitrator fails (e.g., a named official refuses to act, or repeated transfers cause undue delay) and one party approaches the court to secure a functional tribunal.",
+      "reasoning_flow": [
+        "Review the dispute resolution clause to identify the specific procedure agreed upon by the parties for appointing an arbitrator or tribunal.",
+        "Identify the supervening event that frustrated the contractual mechanism, such as a designated official's refusal to act, repeated institutional transfers, or inordinate delay by a party.",
+        "Verify whether the contract explicitly provides a valid fallback mechanism for a unilateral substitute appointment in such circumstances.",
+        "Where the contractual mechanism is exhausted, paralyzed, or lacks a valid unilateral substitution clause, exercise statutory judicial authority to appoint an independent arbitrator to effectuate the dispute resolution process."
+      ],
+      "example_application": "A contract requires a specific government officer to act as the sole arbitrator. The officer refuses the appointment due to a conflict of interest. The government attempts to unilaterally appoint a different officer, which the contract does not permit. The opposing party petitions the court. The court uses this template to bypass the failed mechanism and directly appoints a retired judge to ensure the arbitration proceeds.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1992_599",
+        "il-tur-cjpe-2009_1318",
+        "il-tur-cjpe-2009_1534"
+      ],
+      "shared_pattern": "In these cases, the original contractual mechanism for appointing an arbitrator broke down (due to officials refusing to act, repeated transfers, or undue delay). The court determined that parties cannot unilaterally rewrite the appointment rules without contractual backing, and therefore statutory judicial intervention was justified to appoint an independent arbitrator and restore the arbitration's functionality.",
+      "scope_exclusions": "Do not use if the contract provides a clear, functioning fallback mechanism for substitution that the parties have not yet attempted to exhaust, or if the delay is ordinary and has not reached the threshold of rendering the tribunal non-functional.",
+      "support_count": 3
+    }
+  ]
+}

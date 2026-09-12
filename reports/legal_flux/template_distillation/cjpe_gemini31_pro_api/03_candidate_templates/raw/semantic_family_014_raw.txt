@@ -1,0 +1,136 @@
+{
+  "candidates": [
+    {
+      "template_name": "Recharacterization of Factual Findings as Questions of Law",
+      "knowledge_tags": [
+        "Appellate Review",
+        "Question of Law",
+        "Finding of Fact",
+        "Evidentiary Evaluation"
+      ],
+      "description": "A framework to evaluate whether a lower authority's factual determination is insulated from appellate review, or whether it becomes a reviewable question of law because the finding relies on no evidence, ignores uncontradicted evidence, or is based on pure surmise and conjecture.",
+      "application_scenario": "Use when an appellant seeks to challenge a lower tribunal's factual findings in an appellate forum whose jurisdiction is strictly limited to reviewing questions of law.",
+      "reasoning_flow": [
+        "Identify the specific factual finding being challenged and the evidentiary record presented before the lower authority.",
+        "Assess whether the lower authority ignored relevant and uncontradicted evidence, relied on legally irrelevant materials, or drew an inference that no reasonable person could logically draw from the record.",
+        "If the finding suffers from these severe evidentiary or logical flaws, classify the error as a reviewable question of law rather than a protected finding of fact.",
+        "Intervene to set aside or redetermine the finding based on the correct legal standard applied to the actual evidence on record."
+      ],
+      "example_application": "An environmental tribunal rules that a factory caused no pollution, but explicitly ignores uncontradicted water testing reports submitted by the regulator. The appellate court, though restricted to questions of law, intervenes by characterizing the act of ignoring undisputed scientific evidence as a fatal legal flaw, thereby converting the factual finding into a reviewable question of law.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1956_10",
+        "il-tur-cjpe-1971_279",
+        "il-tur-cjpe-1986_7",
+        "il-tur-cjpe-1963_21"
+      ],
+      "shared_pattern": "In each case, the court determined that while pure findings of fact are generally binding, they cross the threshold into questions of law if the lower authority reached its conclusion without any evidence, by ignoring vital admitted evidence, or through patently unreasonable inferences.",
+      "scope_exclusions": "Do not use to re-weigh or re-appreciate evidence where the lower authority has made a plausible, albeit debatable, inference from valid conflicting evidence.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Strict Boundary Enforcement of Statutory Legal Fictions",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Legal Fiction",
+        "Deeming Provision",
+        "Purposive Construction"
+      ],
+      "description": "A method for interpreting statutory legal fictions by enforcing them fully to their logical conclusion within their intended scope, but strictly prohibiting their extension to areas that contradict other express statutory provisions, penalize unlisted third parties, or exceed the core legislative purpose.",
+      "application_scenario": "Use when a party attempts to extend a statutory 'deeming' provision beyond its explicit boundaries, particularly to impose tax liabilities on successors or to circumvent distinct statutory prohibitions.",
+      "reasoning_flow": [
+        "Identify the statutory provision that creates the legal fiction and determine its exact boundaries and specific legislative purpose.",
+        "Ascertain if the proposed application of the fiction conflicts with an independent statutory prohibition or attempts to encompass persons or situations not expressly covered by the deeming clause.",
+        "Hold that while the fiction and its inevitable corollaries must be treated as real, the fiction cannot override explicit contrary laws or be extended by implication to impose burdens on omitted categories."
+      ],
+      "example_application": "A zoning law deems all temporary structures on agricultural land to be permanent fixtures solely for the purpose of safety inspections. The local authority attempts to use this fiction to permanently transfer the property titles to the state under an unrelated land expropriation law. The court restricts the fiction strictly to its safety inspection purpose and prohibits its extension to property expropriation.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1966_177",
+        "il-tur-cjpe-1962_343",
+        "il-tur-cjpe-1998_1215"
+      ],
+      "shared_pattern": "In each case, the court analyzed a deeming provision (deemed dividend distribution, deemed tax payment, deemed income) and strictly confined its operation to its intended statutory purpose, refusing to let it override an explicit ordinance or impose fictional income status on legal representatives not explicitly named.",
+      "scope_exclusions": "Do not use when the statute explicitly and unambiguously mandates the extension of the legal fiction to successors or other related contexts.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Substance Over Form in Evasion and Sham Transactions",
+      "knowledge_tags": [
+        "Substance Over Form",
+        "Tax Evasion",
+        "Sham Transactions",
+        "Piercing the Veil"
+      ],
+      "description": "A doctrine used to disregard the superficial legal form or nomenclature of a transaction or entity when its true economic substance reveals a sham designed to evade statutory duties, split income artificially, or conceal illegal activities.",
+      "application_scenario": "Use when a party relies on the strict literal form of agreements, memberships, or organizational structures to claim statutory benefits or avoid taxes, while the operational reality contradicts this form.",
+      "reasoning_flow": [
+        "Examine the formal documentation and stated nature of the transaction or entity alongside its actual operational and economic execution.",
+        "Identify substantial discrepancies, such as a lack of genuine participation, the use of dummy structures, or a hidden flow of funds that indicate the formal structure is a mere cloak.",
+        "Disregard the artificial form, pierce the structural veil, and apply the relevant statutory provisions based solely on the true underlying substance and economic reality of the arrangement."
+      ],
+      "example_application": "A luxury vehicle importer creates a separate dummy corporation to sell mandatory warranty packages, classifying them as optional consulting services to avoid the higher tariff rate applicable to vehicle sales. The revenue authority pierces the corporate structure, determines the economic substance is inextricably linked to the vehicle sale, and applies the higher tariff to the entire bundled amount.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1990_211",
+        "il-tur-cjpe-1986_7",
+        "il-tur-cjpe-1997_1178",
+        "il-tur-cjpe-1970_38"
+      ],
+      "shared_pattern": "In each case, the court looked beyond formal labels (e.g., a refundable membership fee, a formal partnership deed, an official export invoice price, or individually appointed receivers) to identify the true economic or operational reality, denying statutory benefits where the form was a device for evasion or illegality.",
+      "scope_exclusions": "Do not use for legitimate tax planning where transactions have genuine economic substance and parties strictly adhere to the operational requirements of their chosen legal forms.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Jurisdictional Preconditions for Rectification and Reassessment",
+      "knowledge_tags": [
+        "Jurisdictional Bar",
+        "Rectification of Mistake",
+        "Reassessment",
+        "Finality of Proceedings"
+      ],
+      "description": "A procedural safeguard defining the limits of an authority's power to reopen, review, or rectify concluded assessments, mandating that such power requires strict compliance with statutory preconditions (such as patent error or non-disclosure of primary facts) and cannot be used merely to substitute a legal opinion.",
+      "application_scenario": "Use when an authority attempts to revise a concluded order based on a change of opinion, a debatable point of law, or by drawing new inferences from facts that were already on record during the original proceeding.",
+      "reasoning_flow": [
+        "Ascertain the specific statutory precondition required to trigger the authority's power to reopen or rectify an order, such as a mistake apparent from the record or a failure to disclose primary facts.",
+        "Evaluate the basis for the reopening to determine if it relies on a debatable legal interpretation or a mere change in inference from already disclosed facts.",
+        "If the basis involves resolving a debatable issue or drawing new inferences from old facts, rule that the strict statutory jurisdictional precondition is absent.",
+        "Quash the reopening or rectification action to preserve the finality of the original order and prevent abuse of procedural powers."
+      ],
+      "example_application": "A municipal tax officer concludes an assessment classifying a building as commercial. Two years later, based on the exact same blueprints initially provided, a new officer reopens the case to classify it as industrial because of a debatable interpretation of a recent circular. The reviewing body quashes the reopening, noting that a mere change of opinion on disclosed facts does not meet the strict jurisdictional threshold of a patent mistake or concealment of facts.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1971_281",
+        "il-tur-cjpe-1975_153",
+        "il-tur-cjpe-1962_10",
+        "il-tur-cjpe-1971_535"
+      ],
+      "shared_pattern": "In each case, the court halted attempts to revisit concluded orders or enhance assessments by insisting that the statutory gateways for reopening (like patent errors, non-disclosure of facts, or strict appellate boundaries) must be rigidly satisfied, blocking mere substitutions of opinion.",
+      "scope_exclusions": "Do not use if the assessee actively concealed primary facts, committed fraud, or if the error in the original order is undeniably clerical or patently contrary to explicit statutory text.",
+      "support_count": 4
+    },
+    {
+      "template_name": "Harmonious Construction via Statutory Scheme Context",
+      "knowledge_tags": [
+        "Harmonious Construction",
+        "Contextual Interpretation",
+        "Statutory Scheme",
+        "Legislative Intent"
+      ],
+      "description": "An interpretative mechanism that resolves ambiguities in isolated statutory words or phrases by reading them in harmony with the surrounding text, the operational machinery of the statute, and the overall legislative scheme, thereby avoiding absurd or unworkable results.",
+      "application_scenario": "Use when a literal reading of a specific word or phrase in a statute leads to anomalies, internal contradictions, or defeats the operational mechanics (such as the annual basis of taxation) of the broader legislation.",
+      "reasoning_flow": [
+        "Identify the ambiguous or contested term that produces conflicting interpretations if read in isolation.",
+        "Analyze the immediate statutory context, related provisions, and the overarching operational mechanics of the statute, such as the concept of the previous year or the official year.",
+        "Reject interpretations that create internal statutory contradictions, render machinery provisions unworkable, or produce absurd extensions of liability.",
+        "Adopt the meaning that harmonizes the provision with the entire statutory scheme and fulfills the practical legislative intent."
+      ],
+      "example_application": "A traffic statute states that a license is suspended for any violation. Read literally, a parking ticket could trigger suspension. However, reading the phrase in harmony with the surrounding chapters that exclusively regulate high-speed and reckless driving, the court interprets any violation to mean only moving violations, thereby preserving the operational logic and avoiding an absurd legislative result.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1961_80",
+        "il-tur-cjpe-1957_47",
+        "il-tur-cjpe-1962_1",
+        "il-tur-cjpe-1976_87"
+      ],
+      "shared_pattern": "In each case, the court resolved ambiguity in a specific term (e.g., 'for any year', 'individual', 'benefit', 'authentication') by analyzing the overarching operational framework of the statute (like the annual cycle of taxation) to adopt a meaning that prevented administrative chaos and fulfilled legislative intent.",
+      "scope_exclusions": "Do not use when the statutory language is clear, unambiguous, and structurally independent, yielding a plain meaning that does not conflict with any other part of the statute.",
+      "support_count": 4
+    }
+  ]
+}

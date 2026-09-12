@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_057",
+  "coverage_analysis": "The current template library successfully covers several recurring themes in the supplied batch, notably the 'Commodity Classification Common Parlance Test' (LF018), which resolves cases involving the classification of items like clinical syringes, gold ornaments, and mustard seeds. It also addresses the purposive construction of welfare statutes (LF025). However, the library exhibits gaps regarding the constitutional limits on retrospective taxation, the precise test for determining whether a sale occasions the movement of goods in inter-state trade, and the specific rules governing when a High Court may entertain a writ petition bypassing a statutory alternative remedy.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_057_01",
+    "GAP_semantic_family_057_02",
+    "GAP_semantic_family_057_03"
+  ]
+}

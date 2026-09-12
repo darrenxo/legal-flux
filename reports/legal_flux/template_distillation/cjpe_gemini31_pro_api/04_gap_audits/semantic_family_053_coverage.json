@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_053",
+  "coverage_analysis": "The audit reveals that while the current library addresses general administrative review and statutory interpretation (e.g., LF002, LF019), it lacks templates for two recurring legal operations. First, it does not cover the doctrine of res extra commercium regarding the State's exclusive privilege in the liquor trade, where exactions are treated as contractual prices rather than statutory taxes or duties. Second, it lacks a framework for the constitutional distinction between a tax and a fee, specifically the quid pro quo assessment required to validate regulatory or compensatory fees. Both missing operations are supported by well over three distinct cases in the supplied batch.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_053_01",
+    "GAP_semantic_family_053_02"
+  ]
+}

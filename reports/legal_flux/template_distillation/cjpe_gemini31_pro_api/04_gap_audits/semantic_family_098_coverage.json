@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_098",
+  "coverage_analysis": "The library covers a wide range of substantive and procedural legal topics, including criminal evidence, constitutional principles, statutory interpretation, and specific administrative review standards. However, the supplied batch reveals a recurring procedural pattern regarding the standard of review and the necessity of speaking orders in civil/writ intra-court appeals (e.g., appeals from a Single Judge to a Division Bench). Several cases demonstrate an appellate court vacating, modifying, or reversing a Single Judge's discretionary or factual order without addressing the underlying reasoning or recording independent, cogent reasons for disagreement. While the library includes LF007 for appellate review of criminal acquittals, it lacks a template governing appellate interference with a Single Judge's discretion in civil proceedings.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_098_01"
+  ]
+}

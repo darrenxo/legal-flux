@@ -1,0 +1,914 @@
+{
+  "accepted_gap_candidate_ids": [
+    "GAP_semantic_family_001_01",
+    "GAP_semantic_family_001_02",
+    "GAP_semantic_family_002_01",
+    "GAP_semantic_family_002_02",
+    "GAP_semantic_family_003_01",
+    "GAP_semantic_family_004_01",
+    "GAP_semantic_family_004_02",
+    "GAP_semantic_family_004_03",
+    "GAP_semantic_family_005_01",
+    "GAP_semantic_family_005_02",
+    "GAP_semantic_family_006_01",
+    "GAP_semantic_family_006_02",
+    "GAP_semantic_family_006_03",
+    "GAP_semantic_family_006_04",
+    "GAP_semantic_family_007_01",
+    "GAP_semantic_family_009_02",
+    "GAP_semantic_family_009_03",
+    "GAP_semantic_family_010_01",
+    "GAP_semantic_family_010_02",
+    "GAP_semantic_family_011_01",
+    "GAP_semantic_family_011_02",
+    "GAP_semantic_family_011_03",
+    "GAP_semantic_family_012_01",
+    "GAP_semantic_family_014_02",
+    "GAP_semantic_family_014_03",
+    "GAP_semantic_family_015_01",
+    "GAP_semantic_family_015_02",
+    "GAP_semantic_family_016_01",
+    "GAP_semantic_family_016_02",
+    "GAP_semantic_family_017_01",
+    "GAP_semantic_family_018_01",
+    "GAP_semantic_family_019_02",
+    "GAP_semantic_family_019_03",
+    "GAP_semantic_family_020_01",
+    "GAP_semantic_family_020_03",
+    "GAP_semantic_family_021_01",
+    "GAP_semantic_family_021_02",
+    "GAP_semantic_family_023_01",
+    "GAP_semantic_family_024_01",
+    "GAP_semantic_family_024_02",
+    "GAP_semantic_family_025_02",
+    "GAP_semantic_family_026_01",
+    "GAP_semantic_family_026_03",
+    "GAP_semantic_family_028_01",
+    "GAP_semantic_family_028_02",
+    "GAP_semantic_family_028_03",
+    "GAP_semantic_family_029_01",
+    "GAP_semantic_family_029_03",
+    "GAP_semantic_family_030_01",
+    "GAP_semantic_family_030_02",
+    "GAP_semantic_family_031_01",
+    "GAP_semantic_family_033_01",
+    "GAP_semantic_family_033_02",
+    "GAP_semantic_family_034_01",
+    "GAP_semantic_family_038_01",
+    "GAP_semantic_family_038_02",
+    "GAP_semantic_family_038_03",
+    "GAP_semantic_family_039_02",
+    "GAP_semantic_family_040_01",
+    "GAP_semantic_family_040_02",
+    "GAP_semantic_family_041_01",
+    "GAP_semantic_family_041_02",
+    "GAP_semantic_family_042_01",
+    "GAP_semantic_family_042_02",
+    "GAP_semantic_family_042_03",
+    "GAP_semantic_family_043_02",
+    "GAP_semantic_family_044_02",
+    "GAP_semantic_family_044_03",
+    "GAP_semantic_family_045_01",
+    "GAP_semantic_family_046_01",
+    "GAP_semantic_family_047_01",
+    "GAP_semantic_family_047_02",
+    "GAP_semantic_family_049_01",
+    "GAP_semantic_family_049_02",
+    "GAP_semantic_family_050_01",
+    "GAP_semantic_family_050_03",
+    "GAP_semantic_family_051_01",
+    "GAP_semantic_family_052_01",
+    "GAP_semantic_family_053_01",
+    "GAP_semantic_family_053_02",
+    "GAP_semantic_family_054_01",
+    "GAP_semantic_family_056_02",
+    "GAP_semantic_family_056_03",
+    "GAP_semantic_family_057_03",
+    "GAP_semantic_family_058_01",
+    "GAP_semantic_family_058_02",
+    "GAP_semantic_family_059_01",
+    "GAP_semantic_family_060_01",
+    "GAP_semantic_family_061_01",
+    "GAP_semantic_family_061_02",
+    "GAP_semantic_family_061_03",
+    "GAP_semantic_family_062_01",
+    "GAP_semantic_family_063_01",
+    "GAP_semantic_family_064_04",
+    "GAP_semantic_family_067_01",
+    "GAP_semantic_family_067_02",
+    "GAP_semantic_family_068_01",
+    "GAP_semantic_family_069_01",
+    "GAP_semantic_family_070_01",
+    "GAP_semantic_family_070_02",
+    "GAP_semantic_family_071_01",
+    "GAP_semantic_family_071_02",
+    "GAP_semantic_family_072_01",
+    "GAP_semantic_family_072_02",
+    "GAP_semantic_family_074_02",
+    "GAP_semantic_family_074_03",
+    "GAP_semantic_family_075_02",
+    "GAP_semantic_family_076_01",
+    "GAP_semantic_family_080_01",
+    "GAP_semantic_family_081_01",
+    "GAP_semantic_family_082_01",
+    "GAP_semantic_family_084_01",
+    "GAP_semantic_family_084_02",
+    "GAP_semantic_family_085_01",
+    "GAP_semantic_family_086_01",
+    "GAP_semantic_family_086_02",
+    "GAP_semantic_family_088_01",
+    "GAP_semantic_family_090_01",
+    "GAP_semantic_family_090_02",
+    "GAP_semantic_family_093_01",
+    "GAP_semantic_family_094_01",
+    "GAP_semantic_family_094_02",
+    "GAP_semantic_family_094_03",
+    "GAP_semantic_family_094_04",
+    "GAP_semantic_family_095_01",
+    "GAP_semantic_family_096_01",
+    "GAP_semantic_family_096_02",
+    "GAP_semantic_family_097_01",
+    "GAP_semantic_family_097_02",
+    "GAP_semantic_family_100_01",
+    "GAP_semantic_family_100_02",
+    "GAP_semantic_family_102_01",
+    "GAP_semantic_family_103_01",
+    "GAP_semantic_family_064_03"
+  ],
+  "merged_templates": [
+    {
+      "template_name": "first_information_report_delay_and_fabrication_assessment",
+      "knowledge_tags": [
+        "Criminal Procedure Code",
+        "First Information Report",
+        "Delay Condonation",
+        "Fabrication",
+        "Section 157 CrPC"
+      ],
+      "description": "Evaluates the impact of a delay in lodging the FIR or dispatching it to the Magistrate, assessing if the delay is naturally justified by exigent circumstances or if it points to anti-timing, deliberation, and false implication.",
+      "application_scenario": "Use when the defense challenges the prosecution's case by arguing that the FIR was delayed, ante-timed, or dispatched belatedly to the Magistrate, suggesting it was concocted after police deliberation.",
+      "reasoning_flow": [
+        "Determine the exact time gap between the occurrence of the crime, the formal registration of the FIR, and its receipt by the jurisdictional Magistrate.",
+        "Assess the prosecution's explanation for the delay, considering practical realities such as medical emergencies, lack of transport, distance, or nighttime conditions.",
+        "Look for contemporaneous external checks corroborating the time of registration, such as the inclusion of the crime number on prompt investigative documents (e.g., inquest reports or site maps).",
+        "Scrutinize the FIR and subsequent evidence for signs of tutoring, consultation, or deliberate fabrication to falsely implicate innocent parties.",
+        "Uphold the FIR if the delay is naturally explained and external checks validate its promptness; conversely, draw an adverse inference if the delay is substantial, unexplained, and accompanied by markers of fabrication."
+      ],
+      "example_application": "A murder occurs at night, but the FIR reaches the Magistrate 16 hours later. The defense claims anti-timing. The court evaluates the explanation that police were engaged in handling village riots and transporting the injured, noting that the inquest report bore the assigned crime number, thereby concluding the FIR was authentic and naturally delayed.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_008_01",
+        "GAP_semantic_family_035_03",
+        "GAP_semantic_family_051_03",
+        "GAP_semantic_family_085_02"
+      ]
+    },
+    {
+      "template_name": "witness_testimony_embellishment_and_omission_filter",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Witness Credibility",
+        "Omissions and Contradictions",
+        "Section 161 CrPC"
+      ],
+      "description": "Evaluates court testimony against initial police statements to filter out material improvements and substantive omissions, distinguishing between minor narrative gaps and fatal embellishments.",
+      "application_scenario": "Use when the defense highlights that critical details, specific overt acts, or names deposed by a witness in court were completely omitted in their initial FIR or Section 161 CrPC statements.",
+      "reasoning_flow": [
+        "Compare the substantive deposition of the witness in court against their earliest recorded statements (FIR and Section 161 CrPC statements).",
+        "Identify specific new allegations introduced during the trial (e.g., newly assigned overt acts) or specific details omitted from the initial reports.",
+        "Assess whether the omitted fact or newly added detail is a minor, peripheral element or a foundational, material component of the charge that a truthful informant would naturally have disclosed immediately.",
+        "Disregard the omission or addition if it is minor or easily explained by the informant's initial distress.",
+        "Exclude embellished, uncorroborated portions of the testimony and draw an adverse inference if the omission or improvement relates to a vital substantive fact, granting the benefit of doubt to the implicated accused."
+      ],
+      "example_application": "An eyewitness testifies in court that Accused B caught hold of the victim while Accused A stabbed him. However, the initial FIR only mentioned Accused A's stabbing and was completely silent on Accused B's role. The court identifies this as a material embellishment and afterthought, filters out the improvement regarding Accused B, and acquits him.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_008_02",
+        "GAP_semantic_family_085_03"
+      ]
+    },
+    {
+      "template_name": "divisibility_of_tainted_witness_testimony_falsus_in_uno",
+      "knowledge_tags": [
+        "Evidence Appreciation",
+        "Separation of Chaff from Grain",
+        "Falsus in Uno Falsus in Omnibus",
+        "Witness Reliability",
+        "Hostile Witness"
+      ],
+      "description": "Rejects the universal application of 'falsus in uno, falsus in omnibus', mandating courts to meticulously sift evidence to separate truthful, corroborated core testimony from embellished, hostile, or false portions.",
+      "application_scenario": "Use when the defense argues that a witness's entire testimony must be discarded because a portion of it is false, the witness turned hostile in cross-examination, or they falsely implicated an acquitted co-accused.",
+      "reasoning_flow": [
+        "Identify the portions of the witness's testimony that are demonstrably false, embellished, or declared hostile.",
+        "Reject the strict application of the 'falsus in uno, falsus in omnibus' maxim, explicitly recognizing the judicial duty to separate the grain from the chaff.",
+        "Determine whether the falsehood is so inextricably intertwined with the truth that the entire account becomes inherently unreliable.",
+        "If severable, isolate the core, consistent portion of the testimony and seek independent corroboration from medical evidence, objective circumstances, or other reliable witnesses.",
+        "Rely on the corroborated truthful residue to sustain a conviction, explicitly treating the hostile or embellished portions as severable rather than fatal to the entire prosecution case."
+      ],
+      "example_application": "A witness correctly identifies the main assailants but falsely adds the names of two innocent relatives due to enmity. Instead of discarding the entire testimony, the court severs the false implication (the chaff), accepts the truthful portion against the actual assailants that is corroborated by medical evidence (the grain), and convicts them.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_008_03",
+        "GAP_semantic_family_035_01",
+        "GAP_semantic_family_079_01"
+      ]
+    },
+    {
+      "template_name": "eyewitness_post_occurrence_unnatural_conduct_assessment",
+      "knowledge_tags": [
+        "Evidence Appreciation",
+        "Witness Credibility",
+        "Unnatural Conduct",
+        "Delayed Disclosure",
+        "Res Gestae"
+      ],
+      "description": "Evaluates the credibility of an alleged eyewitness by analyzing whether their physical actions and emotional responses during and immediately after the incident (such as delayed disclosure or failing to assist the victim) align with normal human behavior.",
+      "application_scenario": "Use when the defense challenges an eyewitness's presence or truthfulness by highlighting their unnatural post-occurrence conduct, such as prolonged silence, failing to aid a severely injured relative, or displaying abnormal apathy.",
+      "reasoning_flow": [
+        "Establish the exact actions and reactions of the eyewitness immediately following the alleged crime, including any delay in disclosing the assailant's identity.",
+        "Compare this conduct against expected natural human behavior, factoring in the witness's relationship to the victim, emotional shock, and surrounding physical circumstances.",
+        "Examine whether the prosecution has provided a plausible, psychologically sound explanation for the seemingly unnatural conduct or delayed disclosure (e.g., mortal fear, severe trauma).",
+        "Assess if the witness's behavior, such as lacking bloodstains despite claimed close contact or abandoning the victim, remains bizarrely indifferent or contradictory.",
+        "Conclude that the conduct is so fundamentally unnatural that it destroys the claim of being a physically present eyewitness, thereby discrediting the testimony, or accept the explained behavior as natural human variation."
+      ],
+      "example_application": "A wife claims she was standing next to her husband when he was brutally stabbed. However, she made no effort to help, had no bloodstains on her clothes, and remained completely silent about the assailant's identity for two days despite police presence. The court rejects her testimony, finding her post-occurrence conduct highly unnatural and improbable.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_008_04",
+        "GAP_semantic_family_035_02",
+        "GAP_semantic_family_068_02"
+      ]
+    },
+    {
+      "template_name": "inherent_power_quashing_criminal_proceedings_prima_facie_test",
+      "knowledge_tags": [
+        "Criminal Procedure",
+        "Section 482 CrPC",
+        "Quashing of Proceedings",
+        "Prima Facie Case",
+        "Abuse of Process",
+        "Civil vs Criminal Dispute"
+      ],
+      "description": "Governs the exercise of the High Court's inherent power to quash criminal proceedings at a preliminary stage by strictly evaluating whether the uncontroverted allegations, taken at face value, disclose an offence, especially when a civil dispute is given a criminal cloak.",
+      "application_scenario": "Use when an accused petitions to quash an FIR, complaint, or summoning order, arguing that the allegations are absurd, legally barred, do not disclose an offence, or merely cloak a purely civil commercial dispute.",
+      "reasoning_flow": [
+        "Examine the core allegations in the FIR or complaint in their entirety, taking them strictly at face value without embarking on a mini-trial or evaluating the reliability of the evidence.",
+        "Ascertain whether the fundamental ingredients of the alleged criminal offence (e.g., fraudulent or dishonest intention at the inception of a transaction) are present.",
+        "Assess whether the dispute is essentially civil or commercial in nature (e.g., simple breach of contract, unpaid dues) that has been artificially given a criminal cloak to exert pressure.",
+        "Quash the proceeding under inherent powers if the uncontroverted allegations disclose no cognizable offence, constitute an abuse of process to settle a civil dispute, or are barred by express legal provision.",
+        "Decline to quash and allow the trial to proceed if a prima facie criminal case is disclosed and resolving the accused's defenses requires the appreciation of evidence."
+      ],
+      "example_application": "A company files a cheating case against a supplier who failed to deliver goods after taking an advance. The High Court accepts the allegations at face value but notes the complete absence of any claim that the supplier harbored fraudulent intent at the inception of the contract. Concluding it is a purely civil breach of contract disguised as a crime, the court quashes the FIR as an abuse of process.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_009_01",
+        "GAP_semantic_family_013_01",
+        "GAP_semantic_family_017_02",
+        "GAP_semantic_family_076_02"
+      ]
+    },
+    {
+      "template_name": "judicial_restraint_expert_academic_and_selection_standards",
+      "knowledge_tags": [
+        "Judicial Review",
+        "Academic Standards",
+        "Recruitment Policy",
+        "Selection Committee",
+        "Separation of Powers"
+      ],
+      "description": "Restricts judicial interference in the qualitative standards, eligibility criteria, and subjective merit assessments formulated by expert academic or recruiting bodies, absent proven mala fides or statutory violation.",
+      "application_scenario": "Use when candidates challenge minimum qualifying marks, educational preconditions, or a selection committee's comparative merit evaluation, asking the court to substitute its own wisdom or equitably dilute the standard.",
+      "reasoning_flow": [
+        "Identify the academic standard, infrastructural precondition, or merit evaluation policy set by the expert regulatory body or selection committee.",
+        "Verify that the standard or assessment was applied uniformly within the committee's jurisdiction and without any manifest procedural illegality.",
+        "Check for specific, proven allegations of mala fides, bias, or oblique motive against the expert body members.",
+        "Acknowledge that courts lack the domain expertise to evaluate academic equivalence, lower prescribed cut-offs, or reappreciate comparative grading.",
+        "Decline to act as an appellate authority; uphold the expert body's standard and evaluation, enforcing the strict regulatory threshold without equitable dilution."
+      ],
+      "example_application": "An unsuccessful candidate challenges a Public Service Commission's recommendation, claiming their academic record was superior and the interview marks were allocated unfairly. The court dismisses the challenge, holding it cannot substitute its judgment for the expert committee's subjective merit assessment in the absence of proven mala fides.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_010_03",
+        "GAP_semantic_family_044_01",
+        "GAP_semantic_family_050_02"
+      ]
+    },
+    {
+      "template_name": "statutory_legal_fiction_logical_corollary_test",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Legal Fiction",
+        "Deeming Provision",
+        "Logical Corollaries",
+        "East End Dwellings Principle"
+      ],
+      "description": "Determines the operative scope of a statutory deeming provision by treating the hypothetical state of affairs as real and enforcing its inevitable logical corollaries within its intended legislative purpose, while halting its expansion if it breaches explicit statutory prohibitions.",
+      "application_scenario": "Use when adjudicating disputes over a 'deeming' provision, where one party seeks to carry the fiction to its logical conclusion and the other argues the extension violates factual reality or separate statutory textual limits.",
+      "reasoning_flow": [
+        "Identify the specific statutory fiction or 'deeming' provision and ascertain the precise legislative purpose for which it was created.",
+        "Treat the fictional event or state of affairs as having actually occurred for the purposes of the statute's operation.",
+        "Determine the inevitable logical corollaries that would naturally accompany that state of affairs if it existed in reality, enforcing them without letting the judicial imagination boggle.",
+        "Examine whether the logical extension of the fiction conflicts with an independent, overriding statutory prohibition or seeks to capture a class outside its express textual bounds.",
+        "Uphold the application of the fiction to realize its necessary consequences, but strike down any extension that breaches explicit textual boundaries or separate statutory bars."
+      ],
+      "example_application": "A statute declares that an asset's value shall be 'deemed' to be the price it would fetch if sold in the open market. The court takes this fiction to its logical conclusion, ruling that because a real sale would be subject to existing statutory encumbrances, the hypothetical buyer would discount the price accordingly, thereby reducing the asset's taxable valuation.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_014_01",
+        "GAP_semantic_family_039_01"
+      ]
+    },
+    {
+      "template_name": "second_appellate_substantial_question_of_law_mandate",
+      "knowledge_tags": [
+        "Civil Procedure Code",
+        "Section 100",
+        "Second Appeal",
+        "Substantial Question of Law",
+        "Concurrent Findings of Fact",
+        "Perversity"
+      ],
+      "description": "Defines the strict jurisdictional boundaries of a High Court in a Second Appeal under Section 100 of the CPC, mandating the explicit formulation of a substantial question of law and prohibiting the reappreciation of plausible factual findings unless they are demonstrably perverse.",
+      "application_scenario": "Use when a High Court's judgment in a civil second appeal is challenged for interfering with a lower appellate court's factual findings without framing a substantial question of law, or for merely substituting an alternative view of the evidence.",
+      "reasoning_flow": [
+        "Confirm that the appellate jurisdiction invoked is under Section 100 of the CPC, which requires the explicit formulation of a 'substantial question of law' prior to hearing the appeal.",
+        "Examine the High Court's judgment to verify if it formally framed this mandatory question of law.",
+        "Assess whether the High Court impermissibly re-appreciated concurrent or finalized findings of fact merely to substitute its own plausible alternative view of the evidence.",
+        "Recognize that a substantial question of law only arises from factual findings if the appellant demonstrates that the lower court's findings are legally perverse, rely on inadmissible evidence, or grossly misread the record.",
+        "Vitiate the High Court's judgment and remand the matter if the mandatory requirement to formulate the question was bypassed, or set it aside if it improperly interfered with plausible factual findings."
+      ],
+      "example_application": "A first appellate court concludes, based on witness testimony, that a plaintiff was in lawful possession. In a second appeal, the High Court re-evaluates the same evidence, reverses the finding without framing a substantial question of law. The Supreme Court sets aside the High Court's decision, ruling that Section 100 CPC strictly bars reappreciation of non-perverse facts and mandates the framing of a legal question.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_018_02",
+        "GAP_semantic_family_032_01",
+        "GAP_semantic_family_091_01"
+      ]
+    },
+    {
+      "template_name": "article_14_reasonable_classification_test",
+      "knowledge_tags": [
+        "Constitutional Law",
+        "Article 14",
+        "Right to Equality",
+        "Reasonable Classification",
+        "Intelligible Differentia",
+        "Rational Nexus"
+      ],
+      "description": "Tests the constitutional validity of a statutory classification against the guarantee of equality under Article 14, determining if the differentiation is founded on an intelligible differentia possessing a rational nexus to the legislative object.",
+      "application_scenario": "Use when a statute, rule, or executive action is challenged under Article 14 for treating certain groups, persons, or things differently from others, and the State defends it as a constitutionally valid classification.",
+      "reasoning_flow": [
+        "Identify the specific classification or categorization created by the impugned statute, rule, or executive action.",
+        "Determine whether the classification is founded on an 'intelligible differentia' that clearly distinguishes persons or things grouped together from those left out.",
+        "Ascertain the core object and purpose sought to be achieved by the impugned legislation or state action.",
+        "Evaluate whether the identified differentia has a rational nexus (a logical connection) to the legislative object.",
+        "Uphold the classification if both the intelligible differentia and the rational nexus are established; otherwise, strike it down as arbitrary and violative of Article 14."
+      ],
+      "example_application": "A statute prescribes higher tax rates for vehicles using asphalted roads compared to gravel roads. Operators claim discrimination. The court identifies the higher cost of asphalt road maintenance as an intelligible differentia having a rational nexus to the object of the tax, thereby upholding the classification under Article 14.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_019_01",
+        "GAP_semantic_family_026_02"
+      ]
+    },
+    {
+      "template_name": "preventive_detention_representation_delay_vitiation",
+      "knowledge_tags": [
+        "Preventive Detention",
+        "Article 22(5)",
+        "Right to Representation",
+        "Unexplained Delay",
+        "Continued Detention"
+      ],
+      "description": "Assesses compliance with Article 22(5) by evaluating whether an unexplained or inordinate delay by the competent authorities in considering and disposing of a detenu's representation vitiates the continued detention.",
+      "application_scenario": "Use when a detenu challenges their continued preventive detention on the ground that the detaining authority or government failed to independently consider or expeditiously dispose of their representation without a satisfactory, day-by-day explanation.",
+      "reasoning_flow": [
+        "Identify all authorities legally competent to revoke the detention order to whom the detenu made a representation.",
+        "Ascertain the exact timeline from the receipt of the representation to its final disposal and communication to the detenu.",
+        "Identify any significant gaps or delays in the processing timeline and require the government to provide a satisfactory, day-by-day explanation.",
+        "Evaluate if the delay was justified by genuine administrative necessities or reflects lethargy, unexplained inaction, or mechanical file-pushing.",
+        "Conclude that an unexplained or inordinate delay violates Article 22(5), thereby vitiating the further/continued detention of the individual, though it does not render the initial detention order void ab initio."
+      ],
+      "example_application": "A detenu submits a representation against their detention. The sponsoring authority takes 28 days to forward its comments to the Central Government without providing a day-to-day explanation for the delay. The court rules that this unexplained delay violates Article 22(5), rendering the continued detention illegal, and orders the detenu's release.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_020_02",
+        "GAP_semantic_family_036_01"
+      ]
+    },
+    {
+      "template_name": "culpable_homicide_downgrade_and_intent_inference",
+      "knowledge_tags": [
+        "Criminal Law",
+        "Murder vs. Culpable Homicide",
+        "Section 300 Exception 4",
+        "Sudden Fight",
+        "Mechanics of Assault",
+        "Intention vs. Knowledge"
+      ],
+      "description": "Infers the specific intention or knowledge required to classify a homicide by analyzing the objective mechanics of the assault and assessing the presence of statutory exceptions, such as a sudden fight without premeditation, to determine if a murder charge should be downgraded.",
+      "application_scenario": "Use when distinguishing between murder and culpable homicide not amounting to murder, especially when direct evidence of mental state is absent, or when an accused claims the fatal blow was struck during a sudden quarrel without premeditation.",
+      "reasoning_flow": [
+        "Analyze the objective physical mechanics of the assault: the nature of the weapon, the specific part deployed (blunt vs. sharp), the force applied, and the situs and severity of the injuries.",
+        "Evaluate the contextual factors to ascertain if the physical altercation erupted suddenly without any prior premeditation or conspiracy to kill.",
+        "Determine if the fatal act was committed in the heat of passion during a continuous sudden fight, and whether the accused took undue advantage or acted in a cruel or unusual manner.",
+        "Synthesize these factors to infer the subjective intent (intention to cause death vs. mere knowledge of likelihood).",
+        "Downgrade the conviction from murder to culpable homicide not amounting to murder if the mechanics negate the intention to cause fatal injury or if all conditions of the sudden fight exception are met."
+      ],
+      "example_application": "During a sudden argument over a right of way, the parties engage in a scuffle. The accused picks up an axe but deliberately strikes a single blow to the victim's head using the blunt side, causing a fatal fracture. The court infers that using the blunt side negates lethal intent and applies the sudden fight exception, scaling the conviction down from murder to culpable homicide not amounting to murder.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_022_01",
+        "GAP_semantic_family_074_01",
+        "GAP_semantic_family_079_02"
+      ]
+    },
+    {
+      "template_name": "rarest_of_rare_death_penalty_assessment",
+      "knowledge_tags": [
+        "Sentencing",
+        "Capital Punishment",
+        "Rarest of Rare Doctrine",
+        "Aggravating Circumstances",
+        "Mitigating Circumstances"
+      ],
+      "description": "Determines whether a capital offense warrants the death penalty by applying the 'rarest of rare' doctrine, meticulously balancing the aggravating circumstances of the crime against the mitigating circumstances relating to the criminal.",
+      "application_scenario": "Use during the sentencing phase of a trial for a capital offense (where guilt is established) to decide whether to impose life imprisonment or the extreme penalty of death.",
+      "reasoning_flow": [
+        "Confirm that the accused has been convicted of a capital offense where life imprisonment is the rule and the death penalty is the exception.",
+        "Identify and list all aggravating circumstances of the crime, such as extreme brutality, diabolical planning, or the vulnerability of the victim (e.g., a child).",
+        "Identify and list all mitigating circumstances relating to the offender, such as young age, socio-economic background, lack of criminal antecedents, and potential for rehabilitation.",
+        "Construct a balance sheet weighing the aggravating factors against the mitigating factors, giving due weight to mitigation.",
+        "Award the death penalty only if the aggravating factors overwhelmingly outweigh the mitigating ones, making life imprisonment unquestionably foreclosed and shocking the collective conscience of society."
+      ],
+      "example_application": "An accused is convicted of the premeditated rape and murder of his 4-year-old daughter. The court weighs the extreme vulnerability of the victim and gross betrayal of trust (aggravating) against the accused's young age and prior clean record (mitigating). The court concludes the aggravating circumstances overwhelmingly outweigh the mitigation and shock the collective conscience, imposing the death penalty.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_022_02",
+        "GAP_semantic_family_063_02"
+      ]
+    },
+    {
+      "template_name": "capital_vs_revenue_asset_and_trade_adventure_characterization",
+      "knowledge_tags": [
+        "Income Tax",
+        "Capital vs Revenue",
+        "Adventure in the Nature of Trade",
+        "Capital Asset",
+        "Stock-in-trade",
+        "Intention Test"
+      ],
+      "description": "Distinguishes between capital gains/losses and revenue profits/losses by classifying the underlying asset as either an enduring capital framework/investment or operational stock-in-trade, evaluating the dominant commercial intention.",
+      "application_scenario": "Use when an assessee disputes the classification of sale proceeds, termination compensation, or destruction losses, and the court must determine if the transaction was an adventure in the nature of trade or the realization of a capital asset.",
+      "reasoning_flow": [
+        "Identify the specific asset transaction (e.g., sale, termination of rights, or physical destruction) generating the disputed surplus or loss.",
+        "Examine the dominant intention of the assessee at the time of acquisition, specifically whether it was acquired as a long-term investment/enduring framework or to be sold at a profit.",
+        "Evaluate the totality of commercial circumstances, including the scale and volume of the transaction, method of financing, frequency of trades, and accounting treatment.",
+        "Classify the asset as either the enduring profit-making apparatus (capital asset) or operational inventory/goods held for realizing trade profits (stock-in-trade).",
+        "Apply the corresponding tax treatment: classify the receipt/loss as a capital gain/loss if it affects the business structure or realizes an investment, or as a revenue profit/loss if it constitutes a commercial venture or adventure in the nature of trade."
+      ],
+      "example_application": "An assessee borrows heavily to purchase a massive block of shares, intending from inception to sell a portion to brokers to finance a managing agency acquisition. The court evaluates the commercial hallmarks, classifies the shares not as a long-term capital investment but as stock-in-trade, and treats the surplus as a taxable revenue profit from an adventure in the nature of trade.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_025_01",
+        "GAP_semantic_family_027_02"
+      ]
+    },
+    {
+      "template_name": "hindu_undivided_family_income_attribution_and_nexus",
+      "knowledge_tags": [
+        "Income Tax",
+        "Hindu Undivided Family",
+        "Coparcenary",
+        "Detriment to Family Property",
+        "Karta's Remuneration",
+        "Income Attribution"
+      ],
+      "description": "Evaluates the validity of a Hindu Undivided Family (HUF) tax entity based on Hindu personal law and determines whether specific income (such as a Karta's remuneration) should be attributed to the HUF or the individual by applying the detriment to joint property test.",
+      "application_scenario": "Use when the Revenue or assessee disputes whether a family structure qualifies as an HUF, or when deciding whether salary, commission, or fees earned by an HUF member from a business entity should be taxed as individual or joint family income.",
+      "reasoning_flow": [
+        "Identify the dispute regarding the valid existence of the HUF or the attribution of specific income (e.g., remuneration) earned by a member.",
+        "To verify HUF existence, apply substantive Hindu personal law to the family's composition, recognizing that multiple male coparceners are not strictly required to hold joint family property.",
+        "To determine income attribution, identify the remunerative position held by the HUF member and ascertain if the appointment was inextricably linked to the investment of joint family funds.",
+        "Apply the 'detriment to joint family property' test to evaluate whether the remuneration was earned primarily due to the individual's specialized personal exertion or as a direct consequence of risking family assets.",
+        "Assess the income in the hands of the HUF if a clear nexus to the family nucleus exists, or as individual income if it stems purely from independent personal skill without detriment to family property."
+      ],
+      "example_application": "A Karta of an HUF is appointed as managing director in a company promoted and financed entirely by HUF funds. Because the appointment is inseparable from the family's investment and there is detriment to family property, the director's remuneration is assessed as HUF income rather than personal income.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_025_03",
+        "GAP_semantic_family_027_01"
+      ]
+    },
+    {
+      "template_name": "test_identification_parade_reliability_and_evidentiary_value",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Test Identification Parade",
+        "In-Court Identification",
+        "Identity of Accused",
+        "Procedural Safeguards"
+      ],
+      "description": "Assesses the evidentiary value of identifying an unknown accused, establishing that in-court identification is substantive evidence while a Test Identification Parade (TIP) serves as corroboration, the reliability of which depends on promptness and procedural safeguards.",
+      "application_scenario": "Use when the identity of an accused (previously unknown to the eyewitnesses) is disputed, and the defense challenges the identification based on delayed, procedurally flawed, or absent Test Identification Parades.",
+      "reasoning_flow": [
+        "Determine whether the accused was a stranger to the eyewitness prior to the incident, making a formal TIP necessary for corroboration.",
+        "Treat the eyewitness's identification of the accused in court during the trial as the substantive, primary evidence of identity.",
+        "If a TIP was conducted, utilize its results strictly as corroborative evidence, scrutinizing the timeline for any inordinate delay and checking if the accused was inadvertently exposed to the witnesses beforehand.",
+        "Review the procedural conduct of the TIP (e.g., mixing of dummy participants, absence of investigating officers) to ensure fairness.",
+        "Accept the TIP as reliable corroboration if prompt and procedurally pristine; if flawed, delayed, or absent, evaluate whether the witness had sufficient opportunity and enduring impression to reliably identify the accused in court, granting the benefit of doubt if vulnerability remains."
+      ],
+      "example_application": "Eyewitnesses identify an accused in court whom they had never met before. The defense argues the TIP held three months later is vitiated because the accused was seen un-muffled at the police station. The court rejects the TIP evidence due to prior exposure, leaving the substantive in-court identification uncorroborated, and grants the benefit of doubt to the accused.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_029_02",
+        "GAP_semantic_family_068_03"
+      ]
+    },
+    {
+      "template_name": "master_servant_relationship_and_sham_contract_test",
+      "knowledge_tags": [
+        "Labour Law",
+        "Contract Labour",
+        "Sham Contract",
+        "Control and Supervision Test",
+        "Employer-Employee Relationship",
+        "Principal Employer"
+      ],
+      "description": "Determines the existence of a direct master-servant relationship between a principal employer and workers engaged through intermediaries or contractors by piercing the contractual veil and applying tests of statutory obligation and direct economic/disciplinary control.",
+      "application_scenario": "Use when workers engaged by a contractor or intermediary claim regularisation and direct employee status with the principal employer, alleging that the contract is a sham or that statutory obligations mandate direct employment.",
+      "reasoning_flow": [
+        "Identify the workers, the principal employer, and the intermediary/contractor through whom they were formally engaged.",
+        "Determine if the principal employer has a strict statutory mandate (e.g., under the Factories Act) to provide the specific facility or service in which the workers are deployed.",
+        "If no statutory mandate exists, pierce the contractual veil and apply the control and supervision test to ascertain who holds ultimate economic control, pays salaries, and exercises direct disciplinary power over day-to-day duties.",
+        "Evaluate whether the arrangement with the contractor is a genuine independent contract or a mere camouflage/sham designed to evade labour welfare obligations.",
+        "Conclude that the workers are direct employees if the contract is a sham and primary control vests in the principal employer, or if a statutory mandate exists; otherwise, uphold the independent contractor arrangement."
+      ],
+      "example_application": "Canteen workers engaged via a contractor seek regularisation with the factory management. The court finds the factory has a statutory duty to provide the canteen, supplies all infrastructure, and exercises total disciplinary supervision, making the contractor a mere name-lender. The court pierces the veil, holds the contract a sham, and declares the workers as direct employees of the principal employer.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_037_01",
+        "GAP_semantic_family_089_01"
+      ]
+    },
+    {
+      "template_name": "discretionary_modulation_of_back_wages",
+      "knowledge_tags": [
+        "Service Law",
+        "Industrial Disputes Act",
+        "Back Wages",
+        "Reinstatement",
+        "Gainful Employment",
+        "Burden of Proof"
+      ],
+      "description": "Modulates the relief granted for an illegal termination, establishing that back wages are not automatically awarded with reinstatement, but depend on the employee pleading non-employment, shifting the evidentiary burden, and balancing equitable factors.",
+      "application_scenario": "Use when a court or tribunal has found an employee's termination to be legally defective and must determine the appropriate consequential remedy of reinstatement and the exact quantum of back wages.",
+      "reasoning_flow": [
+        "Establish that the termination of the employee was procedurally or substantively illegal, triggering the consideration of reinstatement.",
+        "Reject the traditional assumption that an illegal termination automatically entitles the employee to reinstatement with full (100%) back wages.",
+        "Require the employee to make an initial pleading or statement that they were not gainfully employed during the period of enforced idleness.",
+        "Shift the burden to the employer to specifically plead and prove that the employee was gainfully employed and earning comparable wages.",
+        "Modulate the final award—granting full, partial, or no back wages, or substituting reinstatement with lumpsum compensation—based on equitable factors like the employer's financial health, length of service, nature of employment (e.g., daily-wage), and litigation delays."
+      ],
+      "example_application": "An employee's termination is found illegal after 15 years of litigation. The employee pleads non-employment, and the employer fails to prove otherwise. However, instead of automatically awarding 100% back wages, the court exercises discretion and awards 50% back wages, balancing the long delay, the employer's financial status, and the equities of the prolonged litigation.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_041_03",
+        "GAP_semantic_family_089_02",
+        "GAP_semantic_family_101_01"
+      ]
+    },
+    {
+      "template_name": "retrospective_validation_and_legislative_competence_test",
+      "knowledge_tags": [
+        "Constitutional Law",
+        "Legislative Competence",
+        "Retrospective Legislation",
+        "Statutory Validation",
+        "Curing Defect"
+      ],
+      "description": "Evaluates the validity of a retrospective validation act or tax levy by assessing whether the legislature possessed competence over the subject matter during the targeted anterior period and whether it successfully cured the underlying legal defect.",
+      "application_scenario": "Use when a statute retroactively validates previously struck-down actions or taxes, and the challenger argues lack of legislative competence during the anterior period, failure to cure the root defect, or unconstitutional retrospective burden.",
+      "reasoning_flow": [
+        "Identify the retrospective tax statute or validating act and the specific past period it seeks to retroactively cover.",
+        "Ascertain the distribution of legislative powers and limitations that existed specifically during that anterior period, evaluating whether the legislature possessed substantive competence over the subject matter at that time.",
+        "Examine the validating legislation to determine whether it substantively changes the law to cure the underlying defect (e.g., adopting a valid charging section) rather than issuing a naked declaration of validity.",
+        "Assess whether the retroactive burden constitutes an unreasonable restriction on fundamental rights, recognizing that retrospective operation addressing a public need is generally permissible.",
+        "Uphold the validation if the legislature was competent during the period of application and the defect is substantively cured; strike it down if it lacked competence then, or merely attempts to overrule a judgment without changing the law."
+      ],
+      "example_application": "A state's tax levy is struck down for lack of legislative competence. Parliament passes a Validation Act retroactively adopting the state's provisions as its own law for a past period. The court upholds the validation, finding Parliament had competence during the anterior period and successfully cured the defect of competence by substantively enacting the law, which is not an unreasonable restriction.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_043_01",
+        "GAP_semantic_family_057_02"
+      ]
+    },
+    {
+      "template_name": "statutory_conflict_special_law_primacy",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Special vs General Law",
+        "Conflict of Laws",
+        "Lex Specialis Derogat Legi Generali",
+        "Harmonious Construction",
+        "Non-Obstante Clause"
+      ],
+      "description": "Resolves direct conflicts between two statutes by applying the principle that a specialized law governing a specific subject matter overrides a general law, subordinating conflicting general procedures or generic non-obstante clauses.",
+      "application_scenario": "Use when two statutory provisions or enactments appear to govern the same action or proceeding, and an irreconcilable conflict exists (often involving non-obstante clauses), requiring the court to determine which statute prevails.",
+      "reasoning_flow": [
+        "Identify the two competing statutory provisions or enactments that purportedly govern the same issue, action, or proceeding.",
+        "Analyze the primary object, scope, and operational context of each statute to determine its core purpose and classify one as the general law and the other as the special law for the specific subject matter.",
+        "Attempt a harmonious construction to give effect to both if possible; if an irreconcilable conflict exists, invoke the maxim generalia specialibus non derogant.",
+        "Subordinate the general law to the special law, disregarding conflicting general procedures or older non-obstante clauses that attempt to preserve the general law's supremacy.",
+        "Conclude that the special statute prevails, barring the application of the general mechanism and adjudicating the issue exclusively under the specialized framework."
+      ],
+      "example_application": "A sick industrial company faces coercive recovery action under a financial corporation act while revival proceedings are pending under a sick industries act. Both acts contain non-obstante clauses. The court holds that the sick industries act is the special law tailored for post-sickness rehabilitation and prevails over the general debt recovery law, staying the recovery action.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_043_03",
+        "GAP_semantic_family_056_01"
+      ]
+    },
+    {
+      "template_name": "compulsory_retirement_and_premature_displacement_evaluation",
+      "knowledge_tags": [
+        "Service Law",
+        "Compulsory Retirement",
+        "Premature Displacement",
+        "Public Interest",
+        "Subjective Satisfaction",
+        "Objective Material"
+      ],
+      "description": "Evaluates the validity of compulsory retirement or premature displacement from a tenure post by verifying that the authority's subjective satisfaction in the public interest is anchored in a holistic review of objective, proximate service records, rather than isolated or stale entries.",
+      "application_scenario": "Use when a government employee challenges an order of compulsory retirement or premature transfer, alleging it is punitive, arbitrary, or based on stale, uncommunicated, or irrelevant material.",
+      "reasoning_flow": [
+        "Identify the administrative order compulsorily retiring or prematurely displacing the employee under rules allowing such action in the public interest.",
+        "Recognize that such orders are non-punitive prerogatives to weed out inefficiency or dead wood, not disciplinary reductions in rank.",
+        "Examine the specific reasons and the service record relied upon by the authority at the time of passing the order, verifying if the 'subjective satisfaction' is supported by objective, proximate, and relevant material.",
+        "Reject challenges asserting that the authority impermissibly relied on uncommunicated adverse remarks or post-promotion entries, as the entire record must be evaluated holistically.",
+        "Strike down the order if the satisfaction is based purely on non-existent, stale, or isolated irrelevant material; uphold it if a reasonable person could bona fide conclude from the comprehensive recent record that the employee's continuance is detrimental to public interest."
+      ],
+      "example_application": "An officer is prematurely retired in the 'public interest'. The court reviews the record and finds the decision relied solely on a single uncommunicated adverse entry from over ten years ago, while recent entries were 'Very Good'. The court strikes down the retirement as arbitrary because the subjective satisfaction lacked proximate, objective material from a holistic review.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_044_04",
+        "GAP_semantic_family_087_01"
+      ]
+    },
+    {
+      "template_name": "inter_state_trade_movement_nexus_test",
+      "knowledge_tags": [
+        "Central Sales Tax Act",
+        "Inter-State Trade",
+        "Movement of Goods",
+        "Import/Export Nexus",
+        "State Legislative Competence"
+      ],
+      "description": "Determines whether a transaction constitutes an inter-state sale or a sale in the course of import/export by testing if the contract explicitly covenants or inherently occasions the physical movement of goods across borders.",
+      "application_scenario": "Use when determining if a transaction qualifies for central taxation/constitutional protection as an inter-state sale, and a State attempts to levy a local tax, claiming it is a mere intra-state sale or independent consignment.",
+      "reasoning_flow": [
+        "Identify the specific sale or purchase transaction and analyze the factual matrix surrounding the physical movement of the goods across state or national borders.",
+        "Analyze the express terms or implied conditions of the commercial contract to ascertain if the movement was a necessary incident, covenant, or direct consequence inextricably linked to the sale.",
+        "Verify that there is no break in the chain, such as an independent stock transfer to a branch or dispatch instructions given completely after a local sale concluded.",
+        "If the movement is occasioned by the sale itself, classify the transaction as an inter-state sale or a sale in the course of import/export.",
+        "Invalidate any State tax levy applied to such transactions, as they fall strictly outside the State's legislative competence and are governed by Central laws."
+      ],
+      "example_application": "An assessee imports chemicals based on an agreement with the Central Government that explicitly stipulates foreign procurement. The State attempts to tax the sale locally. The court applies the nexus test, holds that the sale inextricably occasioned the cross-border movement (import), and exempts the transaction from State sales tax.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_045_02",
+        "GAP_semantic_family_057_01"
+      ]
+    },
+    {
+      "template_name": "precedent_ratio_decidendi_and_sub_silentio_evaluation",
+      "knowledge_tags": [
+        "Precedent",
+        "Ratio Decidendi",
+        "Stare Decisis",
+        "Sub Silentio",
+        "Article 141",
+        "Judicial Restraint"
+      ],
+      "description": "Determines the binding nature of a prior judicial decision by isolating its ratio decidendi based on specific material facts and invoking the sub silentio exception for points of law that were not actively debated or consciously resolved.",
+      "application_scenario": "Use when a party relies on a prior judgment as a binding precedent, and the opposing party argues the facts are materially different, the observations are mere obiter dicta, or the specific legal point was passed over without argument (sub silentio).",
+      "reasoning_flow": [
+        "Identify the prior judicial decision or order cited as a binding precedent (e.g., under Article 141) for resolving the current dispute.",
+        "Isolate the ratio decidendi by determining the specific legal principle strictly applied to the precise material facts of the precedent, refusing to treat general judicial observations as rigid statutory text.",
+        "Ascertain the precise point of law requiring adjudication in the present dispute and evaluate whether this specific point was actively debated, consciously perceived, and expressly resolved with reasoning in the prior decision.",
+        "Determine if the prior decision merely assumed the point, passed over it without argument (sub silentio), or decided it by consent without statutory analysis.",
+        "Reject the application of the precedent if it is factually distinguishable or if the specific point of law passed sub silentio, allowing the current court to independently adjudicate the issue."
+      ],
+      "example_application": "A party relies on a prior Supreme Court consent order directing alternative accommodation to argue a statutory duty exists before eviction. The court examines the prior order, finds the statutory provisions were neither debated nor reasoned, classifies the decision as passing sub silentio, and rejects its binding value, noting that judgments must be read contextually and not as statutes.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_045_03",
+        "GAP_semantic_family_065_01"
+      ]
+    },
+    {
+      "template_name": "restricted_revisional_and_writ_jurisdiction_factual_interference_limits",
+      "knowledge_tags": [
+        "Civil Procedure",
+        "High Court Jurisdiction",
+        "Revisional Jurisdiction",
+        "Finding of Fact",
+        "Perversity Test",
+        "Appellate Restraint"
+      ],
+      "description": "Delineates the strict boundaries of a High Court's restricted jurisdiction (Writ or Revisional), prohibiting routine reappreciation of evidence to overturn plausible factual conclusions, while mandating intervention if findings are legally perverse or constitute jurisdictional errors.",
+      "application_scenario": "Use when a High Court's interference with a lower court or tribunal's factual findings under a restricted statutory revision, Section 115 CPC, or writ jurisdiction is challenged as exceeding its permissible scope.",
+      "reasoning_flow": [
+        "Identify the specific restricted jurisdiction being exercised by the High Court (e.g., Article 226 Writ, Section 115 Revision, or special statutory revision).",
+        "Ascertain the nature of the challenged finding to determine if it is a pure finding of fact, a discretionary order, or a 'jurisdictional fact' that determines the lower court's competence.",
+        "Evaluate whether the High Court improperly assumed an unrestricted appellate role to re-appreciate substantive factual evidence merely to substitute its own alternate plausible view.",
+        "Apply the threshold test: prohibit interference with plausible factual findings, but mandate intervention if the lower court's findings are manifestly perverse, entirely unsupported by evidence, based on inadmissible material, or suffer from a jurisdictional error.",
+        "Set aside the High Court's order if it breached these jurisdictional boundaries by improperly reweighing evidence, thereby restoring the valid lower court order."
+      ],
+      "example_application": "A trial court evaluates witness testimony and concludes the monthly rent is Rs. 1,500. In revision, the High Court re-evaluates the same evidence and decides the rent is Rs. 250. The Supreme Court reverses the High Court, ruling that the revisional court exceeded its restricted jurisdiction by interfering with a plausible factual finding that was not perverse.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_046_02",
+        "GAP_semantic_family_060_02",
+        "GAP_semantic_family_069_03"
+      ]
+    },
+    {
+      "template_name": "special_statute_confession_admissibility_and_cure",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Special Statutes",
+        "Confession Admissibility",
+        "Police Officer Test",
+        "Voluntariness",
+        "Procedural Safeguards"
+      ],
+      "description": "Determines the admissibility of confessions recorded by officers under special statutes (like Customs Act, TADA) by establishing they are not 'police officers' under the Evidence Act, and allows procedural documentation defects to be cured by oral testimony verifying voluntariness.",
+      "application_scenario": "Use when the prosecution relies on a confession recorded by an officer empowered under a special revenue or penal statute, and the defense challenges its admissibility citing the absolute bar on police confessions, lack of magisterial safeguards, or missing procedural certificates.",
+      "reasoning_flow": [
+        "Identify that the prosecution seeks to rely on an inculpatory statement or confession recorded by an officer acting under a special statute (e.g., Customs Act, TADA).",
+        "Ascertain whether the specific officer possesses the core police power to submit a formal charge-sheet under Section 173 CrPC; if not, they are not a 'police officer' under Section 25 of the Evidence Act.",
+        "Verify whether the core statutory safeguards protecting voluntariness were observed, ensuring the statement was not obtained by threat, inducement, or coercion.",
+        "Check for any procedural defects in documentation (e.g., missing handwritten certificates) and determine if the recording officer testified during trial to adequately explain the procedure and confirm voluntariness, legally curing the defect.",
+        "Admit the voluntary and procedurally sound (or validly cured) statement as substantive evidence against the maker, distinguishing it from general criminal law where police confessions remain strictly inadmissible."
+      ],
+      "example_application": "An accused makes a signed confession to a Customs Inspector. At trial, the defense argues it is inadmissible under Section 25 Evidence Act and lacks a procedural certificate. The court rules the Customs Inspector is not a police officer. The officer testifies to the voluntary nature of the confession, curing the documentary defect. The court admits it as substantive evidence.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_048_01",
+        "GAP_semantic_family_051_02"
+      ]
+    },
+    {
+      "template_name": "fraud_and_material_suppression_vitiation",
+      "knowledge_tags": [
+        "Fraud",
+        "Suppression of Material Facts",
+        "Void Ab Initio",
+        "Public Property",
+        "Public Employment",
+        "Equitable Relief"
+      ],
+      "description": "Invalidates public property allotments, employment appointments, or statutory benefits obtained through deliberate deceit, holding that active fraud or suppression of material facts vitiates the entire transaction ab initio and strips the wrongdoer of equitable protections.",
+      "application_scenario": "Use when a state authority cancels a public land allotment, academic result, or employment appointment, alleging the beneficiary procured it by suppressing material facts (e.g., prior land holdings, criminal history) or submitting forged documents.",
+      "reasoning_flow": [
+        "Identify the specific public allotment, employment, or grant made to the beneficiary and the eligibility criteria required to secure it.",
+        "Determine whether the cancelling authority has explicitly alleged and proven that the beneficiary suppressed material documents, made false factual declarations, or used forged certificates at the inception of the process.",
+        "Evaluate whether the concealed or falsified information was a foundational prerequisite for eligibility or essential for assessing suitability.",
+        "Require the administrative authority to discharge the burden of proving the alleged fraud or misrepresentation with cogent evidence.",
+        "Apply the principle that 'fraud unravels everything', upholding the cancellation and declaring the resulting allotment or appointment void ab initio, thereby denying the claimant any equitable relief."
+      ],
+      "example_application": "A candidate secures a government job using a forged caste certificate. Years later, the fraud is discovered, and the employee is dismissed. The court upholds the dismissal, reasoning that the employment was founded on deceit, rendering it void ab initio. The burden of proof was met by the state, disentitling the employee from claiming procedural equity or past service benefits.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_055_01",
+        "GAP_semantic_family_075_01"
+      ]
+    },
+    {
+      "template_name": "consumer_deficiency_and_delayed_delivery_compensation",
+      "knowledge_tags": [
+        "Consumer Protection",
+        "Deficiency in Service",
+        "Unfair Trade Practice",
+        "Delayed Delivery",
+        "Compensation Modulation"
+      ],
+      "description": "Classifies the unjustified delay by a service provider (e.g., builder, dealer) in delivering booked property or goods as a deficiency in service, replacing arbitrary flat-rate interest awards with fact-specific compensation based on actual injury.",
+      "application_scenario": "Use when a consumer seeks compensation for a service provider's failure to deliver a booked flat, vehicle, or consignment on time, and a lower forum has mechanically awarded a high uniform interest rate without analyzing specific damages.",
+      "reasoning_flow": [
+        "Establish the existence of a valid booking or contract between the consumer and the service provider, and ascertain the explicitly stipulated timeframe for delivery.",
+        "Determine that the provider failed to meet this timeline and evaluate their justification, classifying unjustified delay as a statutory deficiency in service or unfair trade practice.",
+        "Set aside any mechanical or uniform award of a high flat interest rate (e.g., 18%) that ignores the specific factual matrix.",
+        "Determine specific, quantifiable heads of actual loss suffered by the consumer, such as rent paid for alternative accommodation, escalation in construction costs, or mental agony, factoring in if the consumer ultimately received the property at historical rates.",
+        "Mould the final compensation to precisely reflect these actual losses, awarding proportionate quantified damages or a modulated, reasonable interest rate that offsets the specific injuries."
+      ],
+      "example_application": "A consumer forum awards an allottee 18% interest for a 5-year delay in flat delivery by a builder. The appellate authority sets this aside, noting the allottee eventually received the flat at the original price and absorbed the capital appreciation. Instead, it awards specific compensation for the rent paid during the delay and mental agony, classifying the delay as a deficiency but modulating the relief to actual loss.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_059_02",
+        "GAP_semantic_family_073_01"
+      ]
+    },
+    {
+      "template_name": "right_to_fair_consideration_vs_chances_of_promotion",
+      "knowledge_tags": [
+        "Service Law",
+        "Right to Consideration",
+        "Promotion",
+        "Conditions of Service",
+        "Seniority-cum-Merit",
+        "Vested Right"
+      ],
+      "description": "Defines the fundamental right of eligible public employees to be fairly considered for promotion according to existing rules, distinguishing this enforceable right from the mere chance or prospect of promotion, which is not a vested condition of service.",
+      "application_scenario": "Use when an employee challenges a change in seniority rules, cadre restructuring, or alleges arbitrary exclusion from a selection process, claiming it reduces their future prospects or violates an automatic right to promotion.",
+      "reasoning_flow": [
+        "Identify the rule change, restructuring, or selection process challenged by the employee as adversely affecting their career progression or resulting in their bypass.",
+        "Determine if the claimant met the objective statutory eligibility criteria to fall within the zone of consideration at the relevant time.",
+        "Differentiate between the legal right to be fairly considered by the selection committee and the absence of any absolute vested right to actual selection or promotion solely based on seniority.",
+        "Examine whether the challenged action completely denies the employee their right to be considered, or if it merely alters their chances, ranking, or future prospects.",
+        "Dismiss the claim if the employee was fairly considered but found unsuitable, or if the statutory change merely affected their chances of promotion; grant relief if the claimant was arbitrarily excluded or bypassed for juniors without valid rule-bound assessment."
+      ],
+      "example_application": "A state amends its seniority rules, merging two cadres, which pushes a previously senior employee down the list and delays their expected promotion timeline. The employee claims a violation of service conditions. The court dismisses the challenge, reasoning that the amendment only affects their mere chances of promotion, not their vested right to be considered when their turn ultimately arises.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_064_01",
+        "GAP_semantic_family_087_02"
+      ]
+    },
+    {
+      "template_name": "seniority_reckoning_substantive_appointment_and_ad_hoc_service",
+      "knowledge_tags": [
+        "Service Law",
+        "Seniority",
+        "Substantive Appointment",
+        "Ad-hoc Appointment",
+        "Continuous Officiation",
+        "Retrospective Seniority"
+      ],
+      "description": "Establishes that seniority in a cadre is computed strictly from the date of valid, substantive appointment, determining whether prior ad-hoc or officiating service counts based on proper selection against substantive vacancies, and barring retrospective seniority linked merely to historical vacancy dates.",
+      "application_scenario": "Use when a dispute arises over an inter-se seniority list (e.g., between direct recruits and promotees) where employees claim the benefit of past temporary/ad-hoc service or seek retrospective seniority from the date a vacancy originally occurred.",
+      "reasoning_flow": [
+        "Identify the competing employees and the exact dates they were validly and substantively appointed to the cadre.",
+        "Assess claims for retrospective seniority based on the historical date a vacancy arose; apply the principle that an employee cannot be granted seniority from a date prior to being validly 'born' in the cadre.",
+        "Examine periods of temporary, ad-hoc, or officiating service claimed for seniority purposes. Determine if the initial appointment was made against a substantive vacancy through a proper selection process, or if it was merely fortuitous, a stop-gap arrangement, or out-of-quota.",
+        "Exclude any fortuitous or out-of-quota ad-hoc service from regular seniority computation.",
+        "Grant the benefit of continuous officiating service towards seniority only if the initial entry was substantive and flawless; otherwise, anchor seniority strictly to the date of formal regularization or substantive appointment."
+      ],
+      "example_application": "Promotees claim seniority from 1987 when vacancies arose, though they were substantively promoted in 1991 after a period of fortuitous ad-hoc service. Direct recruits were substantively appointed in 1990. The court denies the promotees' claim, holding that fortuitous ad-hoc service does not count and seniority cannot be granted retrospectively from the vacancy date. Seniority runs from the 1991 substantive appointment, making the direct recruits senior.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_064_02",
+        "GAP_semantic_family_078_01"
+      ]
+    },
+    {
+      "template_name": "excise_assessable_value_and_cum_duty_computation",
+      "knowledge_tags": [
+        "Excise Valuation",
+        "Assessable Value",
+        "Cum-Duty Price",
+        "Effective Duty",
+        "Section 4 Valuation"
+      ],
+      "description": "Determines the true assessable value for excise duty by treating the gross wholesale transaction price as a cum-duty price, adding hidden buyer-supplied material costs, and deducting only the effective, actually payable excise duty (post-exemptions).",
+      "application_scenario": "Use when disputes arise over the correct valuation base for excise duty, particularly when goods are sold at a price inclusive of taxes, statutory exemptions apply, or buyers provide free materials.",
+      "reasoning_flow": [
+        "Identify the gross wholesale cash price or contract price at which the manufacturer clears the goods at the factory gate, treating it as a cum-duty price.",
+        "Determine whether this price constitutes the sole consideration, adding the intrinsic value of any direct manufacturing inputs supplied free of cost by the buyer (e.g., containers) to reflect the true manufacturing cost.",
+        "Deduct permissible, quantifiable non-duty deductions (e.g., valid trade discounts) and exclude elements that do not contribute to intrinsic manufacturing value (like a buyer's external brand value).",
+        "Ascertain the effective, actual rate of excise duty payable after factoring in all applicable statutory exemption notifications, ignoring nominal tariff schedule rates.",
+        "Apply the reverse-calculation mathematical formula to the cum-duty price to extract the assessable value, ensuring only the effective duty actually payable is deducted, and any excess duty collected forms part of the taxable base."
+      ],
+      "example_application": "A manufacturer sells goods at a cum-duty price of Rs. 100, receiving free containers from the buyer. An exemption notification reduces the effective duty rate to 10%, though the tariff is 20%. The court rules the assessable value must include the cost of free containers. To compute the value, the court limits the duty deduction to the effective 10% actually payable, treating any excess collected under the 20% guise as part of the assessable value.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_066_01",
+        "GAP_semantic_family_082_02"
+      ]
+    },
+    {
+      "template_name": "mandatory_speaking_order_and_explicit_judicial_reasoning",
+      "knowledge_tags": [
+        "Speaking Order",
+        "Duty to Give Reasons",
+        "Appellate Review",
+        "Application of Mind",
+        "Bail",
+        "Intra-Court Appeal"
+      ],
+      "description": "Mandates that judicial and appellate bodies explicitly record formal, reasoned 'speaking orders' demonstrating independent application of mind, and invalidates cryptic disposals, non-speaking bail grants, or mechanical reversals that frustrate appellate scrutiny.",
+      "application_scenario": "Use when a higher court reviews an order from a lower forum (e.g., granting bail, dismissing a writ in limine, or an intra-court appeal reversing a single judge) that lacks explicit factual and legal rationale or relies on a cryptic one-line disposal.",
+      "reasoning_flow": [
+        "Examine the impugned judicial order to verify if a formal, explicit order was passed addressing the core substantive issue, such as granting bail or reversing a lower court's discretion.",
+        "Ascertain whether the order records an independent application of mind, detailing the logical bridge between the facts, the law, and the ultimate conclusion.",
+        "Identify structural defects: check if the order is 'non-speaking' (lacking reasons), merely records subjective 'satisfaction', mechanically cites precedent without factual mapping, or reverses a reasoned lower court order without addressing its rationale.",
+        "Assert the legal principle that providing reasons is a mandatory requirement for appealable orders to ensure fair adjudication and enable meaningful appellate review.",
+        "Set aside the structurally defective, unreasoned order and remand the matter to the lower forum for fresh adjudication and the passing of a fully reasoned, explicit speaking order."
+      ],
+      "example_application": "A Single Judge grants an interim stay with detailed reasons. On intra-court appeal, the Division Bench mechanically modifies the order with a one-line disposal stating 'bail/stay granted on facts' without addressing the original reasoning. The Supreme Court sets aside the Division Bench's order, ruling that the failure to assign cogent reasons renders it a non-speaking order, and remands the matter for proper reasoned adjudication.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_069_02",
+        "GAP_semantic_family_092_01",
+        "GAP_semantic_family_098_01",
+        "GAP_semantic_family_099_01"
+      ]
+    },
+    {
+      "template_name": "strict_enforcement_advertised_essential_qualifications",
+      "knowledge_tags": [
+        "Service Law",
+        "Recruitment Process",
+        "Essential Qualifications",
+        "Power to Relax",
+        "Rules of the Game",
+        "Void Ab Initio"
+      ],
+      "description": "Invalidates public employment appointments where candidates lack the exact advertised essential qualifications, prohibiting selection committees from unilaterally relaxing criteria or determining unadvertised equivalencies without explicit statutory authorization.",
+      "application_scenario": "Use when an unsuccessful candidate challenges a selection process alleging that the appointed candidate possessed a variant, lesser, or purportedly 'equivalent' qualification than strictly published, and the employer claims an implied administrative power to condone or relax the deficiency.",
+      "reasoning_flow": [
+        "Identify the essential educational, technical, or experience qualifications explicitly mandated in the official recruitment advertisement and statutory rules.",
+        "Analyze the selected candidate's credentials at the time of initial appointment to determine if they strictly match the advertised mandatory requirements.",
+        "If the candidate falls short or possesses a variant degree, verify whether the governing statutory rules contain an explicit, unequivocal provision granting the Selection Committee or employer the power to relax qualifications or determine equivalency.",
+        "Reject any claim of an implied, incidental, or inherent power to administratively relax essential qualifications or alter the 'rules of the game' mid-stream in the absence of a clear statutory enabling provision.",
+        "Declare the appointment void ab initio, noting that unauthorized administrative condonation or subsequent acquisition of the qualification cannot cure the initial statutory violation."
+      ],
+      "example_application": "An advertisement for a Lecturer requires a Master's degree with 54% marks in pure Chemistry. The Selection Committee appoints a candidate with 53% in Industrial Chemistry, claiming it is equivalent and relaxing the marks administratively. The court sets aside the appointment as void ab initio, ruling that without an explicit statutory rule granting the power to relax criteria or determine equivalency, the committee cannot unilaterally alter the advertised essential qualifications.",
+      "source_candidate_ids": [
+        "GAP_semantic_family_077_01",
+        "GAP_semantic_family_078_02"
+      ]
+    }
+  ]
+}

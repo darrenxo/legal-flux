@@ -1,0 +1,58 @@
+{
+  "coverage_analysis": "The current library provides robust coverage of administrative law, constitutional limits, and evidence appreciation (e.g., LF002, LF003, LF014). However, the audit of the supplied batch reveals two distinct, recurring legal reasoning operations that are not subsumed by the existing templates. First, multiple cases (il-tur-cjpe-2008_70, il-tur-cjpe-2003_317, il-tur-cjpe-1996_692) articulate a strict limitation on judicial review regarding subjective service evaluations (like ACRs and comparative merit for promotion or selection grade), establishing that courts may review the procedural legality of the evaluation but must refrain from substituting their own assessment of merit. Second, another subset of cases (il-tur-cjpe-1995_1140, il-tur-cjpe-2005_366, il-tur-cjpe-2003_317) demonstrates the exercise of the court's inherent jurisdiction to actively expunge unwarranted, disparaging remarks from judgments or pleadings in order to maintain institutional decorum. Both patterns satisfy the requirements for abstraction, reuse, and manifestation across at least three distinct cases.",
+  "gap_candidates": [
+    {
+      "template_name": "appellate_restraint_service_evaluations",
+      "knowledge_tags": [
+        "Service Law",
+        "Judicial Review",
+        "Subjective Assessment",
+        "Comparative Merit",
+        "Standard of Review"
+      ],
+      "description": "Limits judicial review of subjective service evaluations, such as performance appraisals and comparative merit for promotions, strictly to procedural regularity, forbidding the re-appreciation of merit by the court.",
+      "application_scenario": "Use when an employee challenges an adverse administrative decision, such as non-selection for promotion, denial of a selection grade, or compulsory retirement, which is based on a subjective assessment of their confidential reports or comparative merit by an expert selection committee.",
+      "reasoning_flow": [
+        "Identify the administrative decision challenged (e.g., non-promotion, denial of selection grade, compulsory retirement) and the expert body responsible for the subjective assessment of the employee's service record.",
+        "Confirm whether the challenge fundamentally seeks a substantive re-appreciation of the employee's comparative merit, confidential reports, or overall performance.",
+        "Determine if the decision-making process was tainted by procedural irregularity, malice, or reliance on manifestly perverse or mutually contradictory records.",
+        "Decline to substitute the court's judgment for that of the selection board or evaluating committee, upholding the decision unless a fundamental procedural, legal, or logical flaw in the evaluation process is conclusively established."
+      ],
+      "example_application": "An officer challenges his non-promotion by a selection board, claiming his service records were demonstrably better than his peers. The court refuses to interfere, stating that assessing comparative merit is the exclusive domain of the selection board and judicial review is restricted to ensuring the process was lawful, not evaluating the substantive decision itself.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2008_70",
+        "il-tur-cjpe-2003_317",
+        "il-tur-cjpe-1996_692"
+      ],
+      "shared_pattern": "All three cases involve a challenge to an administrative outcome based on subjective evaluations of service records (ACRs), where the court emphasizes that judicial review cannot substitute the expert body's assessment of merit, intervening only if the evaluation process is inherently flawed or perverse.",
+      "scope_exclusions": "Do not use for challenges to disciplinary proceedings based on proven misconduct or where an employee challenges objective eligibility criteria (e.g., lacking a required degree or age threshold) rather than a subjective evaluation.",
+      "support_count": 3
+    },
+    {
+      "template_name": "expunction_unwarranted_disparaging_remarks",
+      "knowledge_tags": [
+        "Judicial Restraint",
+        "Expunction of Remarks",
+        "Judicial Decorum",
+        "Inherent Powers"
+      ],
+      "description": "Exercises the court's inherent jurisdiction to expunge sweeping, derogatory, or intemperate remarks from judicial records or pleadings that are unnecessary for adjudication and violate institutional decorum.",
+      "application_scenario": "Use when a lower court's judgment, order, or official pleadings contain harsh, unjustified strictures or personal attacks against a party, witness, or judicial officer that are not integral to deciding the core legal issue.",
+      "reasoning_flow": [
+        "Identify the specific remarks, strictures, or allegations complained of in the impugned judgment, order, or pleadings.",
+        "Assess whether the person or authority targeted by the remarks was afforded a fair opportunity to explain their conduct before the remarks were recorded.",
+        "Determine if the remarks are supported by cogent evidence and whether it is absolutely necessary to animadvert on that conduct as an integral part of deciding the core dispute.",
+        "If the remarks are sweeping, intemperate, or legally unnecessary for the resolution of the case, exercise inherent jurisdiction to expunge or delete them from the record to preserve judicial decorum and prevent undue prejudice."
+      ],
+      "example_application": "A lower court judge passes severe strictures against a police officer or a subordinate judge for a perceived delay, without hearing them. The appellate court finds the remarks were not integral to deciding the case's merits and expunges them to maintain judicial discipline and restraint.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1995_1140",
+        "il-tur-cjpe-2005_366",
+        "il-tur-cjpe-2003_317"
+      ],
+      "shared_pattern": "All three cases deal with the presence of intemperate, derogatory, or uncalled-for remarks in official court records (judgments or pleadings) targeting officials, judges, or constitutional functionaries, where the Supreme Court intervened specifically to expunge those remarks to uphold decorum.",
+      "scope_exclusions": "Do not use when the remarks or findings of misconduct are the central issue being adjudicated with proper evidence and hearing, such as in a formal disciplinary proceeding or a conviction for contempt.",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "coverage_analysis": "The audit of the supplied source-case batch against the consolidated LegalFlux library reveals that while general evidentiary principles (like circumstantial evidence chain completeness in LF004 and interested witness evaluation in LF006) are covered, three distinct, recurring reasoning operations are absent. First, multiple cases deal with homicidal poisoning, which necessitates a highly specific tripartite test (proof of death by poison, possession, and opportunity) not subsumed under general circumstantial rules. Second, several cases revolve around evaluating the credibility of eyewitnesses based strictly on their unnatural post-occurrence conduct (prolonged silence or delayed disclosure to authorities/relatives), which is a separate heuristic from evaluating partisan/interested witnesses. Third, the batch frequently evaluates the procedural integrity and evidentiary value of Test Identification Parades (TIP), specifically focusing on delay, prior exposure, and the Magistrate's safeguards—an operational pattern currently missing from the library.",
+  "gap_candidates": [
+    {
+      "template_name": "homicidal_poisoning_evidentiary_threshold",
+      "knowledge_tags": [
+        "Circumstantial Evidence",
+        "Homicidal Poisoning",
+        "Cause of Death",
+        "Chemical Examiner Report"
+      ],
+      "description": "Establishes the stringent standard of proof required in circumstantial cases of homicidal poisoning, demanding conclusive medical/chemical identification of the poison, evidence of the accused's possession, and proof of an exclusive opportunity to administer it.",
+      "application_scenario": "Use when the prosecution alleges that the accused murdered the victim by administering poison, and the case relies entirely or primarily on circumstantial evidence without direct eyewitnesses to the administration.",
+      "reasoning_flow": [
+        "Identify the prosecution's claim that the deceased's death was caused by the deliberate administration of a specific toxic substance.",
+        "Examine the post-mortem and chemical examiner's reports to verify if the exact poison was conclusively detected in the viscera, effectively ruling out natural diseases, viral infections, or alternative causes like alcohol overdose.",
+        "Evaluate the circumstantial evidence to determine if the prosecution has proven that the accused possessed the alleged poison or had access to it.",
+        "Assess whether the accused had a clear and exclusive opportunity to administer the poison in the food or drink consumed by the deceased.",
+        "Conclude whether the tripartite test (cause of death by poison, possession, and opportunity) forms a complete circumstantial chain, acquitting the accused if any link is medically or factually ambiguous."
+      ],
+      "example_application": "The prosecution alleges a wife poisoned her husband's tea. While the accused had the opportunity to serve the tea, the chemical examiner's report fails to detect poison in the viscera, and the doctor cannot rule out cardiac arrest. The court acquits the accused because the conclusive medical proof of death by poisoning is absent.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1973_15",
+        "il-tur-cjpe-1975_107",
+        "il-tur-cjpe-1992_305",
+        "il-tur-cjpe-1992_691",
+        "il-tur-cjpe-2001_42"
+      ],
+      "shared_pattern": "In each case, the court meticulously searches for a conclusive tripartite chain: definitive medical/chemical proof of death by poison, proof the accused possessed the poison, and proof the accused had the opportunity to administer it. Failure in any of these prongs leads to acquittal.",
+      "scope_exclusions": "Do not use when there is direct, unimpeachable eyewitness testimony of the physical administration of poison that negates the need for a purely circumstantial tripartite test.",
+      "support_count": 5
+    },
+    {
+      "template_name": "eyewitness_post_occurrence_conduct_evaluation",
+      "knowledge_tags": [
+        "Witness Credibility",
+        "Unnatural Conduct",
+        "Delayed Disclosure",
+        "Res Gestae"
+      ],
+      "description": "Evaluates the credibility of an alleged eyewitness by analyzing their immediate post-occurrence conduct, specifically scrutinizing prolonged silence or an unexplained delay in disclosing the incident or the assailant's identity.",
+      "application_scenario": "Use when the defense challenges the presence or truthfulness of a key eyewitness by highlighting their failure to immediately raise an alarm, inform nearby relatives, or report the crime to the police despite having the opportunity to do so.",
+      "reasoning_flow": [
+        "Identify the alleged eyewitness and determine the exact time gap between the occurrence of the crime and their first disclosure of the assailant's identity to family, neighbors, or police.",
+        "Examine the witness's explanation for any silence or delay, considering psychological factors like extreme shock, trauma, or the relationship with the accused.",
+        "Assess whether the witness's behavior (e.g., remaining inexplicably silent while authorities or neighbors are present) is fundamentally unnatural for a normal human being under the given circumstances.",
+        "Check if the belated disclosure is corroborated by other objective circumstances or if it points to a product of afterthought, tutoring, or consultation.",
+        "Reject the testimony if the silence is inexplicably unnatural and undermines their claimed presence at the scene, or accept it if the delay is adequately and reasonably justified by the context."
+      ],
+      "example_application": "A wife claims she saw her husband being murdered but admits she remained completely silent about the assailant's identity for two days despite police and relatives being present. The court rejects her testimony, deeming her post-occurrence conduct highly unnatural and improbable.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1989_225",
+        "il-tur-cjpe-1991_160",
+        "il-tur-cjpe-1994_158",
+        "il-tur-cjpe-1978_327"
+      ],
+      "shared_pattern": "The court tests the veracity of an eyewitness's claim of being present at the crime scene by mapping their immediate subsequent conduct against standard human behavior, paying special attention to delayed disclosure.",
+      "scope_exclusions": "Do not use to evaluate the credibility of witnesses based solely on their familial relationship to the victim or prior enmity with the accused (use LF006).",
+      "support_count": 4
+    },
+    {
+      "template_name": "test_identification_parade_reliability_assessment",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Test Identification Parade",
+        "Identity of Accused",
+        "Procedural Safeguards"
+      ],
+      "description": "Evaluates the evidentiary value of a Test Identification Parade (TIP) by scrutinizing the promptness of the parade, the prevention of prior exposure of the accused to witnesses, and the adherence to procedural safeguards.",
+      "application_scenario": "Use when the prosecution relies on a Test Identification Parade to fix the identity of an accused who was previously unknown to the eyewitnesses, and the defense challenges its fairness.",
+      "reasoning_flow": [
+        "Establish whether the accused was a stranger to the eyewitnesses prior to the incident, making a formal Test Identification Parade (TIP) necessary to corroborate identity.",
+        "Assess the timeline between the arrest of the accused and the holding of the TIP, identifying any inordinate or unexplained delay that could facilitate tutoring or memory fade.",
+        "Scrutinize the record and defense claims to determine if the accused was kept muffled after arrest and whether the police inadvertently or deliberately showed the accused to the witnesses prior to the parade.",
+        "Review the Magistrate's procedural conduct during the TIP, ensuring that a sufficient number of dummy participants with similar physical features were mixed and that investigating/prosecuting officers were excluded.",
+        "Accept the TIP as reliable corroboration if it was prompt and procedurally pristine, or discard the identification evidence if compromised by delay, prior exposure, or procedural flaws."
+      ],
+      "example_application": "A TIP is held three months after the accused's arrest, during which time the accused was seen un-muffled at the police station by the eyewitnesses. The court rejects the TIP evidence as the procedural delay and prior exposure vitiate its evidentiary value.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1978_116",
+        "il-tur-cjpe-1985_329",
+        "il-tur-cjpe-1991_160",
+        "il-tur-cjpe-1993_490"
+      ],
+      "shared_pattern": "In each instance, the court applies a strict procedural review of the TIP, weighing delays, the mixing of dummy participants, and the possibility of prior exposure to decide whether the dock identification is sufficiently corroborated.",
+      "scope_exclusions": "Do not use if the accused was already well-known to the eyewitnesses prior to the occurrence, rendering a formal TIP legally superfluous.",
+      "support_count": 4
+    }
+  ]
+}

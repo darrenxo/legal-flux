@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_046",
+  "coverage_analysis": "The batch primarily involves cases dealing with rent control legislation, landlord-tenant disputes, civil procedure, and the scope of revisional jurisdiction. While the current library contains templates on statutory interpretation and standard of review in specific contexts (like arbitral awards or acquittals), it lacks coverage for two recurring operations observed in this batch: (1) enforcing strict compliance with statutory preconditions when a tenant seeks protection from eviction by depositing arrears, and (2) defining the strict limits of civil revisional jurisdiction regarding interference with a lower court's factual findings.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_046_01",
+    "GAP_semantic_family_046_02"
+  ]
+}

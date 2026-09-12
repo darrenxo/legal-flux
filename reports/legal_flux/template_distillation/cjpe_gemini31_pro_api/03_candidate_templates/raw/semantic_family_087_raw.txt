@@ -1,0 +1,112 @@
+{
+  "candidates": [
+    {
+      "template_name": "Whole_Record_Review_Compulsory_Retirement",
+      "knowledge_tags": [
+        "Service Law",
+        "Compulsory Retirement",
+        "Judicial Review",
+        "Public Interest",
+        "Administrative Discretion"
+      ],
+      "description": "Evaluates challenges to administrative orders of compulsory retirement by ensuring the authority holistically reviewed the employee's entire service record, rather than allowing the employee to invalidate the order by isolating or excluding specific entries.",
+      "application_scenario": "Use when an employee challenges a public-interest compulsory retirement by arguing that specific items of evidence (such as uncommunicated adverse remarks, older entries, or minor past penalties) were improperly considered or should have been wiped out by subsequent promotions.",
+      "reasoning_flow": [
+        "Identify the statutory rule empowering the government or employer to compulsorily retire an employee in the public interest upon reaching a specified age or length of service.",
+        "Examine the administrative record to ascertain whether the competent review committee formed its opinion based on a holistic assessment of the employee's entire service history.",
+        "Reject arguments attempting to compartmentalize or exclude specific materials from consideration (e.g., claims that post-promotion entries or uncommunicated remarks are legally inadmissible for this purpose).",
+        "Uphold the retirement order if the overall record provides a reasonable basis for the subjective satisfaction that the employee's continued service is not in the public interest, refraining from substituting the court's judgment for the employer's."
+      ],
+      "example_application": "An auditor is compulsorily retired at age 55. The auditor challenges the order, arguing that the decision relied on an adverse performance review from three years prior that was never formally communicated, and that a recent routine pay-scale upgrade wiped his slate clean. The court evaluates the decision, notes that the committee reviewed a 20-year file containing multiple instances of substandard work alongside the recent upgrade, determines the uncommunicated remark was legally valid for this specific administrative exercise, and upholds the retirement.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1992_434",
+        "il-tur-cjpe-1996_696",
+        "il-tur-cjpe-1993_537"
+      ],
+      "shared_pattern": "In all these cases, the court refused to interfere with a compulsory retirement order, emphasizing that the administrative authority validly considered the entire service record (including uncommunicated remarks, post-promotion entries, or prior criminal convictions) to assess public interest, rather than acting as a punitive disciplinary measure.",
+      "scope_exclusions": "Do not use if the compulsory retirement is demonstrably a punitive shortcut used to dismiss an employee for specific, unproven misconduct without holding a mandatory disciplinary inquiry, or if there is absolute zero evidence of inefficiency in the record.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Right_To_Consideration_Enforcement",
+      "knowledge_tags": [
+        "Service Law",
+        "Right to Consideration",
+        "Promotions",
+        "Selection Process",
+        "Remedial Directives"
+      ],
+      "description": "Distinguishes between an employee's absolute legal right to be appointed or promoted and their limited right to be fairly considered for the post, tailoring the judicial remedy to compel evaluation rather than direct appointment.",
+      "application_scenario": "Use when an eligible candidate is denied a post, promotion, or appointment and seeks a judicial directive automatically granting them the position in question.",
+      "reasoning_flow": [
+        "Determine whether the governing legal framework grants the candidate a vested right to the actual post or merely a statutory right to be considered for it.",
+        "Ascertain whether the competent administrative authority conducted a fair, merits-based evaluation of the candidate alongside other eligible persons according to prescribed rules.",
+        "If the candidate was duly considered but rejected on valid comparative merits, dismiss the challenge, as the fundamental right to consideration was fulfilled.",
+        "If the candidate was arbitrarily excluded from consideration (e.g., bypassed in favor of juniors without notice, or excluded due to a misapplied rule), issue a directive compelling the authority to evaluate the candidate, without guaranteeing the ultimate appointment."
+      ],
+      "example_application": "A municipal engineer is excluded from a promotion list because the department incorrectly assumed he lacked a mandatory certification. The engineer sues, demanding immediate installation in the higher post. The court finds the rule exempts him from the certification. Instead of ordering his immediate promotion, the court limits its remedy to directing the selection board to convene and properly consider his candidacy on its comparative merits against others.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1988_162",
+        "il-tur-cjpe-1996_1218",
+        "il-tur-cjpe-1996_1074"
+      ],
+      "shared_pattern": "These cases establish that whether an employee is seeking promotion after expunction of adverse remarks, relying on a waitlist while juniors are appointed, or claiming an age-based exemption for a test, the legal entitlement is restricted to fair consideration by the employer, not an automatic judicial grant of the post.",
+      "scope_exclusions": "Do not use when a specific statute or rule mandates automatic, non-selective promotion or regularization upon fulfilling objective criteria (like length of service) without any requirement for comparative merit assessment.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Strict_Statutory_Compliance_Over_Equity",
+      "knowledge_tags": [
+        "Statutory Interpretation",
+        "Equity",
+        "Service Law",
+        "Strict Construction",
+        "Deemed Benefits"
+      ],
+      "description": "Resolves conflicts between plain statutory text and equitable claims by enforcing the strict boundaries of the rule, denying implied or retrospective benefits that contradict the explicit language.",
+      "application_scenario": "Use when an employee relies on equitable factors like long continuous ad-hoc service or administrative delay to claim service benefits that explicitly contradict the plain language of a governing rule.",
+      "reasoning_flow": [
+        "Identify the specific statutory rule or proviso governing the conferral of the disputed service benefit (e.g., seniority calculation, probation confirmation, or validity of select lists).",
+        "Extract any explicit boundaries, negative commands, or preconditions mandated by the rule text.",
+        "Assess whether the claimant is invoking equitable principles (e.g., length of continuous ad-hoc service) or implied doctrines (e.g., deemed confirmation) to circumvent the strict statutory text.",
+        "Hold that equity supplements but cannot supplant the law; enforce the strict statutory condition and deny the equitable claim if it conflicts with the plain language of the rule."
+      ],
+      "example_application": "A junior clerk serves on a temporary basis for six years before being regularized under a new framework. The framework explicitly states seniority begins strictly from the date of the regularization order. The clerk claims equitable seniority dating back to his initial temporary joining because the delay in regularization was not his fault. The court rejects the claim, ruling that equitable considerations cannot override the express, uncompromising statutory language dictating the start date of seniority.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2011_516",
+        "il-tur-cjpe-1996_2064",
+        "il-tur-cjpe-1991_192"
+      ],
+      "shared_pattern": "In each case, the court confronted a clash between a clear statutory provision (a rule assigning seniority upon regular appointment, a rule barring automatic confirmation of probationers, or a saving clause preserving older rules) and a claimant's plea for equitable deviation, consistently ruling that strict statutory text prevails.",
+      "scope_exclusions": "Do not use when the statute itself contains discretionary equitable escape clauses (e.g., 'power to relax rules in cases of undue hardship') which the authority has failed to properly consider.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Threshold_Procedural_Bar_Application",
+      "knowledge_tags": [
+        "Civil Procedure",
+        "Limitation",
+        "Jurisdictional Bar",
+        "Laches",
+        "Threshold Dismissal"
+      ],
+      "description": "Evaluates claims against procedural threshold barriers—such as subject-matter jurisdiction, statutory limitation, or laches—to dismiss non-compliant petitions without adjudicating substantive rights.",
+      "application_scenario": "Use when a preliminary objection is raised that a dispute was filed in the wrong forum, beyond the statutory time limit, or after an unexplained delay, precluding a review of the actual merits.",
+      "reasoning_flow": [
+        "Ascertain the chronological timeline of the cause of action and identify the specific forum chosen by the petitioner.",
+        "Analyze the governing procedural frameworks, such as statutory limitation periods, specialized tribunal exclusivity clauses, or established equitable doctrines of laches.",
+        "Determine if the claim suffers from a fatal procedural defect, such as being filed beyond the strict statutory window or before a court entirely divested of subject-matter jurisdiction.",
+        "Dismiss the petition or direct it to the competent forum strictly on the threshold procedural ground, expressly declining to decide the underlying substantive dispute."
+      ],
+      "example_application": "A dismissed employee files a civil suit in a regular district court four years after receiving his termination order, seeking a declaration that the dismissal was void. The defendant raises objections based on both the creation of a specialized administrative tribunal and the three-year statute of limitations for declaratory suits. The court examines the dates and statutory provisions, finds the suit both time-barred and jurisdictionally excluded, and dismisses the action at the threshold without examining whether the original dismissal was lawful.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_67",
+        "il-tur-cjpe-1996_1662",
+        "il-tur-cjpe-2008_2615"
+      ],
+      "shared_pattern": "These cases demonstrate the court's enforcement of rigid procedural barriers—whether an absolute bar on High Court jurisdiction under the Administrative Tribunals Act, a statutory limitation period for declaratory suits, or laches in claiming back arrears—resulting in the disposal of the claims without delving into their substantive merits.",
+      "scope_exclusions": "Do not use if the delay is caused by the employer's active fraud or if the statute provides an automatic continuing cause of action (e.g., recurring monthly pension deficits) that bypasses standard limitation periods.",
+      "support_count": 3
+    }
+  ]
+}

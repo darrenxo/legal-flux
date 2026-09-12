@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_023",
+  "coverage_analysis": "The current library focuses on administrative actions, criminal liability, natural justice, evidence appreciation, and substantive tax classification. It lacks a template addressing the specific procedural and equitable frameworks governing claims for the refund of taxes, fees, or state charges collected without authority of law. Multiple source cases center not on the substantive illegality of the levy, but on the procedural barriers to restitution, including statutory limitation, equitable laches, tolling for bona fide alternative proceedings, and the impact of retrospective validating legislation.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_023_01"
+  ]
+}

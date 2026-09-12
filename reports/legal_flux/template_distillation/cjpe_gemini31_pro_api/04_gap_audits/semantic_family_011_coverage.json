@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_011",
+  "coverage_analysis": "The current library contains templates for statutory interpretation, administrative review, and evidentiary filters (e.g., LF003, LF019, LF021). However, it lacks coverage for three distinct and recurring legal operations present in the source batch: 1) the application of executive remission and premature release policies for life convicts (evaluating which temporal policy applies and curing executive delay), 2) the evaluation of claims under honorary welfare schemes like the Freedom Fighters Pension (balancing liberal historical proof standards with mandatory procedural documentation), and 3) the enforcement of Article 21 fundamental rights against systemic custodial and prison administration deficits (such as unconstitutional solitary confinement, protective custody of women, and prolonged undertrial detention). Note that appellate review of acquittals (il-tur-cjpe-2007_71, il-tur-cjpe-2008_1626) is already covered by LF007, and public law compensation for Article 21 violations appears in only two cases (il-tur-cjpe-1983_162, il-tur-cjpe-1997_255), falling short of the three-case threshold.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_011_01",
+    "GAP_semantic_family_011_02",
+    "GAP_semantic_family_011_03"
+  ]
+}

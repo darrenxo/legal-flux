@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_075",
+  "coverage_analysis": "The audit of the source-case batch against the Consolidated Template Library reveals two distinct and recurring legal reasoning gaps. First, multiple cases address the doctrine that active fraud or deliberate suppression of material facts at the inception of public employment or statutory benefits vitiates the transaction ab initio, a concept distinct from the existing templates on ad-hoc regularization (LF013) or motive vs. foundation (LF014). Second, the library lacks a template evaluating the administrative reversion of employees from ad-hoc or officiating higher posts back to their substantive lower posts without a hearing, distinguishing a neutral reversion simpliciter from a punitive reduction in rank. Two gap candidates have been proposed to cover these operations.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_075_01",
+    "GAP_semantic_family_075_02"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_049",
+  "coverage_analysis": "The current consolidated library focuses on constitutional boundaries, statutory interpretation, criminal evidence, and administrative law. However, the supplied batch contains recurring tax-law procedures not covered. Specifically, there are multiple cases analyzing the mechanics of carrying forward and setting off unabsorbed depreciation and business losses across different heads of income or against statutory fictions (MAT). Additionally, several cases address the statutory power to rectify mistakes 'apparent from the record', defining the expansive scope of the 'record' and the resetting of limitation periods upon reassessment. These two recurring operations warrant new gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_049_01",
+    "GAP_semantic_family_049_02"
+  ]
+}

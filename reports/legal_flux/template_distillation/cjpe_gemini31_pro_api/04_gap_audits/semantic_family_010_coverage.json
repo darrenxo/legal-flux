@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_010",
+  "coverage_analysis": "The audit of the provided source cases reveals that while the current LegalFlux library adequately covers broad administrative law principles and general statutory interpretation, it lacks specific templates for several distinct, recurring legal operations observed in this batch. First, there is a recurring pattern involving the constitutional boundaries of state interference in minority educational institutions under Article 30(1), specifically distinguishing permissible regulatory measures from unconstitutional usurpations of disciplinary autonomy. Second, the batch contains multiple cases dealing with the expiration of employment rights when individuals are engaged under finite projects, transient schemes, or statutory apprenticeships, where courts consistently hold that no vested rights to regularization or statutory retrenchment benefits accrue upon the project's end. Third, there is a strong recurring pattern of judicial restraint preventing courts from substituting their own criteria for the minimum qualifying marks, qualifications, or evaluation standards set by expert academic or recruiting bodies, even when vacancies remain unfilled. These three distinct legal reasoning operations satisfy the threshold for abstraction and recurrence, and thus form the basis for three proposed gap candidates.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_010_01",
+    "GAP_semantic_family_010_02",
+    "GAP_semantic_family_010_03"
+  ]
+}

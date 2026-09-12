@@ -137,13 +137,19 @@ $env:GOOGLE_APPLICATION_CREDENTIALS = "$env:APPDATA\gcloud\application_default_c
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\legal_flux.yaml flux-gemini-templates --stage candidates --limit 1
 ```
 
-For a reasoning-rich CJPE template pool, use the dedicated config. It reads only
-the 994 `multi_dev` cases, sends each case as one verbatim `full_text` field,
-and never includes the outcome label. Do not change this source split to
-`test`: CJPE test overlaps the Realistic_LJP_Facts test cases intended for
-prediction evaluation.
+For a reasoning-rich CJPE template pool, use the dedicated config. It first
+selects a frozen 10% (3,083-case) sample from cases shared by CJPE `multi_train`
+and the Realistic_LJP_Facts training split. Selection uses balanced semantic
+families with proportional family quotas and label/decade stratification. Dev
+and test remain untouched. Generation sends each selected CJPE case as one
+verbatim `full_text` field and never includes the outcome label. Candidate
+batches are also split when needed to retain substantial headroom below
+Gemini's configured 900,000-token input limit. BGE-M3 uses a 2,048-token view
+for efficient batch grouping; this does not truncate the full text supplied to
+Gemini.
 
 ```powershell
+.\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-prepare-cjpe-template-source
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-export-gemini-batches
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage candidates --dry-run
 .\.venv-codex\Scripts\python.exe -m legal_pilot --config configs\cjpe_template_pool.yaml flux-gemini-templates --stage candidates --limit 1

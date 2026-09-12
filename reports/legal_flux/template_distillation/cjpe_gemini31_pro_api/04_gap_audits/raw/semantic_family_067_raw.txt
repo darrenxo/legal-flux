@@ -1,0 +1,60 @@
+{
+  "coverage_analysis": "The current consolidated template library contains templates for interpreting commercial and property contracts (e.g., LF016, LF017) and moulding equitable relief (LF030), but it completely lacks templates for adjudicating the statutory prerequisites of specific performance claims under the Specific Relief Act. The supplied batch exhibits a high frequency of disputes over specific performance where the courts consistently apply two distinct legal reasoning operations: (1) scrutinizing the plaintiff's continuous 'readiness and willingness' to perform essential contractual obligations as a mandatory statutory bar, and (2) determining whether the specific performance decree can be enforced against a subsequent third-party purchaser based on the tests of good faith, constructive notice, and the doctrine of lis pendens.",
+  "gap_candidates": [
+    {
+      "template_name": "specific_performance_readiness_and_willingness_test",
+      "knowledge_tags": [
+        "Specific Relief Act",
+        "Specific Performance",
+        "Readiness and Willingness",
+        "Section 16(c)",
+        "Contract Enforcement"
+      ],
+      "description": "Evaluates whether a plaintiff seeking specific performance has overcome the mandatory statutory bar by properly averring and proving their continuous readiness and willingness to perform the essential terms of the contract.",
+      "application_scenario": "Use when a defendant resists a suit for specific performance by alleging that the plaintiff failed to tender the balance consideration, lacked financial capacity, or delayed performance, necessitating an inquiry into the plaintiff's conduct prior to and during the suit.",
+      "reasoning_flow": [
+        "Examine the pleadings to verify if the plaintiff has specifically averred their continuous readiness and willingness to perform their contractual obligations.",
+        "Assess the plaintiff's financial capacity to pay the agreed balance consideration, confirming whether the funds were actually available or could reasonably be raised.",
+        "Evaluate the plaintiff's overt conduct, timeline of notices, part payments, and surrounding circumstances to distinguish genuine willingness from speculative delays.",
+        "Deny specific performance if the plaintiff fails to prove continuous readiness and willingness, as this acts as an absolute personal bar, or grant the relief if the burden is successfully discharged."
+      ],
+      "example_application": "A purchaser sues for specific performance of a land sale but admits in evidence that they did not have the funds on the stipulated date and only sent a notice months later. The court refuses specific performance, citing the failure to prove continuous readiness and willingness, regardless of the vendor's own defaults.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2012_200",
+        "il-tur-cjpe-2019_111",
+        "il-tur-cjpe-2019_490"
+      ],
+      "shared_pattern": "In each case, the court evaluates the statutory mandate (Section 16(c) of the Specific Relief Act) requiring the plaintiff to plead and demonstrate continuous readiness and willingness (both financial capacity and conduct) to enforce a contract.",
+      "scope_exclusions": "Do not use for awarding general damages for breach of contract where specific performance is not the primary relief sought, or for resolving disputes over whether a contract was actually formed.",
+      "support_count": 3
+    },
+    {
+      "template_name": "subsequent_purchaser_bona_fide_protection",
+      "knowledge_tags": [
+        "Specific Relief Act",
+        "Bona Fide Purchaser",
+        "Notice",
+        "Lis Pendens",
+        "Transfer of Property"
+      ],
+      "description": "Determines whether a decree for specific performance of a prior agreement can be enforced against a subsequent purchaser of the same property by applying the exceptions of good faith, payment of value, lack of notice, and the doctrine of lis pendens.",
+      "application_scenario": "Use when a plaintiff seeking specific performance discovers the property was sold to a third party, and the third party claims protection against the decree as a bona fide purchaser for value without notice.",
+      "reasoning_flow": [
+        "Establish the existence of a valid prior agreement to sell between the plaintiff and the original vendor.",
+        "Determine the chronological timeline of the subsequent sale relative to the prior agreement and the institution of the plaintiff's suit to check if the transfer is hit by the doctrine of lis pendens.",
+        "Evaluate whether the subsequent purchaser paid valuable consideration and acted in good faith by making reasonable inquiries into the title and possession.",
+        "Ascertain if the subsequent purchaser had actual or constructive notice of the prior agreement to sell.",
+        "Enforce specific performance against the subsequent purchaser if they had notice or purchased pendente lite; otherwise, protect the subsequent purchaser's title and limit the plaintiff's remedy against the original vendor."
+      ],
+      "example_application": "A vendor agrees to sell land to a plaintiff but later sells it to a third party. The third party proves they paid full market value, checked all registry records, and had no knowledge of the unregistered prior agreement. The court protects the third party as a bona fide purchaser for value without notice and refuses specific performance against them.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2008_1357",
+        "il-tur-cjpe-2013_791",
+        "il-tur-cjpe-2019_490"
+      ],
+      "shared_pattern": "In each case, the court adjudicates the competing rights of a prior agreement holder and a subsequent registered purchaser by applying the statutory tests of bona fide purchase for value without notice and the effects of lis pendens.",
+      "scope_exclusions": "Do not use for determining the validity of the initial agreement itself, or for disputes solely between the original vendor and purchaser where no third-party rights have been created.",
+      "support_count": 3
+    }
+  ]
+}

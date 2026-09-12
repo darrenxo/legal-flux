@@ -1,0 +1,60 @@
+{
+  "coverage_analysis": "The batch was audited against the current LegalFlux template library. Several cases aligned with existing templates: Case il-tur-cjpe-1947_106 matches LF001 (subordinate legislation vires) and Case il-tur-cjpe-1947_170 matches LF024 (sufficient cause delay condonation). However, the audit revealed two distinct recurring legal operations not covered by the library. First, multiple cases address the scope of judicial review over complex economic policies and commercial decisions, establishing a principle of judicial restraint unless manifest arbitrariness is proven. Second, several cases evaluate procedural frameworks governing executive or legislative bodies (such as Rules of Business, laying requirements, or Speaker's procedural rules), establishing that these are directory in nature and that substantial compliance is sufficient to uphold the substantive action. These two operations satisfy the threshold of appearing in at least 3 distinct cases and present viable gap candidates.",
+  "gap_candidates": [
+    {
+      "template_name": "judicial_restraint_economic_and_commercial_policy",
+      "knowledge_tags": [
+        "Judicial Review",
+        "Economic Policy",
+        "Commercial Decisions",
+        "Manifest Arbitrariness",
+        "Separation of Powers"
+      ],
+      "description": "Defines the narrow scope of judicial review over complex economic policies, commercial contracts, or regulatory measures, emphasizing that courts must defer to the executive's pragmatic judgment and allow for trial and error unless the state action is manifestly arbitrary, perverse, or violates statutory/constitutional mandates.",
+      "application_scenario": "Use when a party challenges a state's economic policy, resource allocation, public commercial transaction, or economic regulatory measure, asking the court to substitute the executive's wisdom with its own.",
+      "reasoning_flow": [
+        "Identify the challenged state action as involving complex economic, fiscal, or commercial policy decisions.",
+        "Acknowledge that the executive branch possesses the necessary expertise and is entitled to make pragmatic adjustments and employ a trial and error approach in economic matters.",
+        "Apply a strong presumption of validity to the policy, restricting judicial scrutiny to assessing whether the decision is vitiated by manifest arbitrariness, mala fides, or a direct violation of law.",
+        "Refuse to strike down the policy merely because a better or more logical alternative exists, intervening only if the action falls completely outside the broad zone of reasonableness."
+      ],
+      "example_application": "A state entity decides not to exercise a right of first refusal to buy shares in a telecom company due to internal financial analysis and pending disputes. A petitioner challenges this as a loss to the exchequer. The court declines to interfere, classifying it as a bona fide commercial decision immune from judicial review absent clear illegality or perversity.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2011_1196",
+        "il-tur-cjpe-2013_823",
+        "il-tur-cjpe-2016_169"
+      ],
+      "shared_pattern": "All three cases explicitly analyze the limits of judicial intervention in economic or commercial policy, universally establishing that such decisions enjoy broad deference and are only struck down if the threshold of manifest arbitrariness or clear statutory violation is crossed.",
+      "scope_exclusions": "Do not use for challenges to administrative decisions that are purely procedural, disciplinary actions, or when enforcing specific statutory procedural safeguards that do not involve macro-economic or commercial policy formulation.",
+      "support_count": 3
+    },
+    {
+      "template_name": "directory_nature_administrative_procedural_rules",
+      "knowledge_tags": [
+        "Administrative Law",
+        "Procedural Rules",
+        "Directory vs Mandatory",
+        "Substantial Compliance",
+        "Delegated Legislation"
+      ],
+      "description": "Determines whether internal procedural rules governing legislative or executive bodies (e.g., laying rules before Parliament, Rules of Business, or assembly procedural rules) are directory or mandatory, upholding the substantive action if there is substantial compliance and no clear statutory mandate nullifying the act for technical breaches.",
+      "application_scenario": "Use when a substantive executive order, delegated legislation, or statutory decision is challenged solely because a procedural framework or internal administrative rule (like timeline for comments, or parliamentary laying) was not strictly adhered to.",
+      "reasoning_flow": [
+        "Isolate the specific procedural requirement that was allegedly violated by the executive or legislative authority.",
+        "Examine the parent statute or constitutional provision to determine if it explicitly attaches a nullifying consequence to the non-compliance of this procedure.",
+        "If no strict penal or nullifying consequence is explicitly prescribed, classify the procedural rule as directory rather than mandatory.",
+        "Evaluate whether there was substantial compliance with the broader objective of the rule, and if the deviation caused any actual, incurable prejudice.",
+        "Uphold the substantive legislative or executive action, dismissing the technical procedural challenge as a mere curable irregularity."
+      ],
+      "example_application": "A regulatory body frames rules but fails to lay them before Parliament for the full 30 days in a single session as prescribed by the parent act. The court finds the laying requirement to be directory, holding that the rules remain valid despite the technical procedural non-compliance.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_92",
+        "il-tur-cjpe-2007_819",
+        "il-tur-cjpe-2011_1196"
+      ],
+      "shared_pattern": "Each case involves a challenge to a substantive action (disqualification of an MLA, framing of SEBI regulations, amendment of R&R policy) based on the violation of an internal procedural rule (Disqualification Rules, laying before Parliament, Rules of Business). The court in all instances rules the procedure to be directory, saving the substantive action.",
+      "scope_exclusions": "Do not use when the statute expressly provides that non-compliance renders the action void ab initio, or when the procedural violation directly breaches fundamental principles of natural justice causing manifest prejudice (e.g., completely denying a hearing when mandated).",
+      "support_count": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_059",
+  "coverage_analysis": "The supplied batch spans a variety of civil, commercial, and consumer protection disputes. While the current library covers limitation delay condonation (LF024) and contract interpretation (LF016, LF017), it lacks specific reasoning templates for two recurring operations observed in this batch: 1) The equitable restoration of matters dismissed ex-parte or for non-prosecution due to the uncommunicated default of legal counsel or the tribunal, emphasizing the protection of an innocent litigant's right to be heard. 2) The assessment of statutory deficiency in service or unfair trade practice arising specifically from a service provider's unjustified delay or failure to deliver booked goods or property, resulting in financial compensation.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_059_01",
+    "GAP_semantic_family_059_02"
+  ]
+}

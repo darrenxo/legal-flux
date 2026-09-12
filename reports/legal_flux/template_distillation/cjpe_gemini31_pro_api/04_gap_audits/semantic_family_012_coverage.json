@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_012",
+  "coverage_analysis": "The audit reveals that the current library adequately covers statutory interpretation, constitutional powers, and general evidentiary standards. However, it lacks a template for the Supreme Court's exercise of its overarching jurisdiction to consolidate and dispose of multiple fragmented civil and criminal proceedings in matrimonial disputes based on a global mediated settlement. Several cases in this batch exhibit this exact reasoning pattern, where the court transfers matters to itself, grants mutual consent divorce, and quashes ancillary criminal proceedings to give effect to a holistic compromise.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_012_01"
+  ]
+}

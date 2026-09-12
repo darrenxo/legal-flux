@@ -1,0 +1,141 @@
+{
+  "candidates": [
+    {
+      "template_name": "ocular_medical_synchronization_assessment",
+      "knowledge_tags": [
+        "Evidence Appreciation",
+        "Medical Evidence",
+        "Ocular Testimony",
+        "Forensic Correlation"
+      ],
+      "description": "A reasoning operation that evaluates the credibility of ocular testimony by strictly comparing the described mechanics of an assault against objective medical and forensic findings.",
+      "application_scenario": "Use when the defense argues that the eye-witness accounts fundamentally contradict the medical, anatomical, or forensic evidence regarding the weapon used, firing range, trajectory, or time of death.",
+      "reasoning_flow": [
+        "Identify the specific mechanics of the assault as explicitly described by the eye-witnesses, including details like distance, weapon type, and timing.",
+        "Extract the objective medical and forensic data from autopsy reports and ballistic/expert testimony, such as stomach contents, presence/absence of charring, and nature of wounds.",
+        "Compare the ocular description with the objective data to determine if they are fundamentally incompatible or broadly consistent.",
+        "If the data is fundamentally incompatible without a reasonable explanation, treat the ocular testimony as highly suspect and potentially fabricated; if broadly consistent or showing only expected minor variations, uphold the ocular testimony."
+      ],
+      "example_application": "In a murder trial, witnesses claim the accused fired a shotgun at point-blank range. However, the autopsy reveals no blackening or charring around the wound, and the spread of pellets indicates a firing distance of at least 30 feet. The court uses this operation to conclude the eye-witnesses were likely not present and fabricated the narrative.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1975_108",
+        "il-tur-cjpe-1994_244",
+        "il-tur-cjpe-2003_1308",
+        "il-tur-cjpe-1980_296"
+      ],
+      "shared_pattern": "In each case, the court rigorously cross-checked the eye-witness narrative against medical/forensic facts (e.g., stomach contents, charring, trajectory, pellet presence) to either validate or discredit the prosecution's version of the occurrence.",
+      "scope_exclusions": "Do not use to discard ocular testimony based on trivial, hyper-technical, or expected medical discrepancies that do not affect the core narrative or where the expert's opinion is highly speculative.",
+      "support_count": 4
+    },
+    {
+      "template_name": "post_occurrence_witness_conduct_evaluation",
+      "knowledge_tags": [
+        "Witness Credibility",
+        "Human Behavior",
+        "Circumstantial Evidence",
+        "Planted Witness"
+      ],
+      "description": "An operation to assess the truthfulness of an alleged eye-witness by analyzing whether their actions immediately following the crime align with normal, expected human behavior.",
+      "application_scenario": "Use when the presence of an eye-witness at the crime scene is challenged on the grounds that their post-incident behavior was highly anomalous, unnatural, or inexplicably indifferent.",
+      "reasoning_flow": [
+        "Establish the relationship between the witness and the victim, and the circumstances under which the witness allegedly observed the crime.",
+        "Examine the witness's actions immediately after the incident, such as rendering aid, raising an alarm, informing authorities or relatives, or fleeing the scene.",
+        "Evaluate whether these actions constitute a gross deviation from normal human conduct under similar circumstances, checking for any plausible situational or psychological explanation.",
+        "Conclude whether the anomalous conduct is severe enough to suggest the witness was not actually present and was introduced by the prosecution as an after-thought."
+      ],
+      "example_application": "A brother claims to have watched his sibling being murdered in a field, but instead of raising an alarm, rendering aid, or going to the nearby village for help, he runs for hours in the opposite direction and remains silent for days. The court applies this operation to infer that this unnatural conduct makes his presence highly doubtful.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_244",
+        "il-tur-cjpe-2003_1308",
+        "il-tur-cjpe-2010_342",
+        "il-tur-cjpe-2019_510"
+      ],
+      "shared_pattern": "The courts rejected the testimony of alleged eye-witnesses who exhibited bizarrely passive, silent, or evasive behavior immediately following violent attacks on their close relatives, leading to the inference that they were planted witnesses.",
+      "scope_exclusions": "Not applicable when the witness provides a reasonable psychological or situational explanation for their conduct, such as extreme trauma, shock, or a direct and immediate threat to their own life.",
+      "support_count": 4
+    },
+    {
+      "template_name": "partisan_witness_evidence_filtration",
+      "knowledge_tags": [
+        "Interested Witness",
+        "Separating Chaff from Grain",
+        "Evidence Appreciation",
+        "Witness Reliability"
+      ],
+      "description": "A structured approach to evaluating testimony from witnesses who are related to the victim or inimical to the accused, avoiding mechanical rejection while actively filtering out exaggerations or false implications.",
+      "application_scenario": "Use when the defense seeks to discard the entirety of the prosecution evidence on the sole ground that the key witnesses are close relatives of the victim or belong to a rival faction.",
+      "reasoning_flow": [
+        "Acknowledge the witness's partisan nature or relationship to the victim, recognizing the legal principle that relatives are often natural witnesses and usually reluctant to shield the real culprit.",
+        "Scrutinize the testimony with heightened caution to identify any tendencies to exaggerate or to falsely drag in innocent members of the rival faction due to enmity.",
+        "Apply the principle of separating 'chaff from grain' by isolating the inherently probable and corroborated statements from localized falsehoods or embellishments.",
+        "Base convictions on the reliable core of the testimony, while extending the benefit of doubt to specific accused whose implication appears to be the result of partisan overreach."
+      ],
+      "example_application": "In a village faction fight, the deceased's son names six attackers. The court finds his presence natural, but notes he attributed specific fatal blows to only three, while adding the others generally due to family enmity. The court filters the evidence, convicting the three main attackers and acquitting the rest, rather than discarding the son's testimony entirely.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1976_394",
+        "il-tur-cjpe-1992_417",
+        "il-tur-cjpe-2003_1073",
+        "il-tur-cjpe-2007_971"
+      ],
+      "shared_pattern": "The courts consistently rejected the defense argument that related or interested witnesses must be discarded entirely, opting instead to carefully sift the evidence for truth, upholding convictions for core assailants while acquitting those peripherally implicated.",
+      "scope_exclusions": "Do not use if the core of the partisan witness's testimony is fundamentally flawed, demonstrably false in its entirety, or completely contradicted by objective evidence, rendering the whole testimony irredeemable.",
+      "support_count": 4
+    },
+    {
+      "template_name": "appellate_review_of_acquittal_plausibility",
+      "knowledge_tags": [
+        "Appellate Jurisdiction",
+        "Appeal against Acquittal",
+        "Presumption of Innocence",
+        "Standard of Review"
+      ],
+      "description": "A procedural framework defining the strict limitations and high threshold required for a higher court to reverse a trial court's order of acquittal.",
+      "application_scenario": "Use when an appellate court is reviewing a trial court's judgment of acquittal, and must decide whether to reappreciate evidence and overturn the verdict of innocence.",
+      "reasoning_flow": [
+        "Note the foundational principle that the presumption of innocence is further reinforced by the trial court's order of acquittal.",
+        "Review the trial court's appreciation of evidence to determine if its findings are plausible, reasonable, and logically deducible from the record.",
+        "If the trial court's view is a possible or plausible one, prohibit reversal merely because the appellate court would have taken a different, competing view on the same evidence.",
+        "Reverse the acquittal only if the trial court's approach is manifestly illegal, perverse, or ignores vital evidence, thereby constituting 'compelling and substantial reasons' for interference."
+      ],
+      "example_application": "The High Court overturns an acquittal because it prefers a different interpretation of the eye-witnesses' timeline. The Supreme Court applies this operation to restore the acquittal, noting the trial court's timeline interpretation was entirely plausible and logically sound, meaning the High Court lacked compelling grounds to interfere.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1971_335",
+        "il-tur-cjpe-1972_55",
+        "il-tur-cjpe-1977_197",
+        "il-tur-cjpe-2010_342",
+        "il-tur-cjpe-2018_746"
+      ],
+      "shared_pattern": "In each case, the Supreme Court evaluated whether the High Court breached the appellate standard of review by overturning an acquittal without explicitly finding the trial court's judgment to be perverse, manifestly illegal, or wholly untenable.",
+      "scope_exclusions": "Not applicable to appeals against conviction, where the appellate court has broader latitude to reappreciate evidence without the reinforced double-presumption of innocence.",
+      "support_count": 5
+    },
+    {
+      "template_name": "fir_authenticity_and_ante_timing_verification",
+      "knowledge_tags": [
+        "First Information Report",
+        "Procedural Delay",
+        "Investigation Integrity",
+        "Ante-Timing"
+      ],
+      "description": "An operation to assess the genuineness and spontaneity of a First Information Report (FIR) by analyzing delays in its registration, transmission to the Magistrate, and inclusion in contemporaneous documents.",
+      "application_scenario": "Use when the defense alleges that the FIR is an after-thought, was ante-timed, or was drafted after police deliberation and inspection of the crime scene to falsely implicate the accused.",
+      "reasoning_flow": [
+        "Examine the timeline from the occurrence of the crime to the registration of the FIR and its subsequent dispatch and receipt by the jurisdictional Magistrate.",
+        "Assess any explanations offered by the prosecution for delays, such as geographic distance, lack of transport, security concerns, or the time of day.",
+        "Cross-check initial investigative documents, such as inquest reports or spot panchnamas, to see if they reference the FIR number, specific case details, or the names of the accused.",
+        "If unexplained delays exist in transmission, or if initial contemporaneous documents omit FIR details, draw an inference that the FIR was likely ante-timed to introduce fabricated facts or witnesses, thereby tainting the investigation."
+      ],
+      "example_application": "The prosecution claims the FIR was filed within an hour of the murder. However, the special report reached the Magistrate three days later, and the inquest report prepared at the scene lacks the FIR number. The court applies this operation to conclude the FIR was ante-timed after the police gathered at the scene to concoct a narrative.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1985_217",
+        "il-tur-cjpe-1992_222",
+        "il-tur-cjpe-1994_244",
+        "il-tur-cjpe-2003_1073",
+        "il-tur-cjpe-2010_342"
+      ],
+      "shared_pattern": "The courts systematically evaluated the timing of the FIR, its transmission to the Magistrate (special report), and its reflection in contemporaneous documents to validate or invalidate the spontaneity and truthfulness of the initial prosecution narrative.",
+      "scope_exclusions": "Do not use to automatically discard the prosecution case if a delay is adequately and reasonably explained by practical realities, such as remoteness of location, lack of conveyance, or severe terror-affected environments.",
+      "support_count": 5
+    }
+  ]
+}

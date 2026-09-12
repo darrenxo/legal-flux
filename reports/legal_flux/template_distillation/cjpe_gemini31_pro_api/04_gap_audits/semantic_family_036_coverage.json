@@ -1,0 +1,7 @@
+{
+  "batch_id": "semantic_family_036",
+  "coverage_analysis": "The supplied batch contains a high concentration of preventive detention cases. The existing library covers the substantive evaluation of detention grounds through LF027 (Preventive Detention Public Order Nexus), which successfully captures the reasoning in cases like il-tur-cjpe-1972_212, il-tur-cjpe-1972_262, and il-tur-cjpe-1972_96 where acts of throwing bombs or arson were assessed for their impact on public order. However, the library completely lacks a template for a crucial procedural safeguard under Article 22(5) of the Constitution: the right to expeditious consideration of the detenu's representation. Cases il-tur-cjpe-1971_435, il-tur-cjpe-1972_266, il-tur-cjpe-1999_319, and il-tur-cjpe-1981_245 systematically apply a strict test scrutinizing administrative delays in processing representations, striking down detention orders if the delay is unexplained. This forms a clear, recurring operational gap. Other isolated legal operations (such as the transfer of investigations to independent agencies in il-tur-cjpe-2018_108 or appellate review in disciplinary proceedings) do not meet the strict 3-case threshold required for gap candidate submission.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_036_01"
+  ]
+}

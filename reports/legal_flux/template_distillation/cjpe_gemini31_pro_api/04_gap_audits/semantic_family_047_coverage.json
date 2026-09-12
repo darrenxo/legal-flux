@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_047",
+  "coverage_analysis": "The source-case batch contains multiple decisions addressing the administration of Hindu religious endowments and trusts, which are not adequately covered by the current LegalFlux library. The library lacks templates for evaluating constitutional challenges under Articles 25 and 26 that differentiate between essential religious practices and secular or economic administration. Additionally, the library lacks a framework for distinguishing between public and private religious or charitable endowments based on dedication, public user, and structural indicia. Two gap candidates have been identified to cover these recurring reasoning operations.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_047_01",
+    "GAP_semantic_family_047_02"
+  ]
+}

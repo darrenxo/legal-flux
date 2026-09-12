@@ -1,0 +1,17 @@
+You are reviewing a partially executed legal reasoning trajectory built from
+LegalFlux high-level templates.
+
+OUTPUT REQUIREMENT:
+{review_output_requirement}
+
+Keep review_analysis or final_rationale, if present, concise and grounded in the
+executed trajectory and supplied case fact text.
+
+CASE FACT TEXT:
+{case_text}
+
+EXECUTED TRAJECTORY:
+{executed_trajectory}
+
+CURRENT REMAINING ABSTRACT STEPS:
+{remaining_steps}

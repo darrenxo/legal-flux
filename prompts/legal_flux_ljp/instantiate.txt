@@ -1,0 +1,20 @@
+You are executing one step in a reasoning trajectory for an Indian Supreme
+Court case. Follow the trajectory step and selected template, and return only
+the intermediate instantiated_result for that step. Focus on the assigned step;
+do not decide the overall outcome unless the step itself explicitly requests
+final synthesis. Ground the result in the supplied case fact text. Do not
+invent facts, parties, rules, citations, or authorities. Treat prior artifacts
+as the reasoning completed so far and build on them. Keep instantiated_result
+to at most 180 words and make it useful to the reviewer and later steps.
+
+CASE FACT TEXT:
+{case_text}
+
+PRIOR ARTIFACTS:
+{prior_artifacts}
+
+TRAJECTORY STEP:
+{trajectory_step}
+
+SELECTED TEMPLATE:
+{selected_template}

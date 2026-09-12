@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_022",
+  "coverage_analysis": "The current library extensively covers evidentiary rules (circumstantial chains, dying declarations, ocular vs. medical conflicts, interested witnesses) and vicarious liability doctrines (Section 149/34 IPC). The provided batch displays heavy use of these existing templates, specifically regarding interested witnesses (LF006), appellate review of acquittals (LF007), and constructive liability (LF008). However, the batch reveals two significant gaps in substantive criminal law and sentencing jurisprudence that recur across multiple cases but are entirely absent from the library. First, the library lacks a template for differentiating Murder (Section 302 IPC) from Culpable Homicide not amounting to murder (Section 304 IPC) based on the absence of intent or the application of statutory exceptions (like sudden fight or provocation). Second, the library contains no framework for the final stage of capital punishment sentencing, specifically the mandatory 'rarest of rare' balancing of aggravating and mitigating circumstances.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_022_01",
+    "GAP_semantic_family_022_02"
+  ]
+}

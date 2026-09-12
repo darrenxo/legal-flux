@@ -1,0 +1,32 @@
+{
+  "coverage_analysis": "The library covers a wide range of substantive and procedural legal topics, including criminal evidence, constitutional principles, statutory interpretation, and specific administrative review standards. However, the supplied batch reveals a recurring procedural pattern regarding the standard of review and the necessity of speaking orders in civil/writ intra-court appeals (e.g., appeals from a Single Judge to a Division Bench). Several cases demonstrate an appellate court vacating, modifying, or reversing a Single Judge's discretionary or factual order without addressing the underlying reasoning or recording independent, cogent reasons for disagreement. While the library includes LF007 for appellate review of criminal acquittals, it lacks a template governing appellate interference with a Single Judge's discretion in civil proceedings.",
+  "gap_candidates": [
+    {
+      "template_name": "intra_court_appeal_reversal_justification",
+      "knowledge_tags": [
+        "Appellate Review",
+        "Intra-Court Appeal",
+        "Speaking Order",
+        "Judicial Discretion",
+        "Division Bench"
+      ],
+      "description": "Evaluates the validity of an appellate court's (such as a Division Bench) reversal or modification of a lower court's reasoned order, requiring that the appellate court explicitly record cogent reasons for its disagreement rather than passing a cryptic or non-speaking order.",
+      "application_scenario": "Use when a Division Bench or appellate court vacates, modifies, or reverses a Single Judge's discretionary or factual order (such as an interim injunction or stay) without addressing the original reasoning or providing its own independent, reasoned analysis.",
+      "reasoning_flow": [
+        "Identify the reasoned order (interim or final) passed by the Single Judge in the exercise of their factual appreciation or judicial discretion.",
+        "Review the subsequent order of the Division Bench or Appellate Court to determine if it reversed, modified, or vacated the Single Judge's order.",
+        "Analyze whether the Appellate Court independently examined the pleadings, addressed the specific reasoning of the Single Judge, and explicitly recorded its own cogent reasons for the disagreement.",
+        "Set aside the Appellate Court's order if it is non-speaking, mechanically vacates the lower court order, or fails to logically justify its interference with the lower court's discretion."
+      ],
+      "example_application": "A Single Judge grants an interim stay on an employee's salary stoppage, recording detailed reasons based on the employee's 30-year tenure. On intra-court appeal, the Division Bench mechanically modifies the order to maintain the status quo without addressing the Single Judge's reasoning. The Supreme Court sets aside the Division Bench's order for lacking cogent reasons to justify the interference.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2009_623",
+        "il-tur-cjpe-2018_219",
+        "il-tur-cjpe-2009_1920"
+      ],
+      "shared_pattern": "In each case, a Division Bench or appellate court interfered with, vacated, or modified a Single Judge's order without recording adequate, cogent reasons for disagreement or examining the pleadings, prompting the Supreme Court to set aside the appellate order.",
+      "scope_exclusions": "Do not use for criminal appeals against acquittal (covered by LF007), or when the appellate court has engaged in a full, reasoned re-appreciation of evidence and recorded valid grounds for disagreement.",
+      "support_count": 3
+    }
+  ]
+}

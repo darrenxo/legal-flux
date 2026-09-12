@@ -1,0 +1,86 @@
+{
+  "coverage_analysis": "The audit of the source cases against the current consolidated library reveals that while general circumstantial evidence principles (LF004), special knowledge burden shifts (LF010), and discovery statements (LF012) are adequately covered, there are distinct missing operations regarding specific evidentiary doctrines. The library lacks templates for evaluating the reliability of extra-judicial confessions, assessing the substantive versus corroborative weight of in-court identifications and Test Identification Parades (TIP), and filtering the admissibility and evidentiary value of a co-accused's confession against another co-accused under Section 30 of the Evidence Act.",
+  "gap_candidates": [
+    {
+      "template_name": "extra_judicial_confession_reliability_test",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Extra-Judicial Confession",
+        "Witness Credibility",
+        "Corroboration"
+      ],
+      "description": "Evaluates the reliability and admissibility of an extra-judicial confession by examining the voluntariness, the exact words used, the relationship between the accused and the witness, and the presence of independent corroboration.",
+      "application_scenario": "Use when the prosecution relies on a confession made by the accused outside of a formal judicial or police setting to a private individual (such as a relative, friend, or bystander) to establish guilt.",
+      "reasoning_flow": [
+        "Identify the specific witness to whom the extra-judicial confession was allegedly made and examine their relationship with the accused to rule out animosity or bias.",
+        "Assess the circumstances surrounding the confession to determine if it was made voluntarily, in a fit state of mind, and free from any threat or inducement.",
+        "Scrutinize the exact words allegedly spoken by the accused to verify whether they unambiguously and clearly convey the perpetrator's guilt without omission.",
+        "Examine the rest of the evidentiary record to find independent corroboration, treating the extra-judicial confession as a weak piece of evidence that cannot solely form the basis of conviction if uncorroborated.",
+        "Accept the confession as a valid link in the chain of guilt if it passes the tests of credibility and corroboration; otherwise, reject it."
+      ],
+      "example_application": "An accused allegedly confesses to a hostile relative days after the crime. The court examines the relationship, notes the enmity, finds the exact words inconsistent, and notes the lack of independent corroborative evidence, thereby discarding the extra-judicial confession.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2011_374",
+        "il-tur-cjpe-2013_360",
+        "il-tur-cjpe-2016_312"
+      ],
+      "shared_pattern": "In each case, the court subjects an extra-judicial confession to a strict reliability test, evaluating the witness's relationship to the accused, the precision of the words used, and the absolute necessity of independent corroboration before treating it as an incriminating circumstance.",
+      "scope_exclusions": "Do not use for formally recorded judicial confessions before a Magistrate or discovery statements leading to the recovery of facts under Section 27 of the Evidence Act.",
+      "support_count": 3
+    },
+    {
+      "template_name": "test_identification_parade_evidentiary_value",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Test Identification Parade",
+        "In-Court Identification",
+        "Substantive Evidence"
+      ],
+      "description": "Assesses the evidentiary value of identifying an unknown accused, establishing that in-court identification is the primary substantive evidence while a Test Identification Parade (TIP) serves merely as corroboration.",
+      "application_scenario": "Use when the identity of the accused is disputed, the accused was not previously known to the eyewitnesses, and the defense challenges the identification based on delayed, flawed, or absent Test Identification Parades.",
+      "reasoning_flow": [
+        "Determine whether the accused was known to the eyewitness prior to the incident; if known, a formal TIP is generally unnecessary.",
+        "If the accused was a stranger, verify if the investigating agency conducted a Test Identification Parade and assess whether it was held with reasonable promptitude or suffered from unexplained delays.",
+        "Treat the eyewitness's identification of the accused in court during the trial as the substantive, primary evidence of identity.",
+        "Utilize the results of the TIP (if conducted) strictly as corroborative evidence to lend assurance to the in-court identification.",
+        "If a TIP was not held or was delayed, evaluate whether the witness had sufficient opportunity and enduring impression to reliably identify the accused in court, granting the benefit of doubt if the lack of a TIP introduces fatal vulnerability."
+      ],
+      "example_application": "Eyewitnesses identify an accused in court whom they had never met before the crime. The defense argues the TIP was delayed by a month. The court holds the in-court identification is substantive and, given the enduring impression of the traumatic event on the witnesses, uses the delayed TIP merely to corroborate the already reliable in-court identification.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2003_424",
+        "il-tur-cjpe-2003_952",
+        "il-tur-cjpe-2014_799"
+      ],
+      "shared_pattern": "The courts consistently delineate the legal boundary between in-court identification (substantive) and the TIP (corroborative), using this framework to resolve challenges regarding the absence or delay of the parade.",
+      "scope_exclusions": "Do not use to assess the general credibility of a witness's testimony regarding the facts of the incident, only for the mechanical evaluation of the identification process of a previously unknown suspect.",
+      "support_count": 3
+    },
+    {
+      "template_name": "co_accused_confession_admissibility_filter",
+      "knowledge_tags": [
+        "Evidence Act",
+        "Section 30",
+        "Co-Accused Confession",
+        "Exculpatory Statements"
+      ],
+      "description": "Filters statements made by one accused in a joint trial to determine their admissibility against a co-accused, requiring the statement to be strictly self-inculpatory and used only for corroboration.",
+      "application_scenario": "Use when the prosecution attempts to rely on a confession or a Section 313 CrPC statement made by one accused to establish or support the guilt of another co-accused in the same trial.",
+      "reasoning_flow": [
+        "Identify the specific statement or confession made by an accused that the prosecution seeks to use against a co-accused being tried jointly.",
+        "Analyze the contents of the statement to verify if the maker fully and unequivocally implicates themselves in the crime (self-inculpatory).",
+        "If the statement is exculpatory for the maker and merely shifts the blame to the co-accused, reject its use against the co-accused entirely.",
+        "If the statement is genuinely self-inculpatory, classify it not as substantive evidence against the co-accused, but only as a corroborative element.",
+        "Require independent, substantive evidence to establish the co-accused's guilt, using the co-accused's valid confession merely to lend assurance to that independent evidence."
+      ],
+      "example_application": "Accused A states under Section 313 CrPC that he did not participate in the murder but saw Accused B commit it. The court rules this statement is exculpatory for Accused A and therefore cannot be used as a confession against Accused B under Section 30 of the Evidence Act.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1955_53",
+        "il-tur-cjpe-2000_165",
+        "il-tur-cjpe-2003_1228"
+      ],
+      "shared_pattern": "The courts uniformly apply Section 30 of the Evidence Act to bar the use of a co-accused's statement against another unless the statement is self-inculpatory for the maker, and even then, refuse to treat it as substantive standalone evidence.",
+      "scope_exclusions": "Do not use for evaluating the testimony of an accomplice who has been formally granted a pardon and turned approver (which is substantive evidence).",
+      "support_count": 3
+    }
+  ]
+}

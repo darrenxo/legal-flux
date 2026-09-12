@@ -19,6 +19,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("flux-export-template-batches")
     subparsers.add_parser("flux-export-chatgpt-batches")
     subparsers.add_parser("flux-export-gemini-batches")
+    subparsers.add_parser("flux-prepare-cjpe-template-source")
 
     flux_import = subparsers.add_parser("flux-import-templates")
     flux_import.add_argument("--input", required=True)
@@ -195,7 +196,7 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_generate.add_argument(
         "--conditions",
         nargs="+",
-        choices=["direct", "structured"],
+        choices=["direct", "structured", "flux_rf_style"],
         default=None,
     )
     benchmark_generate.add_argument("--run-tag", required=True)
@@ -234,6 +235,10 @@ def main(argv: list[str] | None = None) -> int:
         from .legal_flux_chatgpt import export_legal_flux_chatgpt_batches
 
         result = export_legal_flux_chatgpt_batches(config)
+    elif args.command == "flux-prepare-cjpe-template-source":
+        from .cjpe_template_source import prepare_cjpe_template_source
+
+        result = prepare_cjpe_template_source(config)
     elif args.command == "flux-import-templates":
         from .legal_flux_setup import import_legal_flux_templates
 

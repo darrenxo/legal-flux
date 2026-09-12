@@ -1,0 +1,634 @@
+{
+  "LF001": [
+    "LF001"
+  ],
+  "LF002": [
+    "LF002"
+  ],
+  "LF003": [
+    "LF003"
+  ],
+  "LF004": [
+    "LF004"
+  ],
+  "LF005": [
+    "LF005"
+  ],
+  "LF006": [
+    "LF006"
+  ],
+  "LF007": [
+    "LF007"
+  ],
+  "LF008": [
+    "LF008"
+  ],
+  "LF009": [
+    "LF009"
+  ],
+  "LF010": [
+    "LF010"
+  ],
+  "LF011": [
+    "LF011"
+  ],
+  "LF012": [
+    "LF012"
+  ],
+  "LF013": [
+    "LF013"
+  ],
+  "LF014": [
+    "LF014"
+  ],
+  "LF015": [
+    "LF015"
+  ],
+  "LF016": [
+    "LF016"
+  ],
+  "LF017": [
+    "LF017"
+  ],
+  "LF018": [
+    "LF018"
+  ],
+  "LF019": [
+    "LF019"
+  ],
+  "LF020": [
+    "LF020"
+  ],
+  "LF021": [
+    "LF021"
+  ],
+  "LF022": [
+    "LF022"
+  ],
+  "LF023": [
+    "LF023"
+  ],
+  "LF024": [
+    "LF024"
+  ],
+  "LF025": [
+    "LF025"
+  ],
+  "LF026": [
+    "LF026"
+  ],
+  "LF027": [
+    "LF027"
+  ],
+  "LF028": [
+    "LF028"
+  ],
+  "LF029": [
+    "LF029"
+  ],
+  "LF030": [
+    "LF030"
+  ],
+  "LF031": [
+    "LF031"
+  ],
+  "LF032": [
+    "GAP_semantic_family_001_01"
+  ],
+  "LF033": [
+    "GAP_semantic_family_001_02"
+  ],
+  "LF034": [
+    "GAP_semantic_family_002_01"
+  ],
+  "LF035": [
+    "GAP_semantic_family_002_02"
+  ],
+  "LF036": [
+    "GAP_semantic_family_003_01"
+  ],
+  "LF037": [
+    "GAP_semantic_family_004_01"
+  ],
+  "LF038": [
+    "GAP_semantic_family_004_02"
+  ],
+  "LF039": [
+    "GAP_semantic_family_004_03"
+  ],
+  "LF040": [
+    "GAP_semantic_family_005_01"
+  ],
+  "LF041": [
+    "GAP_semantic_family_005_02"
+  ],
+  "LF042": [
+    "GAP_semantic_family_006_01"
+  ],
+  "LF043": [
+    "GAP_semantic_family_006_02"
+  ],
+  "LF044": [
+    "GAP_semantic_family_006_03"
+  ],
+  "LF045": [
+    "GAP_semantic_family_006_04"
+  ],
+  "LF046": [
+    "GAP_semantic_family_007_01"
+  ],
+  "LF047": [
+    "GAP_semantic_family_009_02"
+  ],
+  "LF048": [
+    "GAP_semantic_family_009_03"
+  ],
+  "LF049": [
+    "GAP_semantic_family_010_01"
+  ],
+  "LF050": [
+    "GAP_semantic_family_010_02"
+  ],
+  "LF051": [
+    "GAP_semantic_family_011_01"
+  ],
+  "LF052": [
+    "GAP_semantic_family_011_02"
+  ],
+  "LF053": [
+    "GAP_semantic_family_011_03"
+  ],
+  "LF054": [
+    "GAP_semantic_family_012_01"
+  ],
+  "LF055": [
+    "GAP_semantic_family_014_02"
+  ],
+  "LF056": [
+    "GAP_semantic_family_014_03"
+  ],
+  "LF057": [
+    "GAP_semantic_family_015_01"
+  ],
+  "LF058": [
+    "GAP_semantic_family_015_02"
+  ],
+  "LF059": [
+    "GAP_semantic_family_016_01"
+  ],
+  "LF060": [
+    "GAP_semantic_family_016_02"
+  ],
+  "LF061": [
+    "GAP_semantic_family_017_01"
+  ],
+  "LF062": [
+    "GAP_semantic_family_018_01"
+  ],
+  "LF063": [
+    "GAP_semantic_family_019_02"
+  ],
+  "LF064": [
+    "GAP_semantic_family_019_03"
+  ],
+  "LF065": [
+    "GAP_semantic_family_020_01"
+  ],
+  "LF066": [
+    "GAP_semantic_family_020_03"
+  ],
+  "LF067": [
+    "GAP_semantic_family_021_01"
+  ],
+  "LF068": [
+    "GAP_semantic_family_021_02"
+  ],
+  "LF069": [
+    "GAP_semantic_family_023_01"
+  ],
+  "LF070": [
+    "GAP_semantic_family_024_01"
+  ],
+  "LF071": [
+    "GAP_semantic_family_024_02"
+  ],
+  "LF072": [
+    "GAP_semantic_family_025_02"
+  ],
+  "LF073": [
+    "GAP_semantic_family_026_01"
+  ],
+  "LF074": [
+    "GAP_semantic_family_026_03"
+  ],
+  "LF075": [
+    "GAP_semantic_family_028_01"
+  ],
+  "LF076": [
+    "GAP_semantic_family_028_02"
+  ],
+  "LF077": [
+    "GAP_semantic_family_028_03"
+  ],
+  "LF078": [
+    "GAP_semantic_family_029_01"
+  ],
+  "LF079": [
+    "GAP_semantic_family_029_03"
+  ],
+  "LF080": [
+    "GAP_semantic_family_030_01"
+  ],
+  "LF081": [
+    "GAP_semantic_family_030_02"
+  ],
+  "LF082": [
+    "GAP_semantic_family_031_01"
+  ],
+  "LF083": [
+    "GAP_semantic_family_033_01"
+  ],
+  "LF084": [
+    "GAP_semantic_family_033_02"
+  ],
+  "LF085": [
+    "GAP_semantic_family_034_01"
+  ],
+  "LF086": [
+    "GAP_semantic_family_038_01"
+  ],
+  "LF087": [
+    "GAP_semantic_family_038_02"
+  ],
+  "LF088": [
+    "GAP_semantic_family_038_03"
+  ],
+  "LF089": [
+    "GAP_semantic_family_039_02"
+  ],
+  "LF090": [
+    "GAP_semantic_family_040_01"
+  ],
+  "LF091": [
+    "GAP_semantic_family_040_02"
+  ],
+  "LF092": [
+    "GAP_semantic_family_041_01"
+  ],
+  "LF093": [
+    "GAP_semantic_family_041_02"
+  ],
+  "LF094": [
+    "GAP_semantic_family_042_01"
+  ],
+  "LF095": [
+    "GAP_semantic_family_042_02"
+  ],
+  "LF096": [
+    "GAP_semantic_family_042_03"
+  ],
+  "LF097": [
+    "GAP_semantic_family_043_02"
+  ],
+  "LF098": [
+    "GAP_semantic_family_044_02"
+  ],
+  "LF099": [
+    "GAP_semantic_family_044_03"
+  ],
+  "LF100": [
+    "GAP_semantic_family_045_01"
+  ],
+  "LF101": [
+    "GAP_semantic_family_046_01"
+  ],
+  "LF102": [
+    "GAP_semantic_family_047_01"
+  ],
+  "LF103": [
+    "GAP_semantic_family_047_02"
+  ],
+  "LF104": [
+    "GAP_semantic_family_049_01"
+  ],
+  "LF105": [
+    "GAP_semantic_family_049_02"
+  ],
+  "LF106": [
+    "GAP_semantic_family_050_01"
+  ],
+  "LF107": [
+    "GAP_semantic_family_050_03"
+  ],
+  "LF108": [
+    "GAP_semantic_family_051_01"
+  ],
+  "LF109": [
+    "GAP_semantic_family_052_01"
+  ],
+  "LF110": [
+    "GAP_semantic_family_053_01"
+  ],
+  "LF111": [
+    "GAP_semantic_family_053_02"
+  ],
+  "LF112": [
+    "GAP_semantic_family_054_01"
+  ],
+  "LF113": [
+    "GAP_semantic_family_056_02"
+  ],
+  "LF114": [
+    "GAP_semantic_family_056_03"
+  ],
+  "LF115": [
+    "GAP_semantic_family_057_03"
+  ],
+  "LF116": [
+    "GAP_semantic_family_058_01"
+  ],
+  "LF117": [
+    "GAP_semantic_family_058_02"
+  ],
+  "LF118": [
+    "GAP_semantic_family_059_01"
+  ],
+  "LF119": [
+    "GAP_semantic_family_060_01"
+  ],
+  "LF120": [
+    "GAP_semantic_family_061_01"
+  ],
+  "LF121": [
+    "GAP_semantic_family_061_02"
+  ],
+  "LF122": [
+    "GAP_semantic_family_061_03"
+  ],
+  "LF123": [
+    "GAP_semantic_family_062_01"
+  ],
+  "LF124": [
+    "GAP_semantic_family_063_01"
+  ],
+  "LF125": [
+    "GAP_semantic_family_064_03"
+  ],
+  "LF126": [
+    "GAP_semantic_family_064_04"
+  ],
+  "LF127": [
+    "GAP_semantic_family_067_01"
+  ],
+  "LF128": [
+    "GAP_semantic_family_067_02"
+  ],
+  "LF129": [
+    "GAP_semantic_family_068_01"
+  ],
+  "LF130": [
+    "GAP_semantic_family_069_01"
+  ],
+  "LF131": [
+    "GAP_semantic_family_070_01"
+  ],
+  "LF132": [
+    "GAP_semantic_family_070_02"
+  ],
+  "LF133": [
+    "GAP_semantic_family_071_01"
+  ],
+  "LF134": [
+    "GAP_semantic_family_071_02"
+  ],
+  "LF135": [
+    "GAP_semantic_family_072_01"
+  ],
+  "LF136": [
+    "GAP_semantic_family_072_02"
+  ],
+  "LF137": [
+    "GAP_semantic_family_074_02"
+  ],
+  "LF138": [
+    "GAP_semantic_family_074_03"
+  ],
+  "LF139": [
+    "GAP_semantic_family_075_02"
+  ],
+  "LF140": [
+    "GAP_semantic_family_076_01"
+  ],
+  "LF141": [
+    "GAP_semantic_family_080_01"
+  ],
+  "LF142": [
+    "GAP_semantic_family_081_01"
+  ],
+  "LF143": [
+    "GAP_semantic_family_082_01"
+  ],
+  "LF144": [
+    "GAP_semantic_family_084_01"
+  ],
+  "LF145": [
+    "GAP_semantic_family_084_02"
+  ],
+  "LF146": [
+    "GAP_semantic_family_085_01"
+  ],
+  "LF147": [
+    "GAP_semantic_family_086_01"
+  ],
+  "LF148": [
+    "GAP_semantic_family_086_02"
+  ],
+  "LF149": [
+    "GAP_semantic_family_088_01"
+  ],
+  "LF150": [
+    "GAP_semantic_family_090_01"
+  ],
+  "LF151": [
+    "GAP_semantic_family_090_02"
+  ],
+  "LF152": [
+    "GAP_semantic_family_093_01"
+  ],
+  "LF153": [
+    "GAP_semantic_family_094_01"
+  ],
+  "LF154": [
+    "GAP_semantic_family_094_02"
+  ],
+  "LF155": [
+    "GAP_semantic_family_094_03"
+  ],
+  "LF156": [
+    "GAP_semantic_family_094_04"
+  ],
+  "LF157": [
+    "GAP_semantic_family_095_01"
+  ],
+  "LF158": [
+    "GAP_semantic_family_096_01"
+  ],
+  "LF159": [
+    "GAP_semantic_family_096_02"
+  ],
+  "LF160": [
+    "GAP_semantic_family_097_01"
+  ],
+  "LF161": [
+    "GAP_semantic_family_097_02"
+  ],
+  "LF162": [
+    "GAP_semantic_family_100_01"
+  ],
+  "LF163": [
+    "GAP_semantic_family_100_02"
+  ],
+  "LF164": [
+    "GAP_semantic_family_102_01"
+  ],
+  "LF165": [
+    "GAP_semantic_family_103_01"
+  ],
+  "LF166": [
+    "GAP_semantic_family_008_01",
+    "GAP_semantic_family_035_03",
+    "GAP_semantic_family_051_03",
+    "GAP_semantic_family_085_02"
+  ],
+  "LF167": [
+    "GAP_semantic_family_008_02",
+    "GAP_semantic_family_085_03"
+  ],
+  "LF168": [
+    "GAP_semantic_family_008_03",
+    "GAP_semantic_family_035_01",
+    "GAP_semantic_family_079_01"
+  ],
+  "LF169": [
+    "GAP_semantic_family_008_04",
+    "GAP_semantic_family_035_02",
+    "GAP_semantic_family_068_02"
+  ],
+  "LF170": [
+    "GAP_semantic_family_009_01",
+    "GAP_semantic_family_013_01",
+    "GAP_semantic_family_017_02",
+    "GAP_semantic_family_076_02"
+  ],
+  "LF171": [
+    "GAP_semantic_family_010_03",
+    "GAP_semantic_family_044_01",
+    "GAP_semantic_family_050_02"
+  ],
+  "LF172": [
+    "GAP_semantic_family_014_01",
+    "GAP_semantic_family_039_01"
+  ],
+  "LF173": [
+    "GAP_semantic_family_018_02",
+    "GAP_semantic_family_032_01",
+    "GAP_semantic_family_091_01"
+  ],
+  "LF174": [
+    "GAP_semantic_family_019_01",
+    "GAP_semantic_family_026_02"
+  ],
+  "LF175": [
+    "GAP_semantic_family_020_02",
+    "GAP_semantic_family_036_01"
+  ],
+  "LF176": [
+    "GAP_semantic_family_022_01",
+    "GAP_semantic_family_074_01",
+    "GAP_semantic_family_079_02"
+  ],
+  "LF177": [
+    "GAP_semantic_family_022_02",
+    "GAP_semantic_family_063_02"
+  ],
+  "LF178": [
+    "GAP_semantic_family_025_01",
+    "GAP_semantic_family_027_02"
+  ],
+  "LF179": [
+    "GAP_semantic_family_025_03",
+    "GAP_semantic_family_027_01"
+  ],
+  "LF180": [
+    "GAP_semantic_family_029_02",
+    "GAP_semantic_family_068_03"
+  ],
+  "LF181": [
+    "GAP_semantic_family_037_01",
+    "GAP_semantic_family_089_01"
+  ],
+  "LF182": [
+    "GAP_semantic_family_041_03",
+    "GAP_semantic_family_089_02",
+    "GAP_semantic_family_101_01"
+  ],
+  "LF183": [
+    "GAP_semantic_family_043_01",
+    "GAP_semantic_family_057_02"
+  ],
+  "LF184": [
+    "GAP_semantic_family_043_03",
+    "GAP_semantic_family_056_01"
+  ],
+  "LF185": [
+    "GAP_semantic_family_044_04",
+    "GAP_semantic_family_087_01"
+  ],
+  "LF186": [
+    "GAP_semantic_family_045_02",
+    "GAP_semantic_family_057_01"
+  ],
+  "LF187": [
+    "GAP_semantic_family_045_03",
+    "GAP_semantic_family_065_01"
+  ],
+  "LF188": [
+    "GAP_semantic_family_046_02",
+    "GAP_semantic_family_060_02",
+    "GAP_semantic_family_069_03"
+  ],
+  "LF189": [
+    "GAP_semantic_family_048_01",
+    "GAP_semantic_family_051_02"
+  ],
+  "LF190": [
+    "GAP_semantic_family_055_01",
+    "GAP_semantic_family_075_01"
+  ],
+  "LF191": [
+    "GAP_semantic_family_059_02",
+    "GAP_semantic_family_073_01"
+  ],
+  "LF192": [
+    "GAP_semantic_family_064_01",
+    "GAP_semantic_family_087_02"
+  ],
+  "LF193": [
+    "GAP_semantic_family_064_02",
+    "GAP_semantic_family_078_01"
+  ],
+  "LF194": [
+    "GAP_semantic_family_066_01",
+    "GAP_semantic_family_082_02"
+  ],
+  "LF195": [
+    "GAP_semantic_family_069_02",
+    "GAP_semantic_family_092_01",
+    "GAP_semantic_family_098_01",
+    "GAP_semantic_family_099_01"
+  ],
+  "LF196": [
+    "GAP_semantic_family_077_01",
+    "GAP_semantic_family_078_02"
+  ]
+}

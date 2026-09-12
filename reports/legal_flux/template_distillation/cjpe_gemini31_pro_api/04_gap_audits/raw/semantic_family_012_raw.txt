@@ -1,0 +1,34 @@
+{
+  "coverage_analysis": "The audit reveals that the current library adequately covers statutory interpretation, constitutional powers, and general evidentiary standards. However, it lacks a template for the Supreme Court's exercise of its overarching jurisdiction to consolidate and dispose of multiple fragmented civil and criminal proceedings in matrimonial disputes based on a global mediated settlement. Several cases in this batch exhibit this exact reasoning pattern, where the court transfers matters to itself, grants mutual consent divorce, and quashes ancillary criminal proceedings to give effect to a holistic compromise.",
+  "gap_candidates": [
+    {
+      "template_name": "comprehensive_matrimonial_settlement_consolidation",
+      "knowledge_tags": [
+        "Matrimonial Settlement",
+        "Quashing of Proceedings",
+        "Mutual Consent Divorce",
+        "Multi-jurisdictional Consolidation",
+        "Complete Justice"
+      ],
+      "description": "Consolidates and disposes of multiple, fragmented civil and criminal matrimonial proceedings across jurisdictions by granting mutual consent divorce and quashing ancillary criminal cases upon a verified global settlement between the parties.",
+      "application_scenario": "Use when estranged spouses reach a comprehensive, voluntary settlement resolving all core marital disputes (alimony, custody, property) and jointly request the apex court to dissolve the marriage and terminate all related civil and criminal litigation.",
+      "reasoning_flow": [
+        "Examine the joint settlement or compromise deed to verify that the parties have amicably and voluntarily resolved all marital disputes, including alimony, property, and child custody.",
+        "Confirm that the substantive obligations under the settlement, such as payment of permanent alimony or return of belongings, have been or are being executed.",
+        "Recognize that the marriage has irretrievably broken down with no possibility of reconciliation, making prolonged litigation futile and harmful.",
+        "Exercise overarching jurisdiction to withdraw pending matrimonial proceedings to the current court and pass a decree of divorce by mutual consent, often waiving statutory cooling-off periods.",
+        "Quash all related ancillary proceedings, including maintenance applications and criminal cases (e.g., for dowry or cruelty), to effectuate the settlement and secure complete peace for the parties."
+      ],
+      "example_application": "Husband and wife engage in multiple litigations including a divorce petition, a maintenance claim, and an FIR for marital cruelty. During a transfer petition before the Supreme Court, they reach a comprehensive mediated settlement, exchanging a lump sum alimony. The Court transfers the divorce petition to itself, grants a mutual consent divorce decree, and quashes the FIR and maintenance claims to finalize the global settlement.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2009_1326",
+        "il-tur-cjpe-2009_1377",
+        "il-tur-cjpe-2009_443",
+        "il-tur-cjpe-2009_86"
+      ],
+      "shared_pattern": "The court leverages a verified, comprehensive settlement between estranged spouses to holistically terminate multiple dispersed civil and criminal litigations, overriding ordinary procedural stages to deliver complete justice and finality.",
+      "scope_exclusions": "Do not use when the settlement is coerced, incomplete, or conditional on future uncertain events, or when criminal charges involve severe non-compoundable offenses against society that cannot be quashed merely by private settlement.",
+      "support_count": 4
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+You are a planner for an Indian Supreme Court case.
+First provide a concise planning_analysis that identifies what the appeal or
+petition asks the Supreme Court to decide or grant, as well as the legal
+concepts, procedural posture, and reasoning bottlenecks. Then, based on the
+analysis, plan a short trajectory of abstract reasoning steps in planned_steps.
+Each step should provide a step name, a concise step description, and retrieval
+tags that a separate matcher can use to retrieve one high-level reasoning
+template from the LegalFlux template library.
+
+Use at most {max_steps} steps. Keep planning_analysis concise and infer it only
+from the supplied case input below. Do not decide the final accepted/rejected
+answer in this planning step.
+
+CASE FACT TEXT:
+{case_text}

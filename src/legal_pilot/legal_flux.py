@@ -274,12 +274,15 @@ def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:
         "runner.py",
         "scoring.py",
     ]
+    rf_prompt_namespace = str(
+        config["legal_flux"].get("rf_prompt_namespace") or "legal_flux"
+    ).strip("/")
     prompt_names = [
         "direct.txt",
         "structured.txt",
-        "legal_flux/rf_plan.txt",
-        "legal_flux/instantiate.txt",
-        "legal_flux/rf_review.txt",
+        f"{rf_prompt_namespace}/rf_plan.txt",
+        f"{rf_prompt_namespace}/instantiate.txt",
+        f"{rf_prompt_namespace}/rf_review.txt",
     ]
     schema_names = [
         "direct_analysis.json",

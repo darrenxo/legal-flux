@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_027",
+  "coverage_analysis": "The current library focuses heavily on administrative law, criminal evidence evaluation, constitutional limits, and specialized statutory interpretation. While it contains some tax-related templates regarding the strict construction of exemptions (LF019) and the manufacture test for excise (LF020), it lacks fundamental templates for core income-tax classification principles. Specifically, the library does not cover the recurring reasoning operations used to classify Hindu Undivided Family (HUF) income versus individual income when a coparcener earns remuneration, nor does it contain a template for distinguishing between capital and revenue receipts based on the 'adventure in the nature of trade' doctrine. The supplied batch reveals strong clusters of cases dealing with both of these specific tax law operations.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_027_01",
+    "GAP_semantic_family_027_02"
+  ]
+}

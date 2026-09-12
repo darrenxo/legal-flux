@@ -1,0 +1,32 @@
+{
+  "candidates": [
+    {
+      "template_name": "AppellateReversalWithoutReasons",
+      "knowledge_tags": [
+        "intra-court appeal",
+        "appellate review",
+        "speaking order",
+        "judicial discretion",
+        "reversal of single judge"
+      ],
+      "description": "Evaluates the validity of an appellate order (such as a Division Bench decision) that reverses, vacates, or modifies a reasoned order of a lower court or Single Judge without addressing the lower court's findings or recording independent reasons for disagreement.",
+      "application_scenario": "Use when analyzing an appellate court's decision that overturns a lower court's finding of fact or discretionary interim order. Do not use when the appellate court is exercising original jurisdiction or has conducted a de novo review that statutorily overrides the lower court's reasoning without a requirement of specific rebuttal.",
+      "reasoning_flow": [
+        "Identify that the impugned order was passed by an appellate forum (e.g., a Division Bench) reversing, vacating, or substantially modifying a reasoned order passed by a lower court or Single Judge.",
+        "Examine the appellate court's judgment to determine whether it independently assessed the pleadings and the specific findings of the lower court.",
+        "Verify if the appellate court recorded explicit and cogent reasons for disagreeing with the lower court's findings of fact or its exercise of discretion.",
+        "Conclude that the appellate reversal is legally unsustainable if it acts as a non-speaking order that merely substitutes its own conclusion without addressing and dismantling the lower court's underlying reasoning."
+      ],
+      "example_application": "A Single Judge issues a detailed order granting an interim injunction based on a finding of a prima facie case. On appeal, the Division Bench vacates the injunction in a brief order, stating only that the balance of convenience favors the defendant. The Supreme Court sets aside the Division Bench order, ruling that in an intra-court appeal, the appellate court cannot overturn the Single Judge's exercise of discretion without recording specific reasons for its disagreement.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2009_623",
+        "il-tur-cjpe-2009_1920",
+        "il-tur-cjpe-2009_2214",
+        "il-tur-cjpe-2018_219"
+      ],
+      "shared_pattern": "In each case, a Division Bench reversed or modified a Single Judge's reasoned order (dismissal of a writ petition, grant of an ad-interim injunction, or stay of salary stoppage) without properly evaluating the Single Judge's findings or recording distinct reasons for disagreement, leading the Supreme Court to set aside the appellate order.",
+      "scope_exclusions": "Do not use for dismissals in limine by the appellate court (which may not require detailed reasons if simply affirming the lower court), or for administrative appeals where strict judicial reasoning standards do not apply.",
+      "support_count": 4
+    }
+  ]
+}

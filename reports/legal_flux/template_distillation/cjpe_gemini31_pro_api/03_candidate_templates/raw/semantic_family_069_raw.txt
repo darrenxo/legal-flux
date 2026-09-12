@@ -1,0 +1,108 @@
+{
+  "candidates": [
+    {
+      "template_name": "sufficient_cause_delay_condonation",
+      "knowledge_tags": [
+        "limitation",
+        "condonation_of_delay",
+        "sufficient_cause",
+        "judicial_discretion"
+      ],
+      "description": "Evaluates whether a party's delay in completing a procedural filing should be condoned by determining if the explanation constitutes 'sufficient cause' without mala fides or negligence.",
+      "application_scenario": "Use when a party files an appeal, objection, or application beyond the statutory limitation period and seeks condonation. Do not use if the governing statute expressly bars any extension of time whatsoever.",
+      "reasoning_flow": [
+        "Quantify the period of delay beyond the statutory limitation period.",
+        "Examine the party's explanation for the delay to identify the underlying cause (e.g., miscalculation by counsel, requirement to inspect documents, or ignorance of a relevant event like a party's death).",
+        "Evaluate whether the delay resulted from deliberate inaction, culpable negligence, or dilatory tactics.",
+        "If the cause is found to be a bona fide lapse, exercise judicial discretion to condone the delay, prioritizing the advancement of substantial justice and a decision on the merits over technical default."
+      ],
+      "example_application": "A party files an appeal 45 days late because their records were destroyed in a localized flood. The court verifies the flood event, finds no dilatory intent, and condones the delay to hear the appeal on its merits.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1972_124",
+        "il-tur-cjpe-1990_600",
+        "il-tur-cjpe-2008_1011"
+      ],
+      "shared_pattern": "In all cases, the court assessed the reasons for procedural delay (lawyer's miscalculation, time taken to inspect account books, ignorance of a respondent's death) and favored a liberal interpretation of 'sufficient cause' to allow the substantive proceedings to continue.",
+      "scope_exclusions": "Statutes containing absolute, unextendable limitation periods; cases where the delay is intentional, strategic, or clearly mala fide.",
+      "support_count": 3
+    },
+    {
+      "template_name": "natural_justice_opportunity_assessment",
+      "knowledge_tags": [
+        "natural_justice",
+        "right_to_be_heard",
+        "statutory_inquiry",
+        "administrative_law"
+      ],
+      "description": "Determines whether an administrative or quasi-judicial authority complied with the principles of natural justice by providing a legally sufficient opportunity to be heard, regardless of the party's full utilization of that opportunity.",
+      "application_scenario": "Use when a party challenges an administrative decision (e.g., compulsory acquisition) on the ground that they were denied a personal hearing or an opportunity to object.",
+      "reasoning_flow": [
+        "Identify whether the governing statute or rules expressly or implicitly mandate an opportunity to be heard or to file objections.",
+        "Verify whether the authority issued adequate notice offering the aggrieved party a chance to submit objections or appear.",
+        "Analyze the party's response to the notice (e.g., filing written objections but failing to appear, or securing partial relief based on their submission).",
+        "Conclude that the requirement of natural justice is satisfied if a genuine opportunity was provided, even if the party chose not to avail themselves of a personal hearing."
+      ],
+      "example_application": "A municipality issues a notice for factory closure, inviting objections and offering a hearing date. The factory owner mails a written reply but does not attend the hearing. The municipality issues the closure order. The court finds no violation of natural justice since the opportunity was formally provided and the written objection was considered.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1976_457",
+        "il-tur-cjpe-1995_350",
+        "il-tur-cjpe-2003_968"
+      ],
+      "shared_pattern": "These cases involve statutory hearing requirements. The courts evaluated whether the State afforded a genuine opportunity to object, ruling that the failure of the party to appear for a personal hearing, or a belated challenge after partial participation, does not negate the compliance with natural justice.",
+      "scope_exclusions": "Cases where the statute explicitly excludes the right to a hearing, or where no notice was ever issued to the affected party at any stage.",
+      "support_count": 3
+    },
+    {
+      "template_name": "appellate_invalidation_of_unreasoned_orders",
+      "knowledge_tags": [
+        "appellate_review",
+        "speaking_order",
+        "reasoned_decision",
+        "judicial_application"
+      ],
+      "description": "Reviews and sets aside lower court or administrative orders that reach a conclusion without articulating the underlying rationale or applying the correct legal standard.",
+      "application_scenario": "Use when an appellate or revisional court is reviewing a lower forum's decision that contains a blanket conclusion, relies blindly on inapplicable precedent, or fails to address the specific statutory tests required.",
+      "reasoning_flow": [
+        "Identify the core conclusion or final directive issued by the lower adjudicatory body.",
+        "Examine the text of the order to locate the factual findings and legal reasoning supporting that specific conclusion.",
+        "Determine if the order lacks independent reasoning (e.g., merely stating an outcome without explanation, blindly citing an unrelated case, or dismissing a matter without framing the required legal questions).",
+        "Set aside the unreasoned or legally deficient order and remand the matter for a fresh decision with proper application of mind."
+      ],
+      "example_application": "A tax tribunal cancels a penalty simply stating 'penalty unjustified' without analyzing the taxpayer's conduct or the statutory requirements. The appellate court sets aside the tribunal's order for lacking reasons and remands it for a speaking order.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2003_954",
+        "il-tur-cjpe-2008_584",
+        "il-tur-cjpe-2019_1015"
+      ],
+      "shared_pattern": "In each case, the High Court disposed of a substantive matter (excise duty exemption, quashing a development scheme, dismissal of a second appeal) without recording its own specific reasons or framing the necessary legal questions, prompting the Supreme Court to set the orders aside.",
+      "scope_exclusions": "Appeals against routine procedural or interim administrative orders where detailed reasons are not statutorily required.",
+      "support_count": 3
+    },
+    {
+      "template_name": "procedural_sequencing_and_jurisdictional_prerequisites",
+      "knowledge_tags": [
+        "procedural_law",
+        "jurisdictional_prerequisite",
+        "statutory_sequence",
+        "judicial_procedure"
+      ],
+      "description": "Invalidates judicial or administrative actions taken prematurely, out of sequence, or by bypassing mandatory preliminary applications or specifically designated authorities.",
+      "application_scenario": "Use when a court or authority proceeds to the main issue or a subsequent procedural step without first resolving a pending threshold application, or when a subordinate authority usurps a directed function.",
+      "reasoning_flow": [
+        "Identify the substantive or punitive action taken by the court or authority.",
+        "Identify the mandatory preliminary step or specific jurisdictional delegation required before taking that action (e.g., deciding an application for leave, hearing the whole appeal, or action by a specifically mandated officer).",
+        "Determine whether the action was executed before the preliminary step was formally resolved or by an unauthorized officer.",
+        "Invalidate the premature or improperly sequenced action and direct that the correct procedural order and jurisdictional boundaries be followed."
+      ],
+      "example_application": "A trial court dismisses a lawsuit for non-payment of court fees while an application seeking an extension of time to pay those fees is still pending. The appellate court reverses the dismissal, ruling that the extension application must be adjudicated before the suit can be dismissed.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2000_455",
+        "il-tur-cjpe-2000_847",
+        "il-tur-cjpe-2013_540"
+      ],
+      "shared_pattern": "The courts overturned actions where a necessary preliminary step or authority was bypassed: rejecting a plaint without deciding a statutory leave application; allowing additional evidence in revision before the appellate court heard the appeal; and a subordinate officer deciding a matter when a mandamus specifically directed the Collector to do so.",
+      "scope_exclusions": "Cases where the procedural sequence is explicitly directory rather than mandatory, or where the threshold defect is incurable and renders preliminary applications moot.",
+      "support_count": 3
+    }
+  ]
+}

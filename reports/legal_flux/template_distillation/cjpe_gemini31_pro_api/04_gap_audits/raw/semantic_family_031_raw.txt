@@ -1,0 +1,34 @@
+{
+  "coverage_analysis": "The supplied batch contains several cases involving disputes over whether specific properties belong to a Hindu joint family or are the absolute self-acquisitions of individual members. These cases consistently apply a distinct burden-shifting reasoning operation: the party asserting jointness must first prove the existence of an adequate income-yielding joint family nucleus, which then shifts the burden to the opposing party to affirmatively prove independent self-acquisition. The current consolidated library addresses criminal burdens of proof, natural justice, specific statutory interpretations, and other doctrines, but completely lacks a template for this fundamental Hindu law property assessment. Because this operation appears in at least four distinct cases and possesses strong abstraction and reuse potential, it is proposed as a gap candidate.",
+  "gap_candidates": [
+    {
+      "template_name": "hindu_joint_family_property_nucleus_burden_shift",
+      "knowledge_tags": [
+        "Hindu Law",
+        "Joint Family Property",
+        "Self-Acquisition",
+        "Nucleus",
+        "Burden of Proof"
+      ],
+      "description": "Determines whether a property acquired by a member of a Hindu joint family is presumed to be joint family property by evaluating if the family possessed a sufficient income-yielding nucleus, which shifts the evidentiary burden to prove self-acquisition.",
+      "application_scenario": "Use when evaluating partition claims where one party asserts that a specific property is joint family property acquired with family funds, while the member holding title asserts it is their absolute self-acquired property.",
+      "reasoning_flow": [
+        "Acknowledge the settled legal position that the mere existence of a joint Hindu family does not automatically create a presumption that all property held by any member is joint family property.",
+        "Require the party alleging the property to be joint to establish that the family possessed an ancestral or joint property nucleus.",
+        "Evaluate the nature and relative value of the established nucleus to determine if it yielded sufficient surplus income capable of forming the foundation for acquiring the disputed property.",
+        "If a sufficient nucleus is proven, shift the evidentiary burden to the party claiming self-acquisition to affirmatively establish that the property was acquired independently without the aid of joint family funds.",
+        "Conclude that the property is joint and available for partition if the burden of proving independent acquisition is not discharged; otherwise, classify it as self-acquired property."
+      ],
+      "example_application": "A plaintiff seeks partition of a house bought in a brother's name. The plaintiff proves the family possessed large ancestral agricultural lands yielding substantial surplus income. The burden shifts to the brother, who fails to prove he bought the house with independent funds. The court classifies the house as joint family property subject to partition.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1954_172",
+        "il-tur-cjpe-1980_247",
+        "il-tur-cjpe-1989_451",
+        "il-tur-cjpe-2011_701"
+      ],
+      "shared_pattern": "All four cases involve disputes over whether properties acquired in the name of individual members are joint family properties or self-acquisitions, utilizing the evidentiary test of a 'sufficient nucleus' to allocate the burden of proof.",
+      "scope_exclusions": "Do not use for determining the initial validity of a coparcenary's existence or for statutory succession to self-acquired property under the Hindu Succession Act.",
+      "support_count": 4
+    }
+  ]
+}

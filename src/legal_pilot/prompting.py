@@ -10,6 +10,17 @@ from .models import NormalizedCase
 
 
 def load_prompt(config: dict[str, Any], name: str) -> str:
+    rf_prompt_names = {
+        "legal_flux/rf_plan",
+        "legal_flux/instantiate",
+        "legal_flux/rf_review",
+    }
+    if name in rf_prompt_names:
+        namespace = str(
+            config.get("legal_flux", {}).get("rf_prompt_namespace")
+            or "legal_flux"
+        ).strip("/")
+        name = f"{namespace}/{name.rsplit('/', 1)[-1]}"
     path = resolve_path(config, "prompts_dir") / f"{name}.txt"
     return path.read_text(encoding="utf-8")
 
@@ -49,6 +60,7 @@ def render_prompt(
         "requested_remedy": case.requested_remedy or "Not separately specified.",
         "parties": "\n".join(case.parties) or "Not separately specified.",
         "facts": format_facts(case.facts),
+        "case_text": "\n".join(case.facts.values()),
         "authorities": case.authorities or "No authorities supplied.",
         "relevant_cases": case.metadata.get("relevant_cases") or "No relevant cases supplied.",
         "authority_context": authority_context(case, include=include_authority),

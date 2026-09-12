@@ -1,0 +1,88 @@
+{
+  "coverage_analysis": "The current consolidated LegalFlux library covers specific areas of administrative law, evidence, statutory interpretation, and constitutional doctrines like pith and substance. However, the supplied batch of cases heavily features recurring constitutional reasoning surrounding Article 14 (reasonable classification), Article 19(1)(g) (limits of the right to trade regarding competition), and Article 301 (freedom of trade and the compensatory tax exemption). None of these three distinct reasoning operations are adequately subsumed by the existing library, representing significant conceptual gaps in constitutional and taxation law coverage.",
+  "gap_candidates": [
+    {
+      "template_name": "compensatory_tax_trade_freedom_exemption",
+      "knowledge_tags": [
+        "Article 301",
+        "Freedom of Trade and Commerce",
+        "Compensatory Tax",
+        "Regulatory Measures",
+        "Principle of Equivalence"
+      ],
+      "description": "Evaluates whether a tax levied by a State acts as an unconstitutional restriction on the freedom of trade, commerce, and intercourse under Article 301, or is exempt as a compensatory and regulatory tax providing measurable facilities or services to the trade.",
+      "application_scenario": "Use when a state taxing statute (like motor vehicles tax or entry tax) is challenged as impeding the free flow of inter-state or intra-state trade and commerce under Article 301 without fulfilling the requirements of Article 304(b).",
+      "reasoning_flow": [
+        "Ascertain if the impugned tax directly and immediately restricts or impedes the free flow of trade and commerce.",
+        "Determine whether the tax is primarily for augmenting general revenue (concept of burden) or serves as a regulatory and compensatory measure (concept of recompense/reimbursement).",
+        "Evaluate whether there is a specific, identifiable object behind the levy and a broad nexus (principle of equivalence) between the tax imposed and the trading facilities/services provided by the State (e.g., road maintenance, traffic control).",
+        "Conclude that if the tax is compensatory—acting to facilitate rather than hinder trade—it falls outside the purview of Article 301 restrictions; otherwise, it must satisfy Article 304(b)."
+      ],
+      "example_application": "A state levies a tax on passengers and goods carried on National Highways. Transport operators challenge it under Article 301. The court upholds the tax, finding it compensatory because the State incurs expenditure on facilities like lighting and traffic control that facilitate trade along those highways.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1962_123",
+        "il-tur-cjpe-1980_395",
+        "il-tur-cjpe-1983_376",
+        "il-tur-cjpe-2006_1214"
+      ],
+      "shared_pattern": "In all these cases, the courts assess whether a transport or goods tax is compensatory (establishing a nexus to a facility or service) to exempt it from the strictures of Article 301 regarding freedom of trade.",
+      "scope_exclusions": "Do not use to evaluate the legislative competence of a tax under the Seventh Schedule lists independently of its effect on trade freedom.",
+      "support_count": 4
+    },
+    {
+      "template_name": "article_14_reasonable_classification_test",
+      "knowledge_tags": [
+        "Article 14",
+        "Right to Equality",
+        "Reasonable Classification",
+        "Intelligible Differentia",
+        "Nexus Test"
+      ],
+      "description": "Tests the constitutional validity of a statutory classification against the guarantee of equality, determining if the classification is founded on an intelligible differentia and has a rational nexus to the object sought to be achieved.",
+      "application_scenario": "Use when a statute or executive action is challenged under Article 14 for treating different groups unequally (e.g., differential tax rates for road types, distinct rules for small vs. large vehicles, or differentiated restrictions on individuals based on location).",
+      "reasoning_flow": [
+        "Identify the specific classification or categorization created by the impugned statute or executive order.",
+        "Determine whether the classification is founded on an intelligible differentia that distinguishes persons or things grouped together from those left out of the group.",
+        "Ascertain the core object and purpose sought to be achieved by the legislation.",
+        "Evaluate whether the identified differentia has a rational nexus or relation to the legislative object.",
+        "Uphold the classification if both the intelligible differentia and the rational nexus are established; otherwise, strike it down as arbitrary and violative of Article 14."
+      ],
+      "example_application": "A statute prescribes higher tax rates for vehicles using asphalted roads compared to gravel roads. Operators claim discrimination. The court identifies the cost of road maintenance as the intelligible differentia having a rational nexus to the object of the tax, upholding the classification.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1953_63",
+        "il-tur-cjpe-1961_394",
+        "il-tur-cjpe-1963_84"
+      ],
+      "shared_pattern": "Each case applies the foundational two-pronged test of Article 14: assessing whether differentiating between classes (small/large taxis, road types, types of prostitutes) has a rational relation to the regulatory object.",
+      "scope_exclusions": "Do not use when the challenge is based on manifest arbitrariness lacking any classification scheme, which is covered by templates for subordinate legislation testing.",
+      "support_count": 3
+    },
+    {
+      "template_name": "article_19_1_g_competition_monopoly_exclusion",
+      "knowledge_tags": [
+        "Article 19(1)(g)",
+        "Freedom of Trade and Profession",
+        "Business Competition",
+        "Monopoly",
+        "Locus Standi"
+      ],
+      "description": "Establishes that the fundamental right to carry on trade or business under Article 19(1)(g) does not guarantee an existing operator protection from competition, a monopoly, or the right to exclude new eligible entrants.",
+      "application_scenario": "Use when existing business operators (e.g., transport permit holders) challenge liberalized government policies or the grant of licenses/permits to rivals, claiming it hurts their commercial interests or violates their fundamental right to trade.",
+      "reasoning_flow": [
+        "Identify the existing operator's claim that the introduction of new competitors or liberalized licensing policies violates their right to carry on business under Article 19(1)(g).",
+        "Recognize that Article 19(1)(g) is an enabling provision guaranteeing the right to practice a trade, subject to reasonable restrictions, but does not confer a right to a monopoly.",
+        "Conclude that commercial loss or reduced profit margin due to increased, healthy competition from new eligible entrants does not constitute a legal injury or a violation of the existing operator's fundamental rights.",
+        "Reject the challenge, affirming the state's policy to liberalize trade and facilitate public convenience over protecting individual commercial monopolies."
+      ],
+      "example_application": "The state removes caps on the number of bus permits to liberalize transport. Existing operators challenge this, fearing lost profits. The court dismisses the claim, ruling that Article 19(1)(g) provides a right to trade, not a right to operate without competition.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1953_63",
+        "il-tur-cjpe-1991_372",
+        "il-tur-cjpe-2001_668"
+      ],
+      "shared_pattern": "In these cases, existing operators attempt to use Article 19(1)(g) to block the state from allowing more competition (cheaper taxis, uncapped permits), and the courts systematically reject this by ruling that the right to trade excludes the right to be protected from competition.",
+      "scope_exclusions": "Do not use when the state itself is taking over a trade to the total or partial exclusion of citizens (nationalisation), which is governed by Article 19(6)(ii).",
+      "support_count": 3
+    }
+  ]
+}

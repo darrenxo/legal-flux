@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_026",
+  "coverage_analysis": "The current consolidated LegalFlux library covers specific areas of administrative law, evidence, statutory interpretation, and constitutional doctrines like pith and substance. However, the supplied batch of cases heavily features recurring constitutional reasoning surrounding Article 14 (reasonable classification), Article 19(1)(g) (limits of the right to trade regarding competition), and Article 301 (freedom of trade and the compensatory tax exemption). None of these three distinct reasoning operations are adequately subsumed by the existing library, representing significant conceptual gaps in constitutional and taxation law coverage.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_026_01",
+    "GAP_semantic_family_026_02",
+    "GAP_semantic_family_026_03"
+  ]
+}

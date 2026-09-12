@@ -32,8 +32,19 @@ from .models import (
     LegalFluxCandidateResponse,
     LegalFluxConsolidatedTemplateDraft,
     LegalFluxConsolidationResponse,
+    LegalFluxGapAdjudicationResponse,
     LegalFluxGapAuditResponse,
     LegalFluxTemplate,
+)
+
+
+_EXECUTABLE_TEMPLATE_FIELDS = (
+    "template_name",
+    "knowledge_tags",
+    "description",
+    "application_scenario",
+    "reasoning_flow",
+    "example_application",
 )
 
 
@@ -350,8 +361,12 @@ def generate_gemini_template_merge(
     raw_path.write_text(raw_text, encoding="utf-8")
     parsed = _parse_model(raw_text, LegalFluxConsolidationResponse)
     candidates = [row for path in candidate_paths for row in read_jsonl(path)]
-    templates, lineage = _finalize_consolidated_templates(
+    preserved_drafts = _preserve_singleton_executable_fields(
         parsed.templates,
+        source_rows={str(row["candidate_id"]): row for row in candidates},
+    )
+    templates, lineage = _finalize_consolidated_templates(
+        preserved_drafts,
         allowed_source_ids={str(row["candidate_id"]) for row in candidates},
         source="Gemini merge response",
     )
@@ -643,17 +658,11 @@ SUPPLIED SOURCE CASES:
 
 def _merge_prompt_text(batch_root: Path, candidate_paths: list[Path]) -> str:
     prompt = _read_text(batch_root / "prompts" / "02_merge_deduplicate_templates.md")
-    coverage = _read_text(batch_root / "coverage_summary.json")
     sections = [
         f"## {path.name}\n\n```jsonl\n{_read_text(path)}\n```"
         for path in candidate_paths
     ]
     return f"""{prompt}
-
-SOURCE COVERAGE SUMMARY:
-```json
-{coverage}
-```
 
 COMPLETE CANDIDATE SET:
 {chr(10).join(sections)}
@@ -721,17 +730,27 @@ def _adjudicate_gap_candidates(
     prompt = f"""You are performing the final global adjudication of proposed gaps in
 a consolidated LegalFlux template library.
 
-The current library has already passed global consolidation. Change it only
-where a gap candidate adds a genuinely missing, reusable legal reasoning
-operation at a middle-to-high abstraction level. Reject or merge any gap
-candidate that is already covered, subsumed, weakly supported, overly broad,
-overly specific, or directionally tied to an outcome. There is no target final
-template count.
+The current library has already passed global consolidation and will be retained
+verbatim by local code unless a genuine merge explicitly replaces one of its LF
+templates. Adjudicate every proposed GAP candidate. Reject any gap that is
+already covered, subsumed, weakly supported, overly broad, overly specific, or
+directionally tied to an outcome. There is no target final template count.
 
-Return the complete resulting library as one JSON object matching the
-consolidation output schema. Use current LF template IDs and GAP candidate IDs
-in source_candidate_ids for provenance. Template IDs will be reassigned
-deterministically afterward.
+Return one compact JSON object matching the adjudication schema:
+
+1. accepted_gap_candidate_ids: list only GAP IDs that should enter the final
+   library unchanged as standalone templates. Do not copy their template fields.
+2. merged_templates: write a full template only for a genuine merge or minimal
+   refinement involving at least two distinct source IDs and at least one GAP ID.
+   Use current LF and GAP IDs in source_candidate_ids. Rewrite only what the merge
+   requires; do not paraphrase for style.
+
+An unlisted GAP is rejected. Never list an LF ID in
+accepted_gap_candidate_ids. Never emit an unchanged LF template in
+merged_templates. Cite each GAP or LF source ID at most once across the entire
+response. Local code will preserve unchanged LF templates, copy accepted
+singleton GAP templates, replace LF templates cited by a merge, assign final
+template IDs, and record complete lineage.
 
 CURRENT LIBRARY:
 ```jsonl
@@ -743,23 +762,19 @@ PROPOSED GAP CANDIDATES:
 {chr(10).join(json.dumps(row, ensure_ascii=False) for row in gap_rows)}
 ```
 """
-    schema = _read_json_schema(
-        batch_root / "legal_flux_consolidation_response.schema.json"
-    )
+    schema = LegalFluxGapAdjudicationResponse.model_json_schema()
     messages = _messages(prompt)
     prompt_tokens = _preflight_prompt_tokens(config, client, messages)
     response = _complete(client, messages, response_schema=schema)
     raw_text = str(response["content"])
     raw_path = output_root / "legal_flux_gap_adjudication_raw.txt"
     raw_path.write_text(raw_text, encoding="utf-8")
-    parsed = _parse_model(raw_text, LegalFluxConsolidationResponse)
-    allowed_source_ids = {
-        str(row["template_id"]) for row in read_jsonl(pool_path)
-    } | {str(row["candidate_id"]) for row in gap_rows}
-    templates, lineage = _finalize_consolidated_templates(
-        parsed.templates,
-        allowed_source_ids=allowed_source_ids,
-        source="Gemini gap adjudication response",
+    parsed = _parse_model(raw_text, LegalFluxGapAdjudicationResponse)
+    current_rows = read_jsonl(pool_path)
+    templates, lineage, decision_summary = _materialize_gap_adjudication(
+        current_rows=current_rows,
+        gap_rows=gap_rows,
+        adjudication=parsed,
     )
     validate_template_pool(templates)
     write_jsonl(final_path, [template.model_dump(mode="json") for template in templates])
@@ -772,11 +787,117 @@ PROPOSED GAP CANDIDATES:
         "status": "ok",
         "gap_candidate_count": len(gap_rows),
         "template_count": len(templates),
+        **decision_summary,
         "raw_path": str(raw_path),
         "lineage_path": str(lineage_path),
         "preflight_prompt_tokens": prompt_tokens,
         "metadata": response.get("metadata", {}),
     }
+
+
+def _materialize_gap_adjudication(
+    *,
+    current_rows: list[dict[str, Any]],
+    gap_rows: list[dict[str, Any]],
+    adjudication: LegalFluxGapAdjudicationResponse,
+) -> tuple[list[LegalFluxTemplate], dict[str, list[str]], dict[str, int]]:
+    current_by_id = {str(row["template_id"]): row for row in current_rows}
+    gap_by_id = {str(row["candidate_id"]): row for row in gap_rows}
+    if len(current_by_id) != len(current_rows):
+        raise ValueError("Current template library contains duplicate template IDs.")
+    if len(gap_by_id) != len(gap_rows):
+        raise ValueError("Gap audit results contain duplicate candidate IDs.")
+
+    accepted_gap_ids = list(adjudication.accepted_gap_candidate_ids)
+    if len(set(accepted_gap_ids)) != len(accepted_gap_ids):
+        raise ValueError("Gemini gap adjudication repeated accepted GAP IDs.")
+    invalid_accepted = sorted(set(accepted_gap_ids) - set(gap_by_id))
+    if invalid_accepted:
+        raise ValueError(
+            "Gemini gap adjudication accepted unknown or non-GAP IDs: "
+            f"{invalid_accepted}."
+        )
+
+    current_positions = {
+        str(row["template_id"]): index for index, row in enumerate(current_rows)
+    }
+    used_source_ids = set(accepted_gap_ids)
+    replaced_current_ids: set[str] = set()
+    anchored_merges: dict[str, LegalFluxConsolidatedTemplateDraft] = {}
+    gap_only_merges: list[LegalFluxConsolidatedTemplateDraft] = []
+    allowed_source_ids = set(current_by_id) | set(gap_by_id)
+    for index, draft in enumerate(adjudication.merged_templates, start=1):
+        source_ids = list(draft.source_candidate_ids)
+        if len(set(source_ids)) != len(source_ids):
+            raise ValueError(
+                f"Gemini gap adjudication merge {index} repeated source IDs."
+            )
+        unknown = sorted(set(source_ids) - allowed_source_ids)
+        if unknown:
+            raise ValueError(
+                f"Gemini gap adjudication merge {index} cited unknown IDs: {unknown}."
+            )
+        if not any(source_id in gap_by_id for source_id in source_ids):
+            raise ValueError(
+                f"Gemini gap adjudication merge {index} does not cite a GAP ID."
+            )
+        repeated = sorted(set(source_ids) & used_source_ids)
+        if repeated:
+            raise ValueError(
+                "Gemini gap adjudication reused source IDs across decisions: "
+                f"{repeated}."
+            )
+        used_source_ids.update(source_ids)
+        current_sources = [
+            source_id for source_id in source_ids if source_id in current_by_id
+        ]
+        if current_sources:
+            anchor = min(current_sources, key=current_positions.__getitem__)
+            anchored_merges[anchor] = draft
+            replaced_current_ids.update(current_sources)
+        else:
+            gap_only_merges.append(draft)
+
+    drafts: list[LegalFluxConsolidatedTemplateDraft] = []
+    for row in current_rows:
+        template_id = str(row["template_id"])
+        if template_id in anchored_merges:
+            drafts.append(anchored_merges[template_id])
+        elif template_id not in replaced_current_ids:
+            drafts.append(_singleton_draft_from_source(row, template_id))
+    for row in gap_rows:
+        candidate_id = str(row["candidate_id"])
+        if candidate_id in accepted_gap_ids:
+            drafts.append(_singleton_draft_from_source(row, candidate_id))
+    drafts.extend(gap_only_merges)
+
+    source_rows = current_by_id | gap_by_id
+    preserved_drafts = _preserve_singleton_executable_fields(
+        drafts,
+        source_rows=source_rows,
+    )
+    templates, lineage = _finalize_consolidated_templates(
+        preserved_drafts,
+        allowed_source_ids=allowed_source_ids,
+        source="Gemini compact gap adjudication response",
+    )
+    used_gap_ids = used_source_ids & set(gap_by_id)
+    return templates, lineage, {
+        "accepted_singleton_gap_count": len(accepted_gap_ids),
+        "merged_template_count": len(adjudication.merged_templates),
+        "replaced_existing_template_count": len(replaced_current_ids),
+        "rejected_gap_count": len(gap_by_id) - len(used_gap_ids),
+    }
+
+
+def _singleton_draft_from_source(
+    row: dict[str, Any],
+    source_id: str,
+) -> LegalFluxConsolidatedTemplateDraft:
+    return LegalFluxConsolidatedTemplateDraft(
+        **{field: row[field] for field in _EXECUTABLE_TEMPLATE_FIELDS},
+        source_candidate_ids=[source_id],
+    )
 
 
 def _validated_candidates(
@@ -848,6 +969,27 @@ def _finalize_consolidated_templates(
     if not templates:
         raise ValueError(f"{source} did not retain any templates.")
     return templates, lineage
+
+
+def _preserve_singleton_executable_fields(
+    drafts: list[LegalFluxConsolidatedTemplateDraft],
+    *,
+    source_rows: dict[str, dict[str, Any]],
+) -> list[LegalFluxConsolidatedTemplateDraft]:
+    preserved = []
+    for draft in drafts:
+        source_ids = list(dict.fromkeys(draft.source_candidate_ids))
+        if len(source_ids) != 1 or source_ids[0] not in source_rows:
+            preserved.append(draft)
+            continue
+        source_row = source_rows[source_ids[0]]
+        executable = {
+            field: source_row[field]
+            for field in _EXECUTABLE_TEMPLATE_FIELDS
+            if field in source_row
+        }
+        preserved.append(draft.model_copy(update=executable))
+    return preserved
 
 
 def _parse_model(text: str, model_type: Any) -> Any:

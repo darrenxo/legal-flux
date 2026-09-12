@@ -1,0 +1,8 @@
+{
+  "batch_id": "semantic_family_097",
+  "coverage_analysis": "The current template library covers a range of administrative, evidentiary, and constitutional doctrines (e.g., vires of subordinate legislation, substance over form, natural justice, burden of proof). However, it lacks reasoning templates addressing two prominent patterns observed in the provided batch: (1) The use of 'Continuing Mandamus and Structural Injunctions' to address widespread systemic executive failures, where the court actively manages and monitors long-term remedies via ad-hoc committees; and (2) The 'Statutory Primacy of Development Plans', where courts strictly enforce town planning and zoning rules (like FSI limits and green belts) against equitable defenses like promissory estoppel or regularization.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_097_01",
+    "GAP_semantic_family_097_02"
+  ]
+}

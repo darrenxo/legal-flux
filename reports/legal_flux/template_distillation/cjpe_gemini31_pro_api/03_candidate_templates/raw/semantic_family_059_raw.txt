@@ -1,0 +1,114 @@
+{
+  "candidates": [
+    {
+      "template_name": "Appellate_Relief_Against_Procedural_Defaults",
+      "knowledge_tags": [
+        "ex-parte order",
+        "dismissal for default",
+        "counsel negligence",
+        "natural justice",
+        "due process"
+      ],
+      "description": "An appellate reasoning operation to set aside ex-parte orders or dismissals for default when the failure to appear was caused by systemic miscommunications or counsel negligence, ensuring matters are decided on their substantive merits.",
+      "application_scenario": "Used when an appellant challenges a default judgment or ex-parte order by showing that the non-appearance was due to reasons beyond their immediate control, such as counsel withdrawing without notice or a tribunal ignoring an administrative venue request. Do not use if the default was intentional, repetitive, or a deliberate delaying tactic.",
+      "reasoning_flow": [
+        "Identify the procedural default (e.g., non-appearance, failure to prosecute) that led to the ex-parte or dismissal order.",
+        "Examine the appellant's explanation for the default, focusing on external factors such as counsel withdrawal, engagement of new counsel requiring time, or administrative communication failures by the tribunal.",
+        "Assess whether the default was a bona fide error or external failure rather than a willful omission by the litigant themselves.",
+        "Weigh the prejudice caused to the defaulting party (loss of right to be heard on merits) against the inconvenience to the opposing party and the justice system.",
+        "Set aside the default order and restore the proceeding for adjudication on the merits, potentially imposing costs to balance the equities."
+      ],
+      "example_application": "A tenant's eviction suit is dismissed for non-prosecution because their newly engaged lawyer missed the hearing due to a scheduling error. The appellate court uses this template to set aside the dismissal, noting the innocent tenant should not be penalized for the lawyer's failure, and restores the case subject to minor costs.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2009_1578",
+        "il-tur-cjpe-2009_416",
+        "il-tur-cjpe-2018_37"
+      ],
+      "shared_pattern": "In each case, the Supreme Court set aside decisions of a lower commission that were based on procedural defaults (ex-parte or non-prosecution), emphasizing that a litigant should not suffer due to counsel's failures or unaddressed administrative requests, and restored the matters for hearing.",
+      "scope_exclusions": "Cases where the litigant personally ignored multiple summons, deliberately evaded service, or repeatedly caused delays without any reasonable justification.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Equitable_Estoppel_Against_Strict_Contractual_Conditions",
+      "knowledge_tags": [
+        "waiver",
+        "implied acceptance",
+        "estoppel by conduct",
+        "condition precedent",
+        "limitation"
+      ],
+      "description": "Evaluates whether a party's conduct, such as retaining consideration or providing ongoing assurances, constitutes an implied waiver of a strict contractual condition, condition precedent, or limitation period.",
+      "application_scenario": "Used when a defending party attempts to repudiate liability based on a strict contractual timeline or condition (e.g., medical exam requirement, strict notice period) but their own prior conduct or prolonged silence induced the claimant's delay or implied acceptance.",
+      "reasoning_flow": [
+        "Identify the strict condition precedent or limitation clause that the defending party seeks to enforce to avoid liability.",
+        "Analyze the defending party's conduct during the relevant period, such as retaining premiums/funds, delaying formal rejection, or providing ongoing assurances of performance.",
+        "Determine whether this conduct contradicts the strict enforcement of the condition and whether it induced a reasonable belief in the claimant that the condition was waived or the contract was accepted.",
+        "Apply equitable principles to estop the defending party from relying on the strict condition to defeat the otherwise valid claim."
+      ],
+      "example_application": "An insurance company accepts a premium for a health policy but requires a physical signature on a secondary medical form. They retain the premium for a year without asking for the form. When the insured falls ill, the insurer denies the claim for lack of the form. The forum applies this template to hold that retaining the premium constituted an implied waiver of the strict signature requirement.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2018_82",
+        "il-tur-cjpe-2007_113",
+        "il-tur-cjpe-1999_1130"
+      ],
+      "shared_pattern": "In each case, a defending party tried to rely on a technical bar (lack of a required medical exam, lack of formal statutory notice within a deadline, expiration of a timeline in a novation attempt), but the Court held that their own actions (retaining premium for years, continuously promising to trace lost goods, failing to execute the substitute agreement) estopped them from invoking the bar.",
+      "scope_exclusions": "Cases governed by strict statutory limitation periods that absolutely cannot be waived by consent, or where the defending party promptly and clearly communicated rejection to the claimant.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Consumer_Deficiency_Through_Unjustified_Delay",
+      "knowledge_tags": [
+        "deficiency in service",
+        "unfair trade practice",
+        "unreasonable delay",
+        "consumer protection",
+        "compensation"
+      ],
+      "description": "A framework for classifying prolonged, unjustified delay in the delivery of goods or services as a compensable deficiency in service or unfair trade practice under consumer protection frameworks.",
+      "application_scenario": "Used when a consumer alleges financial loss, hardship, or denial of use due to a service provider's or seller's failure to deliver goods, vehicles, or real estate within the promised or reasonable timeframe.",
+      "reasoning_flow": [
+        "Establish the agreed-upon timeline or the legally presumed reasonable timeframe for the delivery of the goods or services based on the contract or standard industry practice.",
+        "Confirm the occurrence and calculate the extent of the delay beyond the stipulated timeframe.",
+        "Evaluate the provider's justification for the delay, distinguishing between genuine force majeure events and intentional withholding, negligence, or systemic inefficiency.",
+        "Classify the unjustified delay as a deficiency in service or unfair trade practice.",
+        "Direct remedial action, which may include specific performance, refund, and the payment of interest or compensation to make good the consumer's loss resulting from the delay."
+      ],
+      "example_application": "A furniture company promises to deliver a custom sofa in 30 days. After 6 months and multiple follow-ups, the sofa is undelivered. The forum uses this template to classify the delay as a deficiency in service, rejecting the company's excuse of routine supply chain issues, and orders a refund with 12% interest for the delay period.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1994_267",
+        "il-tur-cjpe-2007_113",
+        "il-tur-cjpe-2018_553"
+      ],
+      "shared_pattern": "All three cases involve a commercial entity (tractor dealer, goods carrier, real estate builder) who failed to deliver the promised item or service on time. The Court classified this delay or non-delivery as a deficiency or unfair trade practice, establishing that unreasonable delay itself warrants restitution or interest-based compensation.",
+      "scope_exclusions": "Complex commercial contract disputes outside the ambit of consumer protection law, or delays strictly caused by the consumer's own default, such as a failure to pay required installments.",
+      "support_count": 3
+    },
+    {
+      "template_name": "Threshold_Relegation_For_Complex_Or_Parallel_Proceedings",
+      "knowledge_tags": [
+        "jurisdiction",
+        "alternative remedy",
+        "relegation to civil court",
+        "abuse of process",
+        "summary jurisdiction"
+      ],
+      "description": "An operation to dismiss or relegate a petition at the threshold when the forum is inappropriate due to the requirement of complex evidentiary trials, the existence of a specialized statutory remedy, or the abusive filing of parallel proceedings.",
+      "application_scenario": "Used when a summary forum (like a writ court or consumer commission) is approached for a dispute that requires extensive cross-examination, involves highly contested interpretations of terms, or where the petitioner is simultaneously or should be pursuing the relief in a specialized statutory forum.",
+      "reasoning_flow": [
+        "Identify the nature of the claims and the specific reliefs sought by the petitioner in the current forum.",
+        "Evaluate the complexity of the evidentiary requirements (e.g., need for extensive witness examination, complex contractual interpretation) or check for the existence of specialized parallel or statutory remedies available to the petitioner.",
+        "Determine that the current forum's summary nature or extraordinary jurisdiction is ill-suited to adjudicate the matter, or that entertaining it would cause a multiplicity of proceedings and bypass established statutory hierarchies.",
+        "Dismiss the petition or relegate the parties to the appropriate civil court, specialized tribunal, or statutory appellate authority without deciding the substantive merits."
+      ],
+      "example_application": "A claimant files a writ petition in the High Court alleging breach of a complex construction contract requiring the accounting of hundreds of invoices. The High Court applies this template to dismiss the writ, relegating the party to a civil suit or arbitration because the dispute involves disputed questions of fact unsuited for summary writ jurisdiction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1991_568",
+        "il-tur-cjpe-1996_610",
+        "il-tur-cjpe-2010_1074"
+      ],
+      "shared_pattern": "In these cases, the Supreme Court upheld or directed the dismissal of proceedings because the chosen forum was inappropriate at the threshold\u2014either due to the availability of a specialized statutory appeal, the complexity of interpreting an insurance contract requiring a civil suit, or the abusive filing of multiple parallel actions for the same cause.",
+      "scope_exclusions": "Cases where the facts are entirely admitted and the issue is purely a question of law, or where a statute explicitly grants the forum concurrent jurisdiction without evidentiary hurdles.",
+      "support_count": 3
+    }
+  ]
+}

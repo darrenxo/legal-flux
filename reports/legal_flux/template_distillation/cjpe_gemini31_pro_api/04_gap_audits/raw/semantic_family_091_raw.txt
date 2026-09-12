@@ -1,0 +1,33 @@
+{
+  "coverage_analysis": "The batch contains multiple instances where the Supreme Court intervened in civil second appeals because the High Court failed to formulate a 'substantial question of law' as mandated by Section 100 of the Code of Civil Procedure (CPC). While the current library contains templates for appellate review standards in criminal acquittals (LF007) and arbitral awards (LF023), it lacks a template covering the strict statutory and jurisdictional prerequisite for civil second appeals under Section 100 CPC. Four cases in this batch cleanly demonstrate this exact recurring procedural vitiation and subsequent remand, making it a strong gap candidate.",
+  "gap_candidates": [
+    {
+      "template_name": "second_appeal_substantial_question_mandate",
+      "knowledge_tags": [
+        "Civil Procedure Code",
+        "Section 100",
+        "Second Appeal",
+        "Substantial Question of Law",
+        "Appellate Jurisdiction"
+      ],
+      "description": "Enforces the mandatory statutory requirement that a High Court exercising second appellate jurisdiction under Section 100 of the CPC must explicitly formulate a substantial question of law before hearing and deciding the appeal.",
+      "application_scenario": "Use when reviewing a High Court's judgment in a civil second appeal to determine if the court exceeded its jurisdiction by interfering with the lower courts' decrees without formally framing a valid substantial question of law.",
+      "reasoning_flow": [
+        "Identify that the proceeding under challenge is a civil Second Appeal governed by Section 100 of the Code of Civil Procedure.",
+        "Examine the High Court's judgment and record to verify whether a specific 'substantial question of law' was formally formulated prior to or at the time of hearing the appeal.",
+        "Assess whether the High Court impermissibly re-appreciated concurrent findings of fact without rooting its interference in a validly framed question of law.",
+        "Vitiate the High Court's judgment and remand the matter for fresh adjudication if the mandatory requirement to formulate the substantial question of law was bypassed."
+      ],
+      "example_application": "A High Court reverses a trial and first appellate court's concurrent factual finding on tenancy in a second appeal. The Supreme Court sets aside the High Court's decision and remands the case, noting that the High Court failed to frame any substantial question of law before hearing the matter, thereby violating the strictures of Section 100 CPC.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2007_1042",
+        "il-tur-cjpe-2008_2579",
+        "il-tur-cjpe-2009_1273",
+        "il-tur-cjpe-2017_680"
+      ],
+      "shared_pattern": "In all these cases, the Supreme Court sets aside High Court judgments in civil second appeals and remands the matters specifically because the High Courts failed to explicitly formulate a 'substantial question of law' as mandatorily required by Section 100 of the CPC.",
+      "scope_exclusions": "Do not use for first civil appeals (Section 96 CPC), criminal appeals, or writ petitions, as they are not governed by the specific statutory requirement to frame a substantial question of law.",
+      "support_count": 4
+    }
+  ]
+}

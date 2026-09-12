@@ -1,0 +1,84 @@
+{
+  "coverage_analysis": "The audit reveals that while the current library adequately addresses evidentiary assessments like the evaluation of interested witnesses (LF006), it lacks templates for specific recurring operations in family and procedural law found in this batch. Uncovered patterns include the prohibition of collateral attacks on formal civil statuses (such as divorce, marriage, or adoption) during summary or criminal proceedings, the strict pleading and evidentiary requirements for proving customary derogations from general family law, and the strict requirement for the continuous subsistence of free consent throughout mutual-consent divorce proceedings.",
+  "gap_candidates": [
+    {
+      "template_name": "prohibition_collateral_attack_civil_status",
+      "knowledge_tags": [
+        "Collateral Attack",
+        "Civil Status",
+        "Summary Proceedings",
+        "Presumption of Validity",
+        "Family Law"
+      ],
+      "description": "Prohibits the invalidation or bypass of formal civil statuses or registered instruments (like marriage, divorce, or adoption) in collateral, summary, or criminal proceedings, requiring a competent civil court declaration.",
+      "application_scenario": "Use when a party in a summary, criminal, or collateral proceeding (e.g., habeas corpus, domestic violence, maintenance) raises a defense claiming that a registered civil instrument or status (divorce decree, marriage, adoption) is void or fraudulent.",
+      "reasoning_flow": [
+        "Identify that the core relief sought in the summary or criminal proceeding is being resisted by challenging the validity of a formal civil status or registered instrument.",
+        "Determine whether the challenged status or instrument has already been formally annulled, cancelled, or declared void by a competent civil court.",
+        "Apply the presumption of validity to the civil status or instrument if no such competent civil declaration exists.",
+        "Prohibit the collateral attack, refusing to summarily declare the instrument or status void, and direct the aggrieved party to seek the specific remedy of a declaratory decree from a competent civil court."
+      ],
+      "example_application": "A husband defends against a domestic violence maintenance claim by producing a document showing his wife was previously married, arguing their current marriage is void. The court rejects this collateral attack, ordering maintenance because the current marriage remains legally and presumptively valid until a competent civil court formally annuls it.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1999_650",
+        "il-tur-cjpe-2011_546",
+        "il-tur-cjpe-2012_527"
+      ],
+      "shared_pattern": "The court refused to let a party invalidate a formal civil status or document without a proper declaratory decree from a competent civil court, rejecting the collateral attack in a summary or criminal context.",
+      "scope_exclusions": "Do not use when the proceeding itself is a direct civil suit for a declaration of nullity or cancellation of the instrument.",
+      "support_count": 3
+    },
+    {
+      "template_name": "strict_pleading_proof_customary_derogations",
+      "knowledge_tags": [
+        "Customary Law",
+        "Burden of Proof",
+        "Family Law",
+        "Statutory Derogation"
+      ],
+      "description": "Requires that any custom acting as an exception to general statutory family law (such as customary divorce or customary marriage ceremonies) be specifically pleaded and established by cogent evidence.",
+      "application_scenario": "Use when a party claims that a marriage was validly formed or dissolved based on a specific community custom that deviates from the standard statutory provisions.",
+      "reasoning_flow": [
+        "Identify that a party is relying on a specific community custom to establish the validity of a marriage or its dissolution, operating as an exception to general statutory law.",
+        "Verify whether the party has explicitly and specifically pleaded the existence and exact nature of this custom in their pleadings and whether specific issues were framed.",
+        "Assess whether the party has led cogent, independent evidence to strictly prove the continuous existence of the custom and the actual performance of its essential ceremonies.",
+        "Reject the claim if the custom was not specifically pleaded or if the essential ceremonies were not strictly proved, upholding the general statutory requirements instead."
+      ],
+      "example_application": "A husband claims his prior marriage was already dissolved by a customary divorce deed signed by both parties. However, he fails to plead the specific custom or prove that his community legally recognizes such paper divorces. The court rejects the customary divorce and treats the first marriage as subsisting.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1965_133",
+        "il-tur-cjpe-2004_701",
+        "il-tur-cjpe-2019_896"
+      ],
+      "shared_pattern": "In all cases, the court refused to recognize a customary exception to family law (whether a marriage ceremony or a divorce) because the party failed to specifically plead and rigorously prove the custom and its essential ceremonies.",
+      "scope_exclusions": "Do not use when the statute explicitly recognizes the specific act without requiring proof of custom, or in matters unrelated to personal and family law derogations.",
+      "support_count": 3
+    },
+    {
+      "template_name": "subsisting_consent_mutual_divorce",
+      "knowledge_tags": [
+        "Mutual Consent Divorce",
+        "Withdrawal of Consent",
+        "Free Consent",
+        "Jurisdiction"
+      ],
+      "description": "Evaluates petitions for divorce by mutual consent by requiring the continuous, free, and unvitiated consent of both parties up to the moment the final decree is passed.",
+      "application_scenario": "Use when one party in a mutual consent divorce proceeding withdraws their consent before the final decree, or alleges that their initial consent was obtained through fraud, force, or undue influence.",
+      "reasoning_flow": [
+        "Ascertain that the proceeding is a joint petition for divorce by mutual consent under the applicable family law statute.",
+        "Verify whether both parties have maintained their explicit and voluntary consent through the mandatory statutory waiting period and at the final hearing.",
+        "Evaluate any claim by a party withdrawing consent or asserting that their initial consent was vitiated by undue influence, such as a medical emergency or pre-existing duty.",
+        "Conclude that the court lacks jurisdiction to pass the decree if valid, free consent does not subsist from both parties, and dismiss the petition unless invoking extraordinary constitutional powers."
+      ],
+      "example_application": "A husband and wife file for mutual consent divorce. After the statutory waiting period, the wife withdraws her consent, stating she wishes to save the marriage. The court holds that mutual consent must subsist until the decree is passed and dismisses the divorce petition.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1991_40",
+        "il-tur-cjpe-2009_1209",
+        "il-tur-cjpe-2015_524"
+      ],
+      "shared_pattern": "The court established that a decree of divorce by mutual consent cannot be granted if one party explicitly withdraws consent before the final decree or if the consent was vitiated by undue influence, depriving the court of jurisdiction.",
+      "scope_exclusions": "Do not use for contested divorce petitions based on fault grounds such as cruelty or desertion.",
+      "support_count": 3
+    }
+  ]
+}

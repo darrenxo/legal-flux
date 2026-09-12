@@ -1,0 +1,140 @@
+{
+  "candidates": [
+    {
+      "template_name": "evaluation_of_uncorroborated_official_testimony_in_search_and_seizure",
+      "knowledge_tags": [
+        "Search and Seizure",
+        "Police Witnesses",
+        "Corroboration",
+        "Rule of Prudence",
+        "Evidentiary Scrutiny"
+      ],
+      "description": "A structured reasoning operation to evaluate the reliability of search, seizure, or arrest evidence when the prosecution relies entirely on official (police) testimony without joining independent public witnesses.",
+      "application_scenario": "Use when the defense challenges a conviction or the recovery of incriminating material on the ground that no independent civilian witnesses were associated with the search/seizure, and only police personnel have testified.",
+      "reasoning_flow": [
+        "Identify the absence of independent public witnesses during the search, seizure, or apprehension event.",
+        "Examine the contextual circumstances provided by the prosecution to justify this absence (e.g., odd hours, desolate location, hostile crowd, or suddenness of the event).",
+        "Subject the uncorroborated testimony of the official witnesses to heightened scrutiny, specifically looking for material contradictions or inconsistencies regarding the procedure, location, time, or handling of seized items (e.g., sealing of parcels, specific pockets of recovery).",
+        "If the official testimony is internally consistent, coherent, and survives cross-examination, accept it as reliable evidence to sustain the finding; if material discrepancies exist, reject the evidence due to lack of independent corroboration."
+      ],
+      "example_application": "In a case where illegal firearms are recovered from a suspect at a bus stand solely by a patrol team, the court notes the lack of civilian witnesses. It finds that despite the busy location, the police testimonies contain material contradictions about who sealed the weapon and in which bag it was found. The court rejects the recovery evidence due to these inconsistencies combined with the lack of independent corroboration.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1992_500",
+        "il-tur-cjpe-1995_1030",
+        "il-tur-cjpe-1995_128",
+        "il-tur-cjpe-1996_394",
+        "il-tur-cjpe-1999_980"
+      ],
+      "shared_pattern": "In all these cases, the defense argued that the recovery of a weapon was invalid because only police officers testified. The court applied a heightened scrutiny test: where police testimony had discrepancies (e.g., left vs. right pocket, sealed vs. unsealed), convictions were set aside. Where police testimony was cohesive and unchallenged in cross-examination, convictions were upheld.",
+      "scope_exclusions": "Do not use when independent witnesses were actually joined but later turned hostile (which triggers a different evaluation of hostile witnesses), or when statutory law mandates a specific class of witnesses for the search.",
+      "support_count": 5
+    },
+    {
+      "template_name": "ascertainment_of_common_object_for_constructive_liability",
+      "knowledge_tags": [
+        "Constructive Liability",
+        "Unlawful Assembly",
+        "Common Object",
+        "Vicarious Liability"
+      ],
+      "description": "A reasoning operation to determine whether an individual member of an unlawful assembly can be held constructively liable for an offense committed by another member, by delineating the exact scope of the assembly's common object or shared knowledge.",
+      "application_scenario": "Use when multiple accused form an unlawful assembly, but specific overt acts constituting a major offense (like murder) are committed by only some members, and the court must decide if vicarious liability extends to the passive or differently-acting members.",
+      "reasoning_flow": [
+        "Identify the formation of an unlawful assembly and establish the presence of the specific accused within it.",
+        "Extract proven facts about the assembly's inception, context, the nature of weapons carried, exhortations made, and the overall behavior of the group to define the scope of their 'common object'.",
+        "Determine the specific offense actually committed by a member (or members) of the assembly.",
+        "Evaluate whether the committed offense squarely fell within the defined common object, or whether the non-acting members possessed the requisite knowledge that such an offense was likely to be committed in prosecution of that object.",
+        "Impose constructive liability if the nexus is established; exclude from liability if the offense was a distinct, unshared act outside the assembly's anticipated scope."
+      ],
+      "example_application": "A group gathers to protest a land dispute, carrying only sticks (lathis) to commit criminal trespass. Suddenly, one member pulls out a concealed firearm and shoots the landowner. The court analyzes the common object (trespass and minor assault) and concludes the other members had no knowledge a shooting was likely, thereby rejecting constructive liability for murder for the stick-wielding members.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1991_315",
+        "il-tur-cjpe-2011_970",
+        "il-tur-cjpe-2012_587"
+      ],
+      "shared_pattern": "The court systematically separates the fact of membership in an assembly from the specific intent/knowledge required to hold all members liable for a severe outcome (like murder). Liability is restricted to what was demonstrably shared or reasonably foreseeable by the group as a whole.",
+      "scope_exclusions": "Do not use when analyzing 'common intention' (e.g., Section 34 IPC) involving a pre-arranged plan among a smaller group of individuals where an assembly of five or more is not established.",
+      "support_count": 3
+    },
+    {
+      "template_name": "appellate_review_of_acquittal_perversity_test",
+      "knowledge_tags": [
+        "Appellate Review",
+        "Acquittal",
+        "Perversity",
+        "Presumption of Innocence",
+        "Evidence Appreciation"
+      ],
+      "description": "A procedural reasoning framework for an appellate court to determine whether it is justified in overturning a trial court's order of acquittal.",
+      "application_scenario": "Use when the State or a complainant appeals against an acquittal, and the appellate court must decide whether to interfere with the trial court's finding of innocence.",
+      "reasoning_flow": [
+        "Acknowledge the double presumption of innocence: the initial presumption, reinforced by the trial court's order of acquittal.",
+        "Examine the trial court's reasoning to determine if it is a plausible, reasonable view of the evidence, even if an alternative view leading to conviction is also possible.",
+        "Scrutinize the trial court's judgment for 'perversity', defined as ignoring material evidence, relying on legally inadmissible evidence, acting on mere conjectures, or reaching a conclusion no reasonable person could reach.",
+        "If the trial court's view is merely one of two plausible views, maintain the acquittal; if the trial court's approach is found to be manifestly illegal or perverse, reverse the acquittal and reappreciate the evidence to record a conviction."
+      ],
+      "example_application": "The trial court acquits an accused of assault because the eyewitnesses were relatives of the victim, rejecting their testimony entirely as 'interested' without pointing out any actual contradictions. The appellate court applies the perversity test, notes that dismissing relative testimony outright without scrutiny is legally erroneous, finds the trial court's reasoning perverse, and reverses the acquittal.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1974_322",
+        "il-tur-cjpe-1992_12",
+        "il-tur-cjpe-2009_1435"
+      ],
+      "shared_pattern": "In each case, the Supreme Court evaluated the reversal of an acquittal by checking if the trial court's original finding was 'unreasonable' or 'perverse'. Reversals of acquittal were upheld only when the trial court ignored compelling evidence or applied an impossibly speculative standard.",
+      "scope_exclusions": "Do not use in standard appeals against conviction, where the presumption of innocence has already been displaced by the trial court's finding of guilt.",
+      "support_count": 3
+    },
+    {
+      "template_name": "evidentiary_severance_and_sufficiency_test",
+      "knowledge_tags": [
+        "Admissibility of Evidence",
+        "Severance",
+        "Sufficiency of Proof",
+        "Tainted Evidence"
+      ],
+      "description": "An analytical method to determine if a conviction can be sustained when a specific, highly contested piece of prosecution evidence is excluded from consideration.",
+      "application_scenario": "Use when the defense successfully challenges the admissibility or reliability of a major piece of evidence (e.g., an involuntary confession, invalid scientific tracking), and the court must decide the fate of the prosecution's case.",
+      "reasoning_flow": [
+        "Identify the specific piece of evidence challenged as legally inadmissible or fatally flawed.",
+        "Conceptually sever and exclude this contested evidence from the prosecution's evidentiary chain.",
+        "Marshal the remaining, untainted evidence on record (e.g., independent eyewitness accounts, valid forensic recoveries, other admissible confessions).",
+        "Evaluate whether this remaining body of evidence independently forms a complete and conclusive chain establishing the guilt of the accused beyond a reasonable doubt.",
+        "Uphold the conviction if the residual evidence is sufficient; acquit if the exclusion breaks a vital link in the prosecution's case."
+      ],
+      "example_application": "The defense proves that a suspect's confession was coerced, rendering it inadmissible. The court excludes the confession but reviews the remaining record: a bloody weapon was recovered from the suspect's home and two independent bystanders positively identified the suspect fleeing the scene. The court concludes the remaining evidence is sufficient to uphold the conviction.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-1969_64",
+        "il-tur-cjpe-1976_111",
+        "il-tur-cjpe-2016_168"
+      ],
+      "shared_pattern": "The court assumes or rules that a specific piece of evidence (dog tracking, a particular confession) is inadmissible, but systematically tests the remaining evidence. Finding the independent remainder conclusive, the court sustains the convictions.",
+      "scope_exclusions": "Do not use when the excluded evidence is the sole, indispensable foundation of the prosecution's case (e.g., in cases where no corroborating evidence exists).",
+      "support_count": 3
+    },
+    {
+      "template_name": "procedural_cure_of_statutory_confessions",
+      "knowledge_tags": [
+        "Statutory Confessions",
+        "Procedural Defects",
+        "Curability",
+        "Oral Testimony"
+      ],
+      "description": "A reasoning template to determine whether a procedural defect in recording a statutory confession (such as a missing certificate or memorandum) can be cured by the oral testimony of the recording officer.",
+      "application_scenario": "Use when an accused challenges the admissibility of a confession recorded under a special statute (like TADA or MCOCA) because the recording officer failed to append the exact statutory certificate or memorandum at the end of the document.",
+      "reasoning_flow": [
+        "Identify the procedural omission in the recorded confession (e.g., absence of the mandatory written certificate stating the confession was voluntary and read over).",
+        "Determine if the governing legal framework permits curing such procedural defects (e.g., applying Section 463 of the CrPC to special statute confessions).",
+        "Examine the oral testimony of the recording officer given during the trial to see if they adequately explain the procedure followed, confirming that statutory warnings were administered and voluntariness was ensured.",
+        "If the officer's credible testimony establishes that substantive safeguards were actually met despite the documentation error, admit the confession; if the testimony fails to satisfy these safeguards, reject the confession."
+      ],
+      "example_application": "A confession under an anti-terror law lacks the required written footer certifying it was voluntary. During trial, the Superintendent of Police who recorded it testifies, providing detailed proof that the accused was warned, given reflection time, and confessed voluntarily without coercion. The court uses this testimony to cure the documentary defect and admits the confession.",
+      "supporting_case_ids": [
+        "il-tur-cjpe-2002_259",
+        "il-tur-cjpe-2009_770",
+        "il-tur-cjpe-2016_168"
+      ],
+      "shared_pattern": "In these cases dealing with special statutory confessions, the defense attacked the admissibility based on missing certificates. The court analyzed whether the recording officer's trial deposition satisfactorily proved that the substantive rights of the accused were protected, thus curing the technical documentary flaw.",
+      "scope_exclusions": "Do not use for curing substantive invalidities, such as failure to obtain prior statutory approval to register the case, or if the recording officer themselves lacked the statutory rank/jurisdiction.",
+      "support_count": 3
+    }
+  ]
+}

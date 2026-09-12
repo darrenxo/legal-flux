@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_085",
+  "coverage_analysis": "The batch of cases primarily involves criminal appeals, specifically dealing with murder, circumstantial evidence, evaluation of eyewitnesses, and procedural aspects of criminal trials like FIR delays and omissions. The current library covers circumstantial evidence chains (LF004), ocular vs. medical evidence (LF005), interested witness evaluation (LF006), and appellate review of acquittals (LF007). However, the library lacks specific templates for evaluating the proximity requirement in the 'last seen together' doctrine, assessing the fatal or non-fatal nature of delays in lodging the FIR, and determining the materiality of omissions in the FIR or initial police statements. These are recurring, distinct reasoning operations in this batch.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_085_01",
+    "GAP_semantic_family_085_02",
+    "GAP_semantic_family_085_03"
+  ]
+}

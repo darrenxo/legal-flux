@@ -1,0 +1,9 @@
+{
+  "batch_id": "semantic_family_042",
+  "coverage_analysis": "The current template library contains operations for general administrative, criminal, and civil adjudication, including lifting the veil in service terminations (LF014) and equitable modulation of strict relief (LF030). However, the library lacks specific frameworks for industrial adjudication, particularly concerning the computation of bonus using the Full Bench Formula or the Payment of Bonus Act. The supplied batch of cases frequently exhibits two recurring operations missing from the library: (1) calculating direct taxes notionally as a prior charge in bonus disputes without first deducting the bonus payable, and (2) evaluating the strict evidentiary burden required to prove that reserves were actually utilized as working capital to claim a return. Additionally, while LF030 allows for molding relief equitably, a highly specialized operation in labour law—denying the normal rule of reinstatement for wrongful dismissal in favor of monetary compensation due to loss of confidence or industrial inexpediency—appears repeatedly and requires a distinct template.",
+  "gap_candidate_ids": [
+    "GAP_semantic_family_042_01",
+    "GAP_semantic_family_042_02",
+    "GAP_semantic_family_042_03"
+  ]
+}
