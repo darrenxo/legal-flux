@@ -144,6 +144,11 @@ def _apply_runtime_environment(config: dict[str, Any]) -> None:
         environment_name = f"LEGAL_FLUX_{role.upper()}_MODEL"
         if os.environ.get(environment_name):
             legal_flux[f"{role}_model"] = os.environ[environment_name]
+        checkpoint_environment_name = f"LEGAL_FLUX_{role.upper()}_CHECKPOINT"
+        if os.environ.get(checkpoint_environment_name):
+            legal_flux[f"{role}_checkpoint"] = os.environ[
+                checkpoint_environment_name
+            ]
     if os.environ.get("LEGAL_FLUX_SOURCE_CHECKPOINT"):
         legal_flux["source_checkpoint"] = os.environ[
             "LEGAL_FLUX_SOURCE_CHECKPOINT"

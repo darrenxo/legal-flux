@@ -139,6 +139,14 @@ def run_legal_flux_generation(
     templates = load_template_pool(config)
     template_hash = template_pool_hash(templates)
     workflow_hash = legal_flux_workflow_hash(config)
+    role_models = {
+        role: _role_model(config, role)
+        for role in ("planner", "executor", "reviewer")
+    }
+    role_checkpoints = {
+        role: str(config["legal_flux"].get(f"{role}_checkpoint") or "")
+        for role in ("planner", "executor", "reviewer")
+    }
     similarity_backend = (
         _build_rf_similarity_backend(config)
         if any(job["condition"] == "flux_rf_style" for job in jobs)
@@ -211,6 +219,8 @@ def run_legal_flux_generation(
                 "phase": normalized_phase,
                 "model_digest": digest,
                 "model_digests": model_digests,
+                "role_models": role_models,
+                "role_checkpoints": role_checkpoints,
                 "inference_runtime": config["model"].get("inference_runtime"),
                 "inference_runtime_version": config["model"].get(
                     "inference_runtime_version"
@@ -309,6 +319,8 @@ def run_legal_flux_generation(
         "run_dir": str(run_dir),
         "model_digest": digest,
         "model_digests": model_digests,
+        "role_models": role_models,
+        "role_checkpoints": role_checkpoints,
         "workflow_hash": workflow_hash,
         "template_pool_hash": template_hash,
         "num_shards": num_shards,

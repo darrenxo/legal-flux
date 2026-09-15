@@ -2311,6 +2311,12 @@ def test_work_root_environment_redirects_generated_artifacts(
     monkeypatch.setenv(
         "LEGAL_FLUX_SOURCE_CHECKPOINT", "/cluster/checkpoints/selected-sft"
     )
+    monkeypatch.setenv(
+        "LEGAL_FLUX_PLANNER_CHECKPOINT", "/cluster/checkpoints/dpo-planner"
+    )
+    monkeypatch.setenv(
+        "LEGAL_FLUX_REVIEWER_CHECKPOINT", "/cluster/checkpoints/sft-reviewer"
+    )
 
     config = load_config(Path(__file__).parents[1] / "configs" / "legal_flux.yaml")
 
@@ -2330,6 +2336,12 @@ def test_work_root_environment_redirects_generated_artifacts(
     )
     assert config["legal_flux"]["source_checkpoint"] == (
         "/cluster/checkpoints/selected-sft"
+    )
+    assert config["legal_flux"]["planner_checkpoint"] == (
+        "/cluster/checkpoints/dpo-planner"
+    )
+    assert config["legal_flux"]["reviewer_checkpoint"] == (
+        "/cluster/checkpoints/sft-reviewer"
     )
 
 
@@ -2363,6 +2375,31 @@ def test_standardized_cluster_rerun_has_isolated_model_roles_and_vllm_version():
     assert 'LEGAL_FLUX_VLLM_VERSION:-0.21.0' in server
     assert "vllm-*.dist-info/METADATA" in server
     assert "vllm --version" not in server
+
+
+def test_dpo_planner_sft_reviewer_launcher_has_three_distinct_model_roles():
+    launcher = (
+        Path(__file__).parents[1]
+        / "scripts"
+        / "cluster"
+        / "run_dpo_planner_sft_reviewer_full_dev.slurm"
+    ).read_text(encoding="utf-8")
+
+    assert 'export LEGAL_FLUX_PLANNER_MODEL="$PLANNER_ADAPTER_NAME"' in launcher
+    assert 'export LEGAL_FLUX_EXECUTOR_MODEL="$BASE_MODEL"' in launcher
+    assert 'export LEGAL_FLUX_REVIEWER_MODEL="$REVIEWER_ADAPTER_NAME"' in launcher
+    assert 'export LEGAL_FLUX_PLANNER_CHECKPOINT="$PLANNER_CHECKPOINT"' in launcher
+    assert 'export LEGAL_FLUX_REVIEWER_CHECKPOINT="$REVIEWER_CHECKPOINT"' in launcher
+    assert 'PLANNER_CHECKPOINT="${LEGAL_FLUX_DPO_PLANNER_CHECKPOINT:-}"' in launcher
+    assert 'REVIEWER_CHECKPOINT="${LEGAL_FLUX_SFT_REVIEWER_CHECKPOINT:-}"' in launcher
+    assert "--max-loras 2" in launcher
+    assert "--max-cpu-loras 2" in launcher
+    assert (
+        '"${PLANNER_ADAPTER_NAME}=${PLANNER_SERVING_CHECKPOINT}"' in launcher
+    )
+    assert (
+        '"${REVIEWER_ADAPTER_NAME}=${REVIEWER_SERVING_CHECKPOINT}"' in launcher
+    )
 
 
 def test_dev_tune_subset_is_fixed_and_stratified(tmp_path: Path):
