@@ -1,0 +1,4 @@
+extends: legal_benchmarks_cjpe_flux.cluster.yaml
+
+legal_flux:
+  template_pool_file: templates/legal_flux_templates_cjpe_merged31_raw_unmasked.jsonl

@@ -1,0 +1,12 @@
+{
+  "variant": "cjpe_gemini31_pro_merged31_raw_unmasked",
+  "source_stage": "merged",
+  "template_count": 31,
+  "source_pool": "legal_flux_templates_gemini_merged.jsonl",
+  "source_lineage": "legal_flux_templates_gemini_merged_lineage.json",
+  "source_pool_sha256": "2ce995c1510db78d36b1071fff3c5d3cd86e5c7ff69a867581ff26b3b8a8bc5a",
+  "source_lineage_sha256": "be7da3b33b264653185605c5b58dd7a0bd7c07107a5c1beb92c15d93e0059311",
+  "output_path": "templates/legal_flux_templates_cjpe_merged31_raw_unmasked.jsonl",
+  "output_sha256": "f14d7b5e6df52251da7a7943dbf77be7987399431503dd5d2e4d19060816bc1e",
+  "template_pool_hash": "67a699960b7dc1464c514b2e03fbc174ad16b637019acd39f7902d9ab77585a2"
+}
