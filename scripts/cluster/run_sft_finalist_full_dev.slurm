@@ -29,10 +29,10 @@ source "${LEGAL_FLUX_WORK_ROOT}/envs/legalflux-eval-v3/bin/activate"
 source scripts/cluster/vllm_server.sh
 mkdir -p "$HF_HOME" "${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux"
 
-CHECKPOINT="${LEGAL_FLUX_SFT_CHECKPOINT:-}"
+CHECKPOINT="${LEGAL_FLUX_ADAPTER_CHECKPOINT:-${LEGAL_FLUX_SFT_CHECKPOINT:-}}"
 if [[ -z "$CHECKPOINT" ]]; then
-  : "${SFT_LR:?Set LEGAL_FLUX_SFT_CHECKPOINT or provide SFT_LR and SFT_EPOCH}"
-  : "${SFT_EPOCH:?Set LEGAL_FLUX_SFT_CHECKPOINT or provide SFT_LR and SFT_EPOCH}"
+  : "${SFT_LR:?Set LEGAL_FLUX_ADAPTER_CHECKPOINT, LEGAL_FLUX_SFT_CHECKPOINT, or provide SFT_LR and SFT_EPOCH}"
+  : "${SFT_EPOCH:?Set LEGAL_FLUX_ADAPTER_CHECKPOINT, LEGAL_FLUX_SFT_CHECKPOINT, or provide SFT_LR and SFT_EPOCH}"
   TRAIN_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/training/template_structure_sft/lr-${SFT_LR}"
   mapfile -t CHECKPOINTS < <(
     find "$TRAIN_DIR" -maxdepth 1 -type d -name 'checkpoint-*' -print | sort -V
@@ -44,13 +44,30 @@ if [[ -z "$CHECKPOINT" ]]; then
   fi
 fi
 CHECKPOINT="$(readlink -f "$CHECKPOINT")"
-SERVING_CHECKPOINT="${CHECKPOINT}/vllm_text_only"
-if [[ ! -f "${SERVING_CHECKPOINT}/adapter_config.json" ]] || \
-   [[ ! -f "${SERVING_CHECKPOINT}/adapter_model.safetensors" ]]; then
-  echo "Prepared text-only adapter not found under ${SERVING_CHECKPOINT}." >&2
-  echo "Run flux-prepare-vllm-adapter on the selected checkpoint first." >&2
+if [[ -f "${CHECKPOINT}/vllm_text_only/adapter_config.json" ]] && \
+   [[ -f "${CHECKPOINT}/vllm_text_only/adapter_model.safetensors" ]]; then
+  SERVING_CHECKPOINT="${CHECKPOINT}/vllm_text_only"
+elif [[ -f "${CHECKPOINT}/adapter_config.json" ]] && \
+     [[ -f "${CHECKPOINT}/adapter_model.safetensors" ]]; then
+  SERVING_CHECKPOINT="$CHECKPOINT"
+else
+  echo "No serving-ready adapter found at ${CHECKPOINT} or ${CHECKPOINT}/vllm_text_only." >&2
   exit 1
 fi
+
+PHASE="${LEGAL_FLUX_PHASE:-trajectory-dev}"
+case "$PHASE" in
+  trajectory-dev|trajectory_dev)
+    PHASE_DIR="trajectory_dev"
+    ;;
+  final-test|final_test)
+    PHASE_DIR="final_test"
+    ;;
+  *)
+    echo "LEGAL_FLUX_PHASE must be trajectory-dev or final-test: ${PHASE}" >&2
+    exit 1
+    ;;
+esac
 
 RUN_TAG="${LEGAL_FLUX_RUN_TAG:-refined-sft-vllm021-full-v1}"
 if [[ ! "$RUN_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
@@ -97,7 +114,7 @@ SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"
 
-LEDGER_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/trajectory_dev/experiments/${RUN_TAG}"
+LEDGER_DIR="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/${PHASE_DIR}/experiments/${RUN_TAG}"
 if (( NUM_SHARDS > 1 )); then
   LEDGER_DIR+="/shards/shard-$(printf '%05d' "$SLURM_ARRAY_TASK_ID")"
   LEDGER_DIR+="-of-$(printf '%05d' "$NUM_SHARDS")"
@@ -109,7 +126,7 @@ fi
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
-  --phase trajectory-dev \
+  --phase "$PHASE" \
   --conditions flux_rf_style \
   --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID" \

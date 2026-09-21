@@ -40,11 +40,25 @@ export LEGAL_FLUX_EXECUTOR_MODEL="$BASE_MODEL"
 export LEGAL_FLUX_REVIEWER_MODEL="$BASE_MODEL"
 unset LEGAL_FLUX_SOURCE_CHECKPOINT
 NUM_SHARDS="${LEGAL_FLUX_NUM_SHARDS:-8}"
+PHASE="${LEGAL_FLUX_PHASE:-trajectory-dev}"
 RUN_TAG="${LEGAL_FLUX_RUN_TAG:-}"
 CASE_LIMIT="${LEGAL_FLUX_CASE_LIMIT:-}"
 CONDITION_ARGS=()
 RUN_TAG_ARGS=()
 CASE_LIMIT_ARGS=()
+
+case "$PHASE" in
+  trajectory-dev|trajectory_dev)
+    PHASE_DIR="trajectory_dev"
+    ;;
+  final-test|final_test)
+    PHASE_DIR="final_test"
+    ;;
+  *)
+    echo "LEGAL_FLUX_PHASE must be trajectory-dev or final-test: ${PHASE}" >&2
+    exit 1
+    ;;
+esac
 
 if [[ -n "${LEGAL_FLUX_CONDITIONS:-}" ]]; then
   read -r -a REQUESTED_CONDITIONS <<< "$LEGAL_FLUX_CONDITIONS"
@@ -72,7 +86,7 @@ if (( SLURM_ARRAY_TASK_ID >= NUM_SHARDS )); then
   exit 1
 fi
 
-LEDGER_BASE="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/trajectory_dev"
+LEDGER_BASE="${LEGAL_FLUX_WORK_ROOT}/runs/legal_flux/${PHASE_DIR}"
 if [[ -n "$RUN_TAG" ]]; then
   LEDGER_BASE+="/experiments/${RUN_TAG}"
 fi
@@ -92,11 +106,11 @@ legal_flux_start_vllm "$PORT" "$VLLM_LOG" --enforce-eager
 SERVER_PID="$LEGAL_FLUX_VLLM_PID"
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 legal_flux_wait_for_vllm "$SERVER_PID" "$LEGAL_FLUX_MODEL_BASE_URL" "$VLLM_LOG"
-echo "Starting shard ${SLURM_ARRAY_TASK_ID}/${NUM_SHARDS}; case_limit=${CASE_LIMIT:-all}."
+echo "Starting ${PHASE} shard ${SLURM_ARRAY_TASK_ID}/${NUM_SHARDS}; case_limit=${CASE_LIMIT:-all}."
 
 python -m legal_pilot --config configs/legal_flux.cluster.yaml \
   flux-generate \
-  --phase trajectory-dev \
+  --phase "$PHASE" \
   --num-shards "$NUM_SHARDS" \
   --shard-index "$SLURM_ARRAY_TASK_ID" \
   "${CONDITION_ARGS[@]}" \

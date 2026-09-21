@@ -2377,6 +2377,35 @@ def test_standardized_cluster_rerun_has_isolated_model_roles_and_vllm_version():
     assert "vllm --version" not in server
 
 
+def test_final_test_suite_changes_only_phase_and_adapter_roles():
+    root = Path(__file__).parents[1]
+    no_training = (
+        root / "scripts" / "cluster" / "run_no_training_eval.slurm"
+    ).read_text(encoding="utf-8")
+    adapter = (
+        root / "scripts" / "cluster" / "run_sft_finalist_full_dev.slurm"
+    ).read_text(encoding="utf-8")
+    submit = (
+        root / "scripts" / "cluster" / "submit_final_test_suite.sh"
+    ).read_text(encoding="utf-8")
+
+    for launcher in (no_training, adapter):
+        assert 'PHASE="${LEGAL_FLUX_PHASE:-trajectory-dev}"' in launcher
+        assert '--phase "$PHASE"' in launcher
+        assert "final-test|final_test" in launcher
+        assert "${PHASE_DIR}" in launcher
+
+    assert "LEGAL_FLUX_PHASE=final-test" in submit
+    assert 'export LEGAL_FLUX_CONDITIONS="direct structured flux_rf_style"' in submit
+    assert "LEGAL_FLUX_SFT_CHECKPOINT" in submit
+    assert "LEGAL_FLUX_DPO_CHECKPOINT" in submit
+    assert "LEGAL_FLUX_ADAPTER_CHECKPOINT=${SFT_CHECKPOINT}" in submit
+    assert "LEGAL_FLUX_ADAPTER_CHECKPOINT=${DPO_CHECKPOINT}" in submit
+    assert "LEGAL_FLUX_CASE_LIMIT=" not in submit
+    assert "unset LEGAL_FLUX_CASE_LIMIT" in submit
+    assert "run_sft_finalist_full_dev.slurm" in submit
+
+
 def test_dpo_planner_sft_reviewer_launcher_has_three_distinct_model_roles():
     launcher = (
         Path(__file__).parents[1]
