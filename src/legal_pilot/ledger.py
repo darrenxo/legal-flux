@@ -17,7 +17,31 @@ class JsonlLedger:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
+        self._repair_invalid_final_line()
         self._completed = self._load_hashes()
+
+    def _repair_invalid_final_line(self) -> None:
+        if not self.path.exists() or self.path.stat().st_size == 0:
+            return
+        with self.path.open("r+b") as handle:
+            content = handle.read()
+            final_content_index = len(content)
+            while final_content_index and content[final_content_index - 1] in b"\r\n":
+                final_content_index -= 1
+            if final_content_index == 0:
+                return
+            final_line_start = content.rfind(b"\n", 0, final_content_index) + 1
+            final_line = content[final_line_start:final_content_index]
+            try:
+                json.loads(final_line.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                handle.seek(final_line_start)
+                handle.truncate()
+            else:
+                if not content.endswith(b"\n"):
+                    handle.seek(0, 2)
+                    handle.write(b"\n")
+                    handle.flush()
 
     def _load_hashes(self) -> set[str]:
         if not self.path.exists():

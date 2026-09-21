@@ -88,9 +88,6 @@ LEDGER_DIR="${LEGAL_BENCHMARK_WORK_ROOT}/runs/legal_benchmarks/${SUBSET}/${RUN_T
 LEDGER_DIR+="/shards/shard-$(printf '%05d' "$SLURM_ARRAY_TASK_ID")"
 LEDGER_DIR+="-of-$(printf '%05d' "$NUM_SHARDS")"
 LEDGER="${LEDGER_DIR}/generations.jsonl"
-if [[ -s "$LEDGER" ]] && [[ "$(tail -c 1 "$LEDGER" | wc -l)" -eq 0 ]]; then
-  printf '\n' >> "$LEDGER"
-fi
 
 PORT=$((20000 + (SLURM_ARRAY_JOB_ID * 16 + SLURM_ARRAY_TASK_ID) % 30000))
 export LEGAL_FLUX_MODEL_BASE_URL="http://127.0.0.1:${PORT}/v1"
