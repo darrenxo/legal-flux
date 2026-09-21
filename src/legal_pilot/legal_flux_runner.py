@@ -24,6 +24,7 @@ from .io_utils import canonical_json, sha256_text
 from .ledger import JsonlLedger, make_run_hash
 from .legal_flux import (
     build_legal_flux_jobs,
+    legal_flux_evaluation_protocol_hash,
     legal_flux_workflow_hash,
     load_template_pool,
     retrieve_template_for_abstract_step,
@@ -189,6 +190,8 @@ def run_legal_flux_generation(
             model_digest=digest,
             workflow_hash=workflow_hash,
             template_hash=template_hash,
+            evaluation_protocol_hash=legal_flux_evaluation_protocol_hash(config),
+            role_checkpoints=role_checkpoints,
         )
 
     ledger = JsonlLedger(run_dir / "generations.jsonl")
@@ -221,6 +224,9 @@ def run_legal_flux_generation(
                 "model_digests": model_digests,
                 "role_models": role_models,
                 "role_checkpoints": role_checkpoints,
+                "source_checkpoint": str(
+                    config["legal_flux"].get("source_checkpoint") or ""
+                ),
                 "inference_runtime": config["model"].get("inference_runtime"),
                 "inference_runtime_version": config["model"].get(
                     "inference_runtime_version"

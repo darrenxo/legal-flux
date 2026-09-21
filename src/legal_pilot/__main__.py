@@ -28,6 +28,9 @@ def build_parser() -> argparse.ArgumentParser:
     flux_smoke.add_argument("--dry-run", action="store_true")
 
     subparsers.add_parser("flux-freeze")
+    final_test_seal = subparsers.add_parser("flux-seal-final-test")
+    final_test_seal.add_argument("--sft-checkpoint", required=True)
+    final_test_seal.add_argument("--dpo-checkpoint", required=True)
 
     flux_generate = subparsers.add_parser("flux-generate")
     flux_generate.add_argument(
@@ -112,6 +115,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Exit nonzero after preserving the ledger if any replay fails.",
     )
+    operator_pilot = subparsers.add_parser("flux-operator-pilot")
+    operator_pilot.add_argument(
+        "--phase",
+        choices=["smoke", "trajectory-dev", "trajectory_dev"],
+        default="smoke",
+    )
+    operator_pilot.add_argument("--case-limit", type=int, default=None)
+    operator_pilot.add_argument("--run-tag", default=None)
+    operator_pilot.add_argument("--dry-run", action="store_true")
+    operator_pilot.add_argument("--fail-on-errors", action="store_true")
     subparsers.add_parser("flux-export-template-sft")
     template_sft = subparsers.add_parser("flux-train-template-sft")
     template_sft.add_argument("--dry-run", action="store_true")
@@ -251,6 +264,14 @@ def main(argv: list[str] | None = None) -> int:
         from .legal_flux_setup import freeze_legal_flux_phase
 
         result = freeze_legal_flux_phase(config)
+    elif args.command == "flux-seal-final-test":
+        from .legal_flux_setup import seal_legal_flux_final_test
+
+        result = seal_legal_flux_final_test(
+            config,
+            sft_checkpoint=args.sft_checkpoint,
+            dpo_checkpoint=args.dpo_checkpoint,
+        )
     elif args.command == "flux-generate":
         from .legal_flux_runner import run_legal_flux_generation
 
@@ -287,6 +308,17 @@ def main(argv: list[str] | None = None) -> int:
             case_limit=args.case_limit,
             num_shards=args.num_shards,
             shard_index=args.shard_index,
+            fail_on_errors=args.fail_on_errors,
+        )
+    elif args.command == "flux-operator-pilot":
+        from .legal_operator_pilot import run_legal_operator_pilot
+
+        result = run_legal_operator_pilot(
+            config,
+            phase=args.phase,
+            case_limit=args.case_limit,
+            run_tag=args.run_tag,
+            dry_run=args.dry_run,
             fail_on_errors=args.fail_on_errors,
         )
     elif args.command == "flux-export-template-sft":

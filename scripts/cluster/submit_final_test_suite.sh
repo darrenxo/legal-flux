@@ -68,8 +68,22 @@ export LEGAL_FLUX_ROOT="$REPO"
 export LEGAL_FLUX_BASE_MODEL="${LEGAL_FLUX_BASE_MODEL:-Qwen/Qwen3.5-9B}"
 export LEGAL_FLUX_MODEL_NAME="$LEGAL_FLUX_BASE_MODEL"
 unset LEGAL_FLUX_CASE_LIMIT LEGAL_FLUX_RUN_TAG LEGAL_FLUX_PHASE \
-  LEGAL_FLUX_ADAPTER_CHECKPOINT
+  LEGAL_FLUX_ADAPTER_CHECKPOINT LEGAL_FLUX_SOURCE_CHECKPOINT \
+  LEGAL_FLUX_PLANNER_MODEL LEGAL_FLUX_EXECUTOR_MODEL \
+  LEGAL_FLUX_REVIEWER_MODEL LEGAL_FLUX_PLANNER_CHECKPOINT \
+  LEGAL_FLUX_EXECUTOR_CHECKPOINT LEGAL_FLUX_REVIEWER_CHECKPOINT
 export LEGAL_FLUX_CONDITIONS="direct structured flux_rf_style"
+
+EVAL_PYTHON="${WORK_ROOT}/envs/legalflux-eval-v3/bin/python"
+if [[ ! -x "$EVAL_PYTHON" ]]; then
+  echo "LegalFlux evaluation Python is missing: ${EVAL_PYTHON}" >&2
+  exit 1
+fi
+"$EVAL_PYTHON" -m legal_pilot \
+  --config configs/legal_flux.cluster.yaml \
+  flux-seal-final-test \
+  --sft-checkpoint "$SFT_CHECKPOINT" \
+  --dpo-checkpoint "$DPO_CHECKPOINT"
 
 BASE_CANARY_SUBMISSION="$(
   sbatch --parsable scripts/cluster/run_vllm_canary.slurm

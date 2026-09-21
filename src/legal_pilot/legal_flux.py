@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import re
 from pathlib import Path
@@ -247,6 +248,29 @@ def sanitize_flux_template(
 
 def legal_flux_workflow_hash(config: dict[str, Any]) -> str:
     return sha256_text(canonical_json(legal_flux_workflow_components(config)))
+
+
+def legal_flux_evaluation_protocol_hash(config: dict[str, Any]) -> str:
+    """Hash the fixed evaluation method without binding it to one adapter role.
+
+    Final-test compares the base, selected SFT, and selected DPO policies under
+    one shared protocol.  Their role-model names and checkpoint locations are
+    expected to differ, so those identities are sealed and checked separately.
+    """
+
+    components = copy.deepcopy(legal_flux_workflow_components(config))
+    legal_flux_config = components["legal_flux_config"]
+    for key in (
+        "planner_model",
+        "executor_model",
+        "reviewer_model",
+        "planner_checkpoint",
+        "executor_checkpoint",
+        "reviewer_checkpoint",
+        "source_checkpoint",
+    ):
+        legal_flux_config.pop(key, None)
+    return sha256_text(canonical_json(components))
 
 
 def legal_flux_workflow_components(config: dict[str, Any]) -> dict[str, Any]:

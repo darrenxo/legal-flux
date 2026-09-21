@@ -1,0 +1,22 @@
+{
+  "version": "v0",
+  "created_at": "2026-09-19",
+  "operator_count": 12,
+  "source_dataset": "LegalHK",
+  "source_splits": [
+    "template_source",
+    "planner_train"
+  ],
+  "source_case_count": 12859,
+  "excluded_from_design": [
+    "trajectory_dev",
+    "final_test"
+  ],
+  "construction_method": "Expert abstraction informed by a training-only audit of recurring operations in gold court reasoning and by general legal reasoning structure.",
+  "design_principle": "Operators are domain-general executable reasoning methods, not summaries of individual doctrines or cases.",
+  "notes": [
+    "The graph and operator prompts never receive court reasoning, judgment decisions, gold labels, reference issues, or reference states.",
+    "Issue-level supporting and opposing applications belong to executor outputs rather than operator records.",
+    "LEGIT inspired the rooted issue hierarchy and leaf-to-root resolution order; its gold conclusions are not used at inference time."
+  ]
+}

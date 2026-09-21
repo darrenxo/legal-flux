@@ -75,6 +75,18 @@ legal_flux:
     - structured
     - flux_rf_style
 
+operator_pilot:
+  operator_pool_file: templates/legal_operators_v0.jsonl
+  max_issues: 4
+  max_depth: 2
+  graph_max_tokens: 1200
+  issue_max_tokens: 700
+  final_max_tokens: 600
+  retrieval_backend: ollama_embedding
+  embedding_model: bge-m3:latest
+  embedding_cache_file: data/processed/legal_flux/operator_embeddings_bge_m3.json
+  embedding_timeout_seconds: 600
+
 xsim:
   dense_model: BAAI/bge-m3
   reranker_model: BAAI/bge-reranker-v2-m3

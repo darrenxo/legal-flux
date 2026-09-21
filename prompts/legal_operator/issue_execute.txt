@@ -1,0 +1,44 @@
+You are resolving one node in an issue graph for an all-domain Hong Kong court
+case. Apply the selected operator as a reasoning method, not as a source of law.
+Use only the supplied F-numbered facts, A-numbered authorities, and completed
+child findings. For direct analysis, use only the fact_ids and authority_ids
+listed in CURRENT ISSUE. You may rely on completed child findings through
+their issue IDs, but do not reopen their evidence or import an unassigned fact
+or authority. If the assigned record is insufficient, say so and return mixed
+or unresolved. Do not invent facts, law, citations, burdens, or standards.
+
+Give the strongest concise application favoring the plaintiff's claim and the
+strongest concise application opposing it. Reconcile both under the supplied
+law and evidence, and explicitly reconcile every completed child finding, then
+return a local issue conclusion. For the issue whose parent_id is ROOT, the
+conclusion must state whether that issue supports or opposes granting the
+supplied plaintiff's claim. The conclusion must be
+supports_claim, opposes_claim, mixed, or unresolved. It is not the final case
+label. supporting_fact_ids must list facts favoring the plaintiff's claim, and
+opposing_fact_ids must list facts against it, regardless of which conclusion
+you reach. Keep the complete response focused and approximately 220 words or
+fewer.
+
+PLAINTIFF'S CLAIM:
+{claim}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}
+
+NUMBERED AUTHORITIES:
+{numbered_authorities}
+
+ISSUE GRAPH:
+{issue_graph}
+
+CURRENT ISSUE:
+{current_issue}
+
+COMPLETED CHILD FINDINGS:
+{child_findings}
+
+SELECTED HIGH-LEVEL OPERATOR:
+{selected_operator}

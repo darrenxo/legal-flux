@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 import re
@@ -24,6 +25,7 @@ from .legal_flux import (
     FLUX_PHASES,
     build_legal_flux_jobs,
     freeze_manifest_path,
+    legal_flux_evaluation_protocol_hash,
     legal_flux_plan_hash,
     legal_flux_workflow_hash,
     load_template_pool,
@@ -283,17 +285,150 @@ def freeze_legal_flux_phase(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def seal_legal_flux_final_test(
+    config: dict[str, Any],
+    *,
+    sft_checkpoint: str,
+    dpo_checkpoint: str,
+) -> dict[str, Any]:
+    """Seal the held-out protocol and the two selected adapter policies.
+
+    Unlike the legacy Ollama smoke freeze, this seal deliberately supports the
+    three preselected comparison profiles: base, SFT, and DPO.  It is created
+    before any final-test generation and refuses to replace an incompatible
+    version-2 seal.
+    """
+
+    cases = load_cases(config)
+    templates = load_template_pool(config)
+    selected_adapters = {
+        "sft": _adapter_identity(sft_checkpoint),
+        "dpo": _adapter_identity(dpo_checkpoint),
+    }
+    if (
+        selected_adapters["sft"]["fingerprint"]
+        == selected_adapters["dpo"]["fingerprint"]
+    ):
+        raise ValueError("The selected SFT and DPO adapters must be distinct.")
+
+    sealed_payload = {
+        "manifest_version": 2,
+        "base_model": {
+            "name": str(config["model"]["name"]),
+            "provider": str(config["model"].get("provider", "")),
+            "inference_runtime": str(
+                config["model"].get("inference_runtime", "")
+            ),
+            "inference_runtime_version": str(
+                config["model"].get("inference_runtime_version", "")
+            ),
+        },
+        "evaluation_protocol_hash": legal_flux_evaluation_protocol_hash(config),
+        "template_pool_hash": template_pool_hash(templates),
+        "template_count": len(templates),
+        "final_test_plan_hash": legal_flux_plan_hash(
+            cases, config, phase="final_test"
+        ),
+        "final_test_case_count": sum(
+            case.metadata.get("selection_split") == "final_test" for case in cases
+        ),
+        "selected_adapters": selected_adapters,
+        "allowed_profiles": {
+            "base": {"checkpoint_fingerprints": []},
+            "sft": {
+                "checkpoint_fingerprints": [
+                    selected_adapters["sft"]["fingerprint"]
+                ]
+            },
+            "dpo": {
+                "checkpoint_fingerprints": [
+                    selected_adapters["dpo"]["fingerprint"]
+                ]
+            },
+        },
+    }
+
+    path = freeze_manifest_path(config)
+    if path.exists():
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        if existing.get("manifest_version") == 2:
+            comparable = {
+                key: value
+                for key, value in existing.items()
+                if key not in {"sealed_at"}
+            }
+            if comparable != sealed_payload:
+                raise RuntimeError(
+                    "The LegalFlux final test is already sealed with a different "
+                    "protocol or selected adapter. Refusing to overwrite it."
+                )
+            return {
+                "path": str(path),
+                "reused": True,
+                **sealed_payload,
+            }
+
+    manifest = {
+        "sealed_at": datetime.now(timezone.utc).isoformat(),
+        **sealed_payload,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return {"path": str(path), "reused": False, **sealed_payload}
+
+
 def assert_legal_flux_frozen(
     config: dict[str, Any],
     *,
     model_digest: str,
     workflow_hash: str,
     template_hash: str,
+    evaluation_protocol_hash: str | None = None,
+    role_checkpoints: dict[str, str] | None = None,
 ) -> None:
     path = freeze_manifest_path(config)
     if not path.exists():
         raise RuntimeError("LegalFlux final test is not frozen. Run flux-freeze first.")
     manifest = json.loads(path.read_text(encoding="utf-8"))
+    if manifest.get("manifest_version") == 2:
+        if not evaluation_protocol_hash:
+            raise RuntimeError("Final-test evaluation protocol hash was not supplied.")
+        if manifest.get("evaluation_protocol_hash") != evaluation_protocol_hash:
+            raise RuntimeError(
+                "LegalFlux prompts, schemas, settings, or code changed after the "
+                "final-test suite was sealed."
+            )
+        if manifest.get("base_model", {}).get("name") != config["model"]["name"]:
+            raise RuntimeError("Base model differs from the LegalFlux final-test seal.")
+        actual_fingerprints = sorted(
+            {
+                _adapter_identity(checkpoint)["fingerprint"]
+                for checkpoint in (role_checkpoints or {}).values()
+                if checkpoint
+            }
+        )
+        allowed_profiles = manifest.get("allowed_profiles") or {}
+        allowed_fingerprint_sets = {
+            tuple(sorted(profile.get("checkpoint_fingerprints") or []))
+            for profile in allowed_profiles.values()
+        }
+        if tuple(actual_fingerprints) not in allowed_fingerprint_sets:
+            raise RuntimeError(
+                "The active adapter checkpoint set is not one of the sealed "
+                "LegalFlux final-test profiles."
+            )
+        if manifest.get("template_pool_hash") != template_hash:
+            raise RuntimeError("LegalFlux template pool differs from the frozen manifest.")
+        cases = load_cases(config)
+        if manifest.get("final_test_plan_hash") != legal_flux_plan_hash(
+            cases, config, phase="final_test"
+        ):
+            raise RuntimeError("The frozen LegalFlux final-test case stream changed.")
+        return
+
     if manifest.get("model", {}).get("digest") != model_digest:
         raise RuntimeError("Ollama model digest differs from the LegalFlux freeze.")
     if manifest.get("workflow_hash") != workflow_hash:
@@ -305,6 +440,38 @@ def assert_legal_flux_frozen(
         cases, config, phase="final_test"
     ):
         raise RuntimeError("The frozen LegalFlux final-test case stream changed.")
+
+
+def _adapter_identity(checkpoint: str | Path) -> dict[str, str]:
+    checkpoint_path = Path(checkpoint).expanduser().resolve()
+    nested = checkpoint_path / "vllm_text_only"
+    if (nested / "adapter_config.json").is_file() and (
+        nested / "adapter_model.safetensors"
+    ).is_file():
+        serving_path = nested
+    elif (checkpoint_path / "adapter_config.json").is_file() and (
+        checkpoint_path / "adapter_model.safetensors"
+    ).is_file():
+        serving_path = checkpoint_path
+    else:
+        raise FileNotFoundError(
+            "No serving-ready adapter found at "
+            f"{checkpoint_path} or {nested}."
+        )
+
+    digest = hashlib.sha256()
+    for filename in ("adapter_config.json", "adapter_model.safetensors"):
+        path = serving_path / filename
+        digest.update(filename.encode("utf-8"))
+        digest.update(b"\0")
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+    return {
+        "checkpoint": str(checkpoint_path),
+        "serving_checkpoint": str(serving_path),
+        "fingerprint": digest.hexdigest(),
+    }
 
 
 def _eligible_frame(

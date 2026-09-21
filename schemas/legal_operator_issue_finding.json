@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalIssueFinding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "issue_id",
+    "analysis_for_claim",
+    "analysis_against_claim",
+    "resolution",
+    "conclusion",
+    "supporting_fact_ids",
+    "opposing_fact_ids",
+    "cited_authority_ids",
+    "relied_on_child_issue_ids"
+  ],
+  "properties": {
+    "issue_id": {"type": "string", "pattern": "^I[1-4]$"},
+    "analysis_for_claim": {"type": "string", "maxLength": 1200},
+    "analysis_against_claim": {"type": "string", "maxLength": 1200},
+    "resolution": {"type": "string", "maxLength": 1800},
+    "conclusion": {
+      "type": "string",
+      "enum": ["supports_claim", "opposes_claim", "mixed", "unresolved"]
+    },
+    "supporting_fact_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^F[0-9]+$"},
+      "uniqueItems": true
+    },
+    "opposing_fact_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^F[0-9]+$"},
+      "uniqueItems": true
+    },
+    "cited_authority_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^A[0-9]+$"},
+      "uniqueItems": true
+    },
+    "relied_on_child_issue_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^I[1-4]$"},
+      "uniqueItems": true
+    }
+  }
+}

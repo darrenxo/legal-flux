@@ -18,6 +18,25 @@ FinalDecisionValue = Literal[
 ]
 BinaryFinalDecisionValue = Literal["support", "reject", "accepted", "rejected"]
 FluxRfReviewDecision = Literal["continue", "revise", "final_answer"]
+LegalOperatorIssueType = Literal[
+    "procedural_gate",
+    "claim_elements",
+    "legal_interpretation",
+    "authority",
+    "evidence",
+    "defense",
+    "causation",
+    "loss_quantum",
+    "discretion",
+    "appellate_review",
+    "remedy",
+]
+LegalOperatorIssueConclusion = Literal[
+    "supports_claim",
+    "opposes_claim",
+    "mixed",
+    "unresolved",
+]
 
 
 class StrictModel(BaseModel):
@@ -184,6 +203,56 @@ class LegalFluxRfReview(StrictModel):
     revised_remaining_steps: list[LegalFluxAbstractStep] = Field(default_factory=list)
     final_rationale: str = ""
     final_decision: BinaryFinalDecisionValue | None = None
+
+
+class LegalOperator(StrictModel):
+    operator_id: str
+    operator_name: str
+    issue_types: list[LegalOperatorIssueType]
+    knowledge_tags: list[str]
+    description: str
+    application_scenario: str
+    reasoning_flow: list[str] = Field(min_length=2)
+    example_application: str
+
+
+class LegalIssuePartyPosition(StrictModel):
+    party: str
+    position: str
+
+
+class LegalIssueNode(StrictModel):
+    issue_id: str
+    parent_id: str
+    issue_type: LegalOperatorIssueType
+    issue_question: str
+    party_positions: list[LegalIssuePartyPosition] = Field(default_factory=list)
+    fact_ids: list[str] = Field(default_factory=list)
+    authority_ids: list[str] = Field(default_factory=list)
+
+
+class LegalIssueGraph(StrictModel):
+    graph_analysis: str
+    root_claim: str
+    issues: list[LegalIssueNode] = Field(min_length=1, max_length=4)
+
+
+class LegalIssueFinding(StrictModel):
+    issue_id: str
+    analysis_for_claim: str
+    analysis_against_claim: str
+    resolution: str
+    conclusion: LegalOperatorIssueConclusion
+    supporting_fact_ids: list[str] = Field(default_factory=list)
+    opposing_fact_ids: list[str] = Field(default_factory=list)
+    cited_authority_ids: list[str] = Field(default_factory=list)
+    relied_on_child_issue_ids: list[str] = Field(default_factory=list)
+
+
+class LegalOperatorFinalDecision(StrictModel):
+    final_rationale: str
+    dispositive_issue_ids: list[str] = Field(min_length=1)
+    final_decision: BinaryFinalDecisionValue
 
 
 class NormalizedCase(StrictModel):

@@ -21,6 +21,7 @@ from legal_pilot.io_utils import (
     write_jsonl,
 )
 from legal_pilot.legal_flux import (
+    legal_flux_evaluation_protocol_hash,
     legal_flux_workflow_components,
     load_template_pool,
     retrieve_template_for_abstract_step,
@@ -65,7 +66,7 @@ from legal_pilot.legal_flux_runner import (
     _select_generation_shard,
     flux_run_hash,
 )
-from legal_pilot.legal_flux_setup import import_legal_flux_templates
+from legal_pilot.legal_flux_setup import _adapter_identity, import_legal_flux_templates
 from legal_pilot.legal_flux_sft import (
     _load_text_tokenizer,
     _template_lora_config_kwargs,
@@ -2404,6 +2405,47 @@ def test_final_test_suite_changes_only_phase_and_adapter_roles():
     assert "LEGAL_FLUX_CASE_LIMIT=" not in submit
     assert "unset LEGAL_FLUX_CASE_LIMIT" in submit
     assert "run_sft_finalist_full_dev.slurm" in submit
+    assert "flux-seal-final-test" in submit
+    assert 'export LEGAL_FLUX_PLANNER_CHECKPOINT="$CHECKPOINT"' in adapter
+    assert 'export LEGAL_FLUX_REVIEWER_CHECKPOINT="$CHECKPOINT"' in adapter
+
+
+def test_final_test_protocol_hash_excludes_only_selected_role_identities():
+    root = Path(__file__).parents[1]
+    config = load_config(root / "configs" / "legal_flux.cluster.yaml")
+    baseline = legal_flux_evaluation_protocol_hash(config)
+
+    selected = json.loads(json.dumps(config))
+    selected["legal_flux"].update(
+        {
+            "planner_model": "selected-adapter",
+            "reviewer_model": "selected-adapter",
+            "executor_model": "Qwen/Qwen3.5-9B",
+            "planner_checkpoint": "/checkpoint/selected",
+            "reviewer_checkpoint": "/checkpoint/selected",
+            "source_checkpoint": "/checkpoint/selected",
+        }
+    )
+    assert legal_flux_evaluation_protocol_hash(selected) == baseline
+
+    selected["legal_flux"]["max_steps"] += 1
+    assert legal_flux_evaluation_protocol_hash(selected) != baseline
+
+
+def test_adapter_identity_fingerprints_serving_weights(tmp_path: Path):
+    checkpoint = tmp_path / "checkpoint"
+    serving = checkpoint / "vllm_text_only"
+    serving.mkdir(parents=True)
+    (serving / "adapter_config.json").write_text("{}\n", encoding="utf-8")
+    weights = serving / "adapter_model.safetensors"
+    weights.write_bytes(b"first")
+
+    first = _adapter_identity(checkpoint)
+    assert first["serving_checkpoint"] == str(serving.resolve())
+
+    weights.write_bytes(b"second")
+    second = _adapter_identity(checkpoint)
+    assert second["fingerprint"] != first["fingerprint"]
 
 
 def test_dpo_planner_sft_reviewer_launcher_has_three_distinct_model_roles():

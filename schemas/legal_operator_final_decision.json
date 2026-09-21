@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalOperatorFinalDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["final_rationale", "dispositive_issue_ids", "final_decision"],
+  "properties": {
+    "final_rationale": {"type": "string", "minLength": 1, "maxLength": 1800},
+    "dispositive_issue_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^I[1-4]$"},
+      "uniqueItems": true
+    },
+    "final_decision": {"type": "string", "enum": ["support", "reject"]}
+  }
+}

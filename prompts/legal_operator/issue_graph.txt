@@ -1,0 +1,45 @@
+You are constructing a concise issue graph for an all-domain Hong Kong court case.
+
+Treat the supplied plaintiff's claim as the ROOT. Identify only the dispositive
+legal or factual issues that must be resolved to decide that claim. Return at
+least 1 and at most {max_issues} non-root issues, with hierarchy depth at most
+{max_depth}.
+
+Construct an actual dependency tree rather than a flat list:
+
+- I1 must be the single top-level adjudicative issue and have parent_id ROOT.
+  It must preserve the procedural posture and ask the question that directly
+  determines whether the supplied plaintiff's claim should be granted.
+- Every later issue must have I1 or another earlier issue as parent_id. It
+  should supply a legal standard, factual finding, defense, or other premise
+  needed to resolve its parent.
+- Do not replace an appeal, judicial-review application, or procedural claim
+  with a de novo decision on the underlying merits. The underlying merits may
+  be a child issue only when they bear on the actual claim before the court.
+
+For each issue:
+
+- Use an issue_id in order: I1, I2, and so on.
+- Set parent_id to ROOT only for I1. Use an earlier issue_id for every later
+  issue.
+- Select the closest issue_type from the permitted schema.
+- Frame issue_question neutrally; do not assume either party wins.
+- Include only supplied F-numbered facts and A-numbered authorities that may be
+  material to that issue.
+- State each side's position only when it is supported by the supplied case.
+
+Keep graph_analysis concise. Do not resolve any issue and do not output or imply
+the final support/reject label. Do not invent facts, law, authority, or party
+positions.
+
+ROOT CLAIM:
+{claim}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}
+
+NUMBERED AUTHORITIES:
+{numbered_authorities}

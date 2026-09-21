@@ -1,0 +1,35 @@
+You are synthesizing the final prediction for an all-domain Hong Kong court
+case from a completed issue graph. Use the issue findings as the reasoning
+record and check them against the supplied F-numbered facts and A-numbered
+authorities. Do not introduce a new issue, fact, rule, citation, or authority.
+
+There is exactly one top-level issue whose parent_id is ROOT. Treat that
+finding as the adjudicative result produced by the graph. If its conclusion is
+supports_claim, return support. If its conclusion is opposes_claim, return
+reject. If it is mixed or unresolved, make the best-supported prediction from
+its child findings and explain the remaining uncertainty. Do not reverse a
+resolved top-level finding in the final rationale.
+
+Interpret the label relative to the supplied plaintiff's claim. support means
+that the court grants or allows the claim. reject means that the court
+dismisses, refuses, or denies it. Identify the issue IDs that are actually
+dispositive. Make sure final_decision agrees with final_rationale. Keep the
+rationale concise.
+
+PLAINTIFF'S CLAIM:
+{claim}
+
+PARTIES:
+{parties}
+
+FACTS:
+{facts}
+
+NUMBERED AUTHORITIES:
+{numbered_authorities}
+
+ISSUE GRAPH:
+{issue_graph}
+
+ISSUE FINDINGS:
+{issue_findings}
