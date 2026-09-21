@@ -54,6 +54,18 @@ legal_flux_start_vllm() {
     --env "HF_HOME=${HF_HOME}"
     --env "TOKENIZERS_PARALLELISM=false"
   )
+  local -a container_binds=(
+    --bind "${LEGAL_FLUX_WORK_ROOT}:${LEGAL_FLUX_WORK_ROOT}"
+  )
+  local hf_home_target
+  if ! hf_home_target="$(readlink -f "$HF_HOME")" || [[ ! -d "$hf_home_target" ]]; then
+    echo "Hugging Face cache is missing: ${HF_HOME}" >&2
+    return 1
+  fi
+  if [[ "$hf_home_target" != "$LEGAL_FLUX_WORK_ROOT" ]] && \
+     [[ "$hf_home_target" != "${LEGAL_FLUX_WORK_ROOT}/"* ]]; then
+    container_binds+=(--bind "${hf_home_target}:${hf_home_target}")
+  fi
   if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then
     container_env+=(--env "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}")
   fi
@@ -61,7 +73,7 @@ legal_flux_start_vllm() {
   apptainer exec \
     --nv \
     --cleanenv \
-    --bind "${LEGAL_FLUX_WORK_ROOT}:${LEGAL_FLUX_WORK_ROOT}" \
+    "${container_binds[@]}" \
     "${container_env[@]}" \
     "$container" \
     /bin/bash -c \
